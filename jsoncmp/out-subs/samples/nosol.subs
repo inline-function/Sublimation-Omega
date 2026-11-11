@@ -1,0 +1,4 @@
+// OQ-10 无解硬拒（双模式）：候选 Str 与上界 Nat 不相容 ⇒ E-INFER-NO-SOLUTION（不可退化）
+fun g2(x: Nat) = 0
+fun f(y) = g2(y)
+var s = f("a")

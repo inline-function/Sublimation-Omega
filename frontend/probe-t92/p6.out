@@ -1,0 +1,6 @@
+[错误][1:6] E-SYNTAX: 顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）
+  1 | fun <>(a: Bool, b: Bool): Bool = True
+    |      ^
+[错误][3:1] E-SYNTAX: 期望>，实际'<eof>'
+  3 | 
+    | ^

@@ -1,0 +1,4 @@
+fun outer(n: Nat): Nat {
+    fun inner(m: Nat): Nat = inner(m)
+    return inner(n)
+}

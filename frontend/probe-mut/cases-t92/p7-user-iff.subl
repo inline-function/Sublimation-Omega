@@ -1,0 +1,2 @@
+fun <->(a: Bool, b: Bool): Bool = a
+@root fun main(): Bool = True <-> False

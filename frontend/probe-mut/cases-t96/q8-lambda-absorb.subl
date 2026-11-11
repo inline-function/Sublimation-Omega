@@ -1,0 +1,1 @@
+fun q(): Null { var g = { => print("x") } }

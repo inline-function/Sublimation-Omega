@@ -1,0 +1,171 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "q3-release-context.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:13-2:14",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:13-1:16",
+        "notes": [],
+        "name": "side",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "side"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 3,
+          "pos": "1:21-1:24",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 2,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 4,
+          "pos": "1:26-1:26",
+          "notes": [],
+          "stmts": []
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 6,
+        "pos": "2:5-2:14",
+        "notes": [],
+        "name": "pureCaller",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "pureCaller"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [
+          {
+            "kind": "HirPAtom",
+            "nid": 8,
+            "pos": "2:18-2:21",
+            "notes": [],
+            "head": "pure",
+            "terms": [
+              {
+                "kind": "HirTName",
+                "nid": 7,
+                "pos": "2:23-2:26",
+                "notes": [],
+                "name": "side",
+                "symbol": {
+                  "id": 0,
+                  "kind": "fun",
+                  "name": "side"
+                }
+              }
+            ]
+          }
+        ],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 9,
+          "pos": "2:31-2:34",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 2,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 10,
+          "pos": "2:36-2:36",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirExprStmt",
+              "nid": 11,
+              "pos": "2:38-2:41",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 12,
+                "pos": "2:38-2:41",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 13,
+                  "pos": "2:38-2:41",
+                  "notes": [],
+                  "name": "side",
+                  "symbol": {
+                    "id": 0,
+                    "kind": "fun",
+                    "name": "side"
+                  },
+                  "type": null
+                },
+                "args": [],
+                "symbol": {
+                  "id": 0,
+                  "kind": "fun",
+                  "name": "side"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 15,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

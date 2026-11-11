@@ -1,0 +1,1 @@
+@root fun h(a: Bool, b: Bool): Bool = a & b

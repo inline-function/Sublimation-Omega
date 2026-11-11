@@ -1,0 +1,3 @@
+struct S(@mut a: Nat, b: Nat)
+@mut var s = S(1, 2)
+s.a = 3

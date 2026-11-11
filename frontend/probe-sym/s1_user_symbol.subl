@@ -1,0 +1,7 @@
+fun ⊗(a: Nat, b: Nat): Nat = a + b
+
+@impure
+fun main() {
+    unchecked print(⊗(1, 2))
+    unchecked print(1 ⊗ 2)
+}

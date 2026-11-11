@@ -1,0 +1,4 @@
+fun applyZero(f: () => Nat): Nat = f()
+@root fun m(): Null {
+    unchecked print(applyZero({ => 7 }))
+}

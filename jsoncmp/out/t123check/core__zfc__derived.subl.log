@@ -1,0 +1,4 @@
+﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/core/zfc/derived.subl -o jsoncmp/out/t123check/core__zfc__derived.subl.json
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t123check\core__zfc__derived.subl.json（55978 字节）

@@ -1,0 +1,4 @@
+// OQ-10 收敛推导：多使用点约束汇聚
+fun add(x) = x + 1
+var a = add(2)
+var b = add(3)

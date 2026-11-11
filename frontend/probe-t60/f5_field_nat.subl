@@ -1,0 +1,3 @@
+struct P(x: Nat)
+
+fun f(p: @mut P): Nat = p.x + 1

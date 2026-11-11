@@ -1,0 +1,1 @@
+@root fun main(): Null { print("x") }

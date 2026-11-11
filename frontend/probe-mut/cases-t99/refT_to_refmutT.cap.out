@@ -1,0 +1,3 @@
+[错误][4:5] E-TYPE-MISMATCH: var u 标注了 @ref @mut Box，但初值是 @ref Box，两边类型不一致
+  4 |     var u : @ref @mut Box = a
+    |     ^

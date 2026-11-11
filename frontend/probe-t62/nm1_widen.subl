@@ -1,0 +1,2 @@
+fun wantRat(r: Rat): Nat = 0
+fun give(n: Nat): Nat = wantRat(n)

@@ -1,0 +1,10 @@
+=== CHANGED CANDIDATES: 6
+#1 core__logic__logic.subl:105 [funprop] lv=[9,6,9] ops=∈ → >= | why: →(6)<>=(9) | fun rangeLowerBound[x, l, r]: Null <x ∈ (l..r) → x >= l>
+#2 core__logic__logic.subl:107 [funprop] lv=[9,6,9] ops=∈ → <= | why: →(6)<<=(9) | fun rangeUpperBound[x, l, r]: Null <x ∈ (l..r) → x <= r>
+#3 core__logic__logic.subl:111 [funprop] lv=[9,8,9,6,9] ops=<= ∧ <= → <= | why: ∧(8)<<=(9); →(6)<<=(9) | fun leqTrans[a, b, c]: Null <a <= b ∧ b <= c → a <= c>
+#4 core__logic__logic.subl:121 [funprop] lv=[9,8,9,6,9] ops=∈ ∧ <= → ∈ | why: ∧(8)<<=(9); →(6)<∈(9) | fun rangeSplitRight[x, l, m, r]: Null <x ∈ (l..r) ∧ x <= m → x ∈ (l..m)>
+#5 examples__模式匹配.subl:35 [value] lv=[9,8,9,6] ops=!= & != -> | why: VAL &(8)<!=(9) | m if !=(m, 0) & !=(m, 1) ->
+#6 examples__特性巡礼.subl:55 [value] lv=[9,8,9,6] ops=!= & != -> | why: VAL &(8)<!=(9) | m if !=(m, 0) & !=(m, 1) ->
+
+=== multi-op runs total: 18
+=== symbols seen in prop runs: ["!","*","+","-","..","/","<","<=","=",">=","→","↔","∈","∧","∨","∴","∵","≤"]

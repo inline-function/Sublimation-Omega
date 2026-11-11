@@ -1,0 +1,184 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "conv-use-first.subs",
+    "mode": "script"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 31,
+    "pos": "2:5-3:10",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 32,
+        "pos": "2:5-2:8",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 37,
+          "pos": "0:0",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": null
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "inferred": true,
+        "evidence": [
+          "use:2:14"
+        ],
+        "body": {
+          "kind": "HirCall",
+          "nid": 33,
+          "pos": "2:14-2:19",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 34,
+            "pos": "2:14-2:19",
+            "notes": [],
+            "name": "double",
+            "symbol": {
+              "id": 1,
+              "kind": "fun",
+              "name": "double"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirIntLit",
+              "nid": 35,
+              "pos": "2:21-2:21",
+              "notes": [],
+              "value": "5"
+            }
+          ],
+          "symbol": {
+            "id": 1,
+            "kind": "fun",
+            "name": "double"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 37,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Nat",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": false
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 38,
+        "pos": "3:5-3:10",
+        "notes": [],
+        "name": "double",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "double"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 39,
+            "pos": "3:12-3:12",
+            "notes": [],
+            "name": "x",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 20,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": null
+            },
+            "symbol": {
+              "id": 4,
+              "kind": "param",
+              "name": "x"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null,
+            "inferred": true,
+            "evidence": [
+              "use:2:14"
+            ]
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 20,
+          "pos": "0:0",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": null
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "inferred": true,
+        "evidence": [
+          "use:3:17"
+        ],
+        "body": {
+          "kind": "HirNameRef",
+          "nid": 46,
+          "pos": "3:17-3:17",
+          "notes": [],
+          "name": "x",
+          "symbol": {
+            "id": 4,
+            "kind": "param",
+            "name": "x"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 20,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Nat",
+            "args": [],
+            "symbol": null
+          }
+        }
+      }
+    ]
+  }
+}

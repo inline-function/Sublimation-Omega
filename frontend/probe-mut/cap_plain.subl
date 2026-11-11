@@ -1,0 +1,4 @@
+fun f(): Nat {
+    var x: Nat = 1
+    x
+}

@@ -1,0 +1,1 @@
+fun main() { unchecked print((37 * 18 + 5) / 10) }

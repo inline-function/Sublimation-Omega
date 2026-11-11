@@ -1,0 +1,2 @@
+@root fun r(f: () => Nat): Nat = f()
+@root fun s(): Nat { return r({ => 1 + 1 }) }

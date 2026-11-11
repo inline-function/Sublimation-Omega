@@ -1,0 +1,482 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "inequality.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "16:5-26:14",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "16:5-16:11",
+        "notes": [],
+        "name": "amgm sq",
+        "symbol": {
+          "id": 0,
+          "kind": "theorem",
+          "name": "amgm sq"
+        },
+        "annotations": [
+          "theorem"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 3,
+            "pos": "16:15-16:15",
+            "notes": [],
+            "name": "a",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 4,
+            "pos": "16:18-16:18",
+            "notes": [],
+            "name": "b",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 5,
+          "pos": "16:22-16:25",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 3,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [
+          {
+            "kind": "HirPAtom",
+            "nid": 18,
+            "pos": "16:41-16:42",
+            "notes": [],
+            "head": "<=",
+            "terms": [
+              {
+                "kind": "HirTBin",
+                "nid": 10,
+                "pos": "16:36-16:36",
+                "notes": [],
+                "op": "*",
+                "left": {
+                  "kind": "HirTBin",
+                  "nid": 8,
+                  "pos": "16:32-16:32",
+                  "notes": [],
+                  "op": "*",
+                  "left": {
+                    "kind": "HirTInt",
+                    "nid": 6,
+                    "pos": "16:30-16:30",
+                    "notes": [],
+                    "value": "4"
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 7,
+                    "pos": "16:34-16:34",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  }
+                },
+                "right": {
+                  "kind": "HirTName",
+                  "nid": 9,
+                  "pos": "16:38-16:38",
+                  "notes": [],
+                  "name": "b",
+                  "symbol": null
+                }
+              },
+              {
+                "kind": "HirTBin",
+                "nid": 17,
+                "pos": "16:53-16:53",
+                "notes": [],
+                "op": "*",
+                "left": {
+                  "kind": "HirTBin",
+                  "nid": 13,
+                  "pos": "16:48-16:48",
+                  "notes": [],
+                  "op": "+",
+                  "left": {
+                    "kind": "HirTName",
+                    "nid": 11,
+                    "pos": "16:46-16:46",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 12,
+                    "pos": "16:50-16:50",
+                    "notes": [],
+                    "name": "b",
+                    "symbol": null
+                  }
+                },
+                "right": {
+                  "kind": "HirTBin",
+                  "nid": 16,
+                  "pos": "16:58-16:58",
+                  "notes": [],
+                  "op": "+",
+                  "left": {
+                    "kind": "HirTName",
+                    "nid": 14,
+                    "pos": "16:56-16:56",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 15,
+                    "pos": "16:60-16:60",
+                    "notes": [],
+                    "name": "b",
+                    "symbol": null
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 19,
+        "pos": "21:5-21:13",
+        "notes": [],
+        "name": "bernoulli",
+        "symbol": {
+          "id": 1,
+          "kind": "theorem",
+          "name": "bernoulli"
+        },
+        "annotations": [
+          "theorem"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 20,
+            "pos": "21:17-21:17",
+            "notes": [],
+            "name": "n",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 21,
+            "pos": "21:20-21:20",
+            "notes": [],
+            "name": "x",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 22,
+          "pos": "21:24-21:27",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 3,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [
+          {
+            "kind": "HirPAtom",
+            "nid": 34,
+            "pos": "21:49-21:50",
+            "notes": [],
+            "head": ">=",
+            "terms": [
+              {
+                "kind": "HirTCall",
+                "nid": 28,
+                "pos": "21:32-21:34",
+                "notes": [],
+                "callee": {
+                  "kind": "HirTName",
+                  "nid": 23,
+                  "pos": "21:32-21:34",
+                  "notes": [],
+                  "name": "pow",
+                  "symbol": {
+                    "id": 4,
+                    "kind": "builtin",
+                    "name": "pow"
+                  }
+                },
+                "args": [
+                  {
+                    "kind": "HirTBin",
+                    "nid": 26,
+                    "pos": "21:39-21:39",
+                    "notes": [],
+                    "op": "+",
+                    "left": {
+                      "kind": "HirTInt",
+                      "nid": 24,
+                      "pos": "21:37-21:37",
+                      "notes": [],
+                      "value": "1"
+                    },
+                    "right": {
+                      "kind": "HirTName",
+                      "nid": 25,
+                      "pos": "21:41-21:41",
+                      "notes": [],
+                      "name": "x",
+                      "symbol": null
+                    }
+                  },
+                  {
+                    "kind": "HirTName",
+                    "nid": 27,
+                    "pos": "21:45-21:45",
+                    "notes": [],
+                    "name": "n",
+                    "symbol": null
+                  }
+                ]
+              },
+              {
+                "kind": "HirTBin",
+                "nid": 33,
+                "pos": "21:61-21:61",
+                "notes": [],
+                "op": "+",
+                "left": {
+                  "kind": "HirTBin",
+                  "nid": 31,
+                  "pos": "21:56-21:56",
+                  "notes": [],
+                  "op": "*",
+                  "left": {
+                    "kind": "HirTName",
+                    "nid": 29,
+                    "pos": "21:54-21:54",
+                    "notes": [],
+                    "name": "n",
+                    "symbol": null
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 30,
+                    "pos": "21:58-21:58",
+                    "notes": [],
+                    "name": "x",
+                    "symbol": null
+                  }
+                },
+                "right": {
+                  "kind": "HirTInt",
+                  "nid": 32,
+                  "pos": "21:63-21:63",
+                  "notes": [],
+                  "value": "1"
+                }
+              }
+            ]
+          }
+        ],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 35,
+        "pos": "26:5-26:14",
+        "notes": [],
+        "name": "two square",
+        "symbol": {
+          "id": 2,
+          "kind": "theorem",
+          "name": "two square"
+        },
+        "annotations": [
+          "theorem"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 36,
+            "pos": "26:18-26:18",
+            "notes": [],
+            "name": "a",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 37,
+            "pos": "26:21-26:21",
+            "notes": [],
+            "name": "b",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 38,
+          "pos": "26:25-26:28",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 3,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [
+          {
+            "kind": "HirPAtom",
+            "nid": 51,
+            "pos": "26:51-26:52",
+            "notes": [],
+            "head": ">=",
+            "terms": [
+              {
+                "kind": "HirTBin",
+                "nid": 45,
+                "pos": "26:40-26:40",
+                "notes": [],
+                "op": "+",
+                "left": {
+                  "kind": "HirTBin",
+                  "nid": 41,
+                  "pos": "26:35-26:35",
+                  "notes": [],
+                  "op": "*",
+                  "left": {
+                    "kind": "HirTName",
+                    "nid": 39,
+                    "pos": "26:33-26:33",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 40,
+                    "pos": "26:37-26:37",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  }
+                },
+                "right": {
+                  "kind": "HirTBin",
+                  "nid": 44,
+                  "pos": "26:45-26:45",
+                  "notes": [],
+                  "op": "*",
+                  "left": {
+                    "kind": "HirTName",
+                    "nid": 42,
+                    "pos": "26:43-26:43",
+                    "notes": [],
+                    "name": "b",
+                    "symbol": null
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 43,
+                    "pos": "26:47-26:47",
+                    "notes": [],
+                    "name": "b",
+                    "symbol": null
+                  }
+                }
+              },
+              {
+                "kind": "HirTBin",
+                "nid": 50,
+                "pos": "26:61-26:61",
+                "notes": [],
+                "op": "*",
+                "left": {
+                  "kind": "HirTBin",
+                  "nid": 48,
+                  "pos": "26:57-26:57",
+                  "notes": [],
+                  "op": "*",
+                  "left": {
+                    "kind": "HirTInt",
+                    "nid": 46,
+                    "pos": "26:55-26:55",
+                    "notes": [],
+                    "value": "2"
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 47,
+                    "pos": "26:59-26:59",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  }
+                },
+                "right": {
+                  "kind": "HirTName",
+                  "nid": 49,
+                  "pos": "26:63-26:63",
+                  "notes": [],
+                  "name": "b",
+                  "symbol": null
+                }
+              }
+            ]
+          }
+        ],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      }
+    ]
+  }
+}

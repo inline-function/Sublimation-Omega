@@ -1,0 +1,5 @@
+@mut struct Box(@mut n: Nat)
+@impure fun main() {
+    var t : Box = Box(0)
+    var u : @ref Box = t
+}

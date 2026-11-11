@@ -1,0 +1,8 @@
+@theorem
+fun rangeLowerBound[x, l, r]: Null <x ∈ (l..r) → x >= l>
+@theorem
+fun rangeUpperBound[x, l, r]: Null <x ∈ (l..r) → x <= r>
+@theorem
+fun leqTrans[a, b, c]: Null <a <= b & b <= c → a <= c>
+@theorem
+fun rangeSplitRight[x, l, m, r]: Null <x ∈ (l..r) & x <= m → x ∈ (l..m)>

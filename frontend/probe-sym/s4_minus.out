@@ -1,0 +1,3 @@
+[错误][2:5] E-RETURN-TYPE: return 值类型 Int 与声明 Nat 不符
+  2 |     return a - b
+    |     ^

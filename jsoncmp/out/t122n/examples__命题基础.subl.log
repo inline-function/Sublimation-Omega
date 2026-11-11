@@ -1,0 +1,4 @@
+﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/命题基础.subl -o jsoncmp/out/t122n/examples__命题基础.subl.json
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t122n\examples__命题基础.subl.json（30583 字节）

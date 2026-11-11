@@ -1,0 +1,6 @@
+[错误][1:24] E-TYPE-MISMATCH: 中缀 +: Str 与 Nat 不匹配
+  1 | fun f(a: Str): Nat = a + 1
+    |                        ^
+[错误][1:24] E-OP-UNCLASSIFIED: 中缀 +: Str 与 Nat 无法定类（不在内建算符表内，且非可兼容名义对）
+  1 | fun f(a: Str): Nat = a + 1
+    |                        ^

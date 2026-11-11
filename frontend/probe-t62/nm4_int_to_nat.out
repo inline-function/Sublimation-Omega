@@ -1,0 +1,3 @@
+[错误][2:25] E-TYPE-MISMATCH: 实参 1 Int 与形参 Nat 不符
+  2 | fun give(r: Rat): Nat = wantNat(floor(r))
+    |                         ^

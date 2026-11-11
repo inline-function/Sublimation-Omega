@@ -1,0 +1,1 @@
+fun f(o: Optional[Nat]): Nat = when (o) { is Some(∧) -> 1; is None -> 2 }

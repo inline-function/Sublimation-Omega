@@ -1,0 +1,1518 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "脚本求值桥.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "12:15-12:17",
+      "message": "var `r` 推导为 Result[(内建T), Str]",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "17:15-17:17",
+      "message": "var `bad` 推导为 Result[(内建T), Str]",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "22:15-22:17",
+      "message": "var `joined` 推导为 Result[(内建T), Str]",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "6:8-11:8",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirStructDecl",
+        "nid": 2,
+        "pos": "6:8-6:9",
+        "notes": [],
+        "name": "Ok",
+        "symbol": {
+          "id": 0,
+          "kind": "struct",
+          "name": "Ok"
+        },
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 3,
+            "pos": "6:11-6:11",
+            "notes": [],
+            "name": "T",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "fields": [
+          {
+            "kind": "HirParam",
+            "nid": 4,
+            "pos": "6:14-6:18",
+            "notes": [],
+            "name": "value",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 5,
+              "pos": "6:21-6:21",
+              "notes": [],
+              "name": "T",
+              "args": [],
+              "symbol": null
+            },
+            "symbol": {
+              "id": 6,
+              "kind": "field",
+              "name": "value"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "annotations": [],
+        "props": [],
+        "nullary": false
+      },
+      {
+        "kind": "HirStructDecl",
+        "nid": 6,
+        "pos": "7:8-7:10",
+        "notes": [],
+        "name": "Err",
+        "symbol": {
+          "id": 2,
+          "kind": "struct",
+          "name": "Err"
+        },
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 7,
+            "pos": "7:12-7:12",
+            "notes": [],
+            "name": "E",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "fields": [
+          {
+            "kind": "HirParam",
+            "nid": 8,
+            "pos": "7:15-7:19",
+            "notes": [],
+            "name": "value",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 9,
+              "pos": "7:22-7:22",
+              "notes": [],
+              "name": "E",
+              "args": [],
+              "symbol": null
+            },
+            "symbol": {
+              "id": 7,
+              "kind": "field",
+              "name": "value"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "annotations": [],
+        "props": [],
+        "nullary": false
+      },
+      {
+        "kind": "HirTypeAlias",
+        "nid": 10,
+        "pos": "8:1-8:4",
+        "notes": [],
+        "name": "Result",
+        "symbol": {
+          "id": 4,
+          "kind": "alias",
+          "name": "Result"
+        },
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 11,
+            "pos": "8:13-8:13",
+            "notes": [],
+            "name": "T",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 12,
+            "pos": "8:16-8:16",
+            "notes": [],
+            "name": "E",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "target": {
+          "kind": "HirUnionType",
+          "nid": 17,
+          "pos": "8:21-8:22",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 13,
+              "pos": "8:21-8:22",
+              "notes": [],
+              "name": "Ok",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 14,
+                  "pos": "8:24-8:24",
+                  "notes": [],
+                  "name": "T",
+                  "args": [],
+                  "symbol": null
+                }
+              ],
+              "symbol": {
+                "id": 0,
+                "kind": "struct",
+                "name": "Ok"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 15,
+              "pos": "8:29-8:31",
+              "notes": [],
+              "name": "Err",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 16,
+                  "pos": "8:33-8:33",
+                  "notes": [],
+                  "name": "E",
+                  "args": [],
+                  "symbol": null
+                }
+              ],
+              "symbol": {
+                "id": 2,
+                "kind": "struct",
+                "name": "Err"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 22,
+        "pos": "11:5-11:8",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 5,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 23,
+          "pos": "11:12-11:12",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirUnchecked",
+              "nid": 24,
+              "pos": "12:5-12:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirVarStmt",
+                "nid": 25,
+                "pos": "12:15-12:17",
+                "notes": [],
+                "name": "r",
+                "symbol": {
+                  "id": 9,
+                  "kind": "local",
+                  "name": "r"
+                },
+                "annotations": [],
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 52,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Result",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 50,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(内建T)",
+                      "args": [],
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 51,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Str",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ],
+                  "symbol": null
+                },
+                "value": {
+                  "kind": "HirCall",
+                  "nid": 26,
+                  "pos": "12:23-12:30",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 27,
+                    "pos": "12:23-12:30",
+                    "notes": [],
+                    "name": "sublEval",
+                    "symbol": {
+                      "id": 8,
+                      "kind": "builtin",
+                      "name": "sublEval"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirStrLit",
+                      "nid": 28,
+                      "pos": "12:32-12:42",
+                      "notes": [],
+                      "value": "1 + (2 * 3)"
+                    }
+                  ],
+                  "symbol": {
+                    "id": 8,
+                    "kind": "builtin",
+                    "name": "sublEval"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 52,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Result",
+                    "args": [
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 50,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "(内建T)",
+                        "args": [],
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 51,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": false
+                },
+                "destruct": null,
+                "deepCopy": false
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 53,
+              "pos": "13:5-13:8",
+              "notes": [],
+              "expr": {
+                "kind": "HirWhen",
+                "nid": 54,
+                "pos": "13:5-13:8",
+                "notes": [],
+                "subject": {
+                  "kind": "HirNameRef",
+                  "nid": 55,
+                  "pos": "13:11-13:11",
+                  "notes": [],
+                  "name": "r",
+                  "symbol": {
+                    "id": 9,
+                    "kind": "local",
+                    "name": "r"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 52,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Result",
+                    "args": [
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 50,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "(内建T)",
+                        "args": [],
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 51,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ],
+                    "symbol": null
+                  }
+                },
+                "subjectBinding": null,
+                "arms": [
+                  {
+                    "kind": "HirWhenArm",
+                    "nid": 56,
+                    "pos": "14:9-14:10",
+                    "notes": [],
+                    "pattern": {
+                      "kind": "HirPatCtor",
+                      "nid": 57,
+                      "pos": "14:9-14:10",
+                      "notes": [],
+                      "name": "Ok",
+                      "args": [
+                        {
+                          "kind": "HirPatBind",
+                          "nid": 67,
+                          "pos": "14:15-14:15",
+                          "notes": [],
+                          "name": "v",
+                          "symbol": {
+                            "id": 10,
+                            "kind": "local",
+                            "name": "v"
+                          }
+                        }
+                      ],
+                      "ctor": {
+                        "id": 1,
+                        "kind": "ctor",
+                        "name": "Ok"
+                      }
+                    },
+                    "guard": null,
+                    "body": {
+                      "kind": "HirCall",
+                      "nid": 68,
+                      "pos": "14:21-14:25",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 69,
+                        "pos": "14:21-14:25",
+                        "notes": [],
+                        "name": "print",
+                        "symbol": {
+                          "id": 11,
+                          "kind": "builtin",
+                          "name": "print"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirNameRef",
+                          "nid": 70,
+                          "pos": "14:27-14:27",
+                          "notes": [],
+                          "name": "v",
+                          "symbol": {
+                            "id": 10,
+                            "kind": "local",
+                            "name": "v"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 50,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "(内建T)",
+                            "args": [],
+                            "symbol": null
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 11,
+                        "kind": "builtin",
+                        "name": "print"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 87,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Null",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    },
+                    "cond": null
+                  },
+                  {
+                    "kind": "HirWhenArm",
+                    "nid": 88,
+                    "pos": "15:9-15:10",
+                    "notes": [],
+                    "pattern": {
+                      "kind": "HirPatCtor",
+                      "nid": 89,
+                      "pos": "15:9-15:10",
+                      "notes": [],
+                      "name": "Err",
+                      "args": [
+                        {
+                          "kind": "HirPatBind",
+                          "nid": 99,
+                          "pos": "15:16-15:16",
+                          "notes": [],
+                          "name": "e",
+                          "symbol": {
+                            "id": 12,
+                            "kind": "local",
+                            "name": "e"
+                          }
+                        }
+                      ],
+                      "ctor": {
+                        "id": 3,
+                        "kind": "ctor",
+                        "name": "Err"
+                      }
+                    },
+                    "guard": null,
+                    "body": {
+                      "kind": "HirCall",
+                      "nid": 100,
+                      "pos": "15:22-15:26",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 101,
+                        "pos": "15:22-15:26",
+                        "notes": [],
+                        "name": "print",
+                        "symbol": {
+                          "id": 11,
+                          "kind": "builtin",
+                          "name": "print"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirCall",
+                          "nid": 102,
+                          "pos": "15:28-15:33",
+                          "notes": [],
+                          "callee": {
+                            "kind": "HirNameRef",
+                            "nid": 103,
+                            "pos": "15:28-15:33",
+                            "notes": [],
+                            "name": "concat",
+                            "symbol": {
+                              "id": 13,
+                              "kind": "builtin",
+                              "name": "concat"
+                            },
+                            "type": null
+                          },
+                          "args": [
+                            {
+                              "kind": "HirStrLit",
+                              "nid": 104,
+                              "pos": "15:35-15:39",
+                              "notes": [],
+                              "value": "err: "
+                            },
+                            {
+                              "kind": "HirNameRef",
+                              "nid": 105,
+                              "pos": "15:44-15:44",
+                              "notes": [],
+                              "name": "e",
+                              "symbol": {
+                                "id": 12,
+                                "kind": "local",
+                                "name": "e"
+                              },
+                              "type": {
+                                "kind": "HirNamedType",
+                                "nid": 51,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "Str",
+                                "args": [],
+                                "symbol": null
+                              }
+                            }
+                          ],
+                          "symbol": {
+                            "id": 13,
+                            "kind": "builtin",
+                            "name": "concat"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 123,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Str",
+                            "args": [],
+                            "symbol": null
+                          },
+                          "dictionary": null,
+                          "slot": null,
+                          "dictArgs": [],
+                          "methodSugar": false,
+                          "awaitPoint": false,
+                          "calleeImpure": false
+                        }
+                      ],
+                      "symbol": {
+                        "id": 11,
+                        "kind": "builtin",
+                        "name": "print"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 140,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Null",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    },
+                    "cond": null
+                  }
+                ],
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 87,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "diverges": false,
+                "exhaustive": true
+              }
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 149,
+              "pos": "17:5-17:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirVarStmt",
+                "nid": 150,
+                "pos": "17:15-17:17",
+                "notes": [],
+                "name": "bad",
+                "symbol": {
+                  "id": 14,
+                  "kind": "local",
+                  "name": "bad"
+                },
+                "annotations": [],
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 177,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Result",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 175,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(内建T)",
+                      "args": [],
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 176,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Str",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ],
+                  "symbol": null
+                },
+                "value": {
+                  "kind": "HirCall",
+                  "nid": 151,
+                  "pos": "17:25-17:32",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 152,
+                    "pos": "17:25-17:32",
+                    "notes": [],
+                    "name": "sublEval",
+                    "symbol": {
+                      "id": 8,
+                      "kind": "builtin",
+                      "name": "sublEval"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirStrLit",
+                      "nid": 153,
+                      "pos": "17:34-17:36",
+                      "notes": [],
+                      "value": "1 +"
+                    }
+                  ],
+                  "symbol": {
+                    "id": 8,
+                    "kind": "builtin",
+                    "name": "sublEval"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 177,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Result",
+                    "args": [
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 175,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "(内建T)",
+                        "args": [],
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 176,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": false
+                },
+                "destruct": null,
+                "deepCopy": false
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 178,
+              "pos": "18:5-18:8",
+              "notes": [],
+              "expr": {
+                "kind": "HirWhen",
+                "nid": 179,
+                "pos": "18:5-18:8",
+                "notes": [],
+                "subject": {
+                  "kind": "HirNameRef",
+                  "nid": 180,
+                  "pos": "18:11-18:13",
+                  "notes": [],
+                  "name": "bad",
+                  "symbol": {
+                    "id": 14,
+                    "kind": "local",
+                    "name": "bad"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 177,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Result",
+                    "args": [
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 175,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "(内建T)",
+                        "args": [],
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 176,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ],
+                    "symbol": null
+                  }
+                },
+                "subjectBinding": null,
+                "arms": [
+                  {
+                    "kind": "HirWhenArm",
+                    "nid": 181,
+                    "pos": "19:9-19:10",
+                    "notes": [],
+                    "pattern": {
+                      "kind": "HirPatCtor",
+                      "nid": 182,
+                      "pos": "19:9-19:10",
+                      "notes": [],
+                      "name": "Err",
+                      "args": [
+                        {
+                          "kind": "HirPatBind",
+                          "nid": 192,
+                          "pos": "19:16-19:16",
+                          "notes": [],
+                          "name": "e",
+                          "symbol": {
+                            "id": 15,
+                            "kind": "local",
+                            "name": "e"
+                          }
+                        }
+                      ],
+                      "ctor": {
+                        "id": 3,
+                        "kind": "ctor",
+                        "name": "Err"
+                      }
+                    },
+                    "guard": null,
+                    "body": {
+                      "kind": "HirCall",
+                      "nid": 193,
+                      "pos": "19:22-19:26",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 194,
+                        "pos": "19:22-19:26",
+                        "notes": [],
+                        "name": "print",
+                        "symbol": {
+                          "id": 11,
+                          "kind": "builtin",
+                          "name": "print"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirCall",
+                          "nid": 195,
+                          "pos": "19:28-19:33",
+                          "notes": [],
+                          "callee": {
+                            "kind": "HirNameRef",
+                            "nid": 196,
+                            "pos": "19:28-19:33",
+                            "notes": [],
+                            "name": "concat",
+                            "symbol": {
+                              "id": 13,
+                              "kind": "builtin",
+                              "name": "concat"
+                            },
+                            "type": null
+                          },
+                          "args": [
+                            {
+                              "kind": "HirStrLit",
+                              "nid": 197,
+                              "pos": "19:35-19:48",
+                              "notes": [],
+                              "value": "expected-err: "
+                            },
+                            {
+                              "kind": "HirNameRef",
+                              "nid": 198,
+                              "pos": "19:53-19:53",
+                              "notes": [],
+                              "name": "e",
+                              "symbol": {
+                                "id": 15,
+                                "kind": "local",
+                                "name": "e"
+                              },
+                              "type": {
+                                "kind": "HirNamedType",
+                                "nid": 176,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "Str",
+                                "args": [],
+                                "symbol": null
+                              }
+                            }
+                          ],
+                          "symbol": {
+                            "id": 13,
+                            "kind": "builtin",
+                            "name": "concat"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 216,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Str",
+                            "args": [],
+                            "symbol": null
+                          },
+                          "dictionary": null,
+                          "slot": null,
+                          "dictArgs": [],
+                          "methodSugar": false,
+                          "awaitPoint": false,
+                          "calleeImpure": false
+                        }
+                      ],
+                      "symbol": {
+                        "id": 11,
+                        "kind": "builtin",
+                        "name": "print"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 233,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Null",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    },
+                    "cond": null
+                  },
+                  {
+                    "kind": "HirWhenArm",
+                    "nid": 234,
+                    "pos": "20:9-20:10",
+                    "notes": [],
+                    "pattern": {
+                      "kind": "HirPatCtor",
+                      "nid": 235,
+                      "pos": "20:9-20:10",
+                      "notes": [],
+                      "name": "Ok",
+                      "args": [
+                        {
+                          "kind": "HirPatBind",
+                          "nid": 245,
+                          "pos": "20:15-20:15",
+                          "notes": [],
+                          "name": "v",
+                          "symbol": {
+                            "id": 16,
+                            "kind": "local",
+                            "name": "v"
+                          }
+                        }
+                      ],
+                      "ctor": {
+                        "id": 1,
+                        "kind": "ctor",
+                        "name": "Ok"
+                      }
+                    },
+                    "guard": null,
+                    "body": {
+                      "kind": "HirCall",
+                      "nid": 246,
+                      "pos": "20:21-20:25",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 247,
+                        "pos": "20:21-20:25",
+                        "notes": [],
+                        "name": "print",
+                        "symbol": {
+                          "id": 11,
+                          "kind": "builtin",
+                          "name": "print"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirStrLit",
+                          "nid": 248,
+                          "pos": "20:27-20:39",
+                          "notes": [],
+                          "value": "unexpected-ok"
+                        }
+                      ],
+                      "symbol": {
+                        "id": 11,
+                        "kind": "builtin",
+                        "name": "print"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 266,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Null",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    },
+                    "cond": null
+                  }
+                ],
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 233,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "diverges": false,
+                "exhaustive": true
+              }
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 275,
+              "pos": "22:5-22:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirVarStmt",
+                "nid": 276,
+                "pos": "22:15-22:17",
+                "notes": [],
+                "name": "joined",
+                "symbol": {
+                  "id": 17,
+                  "kind": "local",
+                  "name": "joined"
+                },
+                "annotations": [],
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 303,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Result",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 301,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(内建T)",
+                      "args": [],
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 302,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Str",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ],
+                  "symbol": null
+                },
+                "value": {
+                  "kind": "HirCall",
+                  "nid": 277,
+                  "pos": "22:28-22:35",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 278,
+                    "pos": "22:28-22:35",
+                    "notes": [],
+                    "name": "sublEval",
+                    "symbol": {
+                      "id": 8,
+                      "kind": "builtin",
+                      "name": "sublEval"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirStrLit",
+                      "nid": 279,
+                      "pos": "22:37-22:65",
+                      "notes": [],
+                      "value": "concat(\"hot\", \"-\" , \"reload\")"
+                    }
+                  ],
+                  "symbol": {
+                    "id": 8,
+                    "kind": "builtin",
+                    "name": "sublEval"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 303,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Result",
+                    "args": [
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 301,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "(内建T)",
+                        "args": [],
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 302,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": false
+                },
+                "destruct": null,
+                "deepCopy": false
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 304,
+              "pos": "23:5-23:8",
+              "notes": [],
+              "expr": {
+                "kind": "HirWhen",
+                "nid": 305,
+                "pos": "23:5-23:8",
+                "notes": [],
+                "subject": {
+                  "kind": "HirNameRef",
+                  "nid": 306,
+                  "pos": "23:11-23:16",
+                  "notes": [],
+                  "name": "joined",
+                  "symbol": {
+                    "id": 17,
+                    "kind": "local",
+                    "name": "joined"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 303,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Result",
+                    "args": [
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 301,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "(内建T)",
+                        "args": [],
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 302,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ],
+                    "symbol": null
+                  }
+                },
+                "subjectBinding": null,
+                "arms": [
+                  {
+                    "kind": "HirWhenArm",
+                    "nid": 307,
+                    "pos": "24:9-24:10",
+                    "notes": [],
+                    "pattern": {
+                      "kind": "HirPatCtor",
+                      "nid": 308,
+                      "pos": "24:9-24:10",
+                      "notes": [],
+                      "name": "Ok",
+                      "args": [
+                        {
+                          "kind": "HirPatBind",
+                          "nid": 318,
+                          "pos": "24:15-24:15",
+                          "notes": [],
+                          "name": "v",
+                          "symbol": {
+                            "id": 18,
+                            "kind": "local",
+                            "name": "v"
+                          }
+                        }
+                      ],
+                      "ctor": {
+                        "id": 1,
+                        "kind": "ctor",
+                        "name": "Ok"
+                      }
+                    },
+                    "guard": null,
+                    "body": {
+                      "kind": "HirCall",
+                      "nid": 319,
+                      "pos": "24:21-24:25",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 320,
+                        "pos": "24:21-24:25",
+                        "notes": [],
+                        "name": "print",
+                        "symbol": {
+                          "id": 11,
+                          "kind": "builtin",
+                          "name": "print"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirNameRef",
+                          "nid": 321,
+                          "pos": "24:27-24:27",
+                          "notes": [],
+                          "name": "v",
+                          "symbol": {
+                            "id": 18,
+                            "kind": "local",
+                            "name": "v"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 301,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "(内建T)",
+                            "args": [],
+                            "symbol": null
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 11,
+                        "kind": "builtin",
+                        "name": "print"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 338,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Null",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    },
+                    "cond": null
+                  },
+                  {
+                    "kind": "HirWhenArm",
+                    "nid": 339,
+                    "pos": "25:9-25:10",
+                    "notes": [],
+                    "pattern": {
+                      "kind": "HirPatCtor",
+                      "nid": 340,
+                      "pos": "25:9-25:10",
+                      "notes": [],
+                      "name": "Err",
+                      "args": [
+                        {
+                          "kind": "HirPatBind",
+                          "nid": 350,
+                          "pos": "25:16-25:16",
+                          "notes": [],
+                          "name": "e",
+                          "symbol": {
+                            "id": 19,
+                            "kind": "local",
+                            "name": "e"
+                          }
+                        }
+                      ],
+                      "ctor": {
+                        "id": 3,
+                        "kind": "ctor",
+                        "name": "Err"
+                      }
+                    },
+                    "guard": null,
+                    "body": {
+                      "kind": "HirCall",
+                      "nid": 351,
+                      "pos": "25:22-25:26",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 352,
+                        "pos": "25:22-25:26",
+                        "notes": [],
+                        "name": "print",
+                        "symbol": {
+                          "id": 11,
+                          "kind": "builtin",
+                          "name": "print"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirCall",
+                          "nid": 353,
+                          "pos": "25:28-25:33",
+                          "notes": [],
+                          "callee": {
+                            "kind": "HirNameRef",
+                            "nid": 354,
+                            "pos": "25:28-25:33",
+                            "notes": [],
+                            "name": "concat",
+                            "symbol": {
+                              "id": 13,
+                              "kind": "builtin",
+                              "name": "concat"
+                            },
+                            "type": null
+                          },
+                          "args": [
+                            {
+                              "kind": "HirStrLit",
+                              "nid": 355,
+                              "pos": "25:35-25:39",
+                              "notes": [],
+                              "value": "err: "
+                            },
+                            {
+                              "kind": "HirNameRef",
+                              "nid": 356,
+                              "pos": "25:44-25:44",
+                              "notes": [],
+                              "name": "e",
+                              "symbol": {
+                                "id": 19,
+                                "kind": "local",
+                                "name": "e"
+                              },
+                              "type": {
+                                "kind": "HirNamedType",
+                                "nid": 302,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "Str",
+                                "args": [],
+                                "symbol": null
+                              }
+                            }
+                          ],
+                          "symbol": {
+                            "id": 13,
+                            "kind": "builtin",
+                            "name": "concat"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 374,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Str",
+                            "args": [],
+                            "symbol": null
+                          },
+                          "dictionary": null,
+                          "slot": null,
+                          "dictArgs": [],
+                          "methodSugar": false,
+                          "awaitPoint": false,
+                          "calleeImpure": false
+                        }
+                      ],
+                      "symbol": {
+                        "id": 11,
+                        "kind": "builtin",
+                        "name": "print"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 391,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Null",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    },
+                    "cond": null
+                  }
+                ],
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 338,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "diverges": false,
+                "exhaustive": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

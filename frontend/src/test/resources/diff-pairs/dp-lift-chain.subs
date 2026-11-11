@@ -1,0 +1,5 @@
+// 差分对拍 C（P-11 §9.1 / R-16 S4 扩面）：链式上提样本——f 调 @impure g，h/s 逐层上调（脚本模式）
+@impure fun g(a: Nat): Nat = a
+fun f(): Null { g(1) }
+fun h(): Null { f() }
+fun s(): Null { h() }

@@ -1,0 +1,3 @@
+[错误][3:5] E-TYPE-MISMATCH: var y 标注了 Nat，但初值是 Bool，两边类型不一致
+  3 |     var y : Nat = x + 1
+    |     ^

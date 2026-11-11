@@ -1,0 +1,3 @@
+[错误][1:29] E-TYPE-MISMATCH: 函数 f 声明返回 Nat，但函数体是 Bool，两边类型不一致
+  1 | fun f(a: @mut Nat): Nat = a + 1
+    |                             ^

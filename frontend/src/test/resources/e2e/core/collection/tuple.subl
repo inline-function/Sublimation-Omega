@@ -1,0 +1,47 @@
+// core.collection.tuple —— Tuple 类型族（EmptyTuple/SingleTuple/(T,U)/(T,U,V)/…）
+// 依赖：无（emptyTuple/singleTuple 为编译期内建：空元组 [] / 单元组 [x]）。
+// 元组字面量 (a, b) 的运行时表示即 JS 数组；本类型族为元组提供统一的方法接口
+// （size/isEmpty 按元目数分派）。
+//
+// P-8 迁移（卷 TS-9 / §10 边界，t31）：特质成员改扩展函数，具名形状（EmptyTuple /
+// SingleTuple[a]）随 t31 迁移。元组形状（(a, b)、(a, b, c) …）在 t37 文法支持括号化
+// 接收者、t38 语义层对非具名接收者按「形状/元数」规范化键（Tuple/n）后可表达——桶键与具名
+// 形状同源登记（ADR-26 剩余 9 形状迁移，t38）。
+
+trait Tuple {
+    fun size(): Nat
+    fun isEmpty(): Bool
+}
+
+fun EmptyTuple.size(): Nat = 0
+fun EmptyTuple.isEmpty(): Bool = True
+
+fun SingleTuple[a].size[a](): Nat = 1
+fun SingleTuple[a].isEmpty[a](): Bool = False
+
+fun (a, b).size[a, b](): Nat = 2
+fun (a, b).isEmpty[a, b](): Bool = False
+
+fun (a, b, c).size[a, b, c](): Nat = 3
+fun (a, b, c).isEmpty[a, b, c](): Bool = False
+
+fun (a, b, c, d).size[a, b, c, d](): Nat = 4
+fun (a, b, c, d).isEmpty[a, b, c, d](): Bool = False
+
+fun (a, b, c, d, e).size[a, b, c, d, e](): Nat = 5
+fun (a, b, c, d, e).isEmpty[a, b, c, d, e](): Bool = False
+
+fun (a, b, c, d, e, f).size[a, b, c, d, e, f](): Nat = 6
+fun (a, b, c, d, e, f).isEmpty[a, b, c, d, e, f](): Bool = False
+
+fun (a, b, c, d, e, f, g).size[a, b, c, d, e, f, g](): Nat = 7
+fun (a, b, c, d, e, f, g).isEmpty[a, b, c, d, e, f, g](): Bool = False
+
+fun (a, b, c, d, e, f, g, h).size[a, b, c, d, e, f, g, h](): Nat = 8
+fun (a, b, c, d, e, f, g, h).isEmpty[a, b, c, d, e, f, g, h](): Bool = False
+
+fun (a, b, c, d, e, f, g, h, i).size[a, b, c, d, e, f, g, h, i](): Nat = 9
+fun (a, b, c, d, e, f, g, h, i).isEmpty[a, b, c, d, e, f, g, h, i](): Bool = False
+
+fun (a, b, c, d, e, f, g, h, i, j).size[a, b, c, d, e, f, g, h, i, j](): Nat = 10
+fun (a, b, c, d, e, f, g, h, i, j).isEmpty[a, b, c, d, e, f, g, h, i, j](): Bool = False

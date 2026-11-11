@@ -1,0 +1,4 @@
+[警告][20:5] W-NON-EXHAUSTIVE: when 非穷尽（缺 else 或覆盖不全），作为表达式时值类型退化为 Null
+  20 |     when(c) {
+     |     ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t77qa\examples__模式匹配.subl.json（86900 字节）

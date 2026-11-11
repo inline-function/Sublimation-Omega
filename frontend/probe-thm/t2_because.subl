@@ -1,0 +1,4 @@
+fun f(n: Nat): Nat {
+    ∵ ∀n . (n >= 5) ∴ n >= 5
+    return 0
+}

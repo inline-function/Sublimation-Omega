@@ -1,0 +1,22 @@
+FileAst(2 条目)
+  entry[0]: FunDecl ⊗ 1:5-1:5
+    params[0]: Param a 1:7-1:7
+      type: NamedType Int 1:10-1:12
+    params[1]: Param b 1:15-1:15
+      type: NamedType Int 1:18-1:20
+    retType: NamedType Int 1:24-1:26
+    body: NameRef a 1:30-1:30
+  entry[1]: FunDecl f 2:5-2:5
+    params[0]: Param p 2:7-2:7
+      type: NamedType Bool 2:10-2:13
+    params[1]: Param q 2:16-2:16
+      type: NamedType Bool 2:19-2:22
+    params[2]: Param r 2:25-2:25
+      type: NamedType Bool 2:28-2:31
+    retType: NamedType Null 2:35-2:38
+    posts[0]: CallExpr 2:47-2:47
+      callee: NameRef → 2:47-2:47
+      args[0]: BinExpr ⊗ 2:43-2:43
+        left: NameRef p 2:41-2:41
+        right: NameRef q 2:45-2:45
+      args[1]: NameRef r 2:49-2:49

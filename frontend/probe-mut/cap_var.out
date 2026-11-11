@@ -1,0 +1,6 @@
+[错误][3:5] E-IMMUT-ASSIGN: `x` 是不可变的，不能赋值。要改它？声明时写成 `var x : @mut T`
+  3 |     x = x + 1
+    |     ^
+[错误][1:14] E-MISSING-RETURN: 函数 `f` 声明返回 Nat，块体未在所有路径 return（Kotlin 语义：请写 return，或改用 = 表达式 表达式体）
+  1 | fun f(): Nat {
+    |              ^

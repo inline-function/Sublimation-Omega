@@ -1,0 +1,11 @@
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun f(xs: List[Nat]): Nat = when(xs) {
+    Nil -> 0
+    is Cons(h, t) -> when(t) {
+        Nil -> 0
+        is Cons(h2, t2) -> f(t2) + 1
+    }
+}

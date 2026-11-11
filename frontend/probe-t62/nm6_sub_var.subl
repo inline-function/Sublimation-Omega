@@ -1,0 +1,5 @@
+fun give(a: Nat, b: Nat): Nothing {
+    var x : Nat = a - b
+    axiom x >= 0
+    x - x
+}

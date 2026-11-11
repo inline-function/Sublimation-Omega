@@ -1,0 +1,2 @@
+struct T(n: Nat)
+@root fun m(t: T): Null { var b: @ref @mut T = t; print(b) }

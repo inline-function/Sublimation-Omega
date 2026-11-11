@@ -1,0 +1,5 @@
+@mut struct T(@mut n: Nat)
+@impure fun main() {
+    var b = T(0)
+    b.n = 1
+}

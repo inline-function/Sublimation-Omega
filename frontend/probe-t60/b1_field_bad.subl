@@ -1,0 +1,7 @@
+struct P(x: Nat)
+
+@impure fun main() {
+    var p : @mut P = P(1)
+    p.x = "abc"
+    print(p.x)
+}

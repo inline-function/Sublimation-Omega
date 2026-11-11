@@ -1,0 +1,16 @@
+T_to_T;n/a
+T_to_mutT;n/a
+T_to_refT;share
+T_to_refmutT;reject
+mutT_to_T;n/a
+mutT_to_mutT;n/a
+mutT_to_refT;share
+mutT_to_refmutT;share
+refT_to_T;copy
+refT_to_mutT;copy
+refT_to_refT;share
+refT_to_refmutT;reject
+refmutT_to_T;copy
+refmutT_to_mutT;copy
+refmutT_to_refT;share
+refmutT_to_refmutT;share

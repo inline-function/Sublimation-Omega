@@ -1,0 +1,4 @@
+struct Inner(@mut v: Nat)
+struct Outer(i: Inner)
+var o: @mut Outer = Outer(Inner(1))
+o.i.v = 2

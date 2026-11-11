@@ -1,0 +1,4 @@
+fun f(): Nat {
+    var ¬: Nat = 1
+    return ¬
+}

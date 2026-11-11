@@ -1,0 +1,4 @@
+fun give(a: Nat, b: Nat): Nothing {
+    var x : Nat = a - b
+    return x - x
+}

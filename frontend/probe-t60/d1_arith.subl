@@ -1,0 +1,4 @@
+@impure fun main() {
+    var x : @mut Nat = 1
+    print(x + 1)
+}

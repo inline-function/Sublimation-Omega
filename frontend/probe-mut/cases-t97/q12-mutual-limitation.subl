@@ -1,0 +1,2 @@
+fun a(n: Nat): Nat = b(n)
+fun b(n: Nat): Nat = a(n)

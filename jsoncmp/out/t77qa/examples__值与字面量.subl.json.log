@@ -1,0 +1,7 @@
+[错误][33:22] E-PROP-POS: ⊤ 只能出现在命题位（程序面无此形态）——值位布尔真请写 True
+  33 |     var _top: Bool = ⊤                 // 静态类型 Bool
+     |                      ^
+[错误][34:22] E-PROP-POS: ⊥ 只能出现在命题位（程序面无此形态）——值位布尔假请写 False
+  34 |     var _bot: Bool = ⊥
+     |                      ^
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out\t77qa\examples__值与字面量.subl.json（99629 字节）

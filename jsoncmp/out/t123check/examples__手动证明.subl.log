@@ -1,0 +1,7 @@
+﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/手动证明.subl -o jsoncmp/out/t123check/examples__手动证明.subl.json
+exit: 1
+----- output -----
+[错误][25:16] E-CANNOT-PROVE: by 断言「p」在当前上下文证不出。by 断言须由现有事实推出；要声明免验证的公理请改用 axiom 语句
+  25 |     consumeP() by [p]
+     |                ^
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out\t123check\examples__手动证明.subl.json（25075 字节）

@@ -1,0 +1,2 @@
+var x: Bool = True | False
+var y: Bool = !True

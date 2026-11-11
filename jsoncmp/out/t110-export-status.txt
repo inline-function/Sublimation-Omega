@@ -1,0 +1,6 @@
+exported=65 fails=3
+FAIL core__collection__list.subl rc=1 err=[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out\t110\core__collection__list.subl.json（742261 字节）
+
+FAIL examples__手动证明.subl rc=1 err=[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out\t110\examples__手动证明.subl.json（25080 字节）
+
+FAIL examples__模块系统__主.subl rc=1 err=[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out\t110\examples__模块系统__主.subl.json（10188 字节）

@@ -1,0 +1,13 @@
+// core.random —— 随机数内建声明
+// 依赖：无。
+// rand：JS Math.random() 语义——[0, 1) 区间均匀分布的 Rat。
+
+// [0, 1) 均匀随机数。
+@impure
+@root fun rand(): Rat
+
+// 区间随机整数：randNat(n) ∈ [0, n)。
+// 返回 Int 而非 Nat：floor 的声明结果就是 Int，而 Int → Nat 属向下、须显式收窄（塔不隐式降）。
+// 非负性由 rand 的 [0,1) 语义保证，但语言目前不提供 Int→Nat 的收窄入口，故诚实声明 Int。
+@impure
+fun randNat(n: Nat): Int = floor(rand() * toRat(n))

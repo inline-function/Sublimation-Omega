@@ -1,0 +1,1 @@
+fun k(f: @impure () => Null): Null { f() }

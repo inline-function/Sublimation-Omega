@@ -1,0 +1,12 @@
+# Gradle 构建产物与缓存（骨架验证后保留本地缓存以便下游任务快速重建）
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+
+# Kotlin 编译器本地状态
+.kotlin/
+archive/
+.agent-teams/
+.build-slot

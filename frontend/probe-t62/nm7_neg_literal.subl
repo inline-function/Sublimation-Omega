@@ -1,0 +1,2 @@
+fun f(): Nat = 0
+fun g(): Nat = f() - f()

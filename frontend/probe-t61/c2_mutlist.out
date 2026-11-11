@@ -1,0 +1,3 @@
+[错误][1:53] E-TYPE-MISMATCH: 函数 f 声明返回 @mut List[Any]，但函数体是 @mut List[Nat]，两边类型不一致
+  1 | fun f(xs: @mut List[Nat], n: Nat): @mut List[Any] = xs
+    |                                                     ^

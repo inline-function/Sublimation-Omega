@@ -1,0 +1,4 @@
+[提示][1:39] H-ARITH-PREC: 算术链混用了不同类算符（`*` 与 `+`）：中缀一律左结合，写出来的顺序就是计算顺序——如 `a + b * c` 实际是 `(a + b) * c`。请用圆括号显式指定本意（如 `a + (b * c)`）
+  1 | fun main() { unchecked print((37 * 18 + 5) / 10) }
+    |                                       ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t77qa\examples___probe_div.subl.json（5719 字节）

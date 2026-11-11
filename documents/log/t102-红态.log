@@ -1,0 +1,39 @@
+﻿SLOT=ACQUIRED pid=14212 note=t102red2
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:compileTestKotlin UP-TO-DATE
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T98RefRulesTest > 赋值位分派留痕() FAILED
+    org.opentest4j.AssertionFailedError at T98RefRulesTest.kt:167
+powershell.exe : 
+At F:\Sublimation\t102-red2.ps1:3 char:13
++   $output = & powershell -NoProfile -ExecutionPolicy Bypass -File F:/ ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+16 tests completed, 1 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 5s
+5 actionable tasks: 1 executed, 4 up-to-date
+

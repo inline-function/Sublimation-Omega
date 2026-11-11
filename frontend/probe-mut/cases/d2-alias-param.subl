@@ -1,0 +1,4 @@
+struct S(@mut a: Nat)
+@root fun share(p: @mut S, q: @mut S): Nat = 1
+var s: @mut S = S(1)
+share(s, s)

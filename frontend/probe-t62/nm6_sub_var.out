@@ -1,0 +1,3 @@
+[错误][1:35] E-MISSING-RETURN: 函数 give 声明返回 Nothing，块体未在所有路径 return（Kotlin 语义：请写 return，或改用 = 表达式 表达式体）
+  1 | fun give(a: Nat, b: Nat): Nothing {
+    |                                   ^

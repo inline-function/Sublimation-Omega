@@ -1,0 +1,56 @@
+[
+ {
+  "name": "core__logic__logic.subl",
+  "line": 105,
+  "ctx": "funprop",
+  "ops": "∈ → >=",
+  "lv": "9,6,9",
+  "why": "→(6)<>=(9)",
+  "text": "fun rangeLowerBound[x, l, r]: Null <x ∈ (l..r) → x >= l>"
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 107,
+  "ctx": "funprop",
+  "ops": "∈ → <=",
+  "lv": "9,6,9",
+  "why": "→(6)<<=(9)",
+  "text": "fun rangeUpperBound[x, l, r]: Null <x ∈ (l..r) → x <= r>"
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 111,
+  "ctx": "funprop",
+  "ops": "<= & <= → <=",
+  "lv": "9,8,9,6,9",
+  "why": "&(8)<<=(9); →(6)<<=(9)",
+  "text": "fun leqTrans[a, b, c]: Null <a <= b & b <= c → a <= c>"
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 121,
+  "ctx": "funprop",
+  "ops": "∈ & <= → ∈",
+  "lv": "9,8,9,6,9",
+  "why": "&(8)<<=(9); →(6)<∈(9)",
+  "text": "fun rangeSplitRight[x, l, m, r]: Null <x ∈ (l..r) & x <= m → x ∈ (l..m)>"
+ },
+ {
+  "name": "examples__模式匹配.subl",
+  "line": 35,
+  "ctx": "value",
+  "ops": "!= & != ->",
+  "lv": "9,8,9,6",
+  "why": "VAL &(8)<!=(9)",
+  "text": "m if !=(m, 0) & !=(m, 1) ->"
+ },
+ {
+  "name": "examples__特性巡礼.subl",
+  "line": 55,
+  "ctx": "value",
+  "ops": "!= & != ->",
+  "lv": "9,8,9,6",
+  "why": "VAL &(8)<!=(9)",
+  "text": "m if !=(m, 0) & !=(m, 1) ->"
+ }
+]

@@ -1,0 +1,16 @@
+﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/模块系统/主.subl -o jsoncmp/out/t123check/examples__模块系统__主.subl.json
+exit: 1
+----- output -----
+[错误][9:21] E-UNBOUND-NAME: 未定义的名称 `tool`（作用域中无此变量/函数/构造子）
+   9 |     unchecked print(tool.triple(4))   // 12：跨模块限定调用 tool.triple
+     |                     ^
+[错误][9:26] E-UNBOUND-NAME: 方法 .`triple` 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）
+   9 |     unchecked print(tool.triple(4))   // 12：跨模块限定调用 tool.triple
+     |                          ^
+[错误][10:21] E-UNBOUND-NAME: 未定义的名称 `tool`（作用域中无此变量/函数/构造子）
+  10 |     unchecked print(tool.square(3))   // 9
+     |                     ^
+[错误][10:26] E-UNBOUND-NAME: 方法 .`square` 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）
+  10 |     unchecked print(tool.square(3))   // 9
+     |                          ^
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out\t123check\examples__模块系统__主.subl.json（10557 字节）

@@ -1,0 +1,4 @@
+﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/上下文弥散.subl -o jsoncmp/out/t123check/examples__上下文弥散.subl.json
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t123check\examples__上下文弥散.subl.json（22637 字节）

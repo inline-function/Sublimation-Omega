@@ -1,0 +1,57 @@
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun size[T](xs: List[T]): Nat = when(xs) {
+    Nil -> 0
+    is Cons(_, t) -> 1 + size(t)
+}
+
+fun map[T, U](xs: List[T], f: (T) => U): List[U] = when(xs) {
+    Nil -> Nil
+    is Cons(h, t) -> Cons(f(h), map(t, f))
+}
+
+fun filter[T](xs: List[T], f: (T) => Bool): List[T] = when(xs) {
+    Nil -> Nil
+    is Cons(h, t) -> if (f(h)) { Cons(h, filter(t, f)) } else { filter(t, f) }
+}
+
+fun fold[T, U](xs: List[T], init: U, f: (T, U) => U): U = when(xs) {
+    Nil -> init
+    is Cons(h, t) -> fold(t, f(h, init), f)
+}
+
+fun range(a: Nat, b: Nat): List[Nat] {
+    if (a < b) {
+        unchecked var rest = range(a + 1, b)
+        return Cons(a, rest)
+    }
+    return Nil
+}
+
+fun joinToString[T](xs: List[T], sep: Str): Str =
+    fold(xs, "", { x, acc => if (acc == "") { toStr(x) } else { concat(acc, concat(sep, toStr(x))) } })
+fun sum(xs: List[Nat]): Nat = fold(xs, 0, { x, acc => x + acc })
+
+fun reverse[T](xs: List[T]): List[T] {
+    var init: List[T] = Nil
+    return fold(xs, init, { x, acc => Cons(x, acc) })
+}
+
+fun fact(n: Int): Int {
+    if (n < 2) { return 1 }
+    unchecked var r = fact(n - 1)
+    return n * r
+}
+
+@impure
+fun main() {
+    var xs = range(1, 6)
+    unchecked print(size(xs))
+    unchecked print(joinToString(map(xs, { x => x * x }), ","))
+    unchecked print(joinToString(filter(xs, { x => x > 2 }), ","))
+    unchecked print(sum(xs))
+    unchecked print(joinToString(reverse(xs), ","))
+    unchecked print(fact(5))
+}

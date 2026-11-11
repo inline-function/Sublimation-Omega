@@ -1,0 +1,6 @@
+[错误][2:13] E-TYPE-MISMATCH: 中缀 +: Nat 与 Str 不匹配
+  2 |     print(1 + "a")
+    |             ^
+[错误][2:13] E-OP-UNCLASSIFIED: 中缀 +: Nat 与 Str 无法定类（不在内建算符表内，且非可兼容名义对）
+  2 |     print(1 + "a")
+    |             ^

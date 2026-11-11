@@ -1,0 +1,1 @@
+var t = Task { var x: @mut Nat = 1; x = x + 1 }

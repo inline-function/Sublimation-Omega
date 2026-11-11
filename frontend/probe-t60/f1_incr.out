@@ -1,0 +1,3 @@
+[错误][3:5] E-TYPE-MISMATCH: 赋值右值 Bool 与目标 @mut Nat 不符，两边类型不一致
+  3 |     x = x + 1
+    |     ^

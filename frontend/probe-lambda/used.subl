@@ -1,0 +1,2 @@
+fun applyZero(f: () => Nat): Nat = f()
+@root fun m(): Nat = applyZero({ _ + 1 })

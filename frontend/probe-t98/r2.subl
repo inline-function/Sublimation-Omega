@@ -1,0 +1,2 @@
+struct T(n: Nat)
+@root fun main(): Null { var b: T = T(0); b.n = 1; print(b.n) }

@@ -1,0 +1,3 @@
+trait Phantom[T] { fun f(): Nat }
+fun use(p: Phantom[Any]): Nat = 0
+fun give(p: Phantom[Nat]): Nat = use(p)

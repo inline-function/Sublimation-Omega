@@ -1,0 +1,7 @@
+@theorem
+fun `thm q`(): Null <∀x . (x >= 3)>
+
+fun f(n: Nat): Nat {
+    if (n == 0) { return 0 } else { `thm q`(); ∴ n >= 3 }
+    return 0
+}

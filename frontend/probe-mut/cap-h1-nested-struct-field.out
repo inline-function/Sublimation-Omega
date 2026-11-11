@@ -1,0 +1,6 @@
+[错误][3:1] E-SYNTAX: 顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）
+  3 | var o: @mut Outer = Outer(Inner(1))
+    | ^
+[错误][3:13] E-SYNTAX: 顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）
+  3 | var o: @mut Outer = Outer(Inner(1))
+    |             ^

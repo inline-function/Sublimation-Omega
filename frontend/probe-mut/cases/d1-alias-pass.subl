@@ -1,0 +1,4 @@
+struct S(@mut a: Nat)
+var s: @mut S = S(1)
+var t: @mut S = s
+t.a = 2

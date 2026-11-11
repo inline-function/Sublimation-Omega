@@ -1,0 +1,21 @@
+[提示][7:16] H-SHADOW: 这里的 `head` 遮蔽了全局（58:5）的同名字段：本作用域内只会解析到这里的声明，外层同名者不可见（不回退）。
+    7 | struct Cons[T](head: T, tail: List[T])
+      |                ^
+[错误][81:40] E-UNBOUND-NAME: 未定义的名称 `getOrElse`（作用域中无此变量/函数/构造子）
+   81 | fun firstOr[T](xs: List[T], d: T): T = getOrElse(head(xs), d)
+      |                                        ^
+[错误][147:48] E-TYPE-MISMATCH: 实参 3 Int 与形参 Nat 不符
+  147 |             if (from == 0) { unchecked var r = slice(t, 0, to - 1); Cons(h, r) }
+      |                                                ^
+[错误][148:20] E-TYPE-MISMATCH: 实参 3 Int 与形参 Nat 不符
+  148 |             else { slice(t, from - 1, to - 1) }
+      |                    ^
+[错误][221:22] E-UNBOUND-NAME: 未定义的名称 `add`（作用域中无此变量/函数/构造子）
+  221 |     is Cons(h, t) -> add(toSet(t), h)
+      |                      ^
+[错误][227:19] E-UNBOUND-NAME: 未定义的名称 `put`（作用域中无此变量/函数/构造子）
+  227 |         (k, v) -> put(toMap(t), k, v)
+      |                   ^
+[警告][226:23] W-NON-EXHAUSTIVE: when 非穷尽（缺 else 或覆盖不全），作为表达式时值类型退化为 Null
+  226 |     is Cons(pr, t) -> when(pr) {
+      |                       ^

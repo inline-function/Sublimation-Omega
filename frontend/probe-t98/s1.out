@@ -1,0 +1,6 @@
+[错误][2:43] E-TYPE-MISMATCH: var b 标注了 @ref @mut T，但初值是 T，两边类型不一致
+  2 | @root fun main(): Null { var a: T = T(0); var b: @ref @mut T = a; print(0) }
+    |                                           ^
+[错误][2:67] E-IMPURE-CALL: 纯作用域内调用了非纯的 内建不纯函数 `print`。三路放行任选其一：给调用方函数标 @impure（效应沿调用链向上传播）、unchecked 前缀包住该语句（单语句豁免）、或经上文 <pure<名>> / axiom pure<名> 供给 pure 命题
+  2 | @root fun main(): Null { var a: T = T(0); var b: @ref @mut T = a; print(0) }
+    |                                                                   ^

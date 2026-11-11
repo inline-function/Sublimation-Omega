@@ -1,0 +1,3 @@
+axiom pure<w>
+@impure fun w(): Null {}
+fun q(): Null { w() }

@@ -1,0 +1,2 @@
+var g = fun(a: Nat): Nat { print(a)
+ return a }

@@ -1,0 +1,4 @@
+@mut struct T(@mut n: Nat)
+@impure fun bump(d : @ref T): Null {
+    d.n = 1
+}

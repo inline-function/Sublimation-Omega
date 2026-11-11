@@ -1,0 +1,46 @@
+// ============================================================
+// 特性：特质（trait / 扩展函数实现 / 方法糖分发 / 显式 self）
+// 预期输出（每行一个）：test / 良好 / 挂科
+// ============================================================
+
+struct Excellent
+struct Good
+struct Pass
+struct Fail
+type Grade = Excellent | Good | Pass | Fail
+
+// trait 声明接口（Rust 机制；Haskell 拼写已成历史）；成员为无体签名（TS-6）
+trait Show[T] { fun show(): Str }
+
+// P-8 迁移（卷 §7）：impl 改扩展函数 fun 接收者.成员名；self 绑定接收者（TS-10）
+fun Grade.show(): Str = when(self) {
+        Excellent -> "优秀"
+        Good -> "良好"
+        Pass -> "及格"
+        Fail -> "挂科"
+        _ -> "?"
+}
+
+// 调用：方法糖 o.show()（接收者头查扩展桶，TS-12(3)）与自由式 show(o)（直接调用按实参 1
+// 类型头查扩展桶，TS-14）等价
+struct A(name: Str = "unknown")
+trait Boast {
+    @impure
+    fun printMyself()
+}
+@impure
+fun A.printMyself() {
+    print(self.name)
+}
+
+@impure
+fun main() {
+    var o = A(name = "test")
+    o.printMyself()                  // test（点号式：方法糖查扩展函数桶）
+    // 自由式：直接调用 show(g)（按实参 1 类型头查扩展桶，TS-14）。
+    // 构造子返回 struct 名（P-9），联合别名头须经 Grade 标注的中间变量带入自由式实参头
+    var g: Grade = Good
+    var f: Grade = Fail
+    unchecked print(show(g))        // 良好
+    unchecked print(show(f))        // 挂科
+}

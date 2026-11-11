@@ -1,0 +1,4 @@
+fun down(n: Nat): Nat {
+    if (n > 0) { return down(n - 1) }
+    return 0
+}

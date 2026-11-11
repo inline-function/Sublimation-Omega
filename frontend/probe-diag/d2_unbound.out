@@ -1,0 +1,3 @@
+[错误][2:21] E-UNBOUND-NAME: 未定义的名称 `g`（作用域中无此变量/函数/构造子）
+  2 |     unchecked print(g())
+    |                     ^

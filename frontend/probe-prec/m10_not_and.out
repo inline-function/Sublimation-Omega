@@ -1,0 +1,10 @@
+FileAst(1 条目)
+  entry[0]: FunDecl f 1:5-1:5
+    theory[0]: TypeParam p arity=0 1:7-1:7
+    theory[1]: TypeParam q arity=0 1:10-1:10
+    retType: NamedType Null 1:14-1:17
+    posts[0]: CallExpr 1:25-1:25
+      callee: NameRef ∧ 1:25-1:25
+      args[0]: UniExpr ¬ 1:20-1:20
+        operand: NameRef p 1:22-1:22
+      args[1]: NameRef q 1:27-1:27

@@ -1,0 +1,7 @@
+fun ` `(): Nat = 1
+
+fun `  `(): Nat = 2
+
+@impure fun main() {
+    unchecked print(` `() + `  `())
+}

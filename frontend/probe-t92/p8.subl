@@ -1,0 +1,1 @@
+@root fun g(a: Bool, b: Bool): Bool { fun iff(x: Bool, y: Bool): Bool = x & y; return iff(a, b) }

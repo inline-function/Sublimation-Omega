@@ -1,0 +1,240 @@
+{
+ "same": [
+  "core__async__async.subl",
+  "core__async__channel.subl",
+  "core__async__flow.subl",
+  "core__async__mutex.subl",
+  "core__async__task.subl",
+  "core__classic__classic.subl",
+  "core__collection__traits.subl",
+  "core__encoding__encoding.subl",
+  "core__io__io.subl",
+  "core__json__json.subl",
+  "core__math__inequality.subl",
+  "core__math__math.subl",
+  "core__math__number.subl",
+  "core__math__order.subl",
+  "core__math__peano.subl",
+  "core__math__series.subl",
+  "core__net__net.subl",
+  "core__number__num.subl",
+  "core__random__random.subl",
+  "core__real__real.subl",
+  "core__regex__regex.subl",
+  "core__script__script.subl",
+  "core__string__string.subl",
+  "core__time__time.subl",
+  "core__zfc__derived.subl",
+  "core__zfc__zfc.subl",
+  "examples___probe_div.subl",
+  "examples___scratch_bill.subl",
+  "examples__公理化.subl",
+  "examples__函数与调用形式.subl",
+  "examples__副作用与unchecked.subl",
+  "examples__变量与绑定.subl",
+  "examples__可变性控制.subl",
+  "examples__命题基础.subl",
+  "examples__字符串与插值.subl",
+  "examples__异步与并发.subl",
+  "examples__手动证明.subl",
+  "examples__日常-容器范型.subl",
+  "examples__日常-异步任务.subl",
+  "examples__日常-数列与区间.subl",
+  "examples__日常-文本处理.subl",
+  "examples__日常-温度与BMI.subl",
+  "examples__日常-账单统计.subl",
+  "examples__日常-通讯录.subl",
+  "examples__模块系统__主.subl",
+  "examples__特性巡礼.subl",
+  "examples__特质.subl",
+  "examples__空安全.subl",
+  "examples__类型系统.subl",
+  "examples__结构体与枚举.subl",
+  "examples__脚本求值桥.subl",
+  "examples__自动证明.subl",
+  "examples__高阶函数与lambda.subl",
+  "examples__高阶类型.subl"
+ ],
+ "diffProp": [
+  {
+   "name": "core__logic__logic.subl",
+   "changed": [
+    {
+     "name": "rangeLowerBound",
+     "prop": true,
+     "old": "⟨>=(→ (∈ x (.. l r)) x)l⟩",
+     "nw": "(→⟨inx(.. l r)⟩⟨>=xl⟩)"
+    },
+    {
+     "name": "rangeUpperBound",
+     "prop": true,
+     "old": "⟨<=(→ (∈ x (.. l r)) x)r⟩",
+     "nw": "(→⟨inx(.. l r)⟩⟨<=xr⟩)"
+    },
+    {
+     "name": "leqTrans",
+     "prop": true,
+     "old": "⟨<=(→ (<= (& (<= a b) b) c) a)c⟩",
+     "nw": "(→(∧⟨<=ab⟩⟨<=bc⟩)⟨<=ac⟩)"
+    },
+    {
+     "name": "rangeSplitRight",
+     "prop": true,
+     "old": "⟨in(→ (<= (& (∈ x (.. l r)) x) m) x)(.. l m)⟩",
+     "nw": "(→(∧⟨inx(.. l r)⟩⟨<=xm⟩)⟨inx(.. l m)⟩)"
+    }
+   ]
+  }
+ ],
+ "diffOther": [
+  {
+   "name": "core__collection__list.subl",
+   "changed": [
+    {
+     "name": "isEmpty",
+     "prop": false
+    },
+    {
+     "name": "contains",
+     "prop": false
+    },
+    {
+     "name": "any",
+     "prop": false
+    },
+    {
+     "name": "all",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "core__collection__map.subl",
+   "changed": [
+    {
+     "name": "isEmpty",
+     "prop": false
+    },
+    {
+     "name": "containsKey",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "core__collection__optional.subl",
+   "changed": [
+    {
+     "name": "isSome",
+     "prop": false
+    },
+    {
+     "name": "isNone",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "core__collection__result.subl",
+   "changed": [
+    {
+     "name": "isOk",
+     "prop": false
+    },
+    {
+     "name": "isErr",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "core__collection__set.subl",
+   "changed": [
+    {
+     "name": "isEmpty",
+     "prop": false
+    },
+    {
+     "name": "contains",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "core__collection__tuple.subl",
+   "changed": [
+    {
+     "name": "isEmpty",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "examples__JSON内建.subl",
+   "changed": [
+    {
+     "name": "main",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "examples__lambda与闭包.subl",
+   "note": "MISSING new=false old=true",
+   "changed": []
+  },
+  {
+   "name": "examples__上下文弥散.subl",
+   "changed": [
+    {
+     "name": "cmp",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "examples__值与字面量.subl",
+   "changed": [
+    {
+     "name": "main",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "examples__标准库集合.subl",
+   "changed": [
+    {
+     "name": "any",
+     "prop": false
+    },
+    {
+     "name": "all",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "examples__模式匹配.subl",
+   "changed": [
+    {
+     "name": "pick",
+     "prop": false
+    },
+    {
+     "name": "main",
+     "prop": false
+    }
+   ]
+  },
+  {
+   "name": "examples__错误处理.subl",
+   "changed": [
+    {
+     "name": "isOk",
+     "prop": false
+    }
+   ]
+  }
+ ]
+}

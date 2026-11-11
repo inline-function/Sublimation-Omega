@@ -1,0 +1,8 @@
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun size[T](xs: List[T]): Nat = when(xs) {
+    Nil -> 0
+    is Cons(_, t) -> size(t) + 1
+}

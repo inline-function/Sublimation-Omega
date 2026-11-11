@@ -1,0 +1,13 @@
+﻿cmd: java -cp "F:\Sublimation\frontend\build\install\frontend\lib\*" sublimation.frontend.cli.MainKt compile "F:\Sublimation\jsoncmp\out-subs\samples\conv-multi-use.subs" -o "F:\Sublimation\jsoncmp\out-subs\run2\conv-multi-use.subs.json" -v
+exit: 0
+----- output -----
+[补充][3:1] D-TYPE-INFERRED: var `a` 推导为 Nat
+  3 | var a = add(2)
+    | ^
+[补充][4:1] D-TYPE-INFERRED: var `b` 推导为 Nat
+  4 | var b = add(3)
+    | ^
+[补充][3:1] D-SCRIPT-IMPLICIT-IMPURE: 脚本顶层语句即隐式不纯入口（P-11 §4;R-16 OQ-2「挂 unit 级 + 诊断可见」）：本文件含 2 条顶层语句，整编译单元按 impure 记隐式入口（不造合成 main——D-12 真值单源）。顶层调用不纯函数免闸（既有口径）;函数体内仍按声明口径受闸
+  3 | var a = add(2)
+    | ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\run2\conv-multi-use.subs.json（6850 字节）

@@ -1,0 +1,19 @@
+FileAst(1 条目)
+  entry[0]: FunDecl f 1:5-1:5
+    params[0]: Param a 1:7-1:7
+      type: NamedType Nat 1:10-1:12
+    params[1]: Param b 1:15-1:15
+      type: NamedType Nat 1:18-1:20
+    params[2]: Param c 1:23-1:23
+      type: NamedType Nat 1:26-1:28
+    retType: NamedType Nat 1:32-1:34
+    body: BlockExpr 1:36-1:36
+      stmts[0]: ReturnStmt  2:5-2:10
+        expr: BinExpr * 2:18-2:18
+          left: BinExpr + 2:14-2:14
+            left: NameRef a 2:12-2:12
+            right: NameRef b 2:16-2:16
+          right: NameRef c 2:20-2:20
+[提示][2:18] H-ARITH-PREC: 算术表达式混用了不同优先级：右侧 `*` 本应先于左侧 `+` 计算，但语言不做优先级（左结合），实际会算成 `(… + …) * …`。请手动加括号（如 `a + (b * c)`）以表达本意
+  2 |     return a + b * c
+    |                  ^

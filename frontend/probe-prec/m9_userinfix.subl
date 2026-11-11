@@ -1,0 +1,2 @@
+fun ⊗(a: Int, b: Int): Int = a
+fun f(p: Bool, q: Bool, r: Bool): Null <p ⊗ q → r>

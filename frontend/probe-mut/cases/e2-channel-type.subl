@@ -1,0 +1,1 @@
+var ch: Channel[@mut Nat] = Channel(2)

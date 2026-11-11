@@ -1,0 +1,5 @@
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun f[T](xs: List[T]): Nat = f(xs.tail)

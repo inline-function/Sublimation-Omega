@@ -1,0 +1,6 @@
+struct Cons[T](head: T, tail: T)
+
+@impure fun main() {
+    var tail: Nat = 1
+    unchecked print(tail)
+}

@@ -1,0 +1,2 @@
+fun double(x) = x + x
+print(double(3))

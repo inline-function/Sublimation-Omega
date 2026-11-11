@@ -1,0 +1,4 @@
+struct S(@mut a: Nat)
+@root fun bump(p: @mut S): @mut S = p
+var t: S = S(1)
+bump(t)

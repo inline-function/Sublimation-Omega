@@ -1,0 +1,2 @@
+fun g(h: (Int) => Int): Int = 1
+@root fun f(): Int = g({ ∧ => 1 })

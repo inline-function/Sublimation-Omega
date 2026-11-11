@@ -1,0 +1,42 @@
+
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun size[T](xs: List[T]): Nat = when(xs) {
+    Nil -> 0
+    is Cons(_, t) -> 1 + size(t)
+}
+
+fun map[T, U](xs: List[T], f: (T) => U): List[U] = when(xs) {
+    Nil -> Nil
+    is Cons(h, t) -> Cons(f(h), map(t, f))
+}
+
+fun filter[T](xs: List[T], f: (T) => Bool): List[T] = when(xs) {
+    Nil -> Nil
+    is Cons(h, t) -> if (f(h)) { Cons(h, filter(t, f)) } else { filter(t, f) }
+}
+
+fun fold[T, U](xs: List[T], init: U, f: (T, U) => U): U = when(xs) {
+    Nil -> init
+    is Cons(h, t) -> fold(t, f(h, init), f)
+}
+
+fun joinToString[T](xs: List[T], sep: Str): Str =
+    fold(xs, "", { x, acc => if (acc == "") { toStr(x) } else { concat(acc, concat(sep, toStr(x))) } })
+
+struct Bill(name: Str, amount: Nat)
+
+fun totalOf(xs: List[Bill]): Nat = fold(xs, 0, { b, acc => b.amount + acc })
+
+// 取首元素（非空前置条件由调用方保证；空列表理论不可达，panic 兜底，同 list.subl 的 get）
+fun head[T](xs: List[T]): T = when(xs) {
+    is Cons(h, _) -> h
+    Nil -> panic()
+}
+
+// biggest：以首元素为 init 的 fold 归约（原 `xs_head` 为未绑定笔误，现经 head(xs) 取首元素）
+fun biggest(xs: List[Bill]): Bill = fold(xs, head(xs), { b, acc => if (b.amount > acc.amount) { b } else { acc } })
+
+fun main() {}

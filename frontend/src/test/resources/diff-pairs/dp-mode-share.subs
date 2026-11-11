@@ -1,0 +1,4 @@
+// 差分对拍 A（P-11 §9.1/R-16 A2 演练）：同逻辑双模式共享面——纯函数链（脚本模式）
+fun add(a: Nat, b: Nat): Nat = a + b
+fun double(x: Nat): Nat = add(x, x)
+fun main(): Nat = double(3)

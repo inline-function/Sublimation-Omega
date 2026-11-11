@@ -1,0 +1,1 @@
+fun f[x, S, l]: Null <(x ∈ S) → (x >= l)>

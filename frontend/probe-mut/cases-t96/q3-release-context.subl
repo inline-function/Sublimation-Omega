@@ -1,0 +1,2 @@
+@impure fun side(): Null {}
+fun pureCaller()<pure<side>>: Null { side() }

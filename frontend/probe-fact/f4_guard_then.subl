@@ -1,0 +1,4 @@
+fun f(n: Nat): Nat {
+    if (n == 0) { ∴ n >= 0 } else { return 0 }
+    return 0
+}

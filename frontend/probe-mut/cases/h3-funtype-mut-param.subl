@@ -1,0 +1,1 @@
+@root fun g(f: (Nat) => @mut Nat): @mut Nat = f(1)

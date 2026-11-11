@@ -1,0 +1,11 @@
+// core.time —— 时间内建声明
+// 依赖：无。
+// timeNow：Unix 毫秒时间戳（JS Date.now()）。
+
+// Unix 毫秒时间戳（epoch 1970-01-01 至今的毫秒数）。
+@impure
+@root fun timeNow(): Nat
+
+// 时间戳差值（毫秒）：差值为正表示 b 在 a 之后，为负表示 b 在 a 之前——结果可负，
+// 签名里无任何前件保证 b > a，故按 ST-10.1（t63）诚实声明 Int 而非 Nat。
+fun diffMs(a: Nat, b: Nat): Int = b - a

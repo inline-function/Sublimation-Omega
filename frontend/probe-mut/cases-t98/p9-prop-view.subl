@@ -1,0 +1,2 @@
+@mut struct T(@mut n: Nat)
+fun g(d : @ref T): Bool <d = d> = False

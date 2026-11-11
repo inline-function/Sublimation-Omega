@@ -1,0 +1,8 @@
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun List[a].count2[a](): Nat = when(self) {
+    Nil -> 0
+    is Cons(h, t) -> t.count2() + 1
+}

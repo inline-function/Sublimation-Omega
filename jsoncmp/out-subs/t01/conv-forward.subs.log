@@ -1,0 +1,4 @@
+﻿cmd: java -cp "F:\Sublimation\frontend\build\install\frontend\lib\*" sublimation.frontend.cli.MainKt compile "F:\Sublimation\jsoncmp\out-subs\samples\conv-forward.subs" -o "F:\Sublimation\jsoncmp\out-subs\t01\conv-forward.subs.json" -v
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\t01\conv-forward.subs.json（4112 字节）

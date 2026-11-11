@@ -1,0 +1,3 @@
+[错误][2:36] E-TYPE-MISMATCH: 实参 1 (Nat) => Nat 与形参 (Any) => Nat 不符
+  2 | fun narrow(f: (Nat) => Nat): Nat = use(f)
+    |                                    ^

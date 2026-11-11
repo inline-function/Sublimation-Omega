@@ -1,0 +1,13 @@
+﻿cmd: java -cp "F:\Sublimation\frontend\build\install\frontend\lib\*" sublimation.frontend.cli.MainKt compile "F:\Sublimation\jsoncmp\out-subs\samples\nosol.subl" -o "F:\Sublimation\jsoncmp\out-subs\t01\nosol.subl.json" -v
+exit: 1
+----- output -----
+[错误][4:1] E-SYNTAX: 顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）
+  4 | var s = f("a")
+    | ^
+[错误][3:7] E-OMITTED-TYPE: 形参 `y` 省略了类型标注——工程模式要求显式标注（仅脚本模式开放推导，R-13）
+  3 | fun f(y) = g2(y)
+    |       ^
+[错误][3:12] E-TYPE-MISMATCH: 实参 1 <错误类型:形参类型标注省略> 与形参 Nat 不符
+  3 | fun f(y) = g2(y)
+    |            ^
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out-subs\t01\nosol.subl.json（5420 字节）

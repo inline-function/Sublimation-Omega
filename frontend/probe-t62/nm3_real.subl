@@ -1,0 +1,2 @@
+fun wantNat(n: Nat): Nat = 0
+fun give(r: Real): Nat = wantNat(r)

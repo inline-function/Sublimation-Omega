@@ -1,0 +1,124 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "q2-fire-builtin.subl",
+    "mode": "project"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "E-IMPURE-CALL",
+      "pos": "1:17-1:21",
+      "message": "纯作用域内调用了非纯的 内建不纯函数 `print`。三路放行任选其一：给调用方函数标 @impure（效应沿调用链向上传播）、unchecked 前缀包住该语句（单语句豁免）、或经上文 <pure<名>> / axiom pure<名> 供给 pure 命题",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:5-1:5",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:5-1:5",
+        "notes": [],
+        "name": "q",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "q"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 3,
+          "pos": "1:10-1:13",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 1,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 4,
+          "pos": "1:15-1:15",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirExprStmt",
+              "nid": 5,
+              "pos": "1:17-1:21",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 6,
+                "pos": "1:17-1:21",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 7,
+                  "pos": "1:17-1:21",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 2,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirStrLit",
+                    "nid": 8,
+                    "pos": "1:23-1:23",
+                    "notes": [],
+                    "value": "x"
+                  }
+                ],
+                "symbol": {
+                  "id": 2,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 26,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

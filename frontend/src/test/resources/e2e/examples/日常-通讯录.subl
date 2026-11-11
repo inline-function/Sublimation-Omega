@@ -1,0 +1,34 @@
+// ============================================================
+// 日常-通讯录：结构体记录 + 泛型列表 + Optional 查找（未找到用缺省值）
+// 预期输出（每行一个）：Alice 30 / Bob 25 / not-found / 2
+// ============================================================
+
+struct Contact(name: Str, age: Nat)
+
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun size[T](xs: List[T]): Nat = when(xs) {
+    Nil -> 0
+    is Cons(_, t) -> 1 + size(t)
+}
+
+fun findName(xs: List[Contact], n: Str): Optional[Contact] = when(xs) {
+    Nil -> None
+    is Cons(h, t) -> if (h.name == n) { Some(h) } else { findName(t, n) }
+}
+
+fun show(c: Optional[Contact], missing: Str): Str = when(c) {
+    is Some(p) -> concat(p.name, concat(" ", toStr(p.age)))
+    None -> missing
+}
+
+@impure
+fun main() {
+    var book: List[Contact] = Cons(Contact("Alice", 30), Cons(Contact("Bob", 25), Nil))
+    unchecked print(show(findName(book, "Alice"), "-"))
+    unchecked print(show(findName(book, "Bob"), "-"))
+    unchecked print(show(findName(book, "Eve"), "not-found"))
+    unchecked print(size(book))
+}

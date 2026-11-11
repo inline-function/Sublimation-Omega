@@ -1,0 +1,6 @@
+[错误][5:7] E-IMMUT-ASSIGN: 字段 x 不可变，不能写。要改它？在结构体声明里给字段加 @mut
+  5 |     p.x = "abc"
+    |       ^
+[错误][5:7] E-TYPE-MISMATCH: 赋值右值 Str 与目标 Nat 不符，两边类型不一致
+  5 |     p.x = "abc"
+    |       ^

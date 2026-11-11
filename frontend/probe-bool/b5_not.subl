@@ -1,0 +1,4 @@
+@impure fun main() {
+    var b: Bool = ¬true
+    unchecked print(b)
+}

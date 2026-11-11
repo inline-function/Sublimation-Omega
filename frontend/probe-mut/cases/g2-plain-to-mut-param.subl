@@ -1,0 +1,3 @@
+@root fun acc(a: @mut Nat): Nat = a
+var x: Nat = 1
+var w: Nat = acc(x)

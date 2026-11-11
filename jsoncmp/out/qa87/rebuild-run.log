@@ -1,0 +1,14 @@
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__logic__logic.json（113244 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__math__inequality.json（12986 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__math__number.json（73955 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__zfc__zfc.json（70221 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__zfc__derived.json（55978 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__classic__classic.json（6991 字节）
+[警告][20:5] W-NON-EXHAUSTIVE: when 非穷尽（缺 else 或覆盖不全），作为表达式时值类型退化为 Null
+  20 |     when(c) {
+     |     ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-examples__模式匹配.json（86900 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-examples__特性巡礼.json（185370 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__math__peano.json（53603 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__math__order.json（41444 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\qa87\new-core__math__series.json（30078 字节）

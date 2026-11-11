@@ -1,0 +1,1 @@
+fun g(a: Nat): @mut Nat = a

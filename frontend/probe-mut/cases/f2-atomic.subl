@@ -1,0 +1,1 @@
+fun g(a: @atomic Nat): Nat = a

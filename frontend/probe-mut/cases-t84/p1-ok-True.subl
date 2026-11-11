@@ -1,0 +1,2 @@
+var b: Bool = True
+var c: Bool = False

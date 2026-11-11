@@ -1,0 +1,8 @@
+@theorem
+fun `thm p`(a: Nat): Null <a >= 5>
+
+fun f(): Nat {
+    `thm p`(7)
+    ∴ 7 >= 5
+    return 0
+}

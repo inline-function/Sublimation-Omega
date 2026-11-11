@@ -1,0 +1,7 @@
+﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/_scratch_bill.subl -o jsoncmp/out/t122n/examples___scratch_bill.subl.json
+exit: 0
+----- output -----
+[提示][3:16] H-SHADOW: 这里的 `head` 遮蔽了全局（34:5）的同名字段：本作用域内只会解析到这里的声明，外层同名者不可见（不回退）。
+   3 | struct Cons[T](head: T, tail: List[T])
+     |                ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t122n\examples___scratch_bill.subl.json（136906 字节）

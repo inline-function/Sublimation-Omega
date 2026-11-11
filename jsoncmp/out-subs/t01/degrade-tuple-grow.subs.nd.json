@@ -1,0 +1,2518 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "degrade-tuple-grow.subs",
+    "mode": "script"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "4:1-4:3",
+      "message": "var `m` 推导为 (((((((((((((((Any, Nat), Nat), Nat), Nat), Nat), Nat), Nat), Nat), Nat), Nat), Nat), Nat), Nat), Nat), Nat)",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-SCRIPT-IMPLICIT-IMPURE",
+      "pos": "4:1-4:3",
+      "message": "脚本顶层语句即隐式不纯入口（P-11 §4;R-16 OQ-2「挂 unit 级 + 诊断可见」）：本文件含 1 条顶层语句，整编译单元按 impure 记隐式入口（不造合成 main——D-12 真值单源）。顶层调用不纯函数免闸（既有口径）;函数体内仍按声明口径受闸",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-INFER-DEGRADE-FORBIDDEN",
+      "pos": "2:5-2:5",
+      "message": "脚本模式发生 R-02 退化（a、b 的推导位 R=8 轮未收敛），--no-degrade 门要求退化即失败——建议在声明位加一处类型标注打破类型环（P-11 §3.5）",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 597,
+    "pos": "2:5-6:6",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 598,
+        "pos": "2:5-2:5",
+        "notes": [],
+        "name": "a",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "a"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 599,
+            "pos": "2:7-2:7",
+            "notes": [],
+            "name": "x",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 600,
+              "pos": "2:10-2:12",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 25,
+              "kind": "param",
+              "name": "x"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirTupleType",
+          "nid": 640,
+          "pos": "2:17-2:17",
+          "notes": [],
+          "items": [
+            {
+              "kind": "HirTupleType",
+              "nid": 637,
+              "pos": "0:0",
+              "notes": [],
+              "items": [
+                {
+                  "kind": "HirTupleType",
+                  "nid": 635,
+                  "pos": "0:0",
+                  "notes": [],
+                  "items": [
+                    {
+                      "kind": "HirTupleType",
+                      "nid": 633,
+                      "pos": "0:0",
+                      "notes": [],
+                      "items": [
+                        {
+                          "kind": "HirTupleType",
+                          "nid": 631,
+                          "pos": "0:0",
+                          "notes": [],
+                          "items": [
+                            {
+                              "kind": "HirTupleType",
+                              "nid": 629,
+                              "pos": "0:0",
+                              "notes": [],
+                              "items": [
+                                {
+                                  "kind": "HirTupleType",
+                                  "nid": 627,
+                                  "pos": "0:0",
+                                  "notes": [],
+                                  "items": [
+                                    {
+                                      "kind": "HirTupleType",
+                                      "nid": 625,
+                                      "pos": "0:0",
+                                      "notes": [],
+                                      "items": [
+                                        {
+                                          "kind": "HirTupleType",
+                                          "nid": 623,
+                                          "pos": "0:0",
+                                          "notes": [],
+                                          "items": [
+                                            {
+                                              "kind": "HirTupleType",
+                                              "nid": 621,
+                                              "pos": "0:0",
+                                              "notes": [],
+                                              "items": [
+                                                {
+                                                  "kind": "HirTupleType",
+                                                  "nid": 619,
+                                                  "pos": "0:0",
+                                                  "notes": [],
+                                                  "items": [
+                                                    {
+                                                      "kind": "HirTupleType",
+                                                      "nid": 617,
+                                                      "pos": "0:0",
+                                                      "notes": [],
+                                                      "items": [
+                                                        {
+                                                          "kind": "HirTupleType",
+                                                          "nid": 615,
+                                                          "pos": "0:0",
+                                                          "notes": [],
+                                                          "items": [
+                                                            {
+                                                              "kind": "HirTupleType",
+                                                              "nid": 613,
+                                                              "pos": "0:0",
+                                                              "notes": [],
+                                                              "items": [
+                                                                {
+                                                                  "kind": "HirTupleType",
+                                                                  "nid": 611,
+                                                                  "pos": "0:0",
+                                                                  "notes": [],
+                                                                  "items": [
+                                                                    {
+                                                                      "kind": "HirNamedType",
+                                                                      "nid": 609,
+                                                                      "pos": "0:0",
+                                                                      "notes": [],
+                                                                      "name": "Any",
+                                                                      "args": [],
+                                                                      "symbol": null
+                                                                    },
+                                                                    {
+                                                                      "kind": "HirNamedType",
+                                                                      "nid": 610,
+                                                                      "pos": "0:0",
+                                                                      "notes": [],
+                                                                      "name": "Nat",
+                                                                      "args": [],
+                                                                      "symbol": null
+                                                                    }
+                                                                  ]
+                                                                },
+                                                                {
+                                                                  "kind": "HirNamedType",
+                                                                  "nid": 612,
+                                                                  "pos": "0:0",
+                                                                  "notes": [],
+                                                                  "name": "Nat",
+                                                                  "args": [],
+                                                                  "symbol": null
+                                                                }
+                                                              ]
+                                                            },
+                                                            {
+                                                              "kind": "HirNamedType",
+                                                              "nid": 614,
+                                                              "pos": "0:0",
+                                                              "notes": [],
+                                                              "name": "Nat",
+                                                              "args": [],
+                                                              "symbol": null
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "kind": "HirNamedType",
+                                                          "nid": 616,
+                                                          "pos": "0:0",
+                                                          "notes": [],
+                                                          "name": "Nat",
+                                                          "args": [],
+                                                          "symbol": null
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "kind": "HirNamedType",
+                                                      "nid": 618,
+                                                      "pos": "0:0",
+                                                      "notes": [],
+                                                      "name": "Nat",
+                                                      "args": [],
+                                                      "symbol": null
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "kind": "HirNamedType",
+                                                  "nid": 620,
+                                                  "pos": "0:0",
+                                                  "notes": [],
+                                                  "name": "Nat",
+                                                  "args": [],
+                                                  "symbol": null
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "kind": "HirNamedType",
+                                              "nid": 622,
+                                              "pos": "0:0",
+                                              "notes": [],
+                                              "name": "Nat",
+                                              "args": [],
+                                              "symbol": null
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "kind": "HirNamedType",
+                                          "nid": 624,
+                                          "pos": "0:0",
+                                          "notes": [],
+                                          "name": "Nat",
+                                          "args": [],
+                                          "symbol": null
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "kind": "HirNamedType",
+                                      "nid": 626,
+                                      "pos": "0:0",
+                                      "notes": [],
+                                      "name": "Nat",
+                                      "args": [],
+                                      "symbol": null
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "HirNamedType",
+                                  "nid": 628,
+                                  "pos": "0:0",
+                                  "notes": [],
+                                  "name": "Nat",
+                                  "args": [],
+                                  "symbol": null
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "HirNamedType",
+                              "nid": 630,
+                              "pos": "0:0",
+                              "notes": [],
+                              "name": "Nat",
+                              "args": [],
+                              "symbol": null
+                            }
+                          ]
+                        },
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 632,
+                          "pos": "0:0",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": null
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 634,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Nat",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ]
+                },
+                {
+                  "kind": "HirNamedType",
+                  "nid": 636,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Nat",
+                  "args": [],
+                  "symbol": null
+                }
+              ]
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 639,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": null
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "inferred": true,
+        "evidence": [
+          "use:2:17"
+        ],
+        "body": {
+          "kind": "HirTuple",
+          "nid": 641,
+          "pos": "2:17-2:17",
+          "notes": [],
+          "items": [
+            {
+              "kind": "HirCall",
+              "nid": 604,
+              "pos": "2:18-2:18",
+              "notes": [],
+              "callee": {
+                "kind": "HirNameRef",
+                "nid": 605,
+                "pos": "2:18-2:18",
+                "notes": [],
+                "name": "b",
+                "symbol": {
+                  "id": 1,
+                  "kind": "fun",
+                  "name": "b"
+                },
+                "type": null
+              },
+              "args": [
+                {
+                  "kind": "HirNameRef",
+                  "nid": 607,
+                  "pos": "2:20-2:20",
+                  "notes": [],
+                  "name": "x",
+                  "symbol": {
+                    "id": 25,
+                    "kind": "param",
+                    "name": "x"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 600,
+                    "pos": "2:10-2:12",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": {
+                      "id": 3,
+                      "kind": "builtin",
+                      "name": "Nat"
+                    }
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 1,
+                "kind": "fun",
+                "name": "b"
+              },
+              "type": {
+                "kind": "HirTupleType",
+                "nid": 637,
+                "pos": "0:0",
+                "notes": [],
+                "items": [
+                  {
+                    "kind": "HirTupleType",
+                    "nid": 635,
+                    "pos": "0:0",
+                    "notes": [],
+                    "items": [
+                      {
+                        "kind": "HirTupleType",
+                        "nid": 633,
+                        "pos": "0:0",
+                        "notes": [],
+                        "items": [
+                          {
+                            "kind": "HirTupleType",
+                            "nid": 631,
+                            "pos": "0:0",
+                            "notes": [],
+                            "items": [
+                              {
+                                "kind": "HirTupleType",
+                                "nid": 629,
+                                "pos": "0:0",
+                                "notes": [],
+                                "items": [
+                                  {
+                                    "kind": "HirTupleType",
+                                    "nid": 627,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "items": [
+                                      {
+                                        "kind": "HirTupleType",
+                                        "nid": 625,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "items": [
+                                          {
+                                            "kind": "HirTupleType",
+                                            "nid": 623,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "items": [
+                                              {
+                                                "kind": "HirTupleType",
+                                                "nid": 621,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "items": [
+                                                  {
+                                                    "kind": "HirTupleType",
+                                                    "nid": 619,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "items": [
+                                                      {
+                                                        "kind": "HirTupleType",
+                                                        "nid": 617,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "items": [
+                                                          {
+                                                            "kind": "HirTupleType",
+                                                            "nid": 615,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "items": [
+                                                              {
+                                                                "kind": "HirTupleType",
+                                                                "nid": 613,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "items": [
+                                                                  {
+                                                                    "kind": "HirTupleType",
+                                                                    "nid": 611,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "items": [
+                                                                      {
+                                                                        "kind": "HirNamedType",
+                                                                        "nid": 609,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "name": "Any",
+                                                                        "args": [],
+                                                                        "symbol": null
+                                                                      },
+                                                                      {
+                                                                        "kind": "HirNamedType",
+                                                                        "nid": 610,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "name": "Nat",
+                                                                        "args": [],
+                                                                        "symbol": null
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "kind": "HirNamedType",
+                                                                    "nid": 612,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "name": "Nat",
+                                                                    "args": [],
+                                                                    "symbol": null
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "kind": "HirNamedType",
+                                                                "nid": 614,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "name": "Nat",
+                                                                "args": [],
+                                                                "symbol": null
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "kind": "HirNamedType",
+                                                            "nid": 616,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "name": "Nat",
+                                                            "args": [],
+                                                            "symbol": null
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "kind": "HirNamedType",
+                                                        "nid": 618,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "name": "Nat",
+                                                        "args": [],
+                                                        "symbol": null
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "kind": "HirNamedType",
+                                                    "nid": 620,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "name": "Nat",
+                                                    "args": [],
+                                                    "symbol": null
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "kind": "HirNamedType",
+                                                "nid": 622,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "name": "Nat",
+                                                "args": [],
+                                                "symbol": null
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "kind": "HirNamedType",
+                                            "nid": 624,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "name": "Nat",
+                                            "args": [],
+                                            "symbol": null
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "kind": "HirNamedType",
+                                        "nid": 626,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "name": "Nat",
+                                        "args": [],
+                                        "symbol": null
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "kind": "HirNamedType",
+                                    "nid": 628,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "name": "Nat",
+                                    "args": [],
+                                    "symbol": null
+                                  }
+                                ]
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 630,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "Nat",
+                                "args": [],
+                                "symbol": null
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "HirNamedType",
+                            "nid": 632,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Nat",
+                            "args": [],
+                            "symbol": null
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 634,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Nat",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 636,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": null
+                  }
+                ]
+              },
+              "dictionary": null,
+              "slot": null,
+              "dictArgs": [],
+              "methodSugar": false,
+              "awaitPoint": false,
+              "calleeImpure": false
+            },
+            {
+              "kind": "HirIntLit",
+              "nid": 638,
+              "pos": "2:24-2:24",
+              "notes": [],
+              "value": "0"
+            }
+          ],
+          "type": {
+            "kind": "HirTupleType",
+            "nid": 640,
+            "pos": "2:17-2:17",
+            "notes": [],
+            "items": [
+              {
+                "kind": "HirTupleType",
+                "nid": 637,
+                "pos": "0:0",
+                "notes": [],
+                "items": [
+                  {
+                    "kind": "HirTupleType",
+                    "nid": 635,
+                    "pos": "0:0",
+                    "notes": [],
+                    "items": [
+                      {
+                        "kind": "HirTupleType",
+                        "nid": 633,
+                        "pos": "0:0",
+                        "notes": [],
+                        "items": [
+                          {
+                            "kind": "HirTupleType",
+                            "nid": 631,
+                            "pos": "0:0",
+                            "notes": [],
+                            "items": [
+                              {
+                                "kind": "HirTupleType",
+                                "nid": 629,
+                                "pos": "0:0",
+                                "notes": [],
+                                "items": [
+                                  {
+                                    "kind": "HirTupleType",
+                                    "nid": 627,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "items": [
+                                      {
+                                        "kind": "HirTupleType",
+                                        "nid": 625,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "items": [
+                                          {
+                                            "kind": "HirTupleType",
+                                            "nid": 623,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "items": [
+                                              {
+                                                "kind": "HirTupleType",
+                                                "nid": 621,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "items": [
+                                                  {
+                                                    "kind": "HirTupleType",
+                                                    "nid": 619,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "items": [
+                                                      {
+                                                        "kind": "HirTupleType",
+                                                        "nid": 617,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "items": [
+                                                          {
+                                                            "kind": "HirTupleType",
+                                                            "nid": 615,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "items": [
+                                                              {
+                                                                "kind": "HirTupleType",
+                                                                "nid": 613,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "items": [
+                                                                  {
+                                                                    "kind": "HirTupleType",
+                                                                    "nid": 611,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "items": [
+                                                                      {
+                                                                        "kind": "HirNamedType",
+                                                                        "nid": 609,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "name": "Any",
+                                                                        "args": [],
+                                                                        "symbol": null
+                                                                      },
+                                                                      {
+                                                                        "kind": "HirNamedType",
+                                                                        "nid": 610,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "name": "Nat",
+                                                                        "args": [],
+                                                                        "symbol": null
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "kind": "HirNamedType",
+                                                                    "nid": 612,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "name": "Nat",
+                                                                    "args": [],
+                                                                    "symbol": null
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "kind": "HirNamedType",
+                                                                "nid": 614,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "name": "Nat",
+                                                                "args": [],
+                                                                "symbol": null
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "kind": "HirNamedType",
+                                                            "nid": 616,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "name": "Nat",
+                                                            "args": [],
+                                                            "symbol": null
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "kind": "HirNamedType",
+                                                        "nid": 618,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "name": "Nat",
+                                                        "args": [],
+                                                        "symbol": null
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "kind": "HirNamedType",
+                                                    "nid": 620,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "name": "Nat",
+                                                    "args": [],
+                                                    "symbol": null
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "kind": "HirNamedType",
+                                                "nid": 622,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "name": "Nat",
+                                                "args": [],
+                                                "symbol": null
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "kind": "HirNamedType",
+                                            "nid": 624,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "name": "Nat",
+                                            "args": [],
+                                            "symbol": null
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "kind": "HirNamedType",
+                                        "nid": 626,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "name": "Nat",
+                                        "args": [],
+                                        "symbol": null
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "kind": "HirNamedType",
+                                    "nid": 628,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "name": "Nat",
+                                    "args": [],
+                                    "symbol": null
+                                  }
+                                ]
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 630,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "Nat",
+                                "args": [],
+                                "symbol": null
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "HirNamedType",
+                            "nid": 632,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Nat",
+                            "args": [],
+                            "symbol": null
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 634,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Nat",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 636,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": null
+                  }
+                ]
+              },
+              {
+                "kind": "HirNamedType",
+                "nid": 639,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": null
+              }
+            ]
+          }
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 642,
+        "pos": "3:5-3:5",
+        "notes": [],
+        "name": "b",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "b"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 643,
+            "pos": "3:7-3:7",
+            "notes": [],
+            "name": "x",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 644,
+              "pos": "3:10-3:12",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 26,
+              "kind": "param",
+              "name": "x"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirTupleType",
+          "nid": 686,
+          "pos": "3:17-3:17",
+          "notes": [],
+          "items": [
+            {
+              "kind": "HirTupleType",
+              "nid": 683,
+              "pos": "0:0",
+              "notes": [],
+              "items": [
+                {
+                  "kind": "HirTupleType",
+                  "nid": 681,
+                  "pos": "0:0",
+                  "notes": [],
+                  "items": [
+                    {
+                      "kind": "HirTupleType",
+                      "nid": 679,
+                      "pos": "0:0",
+                      "notes": [],
+                      "items": [
+                        {
+                          "kind": "HirTupleType",
+                          "nid": 677,
+                          "pos": "0:0",
+                          "notes": [],
+                          "items": [
+                            {
+                              "kind": "HirTupleType",
+                              "nid": 675,
+                              "pos": "0:0",
+                              "notes": [],
+                              "items": [
+                                {
+                                  "kind": "HirTupleType",
+                                  "nid": 673,
+                                  "pos": "0:0",
+                                  "notes": [],
+                                  "items": [
+                                    {
+                                      "kind": "HirTupleType",
+                                      "nid": 671,
+                                      "pos": "0:0",
+                                      "notes": [],
+                                      "items": [
+                                        {
+                                          "kind": "HirTupleType",
+                                          "nid": 669,
+                                          "pos": "0:0",
+                                          "notes": [],
+                                          "items": [
+                                            {
+                                              "kind": "HirTupleType",
+                                              "nid": 667,
+                                              "pos": "0:0",
+                                              "notes": [],
+                                              "items": [
+                                                {
+                                                  "kind": "HirTupleType",
+                                                  "nid": 665,
+                                                  "pos": "0:0",
+                                                  "notes": [],
+                                                  "items": [
+                                                    {
+                                                      "kind": "HirTupleType",
+                                                      "nid": 663,
+                                                      "pos": "0:0",
+                                                      "notes": [],
+                                                      "items": [
+                                                        {
+                                                          "kind": "HirTupleType",
+                                                          "nid": 661,
+                                                          "pos": "0:0",
+                                                          "notes": [],
+                                                          "items": [
+                                                            {
+                                                              "kind": "HirTupleType",
+                                                              "nid": 659,
+                                                              "pos": "0:0",
+                                                              "notes": [],
+                                                              "items": [
+                                                                {
+                                                                  "kind": "HirTupleType",
+                                                                  "nid": 657,
+                                                                  "pos": "0:0",
+                                                                  "notes": [],
+                                                                  "items": [
+                                                                    {
+                                                                      "kind": "HirTupleType",
+                                                                      "nid": 655,
+                                                                      "pos": "0:0",
+                                                                      "notes": [],
+                                                                      "items": [
+                                                                        {
+                                                                          "kind": "HirNamedType",
+                                                                          "nid": 653,
+                                                                          "pos": "0:0",
+                                                                          "notes": [],
+                                                                          "name": "Any",
+                                                                          "args": [],
+                                                                          "symbol": null
+                                                                        },
+                                                                        {
+                                                                          "kind": "HirNamedType",
+                                                                          "nid": 654,
+                                                                          "pos": "0:0",
+                                                                          "notes": [],
+                                                                          "name": "Nat",
+                                                                          "args": [],
+                                                                          "symbol": null
+                                                                        }
+                                                                      ]
+                                                                    },
+                                                                    {
+                                                                      "kind": "HirNamedType",
+                                                                      "nid": 656,
+                                                                      "pos": "0:0",
+                                                                      "notes": [],
+                                                                      "name": "Nat",
+                                                                      "args": [],
+                                                                      "symbol": null
+                                                                    }
+                                                                  ]
+                                                                },
+                                                                {
+                                                                  "kind": "HirNamedType",
+                                                                  "nid": 658,
+                                                                  "pos": "0:0",
+                                                                  "notes": [],
+                                                                  "name": "Nat",
+                                                                  "args": [],
+                                                                  "symbol": null
+                                                                }
+                                                              ]
+                                                            },
+                                                            {
+                                                              "kind": "HirNamedType",
+                                                              "nid": 660,
+                                                              "pos": "0:0",
+                                                              "notes": [],
+                                                              "name": "Nat",
+                                                              "args": [],
+                                                              "symbol": null
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "kind": "HirNamedType",
+                                                          "nid": 662,
+                                                          "pos": "0:0",
+                                                          "notes": [],
+                                                          "name": "Nat",
+                                                          "args": [],
+                                                          "symbol": null
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "kind": "HirNamedType",
+                                                      "nid": 664,
+                                                      "pos": "0:0",
+                                                      "notes": [],
+                                                      "name": "Nat",
+                                                      "args": [],
+                                                      "symbol": null
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "kind": "HirNamedType",
+                                                  "nid": 666,
+                                                  "pos": "0:0",
+                                                  "notes": [],
+                                                  "name": "Nat",
+                                                  "args": [],
+                                                  "symbol": null
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "kind": "HirNamedType",
+                                              "nid": 668,
+                                              "pos": "0:0",
+                                              "notes": [],
+                                              "name": "Nat",
+                                              "args": [],
+                                              "symbol": null
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "kind": "HirNamedType",
+                                          "nid": 670,
+                                          "pos": "0:0",
+                                          "notes": [],
+                                          "name": "Nat",
+                                          "args": [],
+                                          "symbol": null
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "kind": "HirNamedType",
+                                      "nid": 672,
+                                      "pos": "0:0",
+                                      "notes": [],
+                                      "name": "Nat",
+                                      "args": [],
+                                      "symbol": null
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "HirNamedType",
+                                  "nid": 674,
+                                  "pos": "0:0",
+                                  "notes": [],
+                                  "name": "Nat",
+                                  "args": [],
+                                  "symbol": null
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "HirNamedType",
+                              "nid": 676,
+                              "pos": "0:0",
+                              "notes": [],
+                              "name": "Nat",
+                              "args": [],
+                              "symbol": null
+                            }
+                          ]
+                        },
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 678,
+                          "pos": "0:0",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": null
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 680,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Nat",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ]
+                },
+                {
+                  "kind": "HirNamedType",
+                  "nid": 682,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Nat",
+                  "args": [],
+                  "symbol": null
+                }
+              ]
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 685,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": null
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "inferred": true,
+        "evidence": [
+          "use:3:17"
+        ],
+        "body": {
+          "kind": "HirTuple",
+          "nid": 687,
+          "pos": "3:17-3:17",
+          "notes": [],
+          "items": [
+            {
+              "kind": "HirCall",
+              "nid": 648,
+              "pos": "3:18-3:18",
+              "notes": [],
+              "callee": {
+                "kind": "HirNameRef",
+                "nid": 649,
+                "pos": "3:18-3:18",
+                "notes": [],
+                "name": "a",
+                "symbol": {
+                  "id": 0,
+                  "kind": "fun",
+                  "name": "a"
+                },
+                "type": null
+              },
+              "args": [
+                {
+                  "kind": "HirNameRef",
+                  "nid": 651,
+                  "pos": "3:20-3:20",
+                  "notes": [],
+                  "name": "x",
+                  "symbol": {
+                    "id": 26,
+                    "kind": "param",
+                    "name": "x"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 644,
+                    "pos": "3:10-3:12",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": {
+                      "id": 3,
+                      "kind": "builtin",
+                      "name": "Nat"
+                    }
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 0,
+                "kind": "fun",
+                "name": "a"
+              },
+              "type": {
+                "kind": "HirTupleType",
+                "nid": 683,
+                "pos": "0:0",
+                "notes": [],
+                "items": [
+                  {
+                    "kind": "HirTupleType",
+                    "nid": 681,
+                    "pos": "0:0",
+                    "notes": [],
+                    "items": [
+                      {
+                        "kind": "HirTupleType",
+                        "nid": 679,
+                        "pos": "0:0",
+                        "notes": [],
+                        "items": [
+                          {
+                            "kind": "HirTupleType",
+                            "nid": 677,
+                            "pos": "0:0",
+                            "notes": [],
+                            "items": [
+                              {
+                                "kind": "HirTupleType",
+                                "nid": 675,
+                                "pos": "0:0",
+                                "notes": [],
+                                "items": [
+                                  {
+                                    "kind": "HirTupleType",
+                                    "nid": 673,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "items": [
+                                      {
+                                        "kind": "HirTupleType",
+                                        "nid": 671,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "items": [
+                                          {
+                                            "kind": "HirTupleType",
+                                            "nid": 669,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "items": [
+                                              {
+                                                "kind": "HirTupleType",
+                                                "nid": 667,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "items": [
+                                                  {
+                                                    "kind": "HirTupleType",
+                                                    "nid": 665,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "items": [
+                                                      {
+                                                        "kind": "HirTupleType",
+                                                        "nid": 663,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "items": [
+                                                          {
+                                                            "kind": "HirTupleType",
+                                                            "nid": 661,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "items": [
+                                                              {
+                                                                "kind": "HirTupleType",
+                                                                "nid": 659,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "items": [
+                                                                  {
+                                                                    "kind": "HirTupleType",
+                                                                    "nid": 657,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "items": [
+                                                                      {
+                                                                        "kind": "HirTupleType",
+                                                                        "nid": 655,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "items": [
+                                                                          {
+                                                                            "kind": "HirNamedType",
+                                                                            "nid": 653,
+                                                                            "pos": "0:0",
+                                                                            "notes": [],
+                                                                            "name": "Any",
+                                                                            "args": [],
+                                                                            "symbol": null
+                                                                          },
+                                                                          {
+                                                                            "kind": "HirNamedType",
+                                                                            "nid": 654,
+                                                                            "pos": "0:0",
+                                                                            "notes": [],
+                                                                            "name": "Nat",
+                                                                            "args": [],
+                                                                            "symbol": null
+                                                                          }
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "kind": "HirNamedType",
+                                                                        "nid": 656,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "name": "Nat",
+                                                                        "args": [],
+                                                                        "symbol": null
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "kind": "HirNamedType",
+                                                                    "nid": 658,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "name": "Nat",
+                                                                    "args": [],
+                                                                    "symbol": null
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "kind": "HirNamedType",
+                                                                "nid": 660,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "name": "Nat",
+                                                                "args": [],
+                                                                "symbol": null
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "kind": "HirNamedType",
+                                                            "nid": 662,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "name": "Nat",
+                                                            "args": [],
+                                                            "symbol": null
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "kind": "HirNamedType",
+                                                        "nid": 664,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "name": "Nat",
+                                                        "args": [],
+                                                        "symbol": null
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "kind": "HirNamedType",
+                                                    "nid": 666,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "name": "Nat",
+                                                    "args": [],
+                                                    "symbol": null
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "kind": "HirNamedType",
+                                                "nid": 668,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "name": "Nat",
+                                                "args": [],
+                                                "symbol": null
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "kind": "HirNamedType",
+                                            "nid": 670,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "name": "Nat",
+                                            "args": [],
+                                            "symbol": null
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "kind": "HirNamedType",
+                                        "nid": 672,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "name": "Nat",
+                                        "args": [],
+                                        "symbol": null
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "kind": "HirNamedType",
+                                    "nid": 674,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "name": "Nat",
+                                    "args": [],
+                                    "symbol": null
+                                  }
+                                ]
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 676,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "Nat",
+                                "args": [],
+                                "symbol": null
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "HirNamedType",
+                            "nid": 678,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Nat",
+                            "args": [],
+                            "symbol": null
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 680,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Nat",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 682,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": null
+                  }
+                ]
+              },
+              "dictionary": null,
+              "slot": null,
+              "dictArgs": [],
+              "methodSugar": false,
+              "awaitPoint": false,
+              "calleeImpure": false
+            },
+            {
+              "kind": "HirIntLit",
+              "nid": 684,
+              "pos": "3:24-3:24",
+              "notes": [],
+              "value": "1"
+            }
+          ],
+          "type": {
+            "kind": "HirTupleType",
+            "nid": 686,
+            "pos": "3:17-3:17",
+            "notes": [],
+            "items": [
+              {
+                "kind": "HirTupleType",
+                "nid": 683,
+                "pos": "0:0",
+                "notes": [],
+                "items": [
+                  {
+                    "kind": "HirTupleType",
+                    "nid": 681,
+                    "pos": "0:0",
+                    "notes": [],
+                    "items": [
+                      {
+                        "kind": "HirTupleType",
+                        "nid": 679,
+                        "pos": "0:0",
+                        "notes": [],
+                        "items": [
+                          {
+                            "kind": "HirTupleType",
+                            "nid": 677,
+                            "pos": "0:0",
+                            "notes": [],
+                            "items": [
+                              {
+                                "kind": "HirTupleType",
+                                "nid": 675,
+                                "pos": "0:0",
+                                "notes": [],
+                                "items": [
+                                  {
+                                    "kind": "HirTupleType",
+                                    "nid": 673,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "items": [
+                                      {
+                                        "kind": "HirTupleType",
+                                        "nid": 671,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "items": [
+                                          {
+                                            "kind": "HirTupleType",
+                                            "nid": 669,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "items": [
+                                              {
+                                                "kind": "HirTupleType",
+                                                "nid": 667,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "items": [
+                                                  {
+                                                    "kind": "HirTupleType",
+                                                    "nid": 665,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "items": [
+                                                      {
+                                                        "kind": "HirTupleType",
+                                                        "nid": 663,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "items": [
+                                                          {
+                                                            "kind": "HirTupleType",
+                                                            "nid": 661,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "items": [
+                                                              {
+                                                                "kind": "HirTupleType",
+                                                                "nid": 659,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "items": [
+                                                                  {
+                                                                    "kind": "HirTupleType",
+                                                                    "nid": 657,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "items": [
+                                                                      {
+                                                                        "kind": "HirTupleType",
+                                                                        "nid": 655,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "items": [
+                                                                          {
+                                                                            "kind": "HirNamedType",
+                                                                            "nid": 653,
+                                                                            "pos": "0:0",
+                                                                            "notes": [],
+                                                                            "name": "Any",
+                                                                            "args": [],
+                                                                            "symbol": null
+                                                                          },
+                                                                          {
+                                                                            "kind": "HirNamedType",
+                                                                            "nid": 654,
+                                                                            "pos": "0:0",
+                                                                            "notes": [],
+                                                                            "name": "Nat",
+                                                                            "args": [],
+                                                                            "symbol": null
+                                                                          }
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "kind": "HirNamedType",
+                                                                        "nid": 656,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "name": "Nat",
+                                                                        "args": [],
+                                                                        "symbol": null
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "kind": "HirNamedType",
+                                                                    "nid": 658,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "name": "Nat",
+                                                                    "args": [],
+                                                                    "symbol": null
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "kind": "HirNamedType",
+                                                                "nid": 660,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "name": "Nat",
+                                                                "args": [],
+                                                                "symbol": null
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "kind": "HirNamedType",
+                                                            "nid": 662,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "name": "Nat",
+                                                            "args": [],
+                                                            "symbol": null
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "kind": "HirNamedType",
+                                                        "nid": 664,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "name": "Nat",
+                                                        "args": [],
+                                                        "symbol": null
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "kind": "HirNamedType",
+                                                    "nid": 666,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "name": "Nat",
+                                                    "args": [],
+                                                    "symbol": null
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "kind": "HirNamedType",
+                                                "nid": 668,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "name": "Nat",
+                                                "args": [],
+                                                "symbol": null
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "kind": "HirNamedType",
+                                            "nid": 670,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "name": "Nat",
+                                            "args": [],
+                                            "symbol": null
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "kind": "HirNamedType",
+                                        "nid": 672,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "name": "Nat",
+                                        "args": [],
+                                        "symbol": null
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "kind": "HirNamedType",
+                                    "nid": 674,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "name": "Nat",
+                                    "args": [],
+                                    "symbol": null
+                                  }
+                                ]
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 676,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "Nat",
+                                "args": [],
+                                "symbol": null
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "HirNamedType",
+                            "nid": 678,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Nat",
+                            "args": [],
+                            "symbol": null
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 680,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Nat",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 682,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": null
+                  }
+                ]
+              },
+              {
+                "kind": "HirNamedType",
+                "nid": 685,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": null
+              }
+            ]
+          }
+        }
+      },
+      {
+        "kind": "HirVarStmt",
+        "nid": 688,
+        "pos": "4:1-4:3",
+        "notes": [],
+        "name": "m",
+        "symbol": {
+          "id": 27,
+          "kind": "local",
+          "name": "m"
+        },
+        "annotations": [],
+        "type": {
+          "kind": "HirTupleType",
+          "nid": 725,
+          "pos": "0:0",
+          "notes": [],
+          "items": [
+            {
+              "kind": "HirTupleType",
+              "nid": 723,
+              "pos": "0:0",
+              "notes": [],
+              "items": [
+                {
+                  "kind": "HirTupleType",
+                  "nid": 721,
+                  "pos": "0:0",
+                  "notes": [],
+                  "items": [
+                    {
+                      "kind": "HirTupleType",
+                      "nid": 719,
+                      "pos": "0:0",
+                      "notes": [],
+                      "items": [
+                        {
+                          "kind": "HirTupleType",
+                          "nid": 717,
+                          "pos": "0:0",
+                          "notes": [],
+                          "items": [
+                            {
+                              "kind": "HirTupleType",
+                              "nid": 715,
+                              "pos": "0:0",
+                              "notes": [],
+                              "items": [
+                                {
+                                  "kind": "HirTupleType",
+                                  "nid": 713,
+                                  "pos": "0:0",
+                                  "notes": [],
+                                  "items": [
+                                    {
+                                      "kind": "HirTupleType",
+                                      "nid": 711,
+                                      "pos": "0:0",
+                                      "notes": [],
+                                      "items": [
+                                        {
+                                          "kind": "HirTupleType",
+                                          "nid": 709,
+                                          "pos": "0:0",
+                                          "notes": [],
+                                          "items": [
+                                            {
+                                              "kind": "HirTupleType",
+                                              "nid": 707,
+                                              "pos": "0:0",
+                                              "notes": [],
+                                              "items": [
+                                                {
+                                                  "kind": "HirTupleType",
+                                                  "nid": 705,
+                                                  "pos": "0:0",
+                                                  "notes": [],
+                                                  "items": [
+                                                    {
+                                                      "kind": "HirTupleType",
+                                                      "nid": 703,
+                                                      "pos": "0:0",
+                                                      "notes": [],
+                                                      "items": [
+                                                        {
+                                                          "kind": "HirTupleType",
+                                                          "nid": 701,
+                                                          "pos": "0:0",
+                                                          "notes": [],
+                                                          "items": [
+                                                            {
+                                                              "kind": "HirTupleType",
+                                                              "nid": 699,
+                                                              "pos": "0:0",
+                                                              "notes": [],
+                                                              "items": [
+                                                                {
+                                                                  "kind": "HirTupleType",
+                                                                  "nid": 697,
+                                                                  "pos": "0:0",
+                                                                  "notes": [],
+                                                                  "items": [
+                                                                    {
+                                                                      "kind": "HirNamedType",
+                                                                      "nid": 695,
+                                                                      "pos": "0:0",
+                                                                      "notes": [],
+                                                                      "name": "Any",
+                                                                      "args": [],
+                                                                      "symbol": null
+                                                                    },
+                                                                    {
+                                                                      "kind": "HirNamedType",
+                                                                      "nid": 696,
+                                                                      "pos": "0:0",
+                                                                      "notes": [],
+                                                                      "name": "Nat",
+                                                                      "args": [],
+                                                                      "symbol": null
+                                                                    }
+                                                                  ]
+                                                                },
+                                                                {
+                                                                  "kind": "HirNamedType",
+                                                                  "nid": 698,
+                                                                  "pos": "0:0",
+                                                                  "notes": [],
+                                                                  "name": "Nat",
+                                                                  "args": [],
+                                                                  "symbol": null
+                                                                }
+                                                              ]
+                                                            },
+                                                            {
+                                                              "kind": "HirNamedType",
+                                                              "nid": 700,
+                                                              "pos": "0:0",
+                                                              "notes": [],
+                                                              "name": "Nat",
+                                                              "args": [],
+                                                              "symbol": null
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "kind": "HirNamedType",
+                                                          "nid": 702,
+                                                          "pos": "0:0",
+                                                          "notes": [],
+                                                          "name": "Nat",
+                                                          "args": [],
+                                                          "symbol": null
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "kind": "HirNamedType",
+                                                      "nid": 704,
+                                                      "pos": "0:0",
+                                                      "notes": [],
+                                                      "name": "Nat",
+                                                      "args": [],
+                                                      "symbol": null
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "kind": "HirNamedType",
+                                                  "nid": 706,
+                                                  "pos": "0:0",
+                                                  "notes": [],
+                                                  "name": "Nat",
+                                                  "args": [],
+                                                  "symbol": null
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "kind": "HirNamedType",
+                                              "nid": 708,
+                                              "pos": "0:0",
+                                              "notes": [],
+                                              "name": "Nat",
+                                              "args": [],
+                                              "symbol": null
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "kind": "HirNamedType",
+                                          "nid": 710,
+                                          "pos": "0:0",
+                                          "notes": [],
+                                          "name": "Nat",
+                                          "args": [],
+                                          "symbol": null
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "kind": "HirNamedType",
+                                      "nid": 712,
+                                      "pos": "0:0",
+                                      "notes": [],
+                                      "name": "Nat",
+                                      "args": [],
+                                      "symbol": null
+                                    }
+                                  ]
+                                },
+                                {
+                                  "kind": "HirNamedType",
+                                  "nid": 714,
+                                  "pos": "0:0",
+                                  "notes": [],
+                                  "name": "Nat",
+                                  "args": [],
+                                  "symbol": null
+                                }
+                              ]
+                            },
+                            {
+                              "kind": "HirNamedType",
+                              "nid": 716,
+                              "pos": "0:0",
+                              "notes": [],
+                              "name": "Nat",
+                              "args": [],
+                              "symbol": null
+                            }
+                          ]
+                        },
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 718,
+                          "pos": "0:0",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": null
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 720,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Nat",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ]
+                },
+                {
+                  "kind": "HirNamedType",
+                  "nid": 722,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Nat",
+                  "args": [],
+                  "symbol": null
+                }
+              ]
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 724,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": null
+            }
+          ]
+        },
+        "value": {
+          "kind": "HirCall",
+          "nid": 689,
+          "pos": "4:9-4:9",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 690,
+            "pos": "4:9-4:9",
+            "notes": [],
+            "name": "a",
+            "symbol": {
+              "id": 0,
+              "kind": "fun",
+              "name": "a"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirIntLit",
+              "nid": 692,
+              "pos": "4:11-4:11",
+              "notes": [],
+              "value": "5"
+            }
+          ],
+          "symbol": {
+            "id": 0,
+            "kind": "fun",
+            "name": "a"
+          },
+          "type": {
+            "kind": "HirTupleType",
+            "nid": 725,
+            "pos": "0:0",
+            "notes": [],
+            "items": [
+              {
+                "kind": "HirTupleType",
+                "nid": 723,
+                "pos": "0:0",
+                "notes": [],
+                "items": [
+                  {
+                    "kind": "HirTupleType",
+                    "nid": 721,
+                    "pos": "0:0",
+                    "notes": [],
+                    "items": [
+                      {
+                        "kind": "HirTupleType",
+                        "nid": 719,
+                        "pos": "0:0",
+                        "notes": [],
+                        "items": [
+                          {
+                            "kind": "HirTupleType",
+                            "nid": 717,
+                            "pos": "0:0",
+                            "notes": [],
+                            "items": [
+                              {
+                                "kind": "HirTupleType",
+                                "nid": 715,
+                                "pos": "0:0",
+                                "notes": [],
+                                "items": [
+                                  {
+                                    "kind": "HirTupleType",
+                                    "nid": 713,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "items": [
+                                      {
+                                        "kind": "HirTupleType",
+                                        "nid": 711,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "items": [
+                                          {
+                                            "kind": "HirTupleType",
+                                            "nid": 709,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "items": [
+                                              {
+                                                "kind": "HirTupleType",
+                                                "nid": 707,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "items": [
+                                                  {
+                                                    "kind": "HirTupleType",
+                                                    "nid": 705,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "items": [
+                                                      {
+                                                        "kind": "HirTupleType",
+                                                        "nid": 703,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "items": [
+                                                          {
+                                                            "kind": "HirTupleType",
+                                                            "nid": 701,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "items": [
+                                                              {
+                                                                "kind": "HirTupleType",
+                                                                "nid": 699,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "items": [
+                                                                  {
+                                                                    "kind": "HirTupleType",
+                                                                    "nid": 697,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "items": [
+                                                                      {
+                                                                        "kind": "HirNamedType",
+                                                                        "nid": 695,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "name": "Any",
+                                                                        "args": [],
+                                                                        "symbol": null
+                                                                      },
+                                                                      {
+                                                                        "kind": "HirNamedType",
+                                                                        "nid": 696,
+                                                                        "pos": "0:0",
+                                                                        "notes": [],
+                                                                        "name": "Nat",
+                                                                        "args": [],
+                                                                        "symbol": null
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "kind": "HirNamedType",
+                                                                    "nid": 698,
+                                                                    "pos": "0:0",
+                                                                    "notes": [],
+                                                                    "name": "Nat",
+                                                                    "args": [],
+                                                                    "symbol": null
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "kind": "HirNamedType",
+                                                                "nid": 700,
+                                                                "pos": "0:0",
+                                                                "notes": [],
+                                                                "name": "Nat",
+                                                                "args": [],
+                                                                "symbol": null
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "kind": "HirNamedType",
+                                                            "nid": 702,
+                                                            "pos": "0:0",
+                                                            "notes": [],
+                                                            "name": "Nat",
+                                                            "args": [],
+                                                            "symbol": null
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "kind": "HirNamedType",
+                                                        "nid": 704,
+                                                        "pos": "0:0",
+                                                        "notes": [],
+                                                        "name": "Nat",
+                                                        "args": [],
+                                                        "symbol": null
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "kind": "HirNamedType",
+                                                    "nid": 706,
+                                                    "pos": "0:0",
+                                                    "notes": [],
+                                                    "name": "Nat",
+                                                    "args": [],
+                                                    "symbol": null
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "kind": "HirNamedType",
+                                                "nid": 708,
+                                                "pos": "0:0",
+                                                "notes": [],
+                                                "name": "Nat",
+                                                "args": [],
+                                                "symbol": null
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "kind": "HirNamedType",
+                                            "nid": 710,
+                                            "pos": "0:0",
+                                            "notes": [],
+                                            "name": "Nat",
+                                            "args": [],
+                                            "symbol": null
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "kind": "HirNamedType",
+                                        "nid": 712,
+                                        "pos": "0:0",
+                                        "notes": [],
+                                        "name": "Nat",
+                                        "args": [],
+                                        "symbol": null
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "kind": "HirNamedType",
+                                    "nid": 714,
+                                    "pos": "0:0",
+                                    "notes": [],
+                                    "name": "Nat",
+                                    "args": [],
+                                    "symbol": null
+                                  }
+                                ]
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 716,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "Nat",
+                                "args": [],
+                                "symbol": null
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "HirNamedType",
+                            "nid": 718,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Nat",
+                            "args": [],
+                            "symbol": null
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 720,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Nat",
+                        "args": [],
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 722,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": null
+                  }
+                ]
+              },
+              {
+                "kind": "HirNamedType",
+                "nid": 724,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": null
+              }
+            ]
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": false
+        },
+        "destruct": null,
+        "deepCopy": false
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 726,
+        "pos": "6:5-6:6",
+        "notes": [],
+        "name": "ok",
+        "symbol": {
+          "id": 2,
+          "kind": "fun",
+          "name": "ok"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 727,
+          "pos": "6:11-6:13",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 3,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirIntLit",
+          "nid": 728,
+          "pos": "6:17-6:17",
+          "notes": [],
+          "value": "7"
+        }
+      }
+    ]
+  }
+}

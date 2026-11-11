@@ -1,0 +1,4 @@
+trait Both[T] { fun get(): T
+ fun put(x: T): Nat }
+fun use(b: Both[Nat]): Nat = 0
+fun give(b: Both[Any]): Nat = use(b)

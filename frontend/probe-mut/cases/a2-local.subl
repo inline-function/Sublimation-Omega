@@ -1,0 +1,2 @@
+var x: @mut Nat = 1
+var y: Nat = x

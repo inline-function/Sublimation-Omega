@@ -1,0 +1,1 @@
+@root fun m(): Nat { var f = { _ * 3 }; f(4) }

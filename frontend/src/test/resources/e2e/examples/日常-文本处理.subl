@@ -1,0 +1,24 @@
+// ============================================================
+// 日常-文本处理：字符串内建（大小写/去空白/子串/替换/前缀/长度/解析/查找）
+// 预期输出（每行一个）：HELLO / spaced / subl / a+b+c / true / 7 /
+//                       cannot parse: xx / 2 / 5
+// ============================================================
+
+@impure
+fun main() {
+    unchecked print(strUpper("hello"))
+    unchecked print(strTrim("  spaced  "))
+    unchecked print(substring("sublimation", 0, 4))
+    unchecked print(strReplace("a-b-c", "-", "+"))
+    unchecked print(startsWith("sublimation", "sub"))
+    unchecked print(length("sublime"))
+    when(parseNat("xx")) {
+        is Some(n) -> { unchecked print(toStr(n)) }
+        None -> { unchecked print("cannot parse: xx") }
+    }
+    when(strIndexOf("hello", "ll")) {
+        is Some(i) -> { unchecked print(i) }
+        None -> { unchecked print("x") }
+    }
+    unchecked print(length("hello"))
+}

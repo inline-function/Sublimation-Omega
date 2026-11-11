@@ -1,0 +1,237 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "nosol.subl",
+    "mode": "project"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "E-SYNTAX",
+      "pos": "4:1-4:3",
+      "message": "顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-OMITTED-TYPE",
+      "pos": "3:7-3:7",
+      "message": "形参 `y` 省略了类型标注——工程模式要求显式标注（仅脚本模式开放推导，R-13）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-TYPE-MISMATCH",
+      "pos": "3:12-3:13",
+      "message": "实参 1 <错误类型:形参类型标注省略> 与形参 Nat 不符",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 21,
+    "pos": "2:5-4:3",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 22,
+        "pos": "2:5-2:6",
+        "notes": [],
+        "name": "g2",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "g2"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 23,
+            "pos": "2:8-2:8",
+            "notes": [],
+            "name": "x",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 24,
+              "pos": "2:11-2:13",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 2,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 5,
+              "kind": "param",
+              "name": "x"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 29,
+          "pos": "0:0",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": null
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "inferred": true,
+        "evidence": [
+          "use:2:18"
+        ],
+        "body": {
+          "kind": "HirIntLit",
+          "nid": 28,
+          "pos": "2:18-2:18",
+          "notes": [],
+          "value": "0"
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 31,
+        "pos": "3:5-3:5",
+        "notes": [],
+        "name": "f",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "f"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 32,
+            "pos": "3:7-3:7",
+            "notes": [],
+            "name": "y",
+            "type": {
+              "kind": "HirErrorType",
+              "nid": 33,
+              "pos": "3:7-3:7",
+              "notes": [],
+              "message": "形参类型标注省略"
+            },
+            "symbol": {
+              "id": 6,
+              "kind": "param",
+              "name": "y"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 39,
+          "pos": "0:0",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": null
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "inferred": true,
+        "evidence": [
+          "use:3:12"
+        ],
+        "body": {
+          "kind": "HirCall",
+          "nid": 34,
+          "pos": "3:12-3:13",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 35,
+            "pos": "3:12-3:13",
+            "notes": [],
+            "name": "g2",
+            "symbol": {
+              "id": 0,
+              "kind": "fun",
+              "name": "g2"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirNameRef",
+              "nid": 37,
+              "pos": "3:15-3:15",
+              "notes": [],
+              "name": "y",
+              "symbol": {
+                "id": 6,
+                "kind": "param",
+                "name": "y"
+              },
+              "type": {
+                "kind": "HirErrorType",
+                "nid": 33,
+                "pos": "3:7-3:7",
+                "notes": [],
+                "message": "形参类型标注省略"
+              }
+            }
+          ],
+          "symbol": {
+            "id": 0,
+            "kind": "fun",
+            "name": "g2"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 39,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Nat",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": false
+        }
+      },
+      {
+        "kind": "HirErrorStmt",
+        "nid": 40,
+        "pos": "4:1-4:3",
+        "notes": [],
+        "message": "顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）"
+      }
+    ]
+  }
+}

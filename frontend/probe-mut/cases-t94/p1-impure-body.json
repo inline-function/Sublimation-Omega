@@ -1,0 +1,139 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "p1-impure-body.subl",
+    "mode": "script"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "1:1-1:3",
+      "message": "var `g` 推导为 () => Null",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:1-1:3",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirVarStmt",
+        "nid": 2,
+        "pos": "1:1-1:3",
+        "notes": [],
+        "name": "g",
+        "symbol": {
+          "id": 1,
+          "kind": "local",
+          "name": "g"
+        },
+        "annotations": [],
+        "type": {
+          "kind": "HirFunType",
+          "nid": 25,
+          "pos": "1:9-1:9",
+          "notes": [],
+          "params": [],
+          "ret": {
+            "kind": "HirNamedType",
+            "nid": 24,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Null",
+            "args": [],
+            "symbol": null
+          },
+          "purity": "pure",
+          "theory": [],
+          "context": null
+        },
+        "value": {
+          "kind": "HirLambda",
+          "nid": 3,
+          "pos": "1:9-1:9",
+          "notes": [],
+          "params": [],
+          "body": {
+            "kind": "HirCall",
+            "nid": 4,
+            "pos": "1:14-1:18",
+            "notes": [],
+            "callee": {
+              "kind": "HirNameRef",
+              "nid": 5,
+              "pos": "1:14-1:18",
+              "notes": [],
+              "name": "print",
+              "symbol": {
+                "id": 0,
+                "kind": "builtin",
+                "name": "print"
+              },
+              "type": null
+            },
+            "args": [
+              {
+                "kind": "HirStrLit",
+                "nid": 6,
+                "pos": "1:20-1:20",
+                "notes": [],
+                "value": "x"
+              }
+            ],
+            "symbol": {
+              "id": 0,
+              "kind": "builtin",
+              "name": "print"
+            },
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 24,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Null",
+              "args": [],
+              "symbol": null
+            },
+            "dictionary": null,
+            "slot": null,
+            "dictArgs": [],
+            "methodSugar": false,
+            "awaitPoint": false,
+            "calleeImpure": false
+          },
+          "implicitIt": false,
+          "type": {
+            "kind": "HirFunType",
+            "nid": 25,
+            "pos": "1:9-1:9",
+            "notes": [],
+            "params": [],
+            "ret": {
+              "kind": "HirNamedType",
+              "nid": 24,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Null",
+              "args": [],
+              "symbol": null
+            },
+            "purity": "pure",
+            "theory": [],
+            "context": null
+          },
+          "purity": "impure"
+        },
+        "destruct": null,
+        "deepCopy": false
+      }
+    ]
+  }
+}

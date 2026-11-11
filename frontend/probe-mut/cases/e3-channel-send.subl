@@ -1,0 +1,2 @@
+var ch: Channel[@mut Nat] = Channel(2)
+ch.send(1)

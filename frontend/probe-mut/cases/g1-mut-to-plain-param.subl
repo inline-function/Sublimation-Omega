@@ -1,0 +1,3 @@
+@root fun plain(a: Nat): Nat = a
+var x: @mut Nat = 1
+var w: Nat = plain(x)

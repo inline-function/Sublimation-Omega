@@ -1,0 +1,8 @@
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun List[a].loop[a](): Nat = when(self) {
+    Nil -> 0
+    is Cons(h, t) -> self.loop()
+}

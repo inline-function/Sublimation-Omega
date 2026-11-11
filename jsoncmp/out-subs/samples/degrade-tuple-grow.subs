@@ -1,0 +1,6 @@
+// OQ-10 不收敛退化：互递归元组生长（R 轮放满不收敛 → 空位填 Any + impure + D-INFER-DEGRADED 观察级）
+fun a(x: Nat) = (b(x), 0)
+fun b(x: Nat) = (a(x), 1)
+var m = a(5)
+// 局部退化口径：无关函数不受牵连
+fun ok(): Nat = 7

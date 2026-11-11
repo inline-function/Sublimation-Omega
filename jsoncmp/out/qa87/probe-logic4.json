@@ -1,0 +1,635 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "probe-logic4.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "2:5-8:19",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "2:5-2:19",
+        "notes": [],
+        "name": "rangeLowerBound",
+        "symbol": {
+          "id": 0,
+          "kind": "theorem",
+          "name": "rangeLowerBound"
+        },
+        "annotations": [
+          "theorem"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 3,
+            "pos": "2:21-2:21",
+            "notes": [],
+            "name": "x",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 4,
+            "pos": "2:24-2:24",
+            "notes": [],
+            "name": "l",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 5,
+            "pos": "2:27-2:27",
+            "notes": [],
+            "name": "r",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 6,
+          "pos": "2:31-2:34",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 4,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [
+          {
+            "kind": "HirPImp",
+            "nid": 15,
+            "pos": "2:48-2:48",
+            "notes": [],
+            "a": {
+              "kind": "HirPAtom",
+              "nid": 11,
+              "pos": "2:39-2:39",
+              "notes": [],
+              "head": "in",
+              "terms": [
+                {
+                  "kind": "HirTName",
+                  "nid": 7,
+                  "pos": "2:37-2:37",
+                  "notes": [],
+                  "name": "x",
+                  "symbol": null
+                },
+                {
+                  "kind": "HirTBin",
+                  "nid": 10,
+                  "pos": "2:43-2:44",
+                  "notes": [],
+                  "op": "..",
+                  "left": {
+                    "kind": "HirTName",
+                    "nid": 8,
+                    "pos": "2:42-2:42",
+                    "notes": [],
+                    "name": "l",
+                    "symbol": null
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 9,
+                    "pos": "2:45-2:45",
+                    "notes": [],
+                    "name": "r",
+                    "symbol": null
+                  }
+                }
+              ]
+            },
+            "b": {
+              "kind": "HirPAtom",
+              "nid": 14,
+              "pos": "2:52-2:53",
+              "notes": [],
+              "head": ">=",
+              "terms": [
+                {
+                  "kind": "HirTName",
+                  "nid": 12,
+                  "pos": "2:50-2:50",
+                  "notes": [],
+                  "name": "x",
+                  "symbol": null
+                },
+                {
+                  "kind": "HirTName",
+                  "nid": 13,
+                  "pos": "2:55-2:55",
+                  "notes": [],
+                  "name": "l",
+                  "symbol": null
+                }
+              ]
+            }
+          }
+        ],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 16,
+        "pos": "4:5-4:19",
+        "notes": [],
+        "name": "rangeUpperBound",
+        "symbol": {
+          "id": 1,
+          "kind": "theorem",
+          "name": "rangeUpperBound"
+        },
+        "annotations": [
+          "theorem"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 17,
+            "pos": "4:21-4:21",
+            "notes": [],
+            "name": "x",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 18,
+            "pos": "4:24-4:24",
+            "notes": [],
+            "name": "l",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 19,
+            "pos": "4:27-4:27",
+            "notes": [],
+            "name": "r",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 20,
+          "pos": "4:31-4:34",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 4,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [
+          {
+            "kind": "HirPImp",
+            "nid": 29,
+            "pos": "4:48-4:48",
+            "notes": [],
+            "a": {
+              "kind": "HirPAtom",
+              "nid": 25,
+              "pos": "4:39-4:39",
+              "notes": [],
+              "head": "in",
+              "terms": [
+                {
+                  "kind": "HirTName",
+                  "nid": 21,
+                  "pos": "4:37-4:37",
+                  "notes": [],
+                  "name": "x",
+                  "symbol": null
+                },
+                {
+                  "kind": "HirTBin",
+                  "nid": 24,
+                  "pos": "4:43-4:44",
+                  "notes": [],
+                  "op": "..",
+                  "left": {
+                    "kind": "HirTName",
+                    "nid": 22,
+                    "pos": "4:42-4:42",
+                    "notes": [],
+                    "name": "l",
+                    "symbol": null
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 23,
+                    "pos": "4:45-4:45",
+                    "notes": [],
+                    "name": "r",
+                    "symbol": null
+                  }
+                }
+              ]
+            },
+            "b": {
+              "kind": "HirPAtom",
+              "nid": 28,
+              "pos": "4:52-4:53",
+              "notes": [],
+              "head": "<=",
+              "terms": [
+                {
+                  "kind": "HirTName",
+                  "nid": 26,
+                  "pos": "4:50-4:50",
+                  "notes": [],
+                  "name": "x",
+                  "symbol": null
+                },
+                {
+                  "kind": "HirTName",
+                  "nid": 27,
+                  "pos": "4:55-4:55",
+                  "notes": [],
+                  "name": "r",
+                  "symbol": null
+                }
+              ]
+            }
+          }
+        ],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 30,
+        "pos": "6:5-6:12",
+        "notes": [],
+        "name": "leqTrans",
+        "symbol": {
+          "id": 2,
+          "kind": "theorem",
+          "name": "leqTrans"
+        },
+        "annotations": [
+          "theorem"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 31,
+            "pos": "6:14-6:14",
+            "notes": [],
+            "name": "a",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 32,
+            "pos": "6:17-6:17",
+            "notes": [],
+            "name": "b",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 33,
+            "pos": "6:20-6:20",
+            "notes": [],
+            "name": "c",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 34,
+          "pos": "6:24-6:27",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 4,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [
+          {
+            "kind": "HirPImp",
+            "nid": 45,
+            "pos": "6:46-6:46",
+            "notes": [],
+            "a": {
+              "kind": "HirPAnd",
+              "nid": 41,
+              "pos": "6:37-6:37",
+              "notes": [],
+              "a": {
+                "kind": "HirPAtom",
+                "nid": 37,
+                "pos": "6:32-6:33",
+                "notes": [],
+                "head": "<=",
+                "terms": [
+                  {
+                    "kind": "HirTName",
+                    "nid": 35,
+                    "pos": "6:30-6:30",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  },
+                  {
+                    "kind": "HirTName",
+                    "nid": 36,
+                    "pos": "6:35-6:35",
+                    "notes": [],
+                    "name": "b",
+                    "symbol": null
+                  }
+                ]
+              },
+              "b": {
+                "kind": "HirPAtom",
+                "nid": 40,
+                "pos": "6:41-6:42",
+                "notes": [],
+                "head": "<=",
+                "terms": [
+                  {
+                    "kind": "HirTName",
+                    "nid": 38,
+                    "pos": "6:39-6:39",
+                    "notes": [],
+                    "name": "b",
+                    "symbol": null
+                  },
+                  {
+                    "kind": "HirTName",
+                    "nid": 39,
+                    "pos": "6:44-6:44",
+                    "notes": [],
+                    "name": "c",
+                    "symbol": null
+                  }
+                ]
+              }
+            },
+            "b": {
+              "kind": "HirPAtom",
+              "nid": 44,
+              "pos": "6:50-6:51",
+              "notes": [],
+              "head": "<=",
+              "terms": [
+                {
+                  "kind": "HirTName",
+                  "nid": 42,
+                  "pos": "6:48-6:48",
+                  "notes": [],
+                  "name": "a",
+                  "symbol": null
+                },
+                {
+                  "kind": "HirTName",
+                  "nid": 43,
+                  "pos": "6:53-6:53",
+                  "notes": [],
+                  "name": "c",
+                  "symbol": null
+                }
+              ]
+            }
+          }
+        ],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 46,
+        "pos": "8:5-8:19",
+        "notes": [],
+        "name": "rangeSplitRight",
+        "symbol": {
+          "id": 3,
+          "kind": "theorem",
+          "name": "rangeSplitRight"
+        },
+        "annotations": [
+          "theorem"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 47,
+            "pos": "8:21-8:21",
+            "notes": [],
+            "name": "x",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 48,
+            "pos": "8:24-8:24",
+            "notes": [],
+            "name": "l",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 49,
+            "pos": "8:27-8:27",
+            "notes": [],
+            "name": "m",
+            "constraint": null,
+            "arity": 0
+          },
+          {
+            "kind": "HirTypeParam",
+            "nid": 50,
+            "pos": "8:30-8:30",
+            "notes": [],
+            "name": "r",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 51,
+          "pos": "8:34-8:37",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 4,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [
+          {
+            "kind": "HirPImp",
+            "nid": 66,
+            "pos": "8:60-8:60",
+            "notes": [],
+            "a": {
+              "kind": "HirPAnd",
+              "nid": 60,
+              "pos": "8:51-8:51",
+              "notes": [],
+              "a": {
+                "kind": "HirPAtom",
+                "nid": 56,
+                "pos": "8:42-8:42",
+                "notes": [],
+                "head": "in",
+                "terms": [
+                  {
+                    "kind": "HirTName",
+                    "nid": 52,
+                    "pos": "8:40-8:40",
+                    "notes": [],
+                    "name": "x",
+                    "symbol": null
+                  },
+                  {
+                    "kind": "HirTBin",
+                    "nid": 55,
+                    "pos": "8:46-8:47",
+                    "notes": [],
+                    "op": "..",
+                    "left": {
+                      "kind": "HirTName",
+                      "nid": 53,
+                      "pos": "8:45-8:45",
+                      "notes": [],
+                      "name": "l",
+                      "symbol": null
+                    },
+                    "right": {
+                      "kind": "HirTName",
+                      "nid": 54,
+                      "pos": "8:48-8:48",
+                      "notes": [],
+                      "name": "r",
+                      "symbol": null
+                    }
+                  }
+                ]
+              },
+              "b": {
+                "kind": "HirPAtom",
+                "nid": 59,
+                "pos": "8:55-8:56",
+                "notes": [],
+                "head": "<=",
+                "terms": [
+                  {
+                    "kind": "HirTName",
+                    "nid": 57,
+                    "pos": "8:53-8:53",
+                    "notes": [],
+                    "name": "x",
+                    "symbol": null
+                  },
+                  {
+                    "kind": "HirTName",
+                    "nid": 58,
+                    "pos": "8:58-8:58",
+                    "notes": [],
+                    "name": "m",
+                    "symbol": null
+                  }
+                ]
+              }
+            },
+            "b": {
+              "kind": "HirPAtom",
+              "nid": 65,
+              "pos": "8:64-8:64",
+              "notes": [],
+              "head": "in",
+              "terms": [
+                {
+                  "kind": "HirTName",
+                  "nid": 61,
+                  "pos": "8:62-8:62",
+                  "notes": [],
+                  "name": "x",
+                  "symbol": null
+                },
+                {
+                  "kind": "HirTBin",
+                  "nid": 64,
+                  "pos": "8:68-8:69",
+                  "notes": [],
+                  "op": "..",
+                  "left": {
+                    "kind": "HirTName",
+                    "nid": 62,
+                    "pos": "8:67-8:67",
+                    "notes": [],
+                    "name": "l",
+                    "symbol": null
+                  },
+                  "right": {
+                    "kind": "HirTName",
+                    "nid": 63,
+                    "pos": "8:70-8:70",
+                    "notes": [],
+                    "name": "m",
+                    "symbol": null
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      }
+    ]
+  }
+}

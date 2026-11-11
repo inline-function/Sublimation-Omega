@@ -1,0 +1,3 @@
+trait Box[T] { fun get(): T }
+fun use(b: Box[Nat]): Nat = 0
+fun give(b: Box[Any]): Nat = use(b)

@@ -1,0 +1,6 @@
+fun f(): Nat {
+    var a : @mut Nat = 1
+    axiom a < 2
+    if a < 2 { }
+    a
+}

@@ -1,0 +1,27 @@
+// examples/脚本求值桥.subl —— t84：sublEval 宿主桥演示
+// sublEval 是 @root 无体内建：编译产物在调用点经 globalThis.__subl.call("sublEval", [src])
+// 桥接宿主（Kotlin SubsInterpreter）；node 无宿主时回落到兜底桩报错。本演示用
+// node 宿主桩运行（见 t84 报告）；Result 分支同编译侧 matchJs 语义。
+
+struct Ok[T](value: T)
+struct Err[E](value: E)
+type Result[T, E] = Ok[T] | Err[E]
+
+@impure
+fun main() {
+    unchecked var r = sublEval("1 + (2 * 3)")
+    when (r) {
+        is Ok(v) -> print(v)
+        is Err(e) -> print(concat("err: ", e))
+    }
+    unchecked var bad = sublEval("1 +")
+    when (bad) {
+        is Err(e) -> print(concat("expected-err: ", e))
+        is Ok(v) -> print("unexpected-ok")
+    }
+    unchecked var joined = sublEval("concat(\"hot\", \"-\" , \"reload\")")
+    when (joined) {
+        is Ok(v) -> print(v)
+        is Err(e) -> print(concat("err: ", e))
+    }
+}

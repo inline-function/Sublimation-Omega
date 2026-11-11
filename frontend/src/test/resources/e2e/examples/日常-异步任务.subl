@@ -1,0 +1,21 @@
+// ============================================================
+// 日常-异步任务：Task 启动/汇合 + Channel 收发 + 关闭状态
+// 预期输出（每行一个）：receive total 42 / child task / closed = true
+// ============================================================
+
+@impure
+fun main() {
+    var ch: Channel[Nat] = Channel<Nat>(4)
+    ch.send(40)
+    ch.send(2)
+    var a: Nat = ch.receive()
+    var b: Nat = ch.receive()
+    unchecked print(concat("receive total ", toStr(a + b)))
+
+    var t = Task { unchecked print("child task") }
+    t.start()
+    t.join()
+
+    ch.close()
+    unchecked print(concat("closed = ", toStr(ch.isClosed())))
+}

@@ -1,0 +1,4 @@
+fun f(a: Nat, b: Nat): Nat {
+    axiom a <: b
+    return 0
+}

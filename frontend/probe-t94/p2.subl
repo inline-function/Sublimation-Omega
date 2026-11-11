@@ -1,0 +1,1 @@
+@root fun m(): Null { var inner = { => print("i") }; var outer = { => inner() }; print(outer) }

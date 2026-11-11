@@ -1,0 +1,2 @@
+fun use(xs: List[Nat]): Nat = 0
+fun give(xs: List[Any]): Nat = use(xs)

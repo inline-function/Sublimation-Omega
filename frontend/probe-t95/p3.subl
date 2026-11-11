@@ -1,0 +1,2 @@
+struct T(n: Nat)
+fun f(@ref x: T): Nat = x.n

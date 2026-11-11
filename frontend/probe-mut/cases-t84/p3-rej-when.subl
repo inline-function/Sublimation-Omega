@@ -1,0 +1,2 @@
+var b: Bool = True
+var n: Nat = when (b) { true -> 1; False -> 0 }

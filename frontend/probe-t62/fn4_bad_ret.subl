@@ -1,0 +1,2 @@
+fun use(f: (Nat) => Nat): Nat = 0
+fun wide(f: (Nat) => Any): Nat = use(f)

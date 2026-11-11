@@ -1,0 +1,3 @@
+trait Sink[T] { fun put(x: T): Nat }
+fun use(s: Sink[Any]): Nat = 0
+fun give(s: Sink[Nat]): Nat = use(s)

@@ -1,0 +1,3 @@
+[错误][1:41] E-OP-RETIRED: `<->` 算符已退役：命题层的等价写作 `↔`；如需在值位使用，可自定义 `fun <->(a: Bool, b: Bool)`
+  1 | @root fun f(a: Bool, b: Bool): Bool = a <-> b
+    |                                         ^

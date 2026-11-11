@@ -1,0 +1,16 @@
+﻿SLOT=ACQUIRED pid=6156 note=t102green2
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileKotlin
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+> Task :frontend:test
+
+BUILD SUCCESSFUL in 24s
+5 actionable tasks: 4 executed, 1 up-to-date
+

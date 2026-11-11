@@ -1,0 +1,1 @@
+fun f[T: Nat](a: T, b: T): T = a

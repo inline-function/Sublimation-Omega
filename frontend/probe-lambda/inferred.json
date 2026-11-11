@@ -1,0 +1,285 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "inferred.subl",
+    "mode": "project"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "1:22-1:24",
+      "message": "var `f` 推导为 ((推导:lambda参数_)) => (推导:中缀*)",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-MISSING-RETURN",
+      "pos": "1:20-1:20",
+      "message": "函数 `m` 声明返回 Nat，块体未在所有路径 return（Kotlin 语义：请写 return，或改用 = 表达式 表达式体）",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:11-1:11",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:11-1:11",
+        "notes": [],
+        "name": "m",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "m"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 3,
+          "pos": "1:16-1:18",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 1,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 4,
+          "pos": "1:20-1:20",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirVarStmt",
+              "nid": 5,
+              "pos": "1:22-1:24",
+              "notes": [],
+              "name": "f",
+              "symbol": {
+                "id": 3,
+                "kind": "local",
+                "name": "f"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirFunType",
+                "nid": 16,
+                "pos": "1:30-1:30",
+                "notes": [],
+                "params": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 7,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "(推导:lambda参数_)",
+                    "args": [],
+                    "symbol": null
+                  }
+                ],
+                "ret": {
+                  "kind": "HirNamedType",
+                  "nid": 13,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:中缀*)",
+                  "args": [],
+                  "symbol": null
+                },
+                "purity": "pure",
+                "theory": [],
+                "context": null
+              },
+              "value": {
+                "kind": "HirLambda",
+                "nid": 6,
+                "pos": "1:30-1:30",
+                "notes": [],
+                "params": [
+                  {
+                    "kind": "HirParam",
+                    "nid": 8,
+                    "pos": "1:30-1:30",
+                    "notes": [],
+                    "name": "_",
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 7,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(推导:lambda参数_)",
+                      "args": [],
+                      "symbol": null
+                    },
+                    "symbol": {
+                      "id": 2,
+                      "kind": "param",
+                      "name": "_"
+                    },
+                    "annotations": [],
+                    "default": null,
+                    "destruct": null
+                  }
+                ],
+                "body": {
+                  "kind": "HirBinExpr",
+                  "nid": 15,
+                  "pos": "1:34-1:34",
+                  "notes": [],
+                  "op": "*",
+                  "left": {
+                    "kind": "HirNameRef",
+                    "nid": 9,
+                    "pos": "1:32-1:32",
+                    "notes": [],
+                    "name": "_",
+                    "symbol": {
+                      "id": 2,
+                      "kind": "param",
+                      "name": "_"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 7,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(推导:lambda参数_)",
+                      "args": [],
+                      "symbol": null
+                    }
+                  },
+                  "right": {
+                    "kind": "HirIntLit",
+                    "nid": 10,
+                    "pos": "1:36-1:36",
+                    "notes": [],
+                    "value": "3"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 13,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "(推导:中缀*)",
+                    "args": [],
+                    "symbol": null
+                  }
+                },
+                "implicitIt": true,
+                "type": {
+                  "kind": "HirFunType",
+                  "nid": 16,
+                  "pos": "1:30-1:30",
+                  "notes": [],
+                  "params": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 7,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(推导:lambda参数_)",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ],
+                  "ret": {
+                    "kind": "HirNamedType",
+                    "nid": 13,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "(推导:中缀*)",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "purity": "pure",
+                  "theory": [],
+                  "context": null
+                },
+                "purity": "pure"
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 17,
+              "pos": "1:41-1:41",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 18,
+                "pos": "1:41-1:41",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 19,
+                  "pos": "1:41-1:41",
+                  "notes": [],
+                  "name": "f",
+                  "symbol": {
+                    "id": 3,
+                    "kind": "local",
+                    "name": "f"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 20,
+                    "pos": "1:43-1:43",
+                    "notes": [],
+                    "value": "4"
+                  }
+                ],
+                "symbol": {
+                  "id": 3,
+                  "kind": "local",
+                  "name": "f"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 22,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:中缀*)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

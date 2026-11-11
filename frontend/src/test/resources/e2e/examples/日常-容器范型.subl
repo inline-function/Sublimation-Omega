@@ -1,0 +1,26 @@
+// ============================================================
+// 日常-容器范型：泛型容器 List[T] + 高阶 map（容器范畴的范型映射）
+// 预期输出（每行一个）：3,6,9
+// ============================================================
+
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun map[T, U](xs: List[T], f: (T) => U): List[U] = when(xs) {
+    Nil -> Nil
+    is Cons(h, t) -> Cons(f(h), map(t, f))
+}
+
+fun showNat(xs: List[Nat]): Str = when(xs) {
+    Nil -> ""
+    is Cons(h, Nil) -> toStr(h)
+    is Cons(h, t) -> concat(toStr(h), concat(",", showNat(t)))
+}
+
+@impure
+fun main() {
+    var xs: List[Nat] = Cons(1, Cons(2, Cons(3, Nil)))
+    var ys: List[Nat] = map(xs, { x => x * 3 })
+    unchecked print(showNat(ys))
+}

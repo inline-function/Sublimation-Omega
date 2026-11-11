@@ -1,0 +1,2 @@
+fun iff(a: Bool, b: Bool): Bool = a & b
+fun <>(x: Bool, y: Bool): Bool = iff(x, y)

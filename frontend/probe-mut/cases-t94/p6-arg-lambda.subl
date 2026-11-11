@@ -1,0 +1,2 @@
+fun k(f: () => Null): Null = f()
+var g = k({ => print("x") })

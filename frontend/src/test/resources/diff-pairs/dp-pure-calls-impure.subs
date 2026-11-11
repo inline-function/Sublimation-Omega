@@ -1,0 +1,3 @@
+// 差分对拍 B（护栏③ 真纯调不纯样本）：未注解 q 调 @impure p——q 闭包推导 IMPURE 且产物面回写（脚本模式）
+@impure fun p(a: Nat): Nat = a
+fun q(): Nat { p(1) }

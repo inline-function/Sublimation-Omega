@@ -1,0 +1,2 @@
+fun wantInt(n: Int): Nat = 0
+fun give(a: Nat, b: Nat): Nat = wantInt(a - b)

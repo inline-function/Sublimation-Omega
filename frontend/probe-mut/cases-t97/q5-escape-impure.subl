@@ -1,0 +1,1 @@
+@impure fun f(n: Nat): Nat = f(n)

@@ -1,0 +1,7 @@
+fun `ab
+c`(): Nat = 1
+
+@impure fun main() {
+    unchecked print(`ab
+c`())
+}

@@ -1,0 +1,11 @@
+sublimation-frontend — Sublimation 前端编译器（词法 / 语法 / HIR / JSON 产物）
+用法:
+  tokens <file>                        打印 token 流（含邻接标记）
+  parse <file> [--script]              词法 + 语法分析，打印语法树
+  check <file> [--script] [-v]         前端全分析（HIR 构造含名称解析与证明校验），诊断分级输出
+  compile <file> [-o <out.json>] [--script] [-v]   全管线：源代码 → HIR → JSON 文件写盘
+选项:
+  --script    按脚本模式解析（顶层允许任意语句与声明；默认工程模式）
+  -v          输出提示/补充级诊断（默认隐藏补充族，与旧 CLI 同口径）
+  -o <path>   JSON 产物路径（compile；默认 <file>.hir.json）
+退出码：0 成功；1 存在 ERROR 级诊断；2 用法错误。

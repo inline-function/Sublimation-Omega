@@ -1,0 +1,4 @@
+// OQ-10 无解硬拒（工程模式）：E-OMITTED-TYPE + 调用位 E-TYPE-MISMATCH
+fun g2(x: Nat) = 0
+fun f(y) = g2(y)
+var s = f("a")

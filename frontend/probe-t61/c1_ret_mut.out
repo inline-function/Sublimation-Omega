@@ -1,0 +1,3 @@
+[错误][1:27] E-TYPE-MISMATCH: 函数 g 声明返回 @mut Nat，但函数体是 Nat，两边类型不一致
+  1 | fun g(a: Nat): @mut Nat = a
+    |                           ^

@@ -1,0 +1,187 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "q4-release-axiom.subl",
+    "mode": "script"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:1-3:5",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirAxiom",
+        "nid": 2,
+        "pos": "1:1-1:5",
+        "notes": [],
+        "props": [
+          {
+            "kind": "HirPAtom",
+            "nid": 4,
+            "pos": "1:7-1:10",
+            "notes": [],
+            "head": "pure",
+            "terms": [
+              {
+                "kind": "HirTName",
+                "nid": 3,
+                "pos": "1:12-1:12",
+                "notes": [],
+                "name": "w",
+                "symbol": {
+                  "id": 0,
+                  "kind": "fun",
+                  "name": "w"
+                }
+              }
+            ]
+          }
+        ],
+        "proofContext": {
+          "facts": [],
+          "matched": null
+        },
+        "rule": "R-AXIOM",
+        "verdict": {
+          "status": "proven",
+          "diagCode": null
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 5,
+        "pos": "2:13-2:13",
+        "notes": [],
+        "name": "w",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "w"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 6,
+          "pos": "2:18-2:21",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 2,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 7,
+          "pos": "2:23-2:23",
+          "notes": [],
+          "stmts": []
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 9,
+        "pos": "3:5-3:5",
+        "notes": [],
+        "name": "q",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "q"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 10,
+          "pos": "3:10-3:13",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 2,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 11,
+          "pos": "3:15-3:15",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirExprStmt",
+              "nid": 12,
+              "pos": "3:17-3:17",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 13,
+                "pos": "3:17-3:17",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 14,
+                  "pos": "3:17-3:17",
+                  "notes": [],
+                  "name": "w",
+                  "symbol": {
+                    "id": 0,
+                    "kind": "fun",
+                    "name": "w"
+                  },
+                  "type": null
+                },
+                "args": [],
+                "symbol": {
+                  "id": 0,
+                  "kind": "fun",
+                  "name": "w"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 16,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

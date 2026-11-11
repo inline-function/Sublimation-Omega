@@ -1,0 +1,2 @@
+@impure fun p(a: Nat): Nat = a
+fun q(): Null { unchecked p(1) }

@@ -1,0 +1,4 @@
+﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/特性巡礼.subl -o jsoncmp/out/t122n/examples__特性巡礼.subl.json
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t122n\examples__特性巡礼.subl.json（185660 字节）

@@ -1,0 +1,3 @@
+[错误][1:7] E-DEFAULT-TYPE: 默认值 Str 与形参 a 的类型 Nat 不符，两边类型不一致
+  1 | fun f(a: Nat = "abc"): Nat = a
+    |       ^

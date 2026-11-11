@@ -1,0 +1,1 @@
+fun f(x: Nat, l: Nat, r: Nat): Null <x ∈ (l..r) → x >= l>

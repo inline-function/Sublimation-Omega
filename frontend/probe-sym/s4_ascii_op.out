@@ -1,0 +1,9 @@
+[错误][1:6] E-SYNTAX: 顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）
+  1 | fun <+>(a: Nat, b: Nat): Nat = a + b
+    |      ^
+[错误][5:24] E-SYNTAX: 期望表达式
+  5 |     unchecked print(1 <+> 2)
+    |                        ^
+[错误][5:25] E-SYNTAX: 期望表达式
+  5 |     unchecked print(1 <+> 2)
+    |                         ^

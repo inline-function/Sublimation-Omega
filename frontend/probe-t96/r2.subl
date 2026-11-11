@@ -1,0 +1,2 @@
+@impure fun side(): Null { }
+@root fun main(): Null { unchecked side() }

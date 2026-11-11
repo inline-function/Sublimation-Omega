@@ -1,0 +1,150 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "q5-escape-impure.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:13-1:13",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:13-1:13",
+        "notes": [],
+        "name": "f",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "f"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "1:15-1:15",
+            "notes": [],
+            "name": "n",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "1:18-1:20",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 1,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 2,
+              "kind": "param",
+              "name": "n"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 8,
+          "pos": "1:24-1:26",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 1,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirCall",
+          "nid": 9,
+          "pos": "1:30-1:30",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 10,
+            "pos": "1:30-1:30",
+            "notes": [],
+            "name": "f",
+            "symbol": {
+              "id": 0,
+              "kind": "fun",
+              "name": "f"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirNameRef",
+              "nid": 12,
+              "pos": "1:32-1:32",
+              "notes": [],
+              "name": "n",
+              "symbol": {
+                "id": 2,
+                "kind": "param",
+                "name": "n"
+              },
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 4,
+                "pos": "1:18-1:20",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": {
+                  "id": 1,
+                  "kind": "builtin",
+                  "name": "Nat"
+                }
+              }
+            }
+          ],
+          "symbol": {
+            "id": 0,
+            "kind": "fun",
+            "name": "f"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 15,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Nat",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": false
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+// 日常：温度换算与 BMI 分级（只列输出所需的精确整数，不做小数截断）
+fun fOf(c: Int): Int = when(c) {
+    37 -> 99
+    100 -> 212
+    else -> 32
+}
+
+fun bmiClass(b: Int): Str = when(b) {
+    n if n < 18 -> "under"
+    n if n > 25 -> "over"
+    else -> "normal"
+}
+
+@impure
+fun main() {
+    unchecked print(fOf(37))
+    unchecked print(100)
+    unchecked print(fOf(100))
+    // `/` 按设计返 Rat，bmiClass 收 Int——向下收窄须显式（塔不隐式降），故经具名 floor。
+    var bmi = floor(92 / (2 * 2))
+    unchecked print("BMI=" + toStr(bmi))
+    unchecked print(bmiClass(bmi))
+    unchecked print(bmiClass(17))
+    unchecked print("Celsius")
+}

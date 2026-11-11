@@ -1,0 +1,2 @@
+fun use(f: (Any) => Nat): Nat = f(1)
+fun narrow(f: (Nat) => Nat): Nat = use(f)

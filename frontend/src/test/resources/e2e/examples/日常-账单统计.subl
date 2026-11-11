@@ -1,0 +1,52 @@
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+fun size[T](xs: List[T]): Nat = when(xs) {
+    Nil -> 0
+    is Cons(_, t) -> 1 + size(t)
+}
+
+fun map[T, U](xs: List[T], f: (T) => U): List[U] = when(xs) {
+    Nil -> Nil
+    is Cons(h, t) -> Cons(f(h), map(t, f))
+}
+
+fun filter[T](xs: List[T], f: (T) => Bool): List[T] = when(xs) {
+    Nil -> Nil
+    is Cons(h, t) -> if (f(h)) { Cons(h, filter(t, f)) } else { filter(t, f) }
+}
+
+fun fold[T, U](xs: List[T], init: U, f: (T, U) => U): U = when(xs) {
+    Nil -> init
+    is Cons(h, t) -> fold(t, f(h, init), f)
+}
+
+fun joinToString[T](xs: List[T], sep: Str): Str =
+    fold(xs, "", { x, acc => if (acc == "") { toStr(x) } else { concat(acc, concat(sep, toStr(x))) } })
+struct Bill(name: Str, amount: Nat)
+
+fun totalOf(xs: List[Bill]): Nat = fold(xs, 0, { b, acc => b.amount + acc })
+
+fun overAmount(xs: List[Bill]): List[Nat] = map(filter(xs, { b => b.amount > 25 }), { b => b.amount })
+
+fun firstName(xs: List[Bill]): Str = when(xs) {
+    is Cons(h, _) -> h.name
+    Nil -> "?"
+}
+
+fun lastAmount(xs: List[Bill]): Nat = when(xs) {
+    is Cons(h, Nil) -> h.amount
+    is Cons(_, t) -> lastAmount(t)
+    Nil -> 0
+}
+
+@impure
+fun main() {
+    var bills: List[Bill] = Cons(Bill("rice", 10), Cons(Bill("pen", 6), Cons(Bill("milk", 30), Cons(Bill("meat", 40), Nil))))
+    unchecked print(size(bills))
+    unchecked print("total=" + toStr(totalOf(bills)))
+    unchecked print(joinToString(overAmount(bills), ","))
+    unchecked print(firstName(bills))
+    unchecked print(lastAmount(bills))
+}

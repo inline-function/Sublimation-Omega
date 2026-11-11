@@ -1,0 +1,2 @@
+fun q(a: Nat): Nat = a
+var f = q

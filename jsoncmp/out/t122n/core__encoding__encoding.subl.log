@@ -1,0 +1,4 @@
+﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/core/encoding/encoding.subl -o jsoncmp/out/t122n/core__encoding__encoding.subl.json
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t122n\core__encoding__encoding.subl.json（10173 字节）

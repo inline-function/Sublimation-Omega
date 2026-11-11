@@ -1,0 +1,4 @@
+struct A(x: Nat)
+struct D(x: Str)
+fun takeA(a: A): Nat = a.x
+fun give(d: D): Nat = takeA(d)

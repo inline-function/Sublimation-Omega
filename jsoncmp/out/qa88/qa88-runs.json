@@ -1,0 +1,146 @@
+[
+ {
+  "name": "core__logic__logic.subl",
+  "line": 16,
+  "ctx": "funprop",
+  "ops": "∧8 →6",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 51,
+  "ctx": "funprop",
+  "ops": "∧8 ∧8",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 98,
+  "ctx": "funprop",
+  "ops": "∧8 →6",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 105,
+  "ctx": "funprop",
+  "ops": "∈9 →6 >=9",
+  "n": 3,
+  "why": "→(6)<>=(9)"
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 107,
+  "ctx": "funprop",
+  "ops": "∈9 →6 <=9",
+  "n": 3,
+  "why": "→(6)<<=(9)"
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 111,
+  "ctx": "funprop",
+  "ops": "<=9 ∧8 <=9 →6 <=9",
+  "n": 5,
+  "why": "∧(8)<<=(9);→(6)<<=(9)"
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 113,
+  "ctx": "funprop",
+  "ops": "∧8 →6",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 115,
+  "ctx": "funprop",
+  "ops": "∧8 →6",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 119,
+  "ctx": "funprop",
+  "ops": "∧8 →6",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__logic__logic.subl",
+  "line": 121,
+  "ctx": "funprop",
+  "ops": "∈9 ∧8 <=9 →6 ∈9",
+  "n": 5,
+  "why": "∧(8)<<=(9);→(6)<∈(9)"
+ },
+ {
+  "name": "core__math__inequality.subl",
+  "line": 16,
+  "ctx": "funprop",
+  "ops": "*10 *10",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__math__inequality.subl",
+  "line": 26,
+  "ctx": "funprop",
+  "ops": "*10 *10",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__math__number.subl",
+  "line": 44,
+  "ctx": "funprop",
+  "ops": "∧8 →6",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__math__number.subl",
+  "line": 56,
+  "ctx": "funprop",
+  "ops": "∧8 ∧8",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__math__number.subl",
+  "line": 85,
+  "ctx": "funprop",
+  "ops": "+10 +10",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__math__number.subl",
+  "line": 89,
+  "ctx": "funprop",
+  "ops": "*10 *10",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__zfc__zfc.subl",
+  "line": 118,
+  "ctx": "funprop",
+  "ops": "∧8 ∧8",
+  "n": 2,
+  "why": ""
+ },
+ {
+  "name": "core__zfc__zfc.subl",
+  "line": 118,
+  "ctx": "funprop",
+  "ops": "∧8 ∧8",
+  "n": 2,
+  "why": ""
+ }
+]

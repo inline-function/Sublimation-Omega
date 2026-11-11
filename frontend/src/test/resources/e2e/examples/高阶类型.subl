@@ -1,0 +1,36 @@
+// ============================================================
+// 特性：高阶类型 HKT（kind 形参 [F[_]] / 扩展函数 fun List[a].map / kind
+//       应用 F[A]~List[Nat] / 方法糖 + 自由式调用同桶路由）
+// 预期输出（每行一个）：2,4,6
+// ============================================================
+
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+// [F[_]]：F 是 arity 1 的构造子形参（kind *→*）
+trait Functor[F[_]] {
+    fun map[A, B](f: (A) => B, fa: F[A]): F[B]
+}
+
+// P-8 迁移（卷 §7）：impl Functor for List[a] 改扩展函数；接收者入首参位（形参顺序
+// 随之调整：f 在前 → f（剩余形参），调用侧 map(f, xs) → xs.map(f) / map(xs, f)）
+fun List[a].map[a, b](f: (a) => b): List[b] = when(self) {
+        Nil  -> Nil
+        is Cons(h, t) -> Cons(f(h), t.map(f))
+}
+
+fun fold[T, U](xs: List[T], init: U, f: (T, U) => U): U = when(xs) {
+    Nil  -> init
+    is Cons(h, t) -> fold(t, f(h, init), f)
+}
+
+fun joinToStr[T](xs: List[T], sep: Str): Str =
+    fold(xs, "", { x, acc  => if (acc == "") { toStr(x) } else { concat(acc, concat(sep, toStr(x))) } })
+
+@impure
+fun main() {
+    var xs: List[Nat] = Cons(1, Cons(2, Cons(3, Nil)))
+    var ys = xs.map({ n  => n * 2 })        // 方法糖：接收者头 List 查扩展函数桶（TS-12）
+    unchecked print(joinToStr(ys, ","))     // 2,4,6
+}

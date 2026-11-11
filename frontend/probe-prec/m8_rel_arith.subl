@@ -1,0 +1,1 @@
+fun f(x: Int, l: Int): Bool = x >= l + 1

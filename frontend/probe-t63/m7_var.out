@@ -1,0 +1,6 @@
+[错误][2:5] E-TYPE-MISMATCH: var x 标注了 Nat，但初值是 Int，两边类型不一致
+  2 |     var x : Nat = a - b
+    |     ^
+[错误][3:5] E-RETURN-TYPE: return 值类型 Int 与声明 Nothing 不符
+  3 |     return x - x
+    |     ^
