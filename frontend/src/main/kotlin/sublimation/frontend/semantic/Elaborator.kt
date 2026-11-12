@@ -533,6 +533,8 @@ private class Elaborator(
 
     /** 声明索引（file 预扫描：调用点的签名/字段/构造子来源；AST 只读）。 */
     private val funDecls = mutableMapOf<String, FunDecl>()
+    /** P-8/D（卷 TS-8/TS-17）：特质声明索引（满足判定的规范来源；t140 B2.2 起含挂载快照注入）。 */
+    private val traitDecls = mutableMapOf<String, TraitDecl>()
     private val structDecls = mutableMapOf<String, StructDecl>()
     private val aliasDecls = mutableMapOf<String, TypeAliasDecl>()
     private val aliasExpanding = mutableSetOf<String>()
@@ -587,12 +589,19 @@ private class Elaborator(
                             symbols.declareModuleExt(head, name, ext.decl)
                     }
                 }
+                // t140（B2.2 快照 trait 面）：stdlib 顶层特质入父域声明索引（traitDecls——
+                // 满足判定/变构推断/环检共用；限定类型面 type() 另查快照 traits 表。R-22 裸名链
+                // 不通——特质不经 prelude 虚拟层，无符号面泄漏）。因为满足判定索引只按**名**查
+                // （界名/父链名），stdlib 特质可被裸界名 + 限定父链双形态引用。
+                snap.traits.forEach { (k, v) -> traitDecls[k] = v.decl }
             } else {
                 snap.structs.forEach { (k, v) ->
                     structDecls[k] = v.decl
                     symbols.declareModuleCtor(k, v.symbol.id, v.decl.pos, v.decl.fields.isEmpty())
                 }
                 snap.aliases.forEach { (k, v) -> aliasDecls[k] = v.decl }
+                // t140（B2.2）：用户挂载件顶层特质同面入父域声明索引（同别名/结构体口径）
+                snap.traits.forEach { (k, v) -> traitDecls[k] = v.decl }
             }
         }
         symbols.declareModuleStructShapes(retiredStructShapes)
@@ -601,8 +610,6 @@ private class Elaborator(
 
     /** P-8/D（卷 TS-11/TS-19）：扩展函数声明索引——(接收者类型头, 名字) → 声明集合；
      *  与自由函数 funDecls 分桶，判定基于全集（声明顺序无关，前向引用合法）。 */
-    /** P-8/D（卷 TS-8/TS-17）：特质声明索引（满足判定的规范来源）。 */
-    private val traitDecls = mutableMapOf<String, TraitDecl>()
 
     /** return 上下文帧（函数/lambda：声明返回类型 + sawReturn 计数，E-RETURN-OUTSIDE/E-MISSING-RETURN 判据）。 */
     private val funFrames = ArrayDeque<FunFrame>()
@@ -1462,7 +1469,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         // P-8/D（卷 TS-9/TS-10/TS-15）：接收者解释——头未知 → W-EXT-OBSOLETE（不阻断，替代头名报错，
         // TS-9 §9）；头已知 → 全量查名（Receiver 中的类型参数须经理论参数表声明，TS-15，由 type() 落
         // E-UNBOUND-NAME；实参中的未声明名同源）。Self 形态接收者由 type() 落 E-SELF-OUTSIDE-CLASS（TS-26）。
-        val recvHeadOk = (d.receiver as? NamedType)?.name?.let { symbols.lookupType(it) != null } ?: true
+        // t140（B2.2）：接收者头为当前作用域理论参数（特质体内的 F 等）时视为已知头——
+        // 消 W-EXT-OBSOLETE 假阳（F 从未作为类型声明；它是所属特质的 kind 形参，TS-15 头名口径）。
+        val recvHeadOk = (d.receiver as? NamedType)?.name?.let { symbols.lookupType(it) != null || isTypeParam(it) } ?: true
         val recvT: sublimation.frontend.hir.HirType? = d.receiver?.let {
             if (recvHeadOk) type(it) else quietReceiverHead(it)
         }
@@ -4496,8 +4505,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             val mod = if (t.module.size == 1) mounted[t.module.first()] else null
             val mAlias = mod?.aliases?.get(t.name)
             val mStruct = mod?.structs?.get(t.name)
+            // t140（B2.2 快照 trait 面）：限定特质引用 traits.Functor——traitDecls 侧由 init 注入，
+            // 类型面落具名 + 模块符号引用（kind=TRAIT；父链/界引用形态保留，HIR 不展开成员）
+            val mTrait = mod?.traits?.get(t.name)
             when {
-                mod != null && mAlias == null && mStruct == null -> {
+                mod != null && mAlias == null && mStruct == null && mTrait == null -> {
                     diag.error("E-UNBOUND-NAME", t.pos,
                         "类型 " + ident(t.name) + " 不可解析：模块 " + ident(mod.alias) +
                             " 的类型面无该别名/结构体（限定类型引用未命中）")
@@ -4508,6 +4520,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     t.name, t.args.map { type(it) }, mAlias.symbol, freshNid(), t.pos, emptyList())), t.pos)
                 mStruct != null -> sublimation.frontend.hir.HirNamedType(
                     t.name, t.args.map { type(it) }, mStruct.symbol, freshNid(), t.pos,
+                    notesOf(t, listOf(moduleRefNote(t.pos))))
+                mTrait != null -> sublimation.frontend.hir.HirNamedType(
+                    t.name, t.args.map { type(it) }, mTrait.symbol, freshNid(), t.pos,
                     notesOf(t, listOf(moduleRefNote(t.pos))))
                 else -> {
                     // 本期单文件：模块段折叠留给后期模块挂载任务（ADR-1 §3.2）——形态保留、不落诊断
@@ -4595,13 +4610,14 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         val key = infer.render(concrete) to traitName
         satisfiesCache[key]?.let { return it }
         // 继承闭包（TS-8）：父类规范并入要求；环由 traitCycleCheck 在声明期已落 E-CYCLE，此作访问保护
-        val specs = mutableListOf<Pair<String, FunDecl>>()
+        // t140（B2.2）：规范携带所属特质的**理论参数**（F[_] 等）——满足判定与缺失渲染须认 F。
+        val specs = mutableListOf<Triple<String, List<TheoryParam>, FunDecl>>()
         val seen = mutableSetOf(traitName)
         val stack = ArrayDeque<String>().apply { addLast(traitName) }
         while (stack.isNotEmpty()) {
             val cur = stack.removeLast()
             val cd = traitDecls[cur] ?: continue
-            cd.members.forEach { m -> specs += cur to m }   // P-9/B.3 后 trait 体只剩函数规范（val 常量已废除）
+            cd.members.forEach { m -> specs += Triple(cur, cd.theory, m) }   // P-9/B.3 后 trait 体只剩函数规范（val 常量已废除）
             cd.parents.forEach { p ->
                 val pn = (p as? NamedType)?.name ?: return@forEach
                 if (seen.add(pn)) stack.addLast(pn)
@@ -4609,9 +4625,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         }
         val missing = mutableListOf<String>()
         var residue = false
-        for ((src, sigma) in specs) {
-            when (extSpecMatch(sigma, concrete)) {
-                SpecMatch.UNMATCHED -> missing.add(src + "." + renderSpecAfterSelf(sigma, concrete))
+        for ((src, traitTheory, sigma) in specs) {
+            when (specSatisfy(sigma, traitTheory, concrete)) {
+                SpecMatch.UNMATCHED -> missing.add(src + "." + renderSpecAfterSelf(sigma, traitTheory, concrete))
                 SpecMatch.SELF_RESIDUE -> residue = true
                 SpecMatch.MATCHED -> { }
             }
@@ -4625,7 +4641,191 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         return out
     }
 
-    /** 单条规范与扩展函数集匹配（TS-17）：接收者头下的同名扩展任一签名一致即满足。 */
+    /** t140（B2.2 满足面双通道，用户裁决）：规范形态路由。
+     *  ① 接收者形态（`fun F[A].map…`）→ 接收者形状恒等匹同形扩展函数（P-8 迁移层收口）；
+     *  ② 无接收者：先按既有 ADR-24 首位 Self 吸收走扩展通道，miss 再落自由函数通道（pure 缺口补）。 */
+    private fun specSatisfy(sigma: FunDecl, traitTheory: List<TheoryParam>, concrete: sublimation.frontend.hir.HirType): SpecMatch {
+        if (sigma.receiver != null) return receiverSpecMatch(sigma, traitTheory, concrete)
+        val viaExt = extSpecMatch(sigma, traitTheory, concrete)
+        if (viaExt != SpecMatch.UNMATCHED) return viaExt
+        return freeSpecMatch(sigma, traitTheory, concrete)
+    }
+
+    /** 通道①（接收者形态 ⇄ 同形扩展函数）：头部经 extHeadOf（别名身份复原，ADR-31 R-27）取扩展桶；
+     *  规范接收者须为**特质 kind 形参的应用形态**（F[A]，F ∈ traitTheory arity>0）——形状恒等前提。
+     *  F 弯到具体头由本层**显式 kind 实例化**（F[X] → 头[X]）完成：kind 形参与别名展开在
+     *  unifyInto 的别名展开通道里互相拦截（F[A] ↔ List[a] 走别名展开会炸成联合），故接收者合一不
+     *  经 HKT-U2 unify，改绑头 + 参数一阶合一。 */
+    private fun receiverSpecMatch(sigma: FunDecl, traitTheory: List<TheoryParam>, concrete: sublimation.frontend.hir.HirType): SpecMatch {
+        val head = extHeadOf(concrete, sigma.name) ?: ExtFunHeads.ofHir(concrete) ?: return SpecMatch.UNMATCHED
+        val ext = symbols.lookupExtDeclVisible(head, sigma.name) ?: return SpecMatch.UNMATCHED
+        // 规范接收者头须是 trait 的 kind 形参（接收者形态规范的形状恒等前提）
+        val sRecvHead = (sigma.receiver as? NamedType)?.name
+        val kindParam = traitTheory.filterIsInstance<TypeParam>().firstOrNull { it.name == sRecvHead && it.arity > 0 }
+        if (sRecvHead == null || kindParam == null) return SpecMatch.UNMATCHED
+        val kindSub = mapOf(kindParam.name to head)
+        inTraitBody++
+        return try {
+            enterTypeParams(traitTheory)
+            enterTypeParams(sigma.theory)
+            if (containsSelf(specTypeQuiet(sigma.receiver!!))) return SpecMatch.SELF_RESIDUE   // TS-27
+            val specPs = sigma.params.map { substKindParams(specTypeQuiet(it.type ?: ErrorType("形参类型标注省略", it.pos)), kindSub) }
+            val specR = substKindParams(sigma.retType?.let { specTypeQuiet(it) } ?: infer.namedT("Null"), kindSub)
+            if (specPs.any { containsSelf(it) } || containsSelf(specR)) return SpecMatch.SELF_RESIDUE   // TS-27
+            receiverSigMatch(sigma, ext, specPs, specR, kindSub, traitTheory)
+                .let { if (it) SpecMatch.MATCHED else SpecMatch.UNMATCHED }
+        } finally { exitTypeParams(); exitTypeParams(); inTraitBody-- }
+    }
+
+    /** 通道①签名合一（kind 实例化后的一阶世界）：规范接收者实参 ↔ 扩展接收者实参、形参逐位、
+     *  返回类型；规范/扩展两侧理论参数共作变量（A ↔ a），别名展开两侧同行（等价形态）。 */
+    private fun receiverSigMatch(
+        sigma: FunDecl, ext: FunDecl,
+        specPs: List<sublimation.frontend.hir.HirType>, specR: sublimation.frontend.hir.HirType,
+        kindSub: Map<String, String>, traitTheory: List<TheoryParam>,
+    ): Boolean {
+        enterTypeParams(ext.theory)
+        return try {
+            val extHead = (ext.receiver as? NamedType)?.name ?: return false
+            val sRecvArgs = (sigma.receiver as? NamedType)?.args?.map { substKindParams(specTypeQuiet(it), kindSub) }
+                ?: return false
+            val eRecvArgs = (ext.receiver as? NamedType)?.args?.map { specTypeQuiet(it) } ?: return false
+            val extPs = ext.params.map { specTypeQuiet(it.type ?: ErrorType("形参类型标注省略", it.pos)) }
+            val extR = ext.retType?.let { specTypeQuiet(it) } ?: infer.namedT("Null")
+            val vars = (sigma.theory.filterIsInstance<TypeParam>().map { it.name } +
+                ext.theory.filterIsInstance<TypeParam>().map { it.name } +
+                traitTheory.filterIsInstance<TypeParam>().map { it.name }).toSet()
+            val sub = LinkedHashMap<String, sublimation.frontend.hir.HirType>()
+            // 接收者头由 kind 实例化钉死（F → 扩展头）——头等价免检；实参逐位合一（A ↔ a）
+            sRecvArgs.size == eRecvArgs.size &&
+                sRecvArgs.zip(eRecvArgs).all { infer.unifyInto(it.first, it.second, vars, sub) } &&
+                specPs.size == extPs.size &&
+                specPs.zip(extPs).all { infer.unifyInto(it.first, it.second, vars, sub) } &&
+                infer.unifyInto(specR, extR, vars, sub)
+        } finally { exitTypeParams() }
+    }
+
+    /** 通道②（无接收者规范 ⇄ 同名自由函数；t140 B2.2 实缺口）：pure 类签名以自由函数落满足面——
+     *  `pure[A](x: A): F[A]` ⇄ `fun pure[A](x: A): Optional[A]`。kind 实例化把 F 钉到 **concrete 头**
+     *  （F[X] → 头[X]）：自由函数必须正交容器头才算满足（防乱接容器），再一阶合一签名。 */
+    private fun freeSpecMatch(sigma: FunDecl, traitTheory: List<TheoryParam>, concrete: sublimation.frontend.hir.HirType): SpecMatch {
+        val d = funDecls[sigma.name] ?: return SpecMatch.UNMATCHED
+        if (d.receiver != null) return SpecMatch.UNMATCHED
+        // kind 形参钉 concrete 头（联合→别名身份复原；不可复原头 ⇒ 自由通道不可判）
+        val head = extHeadOf(concrete, sigma.name) ?: ExtFunHeads.ofHir(concrete) ?: return SpecMatch.UNMATCHED
+        val kindSub = traitTheory.filterIsInstance<TypeParam>().filter { it.arity > 0 }
+            .associate { it.name to head }
+        inTraitBody++
+        return try {
+            enterTypeParams(traitTheory)
+            enterTypeParams(sigma.theory)
+            enterTypeParams(d.theory)
+            val specPs = sigma.params.map { substKindParams(specTypeQuiet(it.type ?: ErrorType("形参类型标注省略", it.pos)), kindSub) }
+            val specR = substKindParams(sigma.retType?.let { specTypeQuiet(it) } ?: infer.namedT("Null"), kindSub)
+            if (specPs.any { containsSelf(it) } || containsSelf(specR)) return SpecMatch.SELF_RESIDUE   // TS-27
+            val fPs = d.params.map { specTypeQuiet(it.type ?: ErrorType("形参类型标注省略", it.pos)) }
+            val fR = d.retType?.let { specTypeQuiet(it) } ?: infer.namedT("Null")
+            val vars = (sigma.theory.filterIsInstance<TypeParam>().map { it.name } +
+                d.theory.filterIsInstance<TypeParam>().map { it.name } +
+                traitTheory.filterIsInstance<TypeParam>().map { it.name }).toSet()
+            val sub = LinkedHashMap<String, sublimation.frontend.hir.HirType>()
+            val ok = specPs.size == fPs.size &&
+                specPs.zip(fPs).all { infer.unifyInto(it.first, it.second, vars, sub) } &&
+                infer.unifyInto(specR, fR, vars, sub)
+            if (ok) SpecMatch.MATCHED else SpecMatch.UNMATCHED
+        } finally { exitTypeParams(); exitTypeParams(); exitTypeParams(); inTraitBody-- }
+    }
+
+    /** t140（B2.2）：kind 形参实例化替换 F[X] → 头[X]（名位置映射，实参保留原样下探）。
+     *  与 Self 替换同理的 HIR 树复制（freshNid 保唯一），不改原树。 */
+    private fun substKindParams(t: sublimation.frontend.hir.HirType, kindSub: Map<String, String>): sublimation.frontend.hir.HirType = when (t) {
+        is HirNamedType -> {
+            val mapped = kindSub[t.name]
+            HirNamedType(mapped ?: t.name, t.args.map { substKindParams(it, kindSub) }, t.symbol, freshNid(), t.origin, t.notes)
+        }
+        is sublimation.frontend.hir.HirFunType -> sublimation.frontend.hir.HirFunType(
+            t.params.map { substKindParams(it, kindSub) }, substKindParams(t.ret, kindSub), t.purity, t.theory, t.context,
+            freshNid(), t.origin, t.notes)
+        is sublimation.frontend.hir.HirTupleType ->
+            sublimation.frontend.hir.HirTupleType(t.items.map { substKindParams(it, kindSub) }, freshNid(), t.origin, t.notes)
+        is HirMutType -> HirMutType(substKindParams(t.inner, kindSub), freshNid(), t.origin, t.notes)
+        is sublimation.frontend.hir.HirAtomicType ->
+            sublimation.frontend.hir.HirAtomicType(substKindParams(t.inner, kindSub), freshNid(), t.origin, t.notes)
+        is sublimation.frontend.hir.HirRefType ->
+            sublimation.frontend.hir.HirRefType(substKindParams(t.inner, kindSub), freshNid(), t.origin, t.notes)
+        is sublimation.frontend.hir.HirUnionType ->
+            sublimation.frontend.hir.HirUnionType(t.variants.map { substKindParams(it, kindSub) }, freshNid(), t.origin, t.notes)
+        else -> t
+    }
+    /** t140（B2.2）：理论参数的 kind arity 表（TypeParam.arity > 0）——unifyInto HKT-U2 合一的 arity 入参。 */
+    private fun hktArity(theory: List<TheoryParam>): Map<String, Int> =
+        theory.filterIsInstance<TypeParam>().filter { it.arity > 0 }.associate { it.name to it.arity }
+
+    /** 单条规范与扩展函数集匹配（TS-17）：接收者头下的同名扩展任一签名一致即满足。
+     *  t140（B2.2）：头走 extHeadOf（联合→别名身份复原），特质理论参数入域（F 可解）+ vars/arity 透传。 */
+    private fun extSpecMatch(sigma: FunDecl, traitTheory: List<TheoryParam>, concrete: sublimation.frontend.hir.HirType): SpecMatch {
+        val head = extHeadOf(concrete, sigma.name) ?: ExtFunHeads.ofHir(concrete) ?: return SpecMatch.UNMATCHED
+        // t39（TS-19 可见集）：调用点可见的扩展函数（V1 禁止重载——唯一声明）——帧链内→外按键遮蔽 + 全局其余键
+        val ext = symbols.lookupExtDeclVisible(head, sigma.name) ?: return SpecMatch.UNMATCHED
+        inTraitBody++
+        val ok = try {
+            enterTypeParams(traitTheory)
+            enterTypeParams(sigma.theory)
+            val specPs = sigma.params.map { specTypeQuiet(it.type ?: ErrorType("形参类型标注省略", it.pos)) }
+            val specR = sigma.retType?.let { specTypeQuiet(it) } ?: infer.namedT("Null")
+            val absorb = specPs.isNotEmpty() && isSelfForm(specPs.first())   // 替换前判定（ADR-24 接收者吸收位）
+            val sPs = specPs.map { substSelf(it, concrete) }
+            val sR = substSelf(specR, concrete)
+            if (sPs.any { containsSelf(it) } || containsSelf(sR)) return SpecMatch.SELF_RESIDUE   // TS-27
+            // t39：可见集内唯一声明（V1 禁止重载）——同一域声明顺序无关性质保持
+            extSigMatch(sigma, ext, sPs, sR, absorb, traitTheory)
+        } finally { exitTypeParams(); exitTypeParams(); inTraitBody-- }
+        return if (ok) SpecMatch.MATCHED else SpecMatch.UNMATCHED
+    }
+
+    /**
+     * 替换后的规范签名与扩展签名合一（TS-17：名字（桶键已匹配）+ 形参逐位 + 返回类型；
+     * 理论参数两侧均作变量，unifyInto 收集绑定）。
+     * ADR-24 裁决：**规范首位形参为 Self 形态（Self / Self[…]）时该位由接收者承担**，
+     * 其余位与扩展函数形参逐位对齐（fa: Self[A] ↔ 接收者 List[A]）；首位非 Self → 接收者不占形参位。
+     * t140（B2.2）：特质理论参数并入 vars，kind 形参经 arity 表入 HKT-U2 合一。 */
+    private fun extSigMatch(
+        sigma: FunDecl, ext: FunDecl,
+        sPs: List<sublimation.frontend.hir.HirType>, sR: sublimation.frontend.hir.HirType,
+        absorb: Boolean, traitTheory: List<TheoryParam>,
+    ): Boolean {
+        enterTypeParams(ext.theory)
+        return try {
+            val recvT = ext.receiver?.let { specTypeQuiet(it) } ?: return false
+            val extPs = ext.params.map { specTypeQuiet(it.type ?: ErrorType("形参类型标注省略", it.pos)) }
+            val extR = ext.retType?.let { specTypeQuiet(it) } ?: infer.namedT("Null")
+            val specTpNames = sigma.theory.filterIsInstance<TypeParam>().map { it.name }
+            val extTpNames = ext.theory.filterIsInstance<TypeParam>().map { it.name }
+            val vars = (specTpNames + extTpNames + traitTheory.filterIsInstance<TypeParam>().map { it.name }).toSet()
+            val hkt = hktArity(sigma.theory) + hktArity(ext.theory) + hktArity(traitTheory)
+            val sub = LinkedHashMap<String, sublimation.frontend.hir.HirType>()
+            val recvOk = if (absorb) infer.unifyInto(recvT, sPs.first(), vars, sub, hkt) else true
+            val effSpec = if (absorb) sPs.drop(1) else sPs
+            val paramsOk = effSpec.size == extPs.size &&
+                effSpec.zip(extPs).all { infer.unifyInto(it.first, it.second, vars, sub, hkt) }
+            val retOk = infer.unifyInto(sR, extR, vars, sub, hkt)
+            recvOk && paramsOk && retOk
+        } finally { exitTypeParams() }
+    }
+
+    /** 规范签名渲染——缺失规范清单的条目形态：map(fa: List[Nat], f: (A) => B): List[B]；
+     *  t140（B2.2）：接收者形态规范渲染为 F[A].map(f: (A) => B): F[B]（特质理论参数入域认 F）。 */
+    private fun renderSpecAfterSelf(sigma: FunDecl, traitTheory: List<TheoryParam>, concrete: sublimation.frontend.hir.HirType): String {
+        inTraitBody++
+        return try {
+            enterTypeParams(traitTheory)
+            enterTypeParams(sigma.theory)
+            val recv = sigma.receiver?.let { infer.render(specTypeQuiet(it)) }
+            val ps = sigma.params.map { substSelf(specTypeQuiet(it.type ?: ErrorType("形参类型标注省略", it.pos)), concrete) }
+            val rt = substSelf(sigma.retType?.let { specTypeQuiet(it) } ?: infer.namedT("Null"), concrete)
+            (recv?.let { it + "." } ?: "") + sigma.name + "(" + ps.joinToString(", ") { infer.render(it) } + "): " + infer.render(rt)
+        } finally { exitTypeParams(); exitTypeParams(); inTraitBody-- }
+    }
     private fun extSpecMatch(sigma: FunDecl, concrete: sublimation.frontend.hir.HirType): SpecMatch {
         val head = ExtFunHeads.ofHir(concrete) ?: return SpecMatch.UNMATCHED
         // t39（TS-19 可见集）：调用点可见的扩展函数——帧链内→外按键遮蔽 + 全局其余键

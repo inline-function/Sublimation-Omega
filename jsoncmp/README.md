@@ -172,3 +172,27 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 - **ext 限定调位**（B2 新绿面）：`moduleQualifiedCall` 自由函数面未命中时查快照 ext 面（实参 1 = 接收者位，头推导复用 `extHeadOf`），命中落 `HirField(模块别名, 名, field=ext 符号)` + D-MODULE-REF 旁注（zero schema 变动）；签名核对复用 `extCallType`（接收者首参），借用实参位同方法糖口径（borrowArgNotes）。限定调位诊断文案升格为「自由函数面与扩展函数面均无该名」。
 - **add 体仍空**（OQ-4 队长裁 b，别写结构性体——a 方案在 codegen 数组特判下语义假）：`@mut fun (@mut List[a]).add[a](v: a): List[a]` 无体 + 注释登记；R-15 兑现债随「运行时桥规格」（R4）后续件落（提案 §4 结论）。
 - **FUNS 不动**（MutableListOf/ListOf 分 B2.1 后置——本批只 retire EXT_METHODS 一条）。
+## t140 分账（stdlib B2.2: HKT 特质族·接收者形态 + 满足面双通道 + 快照 trait 面，2026-11-13）
+
+**变更画像**（字面: 既有件零字节变化 + 唯一 additive 新子件）:
+
+| 门 | 结果 | 证据 |
+|---|---|---|
+| 精确差分（vs t139 冻结产物 `out-subs/t139gate`） | **67 e2e 件逐字节同**；模块样本主件 + 8 子件逐字节同 | out-subs/t140diff-ledger.txt、t140-parity ③ |
+| 唯一 additive | 新子件 `examples__模块系统__主.subl__traits.json`（stdlib 默认挂载第 7 件的产物） | t140-parity ③ |
+| 68 门（vs **t122n 死冻锚**，队长修正令口径） | SAME 51 + 剥差同 16（历史盲差 pos/message，t131 时代起未收敛）+ 结构差 1（模块样本——t131 冻红→绿演化叠加本批 traits 子件，非回归） | out-subs/t140gate-ledger.txt |
+| stdlib 侧（vs t137stdlib） | 逐字节同 3 件（math/tool/主件）+ 预期差 1 = list（**t139 的 add 声明位，保持**） | t140-parity ④ |
+| t139→t140 快照侧 | 8/8 逐字节同 + traits 新件 | t140-parity ④ |
+| 套件 | **1144/1144**（1128 基线 + 16 T140StdlibTraitsTest；存量 3 处库存断言更新——2 处 stdlib 件清单 + 1 处模块子产物 7→8，测试不减） | :frontend:test |
+| 模块确定性 | 9/9（原 8/8 → +traits 子件） | t140-parity ⑤ |
+| 脚本门 | 14/14 | t140-parity ⑤ |
+
+**台账登记（新面/预期差/挂账）**:
+
+- **stdlib 新件**: `stdlib/collection/traits/traits.subl`（五特质族 + 头注）入默认挂载——模块样本新增 `__traits` 子件（additive 台账登记，零既有字节变化）;
+- **pure 自由函数实例回退**: 曾落 list/optional/set 三件的 `fun pure[a](x: a)` 实例（满足面第二通道），模块路径触发裸名链 E-DUP-DECL 三件同名 + R-23 裸名链污染（特质实例名入用户裸名面）⇒ **回退**; 容器 pure 实例保留既有**扩展形态**，自由函数通道由语言面测试覆盖（用户模块级能力）;
+- **历史盲差不收敛声明**: vs t122n 的 16 剥差同为 pos/message 盲差（t131 时代起，与 t140 无关——精确差分证明）; t131mod 活目录不作锚（队长修正令）;
+- **traverse 单子约束挂账**: `M[_]: Applicative` 落 E-TC-BOUNDARY（TS-24 V1 不可为界）⇒ Traversable 本体无界形态声明 + 债登记（提案 §14）;
+- **stdlib 特质裸名界不解析**（R-22）: 界名裸写落 E-UNBOUND-NAME，唯一通道 = 限定父链（`traits.Functor`）——门内证。
+
+机械证据脚本: `jsoncmp/scripts/t140-parity.ps1` 五段（traits 落位核对 / 68 门 t122n 冻锚台账 / 精确差分 vs t139 冻结 / 侧基线 / 确定性 + 脚本门），rc=0 全绿。

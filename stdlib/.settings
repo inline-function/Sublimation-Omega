@@ -1,8 +1,10 @@
 # stdlib 根默认挂载约定（R-23：编译入口解析此文件，条目并入编译根挂载表——用户挂载优先）
 # B0-0+B0-1：collection 五件（list/optional/result/set/map）+ math
 mount collection/list
+# t140（B2.2）：collection/traits 件（HKT 特质族——限定形态引用 traits.Functor 等）
 mount collection/optional
 mount collection/result
 mount collection/set
 mount collection/map
+mount collection/traits
 mount math

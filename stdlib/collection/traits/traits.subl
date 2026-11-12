@@ -1,0 +1,40 @@
+// stdlib.collection.traits —— 高阶特质族（B2.2 接收者形态）：Functor / Applicative /
+// Monad / Foldable / Traversable。特质方法建**接收者位**（用户裁决 fun F[A].map[A,B](f:…): F[B]）
+// ——satisfiesCheck 形状恒等（同形扩展函数收 P-8 迁移层）；无接收者方法（pure）走自由函数通道。
+// 实例 = 容器的扩展/自由函数（auto-impl 声明即满足，ST-3/ST-9）：List/Optional/Set 的 map/ap/
+// flatMap/fold 见各容器件；pure 以自由函数落件（fun pure[A](x): Optional[A] 等）。引用形态：
+// 挂载本件后以限定形态写（traits.Functor / traits.Monad）——裸名不经 R-22 非限定链。
+
+// ---------- Functor：可映射容器 ----------
+// 依据：map 保持容器形状、只变换元素（函子定律：identity 与组合保持）。
+trait Functor[F[_]] {
+    fun F[A].map[A, B](f: (A) => B): F[B]
+}
+
+// ---------- Applicative：函子应用 ----------
+// 依据：pure 注入单值、ap 逐函数应用；pure 无接收者（注入语义非接收者派生）⇒ 自由函数面。
+trait Applicative[F[_]] : Functor[F] {
+    fun pure[A](x: A): F[A]
+    fun F[A].ap[A, B](ff: F[(A) => B]): F[B]
+}
+
+// ---------- Monad：Applicative 之上的单子 ----------
+// 依据：flatMap 链式展平（结合律 + 左/右单位元；pure 继承 Applicative）。
+trait Monad[F[_]] : Applicative[F] {
+    fun F[A].flatMap[A, B](f: (A) => F[B]): F[B]
+}
+
+// ---------- Foldable：可折叠容器 ----------
+// 依据：fold 左结合累积——init 为零元、f 为 (R, A) => R 步进（累积在前）。
+trait Foldable[F[_]] {
+    fun F[A].fold[A, R](init: R, f: (R, A) => R): R
+}
+
+// ---------- Traversable：可遍历容器（**V1 边界——本体挂账**） ----------
+// 卷 §10.2「V1 HKT 约束满足判定」实测：单子约束 [M[_]: Applicative] 在 V1 不可为界
+// （TS-24/E-TC-BOUNDARY 落红——理论参数 arity > 0 不可为界）。 traverse 签名以**无界形态**
+// 声明（M 空商位）；单子律（traverse 须在单子上复合）在 V1 不可表达 ⇒ 本体挂账：
+// 债登记（R-16 前置件），后续件落约束面时一并收。不准硬砸。
+trait Traversable[F[_]] : Functor[F] {
+    fun F[A].traverse[A, M, B](f: (A) => M[B]): M[F[B]]
+}

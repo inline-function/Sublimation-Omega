@@ -238,3 +238,31 @@ builtinSig（TypeInfer:790）60+ 内建函数按域分类登记——**语言定
 **不在本提案内**: B2.1（FUNS: MutableListOf/ListOf 落 stdlib 源——ext 快照注入通道就绪后构造件落地）、B3 axioms、运行时桥（R4）。翻新执行须队长批准后另批（提案者：semantics；执行门号待队长定）。
 
 **本批未越界声明**: B2 不翻任何基线；上述提案仅登记。
+## 14 批史 t140（stdlib B2.2: HKT 特质族·接收者形态 + 满足面双通道 + 快照 trait 面，2026-11-13）
+
+**完成面**（用户裁决：特质方法统一接收者形态 `fun F[A].map[A,B](f: (A)=>B): F[B]`）:
+
+1. **特质方法接收者形态语言面**（消假阳）: funDecl 接收者头校验认 kind 形参（`lookupType(F) != null || isTypeParam(F)`）——接收者形态特质声明不再落 W-EXT-OBSOLETE 假阳（真未知头仍警告，冻结用例不动）。
+2. **满足面双通道**（satisfiesCheck 形状恒等）: 规范形态路由——**接收者形态规范**（`F[A].map`）经 receiverSpecMatch 匹**同形扩展函数**（kind 显式实例化 F→扩展头后一阶合一，绕开别名展开对 HKT 合一的拦截）; **无接收者规范**（`pure`）先经旧 ext 吸收通道（ADR-24 Self 首位）miss 后经 freeSpecMatch 匹**同名自由函数**（head 钉 concrete 后一阶合一）。三通道 vars 并集含 traitTheory 理论参数（否则 T↔Nat 合一假失败）。缺失规范渲染按规范原形态（`F[A].map(...)`）精确报。
+3. **stdlib 特质族件** `stdlib/collection/traits/traits.subl`: Functor / Applicative(:Functor) / Monad(:Applicative) / Foldable / Traversable(:Functor)——map/ap/flatMap/fold/traverse 建接收者位，pure 无接收者（自由函数通道）; 入 stdlib 默认挂载（.settings 第 6 位 collection 件）。
+4. **快照 trait 面**（t134 漏面补齐）: ModuleSnapshot 加 `traits` 面（ModuleTrait = SymbolRef(kind=TRAIT) + TraitDecl）——限定类型面 `type()` 加 trait 分支（`traits.Functor` → HirNamedType + 模块符号引用 + D-MODULE-REF）; init 将挂载快照特质注入父域 `traitDecls`（满足判定/变构推断/环检共用——裸名界不经 R-22 非限定链：stdlib 特质界名裸写落 E-UNBOUND-NAME，唯一引用通道是限定父链）。
+5. **容器实例 auto-impl**（ST-3/ST-9 声明即满足）: List/Optional/Set 的 map/ap/flatMap/fold/pure **扩展函数**（既有 stdlib 件承载）; 实测 stdlib 挂载 ext 查询链（t134 方法糖链同源）供给继承规范——`trait M : traits.Functor` 的 map 无本地实例亦满足。pure 的自由函数实例在 stdlib **无裸名落位**（R-23 裸名链纪律：特质实例名不入用户裸名面——曾试落 list/optional/set 三件触发模块路径 E-DUP-DECL 裸名撞，即回退; 自由函数通道为用户模块级能力，由语言面测试覆盖）。
+6. **traverse 单子约束边界（挂账）**: 卷 §10.2 V1 HKT 约束满足判定实测——`M[_]: Applicative` 在 checkConstraints 直接落 E-TC-BOUNDARY（理论参数 arity>0 不可为界，TS-24）⇒ Traversable 本体挂账：签名以无界形态声明（M 空商位、traverse 理论参数 [A,M,B]），单子律 V1 不可表达。**债登记**，不准硬砸。
+
+**B2.2 差分台账**（jsoncmp/README.md t140 分账 + out-subs/t140*-ledger 机械证据）:
+
+- 精确差分（vs t139 冻结产物 out-subs/t139gate）：**67 e2e 件逐字节同** + 模块样本主件与 8 子件逐字节同 + **唯一 additive = 新子件 `__traits`**（stdlib 默认挂载新增第 7 件的产物——零既有字节变化）。
+- 68 门 vs **t122n 死冻锚**（队长修正令口径）: SAME 51 + 剥差同 16（历史盲差 pos/message，t131 时代起从未收敛——非本批所致）+ 结构差 1（模块样本：t131 冻红→绿演化 + t140 traits 子件）。
+- stdlib 侧：t137stdlib 基线 3 同（math/tool/主件）+ list 件差（t139 add 声明位，保持）+ t139→t140 快照侧 8/8 逐字节同 + traits 新件。
+- 套件 **1144/1144**（1128 基线 + 16 T140StdlibTraitsTest: 特质族落位/容器实例/接收者声明无假阳/真未知头仍警告/双通道三绿/stdlib 注入两门/负例四红/traverse 边界红/旧形态冻结两通道/限定引用绿/未挂载前缀形态保留）; 更新 3 处存量断言（stdlib 件清单 2 处 + 模块子产物 7→8——库存口径随新件更新，测试不减）。
+- 模块双导出确定性 **9/9**（原 8/8 → 9 件: +traits 子件）; 脚本门 14/14。
+- 机械证据脚本 `jsoncmp/scripts/t140-parity.ps1`（traits 落位核对 / 68 门 t122n 冻锚台账 / 精确差分 / 侧基线 / 确定性 + 脚本门）。
+
+**诚实边界与债**:
+
+- traverse 单子约束（§10.2 V1 不可为界）——本体挂账，后续约束面件一并收;
+- stdlib 特质**裸名界不解析**（R-22 限定唯一通道）——界名裸写须本地声明;
+- 跨模块**自由函数实例**不经快照面入满足判定（freeSpecMatch 只吃本模块 funDecls）——stdlib auto-impl 靠挂载 ext 链（接收者形态规范）与声明即满足口径;
+- 预告 t141（R-24 v2）: `@mutable` 新注解纯糖（映 `@mut @ref` 接收者组合）、⇒ impure、吸收接收者形态 E-MUT-CAPTURE 误伤、stdlib add 改函数级形态、两形态 HIR 逐字节同——批内别按旧 v1 spec 做。
+
+**本批未越界声明**: 不动 B2.1（FUNS 构造件）、不动 add 体（R-15 随运行时桥）、不翻基线（t122n 死冻锚口径沿用，§13 翻新提案仍仅提案）、不硬砸 Traversable 单子约束。

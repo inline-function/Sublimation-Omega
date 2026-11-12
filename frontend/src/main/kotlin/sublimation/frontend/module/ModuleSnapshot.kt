@@ -9,6 +9,7 @@ import sublimation.frontend.ast.NamedType
 import sublimation.frontend.ast.QualifiedType
 import sublimation.frontend.ast.RefType
 import sublimation.frontend.ast.StructDecl
+import sublimation.frontend.ast.TraitDecl
 import sublimation.frontend.ast.TypeAliasDecl
 import sublimation.frontend.ast.Type as AstType
 import sublimation.frontend.hir.SymbolKind
@@ -35,6 +36,8 @@ internal class ModuleSnapshot(
     val structs: Map<String, ModuleStruct>,
     /** t134：扩展函数（接收者头 → 名 → 符号引用 + AST 声明；方法糖查询链兜底层）。 */
     val exts: Map<String, Map<String, ModuleExt>>,
+    /** t140（B2.2）：顶层特质（名 → 符号引用 + AST 声明；限定类型面 traits.Functor + 父域 traitDecls 注入）。 */
+    val traits: Map<String, ModuleTrait>,
     /** t137（R-23）：stdlib 默认挂载件旗标——非限定链符号面（preludeFun 数据源）只吃 stdlib 件；
      *  用户件走 R-22 限定唯一通道，裸名不泄漏。默认 false（零侵入非 stdlib 快照）。 */
     val stdlib: Boolean = false,
@@ -43,6 +46,9 @@ internal class ModuleSnapshot(
 
     /** t134：扩展函数按（接收者头, 名）查——方法糖兜底通道的唯一查询面。 */
     fun lookupExt(receiverHead: String, name: String): ModuleExt? = exts[receiverHead]?.get(name)
+
+    /** t140（B2.2）：特质按名查——限定类型面（traits.Functor）与满足判定索引的查询面。 */
+    fun lookupTrait(name: String): ModuleTrait? = traits[name]
 }
 
 internal data class ModuleFun(val symbol: SymbolRef, val decl: FunDecl)
@@ -56,10 +62,14 @@ internal data class ModuleStruct(val symbol: SymbolRef, val decl: StructDecl)
 /** t134：模块扩展函数面（符号引用 kind=FUN；接收者头=ExtFunHeads 口径的模块内镜像）。 */
 internal data class ModuleExt(val symbol: SymbolRef, val decl: FunDecl)
 
+/** t140（B2.2）：模块特质面（符号引用 kind=TRAIT；AST 声明承载成员/父链/理论参数。
+ * 供父域 traitDecls 注入与限定类型面解析——快照只读视图，特质本体经声明即满足 ST-3/ST-9）。 */
+internal data class ModuleTrait(val symbol: SymbolRef, val decl: TraitDecl)
+
 internal object ModuleSnapshots {
 
     /**
-     * 由模块体的 FileAst 建快照：顶层声明按声明序进四表（自由函数/别名/结构体/扩展函数），
+     * 由模块体的 FileAst 建快照：顶层声明按声明序进五表（自由函数/别名/结构体/扩展函数/特质 t140），
      * 符号 id 按序（零 nid 消费——SymbolRef 是跨模块引用标识，与 NodeIdSource 无关；R-22 nid 纪律）。
      * 同名取后者（模块内重复落 E-DUP-DECL 于模块自身编译——快照为符号视图，红模块的父域门由编排层把关）。 */
     fun fromAst(name: String, alias: String, file: FileAst, stdlib: Boolean = false): ModuleSnapshot {
@@ -67,6 +77,8 @@ internal object ModuleSnapshots {
         val aliases = LinkedHashMap<String, ModuleAlias>()
         val structs = LinkedHashMap<String, ModuleStruct>()
         val exts = LinkedHashMap<String, MutableMap<String, ModuleExt>>()
+        // t140（B2.2）：顶层特质面（名 → 符号引用 + AST 声明——父域 traitDecls/限定类型面共用）
+        val traits = LinkedHashMap<String, ModuleTrait>()
         var nextId = 0
         for (entry in file.entries) {
             val d = (entry as? DeclEntry)?.decl ?: continue
@@ -83,10 +95,12 @@ internal object ModuleSnapshots {
                     structs[d.name] = ModuleStruct(SymbolRef(nextId++, SymbolKind.STRUCT, d.name), d)
                 is TypeAliasDecl ->
                     aliases[d.name] = ModuleAlias(SymbolRef(nextId++, SymbolKind.ALIAS, d.name), d)
+                is TraitDecl ->
+                    traits[d.name] = ModuleTrait(SymbolRef(nextId++, SymbolKind.TRAIT, d.name), d)
                 else -> { }
             }
         }
-        return ModuleSnapshot(name, alias, funs, aliases, structs, exts, stdlib)
+        return ModuleSnapshot(name, alias, funs, aliases, structs, exts, traits, stdlib)
     }
 
     /** 扩展函数接收者头（ExtFunHeads.ofAst 的模块内最小镜像：具名/限定段链 + 视图族解包）。 */
