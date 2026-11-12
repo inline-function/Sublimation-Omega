@@ -875,7 +875,7 @@ class Parser(
         // （旧路径落「期望表达式」+ 跳符号级联），统一改走废除通道
         isRemovedKeyword(cur()) -> removedKeywordStmt(cur())
         peek(Kind.EXISTS) -> parseExistsStmt()                                                    // S-18
-        peek(Kind.FUN) -> {                                                                        // S-19
+        peek(Kind.FUN) -> {                                                                        // S-19（bare：无注解位，@注解局部 fun 走 AT 分派透传——t129 件 2）
             val fn = parseFun(emptyList())
             if (fn is FunDecl) FunStmt(fn, fn.pos) else ErrorStmt((fn as ErrorDecl).message, fn.pos)
         }
@@ -901,7 +901,18 @@ class Parser(
             } else {
                 val at = cur()
                 val anns = parseAnnotations()
-                if (peek(Kind.VAR)) parseVar(anns) else errStmt("期望 var 变量声明", at)
+                // t129 件 2（I-6 收口）：局部 fun 注解透传——原 AT 位只放 var，@impure/@pure 局部 fun
+                //  被错拒（E-SYNTAX「期望 var 变量声明」）；现注解落 FunDecl.anns，语义层走既有注解位
+                //  （funDecl 纯度/闸帧）。bare 局部 fun 走 FUN 分派（无注解位，emptyList 等价）。
+                when {
+                    peek(Kind.VAR) -> parseVar(anns)
+                    peek(Kind.FUN) -> {
+                        val fn = parseFun(anns)
+                        if (fn is FunDecl) FunStmt(fn, fn.pos)
+                        else ErrorStmt((fn as ErrorDecl).message, fn.pos)
+                    }
+                    else -> errStmt("期望 var 变量声明或 fun 函数声明", at)
+                }
             }
         }
         peek(Kind.VAR) -> parseVar(emptyList())                                                     // S-29
@@ -1031,7 +1042,9 @@ class Parser(
         else ExistsElimStmt(x, prop, emptyList(), t.range())
     }
 
-    /** S-25【unchecked 语句】：unchecked <语句>；unchecked.axiom 形态引导改写（诊断 + ErrorStmt）。 */
+    /** S-25【unchecked 语句】：unchecked <语句>（**单语句面**）；块形态精确拒绝
+     *  （t129 清账件 1，收口 S6 登记 OQ-3：unchecked { … } 原静默解析为异形块——降闸帧不落，
+     *  暗病形态）；unchecked.axiom 形态引导改写（诊断 + ErrorStmt）。 */
     private fun parseUnchecked(): Stmt {
         val t = cur()
         if (peek(Kind.DOT)) {
@@ -1039,6 +1052,12 @@ class Parser(
             val msg = if (isAxiom) "公理请直接写 `axiom <命题>` 语句（unchecked.axiom 已废除）"
             else "unchecked 后须直接跟语句"
             diagError(msg, t)
+            return ErrorStmt(msg, t.range())
+        }
+        if (peekAt(1)?.kind == Kind.LBRACE) {   // 块形态精确拒绝（peek 查当前位——用 peekAt 看后继）
+            val msg = "unchecked 后须直接跟单语句（S-25 单语句面），块形态已禁——" +
+                "请写 `unchecked <语句>`（如 unchecked xs.add(1)）；多条语句请逐条前缀 unchecked"
+            diagError(msg, cur())
             return ErrorStmt(msg, t.range())
         }
         next()
