@@ -1,0 +1,74 @@
+// ============================================================
+// 日常-区间合并与覆盖：数列区间计算（排序扫描合并 / 折叠极值 / 点覆盖查询）
+// 注：单文件模式不挂 stdlib，List 内联声明；输入区间已按 lo 排序。
+// 预期输出（每行一个）：3 / 1-6,8-12,15-18 / 1 / 18 / true / false / true
+// ============================================================
+
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+struct Iv(lo: Nat, hi: Nat)
+
+fun size[T](xs: List[T]): Nat = when(xs) {
+    Nil  -> 0
+    is Cons(_, t) -> 1 + size(t)
+}
+
+fun map[T, U](xs: List[T], f: (T) => U): List[U] = when(xs) {
+    Nil  -> Nil
+    is Cons(h, t) -> Cons(f(h), map(t, f))
+}
+
+fun fold[T, U](xs: List[T], init: U, f: (T, U) => U): U = when(xs) {
+    Nil  -> init
+    is Cons(h, t) -> fold(t, f(h, init), f)
+}
+
+fun joinToString[T](xs: List[T], sep: Str): Str =
+    fold(xs, "", { x, acc => if (acc == "") { toStr(x) } else { concat(acc, concat(sep, toStr(x))) } })
+
+fun touches(a: Iv, b: Iv): Bool = b.lo <= a.hi
+
+fun unionIv(a: Iv, b: Iv): Iv = Iv(a.lo, if (b.hi > a.hi) { b.hi } else { a.hi })
+
+// 排序扫描合并：cur 与后续重叠则并入，否则封段后从下一段继续
+fun mergeFrom(cur: Iv, rest: List[Iv]): List[Iv] = when (rest) {
+    Nil -> Cons(cur, Nil)
+    is Cons(h, t) -> if (touches(cur, h)) { mergeFrom(unionIv(cur, h), t) } else { Cons(cur, mergeFrom(h, t)) }
+}
+
+fun mergeAll(xs: List[Iv]): List[Iv] = when (xs) {
+    Nil -> Nil
+    is Cons(h, t) -> mergeFrom(h, t)
+}
+
+fun minLo(xs: List[Iv]): Nat = when (xs) {
+    Nil -> 0
+    is Cons(h, _) -> h.lo
+}
+
+fun maxHi(xs: List[Iv]): Nat =
+    fold(xs, 0, { iv, acc => if (iv.hi > acc) { iv.hi } else { acc } })
+
+fun covers(iv: Iv, p: Nat): Bool = if (p >= iv.lo) { p <= iv.hi } else { False }
+
+fun anyCover(xs: List[Iv], p: Nat): Bool = when (xs) {
+    Nil -> False
+    is Cons(h, t) -> if (covers(h, p)) { True } else { anyCover(t, p) }
+}
+
+fun showIv(iv: Iv): Str = concat(concat(toStr(iv.lo), "-"), toStr(iv.hi))
+
+@impure
+fun main() {
+    var ivs: List[Iv] = Cons(Iv(1, 4), Cons(Iv(3, 6), Cons(Iv(8, 10), Cons(Iv(9, 12), Cons(Iv(15, 18), Nil)))))
+    var merged: List[Iv] = mergeAll(ivs)
+    unchecked print(size(merged))                          // 3
+    unchecked print(joinToString(map(merged, { iv => showIv(iv) }), ","))  // 1-6,8-12,15-18
+    unchecked print(minLo(merged))                         // 1
+    unchecked print(maxHi(merged))                         // 18
+    unchecked print(anyCover(merged, 5))                   // true
+    unchecked print(anyCover(merged, 7))                   // false
+    unchecked print(anyCover(merged, 16))                  // true
+}

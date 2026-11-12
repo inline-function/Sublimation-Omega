@@ -1,0 +1,90 @@
+// ============================================================
+// 日常-CSV解析统计：文本处理（字符串切分 / 结构化解析 / 折叠统计 / 过滤）
+// 注：单文件模式不挂 stdlib，List 与高阶函数内联声明（目录模式见 模块系统/）
+// 预期输出（每行一个）：5 / 440 / apple / apple,pear,jam / 3
+// ============================================================
+
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+struct Row(name: Str, qty: Nat, price: Nat)
+
+fun size[T](xs: List[T]): Nat = when(xs) {
+    Nil  -> 0
+    is Cons(_, t) -> 1 + size(t)
+}
+
+fun map[T, U](xs: List[T], f: (T) => U): List[U] = when(xs) {
+    Nil  -> Nil
+    is Cons(h, t) -> Cons(f(h), map(t, f))
+}
+
+fun filter[T](xs: List[T], f: (T) => Bool): List[T] = when(xs) {
+    Nil  -> Nil
+    is Cons(h, t) -> if (f(h)) { Cons(h, filter(t, f)) } else { filter(t, f) }
+}
+
+fun fold[T, U](xs: List[T], init: U, f: (T, U) => U): U = when(xs) {
+    Nil  -> init
+    is Cons(h, t) -> fold(t, f(h, init), f)
+}
+
+fun joinToString[T](xs: List[T], sep: Str): Str =
+    fold(xs, "", { x, acc => if (acc == "") { toStr(x) } else { concat(acc, concat(sep, toStr(x))) } })
+
+// Optional 取默认值（纯）
+fun optNat(o: Optional[Nat], d: Nat): Nat = when(o) {
+    is Some(v) -> v
+    None -> d
+}
+
+fun natOf(s: Str): Nat = when(parseNat(s)) {
+    is Some(n) -> n
+    None -> 0
+}
+
+// 字符串切分：递归参数为子串（数值度量不可证，unchecked 逃逸同 range 口径）
+fun splitFields(s: Str): List[Str] {
+    var i = optNat(strIndexOf(s, ","), length(s))
+    if (i < length(s)) {
+        unchecked var rest = splitFields(substring(s, i + 1, length(s)))
+        return Cons(substring(s, 0, i), rest)
+    }
+    return Cons(s, Nil)
+}
+
+// 三字段定长行的结构化解析（when 表达式逐层解构）
+fun parseRow(s: Str): Row =
+    when (splitFields(s)) {
+        is Cons(name, rest1) -> when (rest1) {
+            is Cons(qs, rest2) -> when (rest2) {
+                is Cons(ps, _) -> Row(name, natOf(qs), natOf(ps))
+                Nil -> Row(name, natOf(qs), 0)
+            }
+            Nil -> Row(name, 0, 0)
+        }
+        Nil -> Row("", 0, 0)
+    }
+
+fun revenue(r: Row): Nat = r.qty * r.price
+
+fun totalRevenue(xs: List[Row]): Nat =
+    fold(xs, 0, { r, acc => revenue(r) + acc })
+
+fun bestRow(xs: List[Row]): Row =
+    fold(xs, Row("", 0, 0), { r, acc => if (revenue(r) > revenue(acc)) { r } else { acc } })
+
+fun highValueNames(xs: List[Row], threshold: Nat): List[Str] =
+    map(filter(xs, { r => revenue(r) > threshold }), { r => r.name })
+
+@impure
+fun main() {
+    var raw: List[Str] = Cons("apple,10,12", Cons("pear,5,20", Cons("milk,3,30", Cons("bread,2,15", Cons("jam,4,25", Nil)))))
+    var rows = map(raw, { r => parseRow(r) })
+    unchecked print(size(rows))                                  // 5
+    unchecked print(totalRevenue(rows))                          // 440
+    unchecked print(bestRow(rows).name)                          // apple
+    unchecked print(joinToString(highValueNames(rows, 90), ",")) // apple,pear,jam
+    unchecked print(size(highValueNames(rows, 90)))              // 3
+}

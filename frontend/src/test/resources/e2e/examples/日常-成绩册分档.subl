@@ -1,0 +1,82 @@
+// ============================================================
+// 日常-成绩册分档：数列记录与统计（分档计数 / 折叠极值 / 查询闭包）
+// 注：单文件模式不挂 stdlib，List 与高阶函数内联声明（目录模式见 模块系统/）
+// 预期输出（每行一个）：6 / 451 / 92 / 2 / 2 / 1 / 1 / alice,eve / 65 / 未找到 / 优秀
+// ============================================================
+
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+struct Student(name: Str, score: Nat)
+
+fun size[T](xs: List[T]): Nat = when(xs) {
+    Nil  -> 0
+    is Cons(_, t) -> 1 + size(t)
+}
+
+fun map[T, U](xs: List[T], f: (T) => U): List[U] = when(xs) {
+    Nil  -> Nil
+    is Cons(h, t) -> Cons(f(h), map(t, f))
+}
+
+fun filter[T](xs: List[T], f: (T) => Bool): List[T] = when(xs) {
+    Nil  -> Nil
+    is Cons(h, t) -> if (f(h)) { Cons(h, filter(t, f)) } else { filter(t, f) }
+}
+
+fun fold[T, U](xs: List[T], init: U, f: (T, U) => U): U = when(xs) {
+    Nil  -> init
+    is Cons(h, t) -> fold(t, f(h, init), f)
+}
+
+fun joinToString[T](xs: List[T], sep: Str): Str =
+    fold(xs, "", { x, acc => if (acc == "") { toStr(x) } else { concat(acc, concat(sep, toStr(x))) } })
+
+// 分档：区间嵌套判定（不用 &&，保持布尔算子最小面）
+fun inRange(score: Nat, lo: Nat, hi: Nat): Bool =
+    if (score >= lo) { score < hi } else { False }
+
+fun classify(score: Nat): Str =
+    if (score >= 85) { "优秀" } else {
+    if (score >= 70) { "良好" } else {
+    if (score >= 60) { "及格" } else { "挂科" } } }
+
+fun countIf(xs: List[Student], lo: Nat, hi: Nat): Nat =
+    size(filter(xs, { s => inRange(s.score, lo, hi) }))
+
+fun sumScores(xs: List[Student]): Nat =
+    fold(xs, 0, { s, acc => s.score + acc })
+
+fun maxScore(xs: List[Student]): Nat =
+    fold(xs, 0, { s, acc => if (s.score > acc) { s.score } else { acc } })
+
+fun namesAbove(xs: List[Student], threshold: Nat): List[Str] =
+    map(filter(xs, { s => s.score >= threshold }), { s => s.name })
+
+fun findScore(xs: List[Student], name: Str): Optional[Nat] = when(xs) {
+    Nil -> None
+    is Cons(h, t) -> if (h.name == name) { Some(h.score) } else { findScore(t, name) }
+}
+
+@impure
+fun main() {
+    var students: List[Student] = Cons(Student("alice", 92), Cons(Student("bob", 78), Cons(Student("cara", 65), Cons(Student("dave", 55), Cons(Student("eve", 88), Cons(Student("frank", 73), Nil))))))
+    unchecked print(size(students))                                    // 6
+    unchecked print(sumScores(students))                               // 451
+    unchecked print(maxScore(students))                                // 92
+    unchecked print(countIf(students, 85, 101))                        // 2（优秀）
+    unchecked print(countIf(students, 70, 85))                         // 2（良好）
+    unchecked print(countIf(students, 60, 70))                         // 1（及格）
+    unchecked print(countIf(students, 0, 60))                          // 1（挂科）
+    unchecked print(joinToString(namesAbove(students, 85), ","))       // alice,eve
+    when (findScore(students, "cara")) {
+        is Some(n) -> { unchecked print(n) }
+        None -> { unchecked print("未找到") }
+    }
+    when (findScore(students, "zoe")) {
+        is Some(n) -> { unchecked print(n) }
+        None -> { unchecked print("未找到") }
+    }
+    unchecked print(classify(maxScore(students)))                      // 优秀
+}

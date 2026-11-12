@@ -1,0 +1,101 @@
+// ============================================================
+// 日常-订单状态机：小规模状态机（ union 状态/事件 × 转移表 × 折叠驱动）
+// 非法转移落 None 计数；折叠驱动带状态与拒绝计数双累加。
+// 预期输出（每行一个）：Delivered / 1 / Cancelled / 0 / 非法转移：未支付不得签收
+// ============================================================
+
+struct Nil
+struct Cons[T](head: T, tail: List[T])
+type List[T] = Nil | Cons[T]
+
+// 订单状态（union）
+struct Created
+struct Paid
+struct Shipped
+struct Delivered
+struct Cancelled
+type OrderState = Created | Paid | Shipped | Delivered | Cancelled
+
+// 订单事件（union）
+struct RequestPay
+struct RequestShip
+struct RequestDeliver
+struct RequestCancel
+type OrderEvent = RequestPay | RequestShip | RequestDeliver | RequestCancel
+
+struct Drive(state: OrderState, rejected: Nat)
+
+fun fold[T, U](xs: List[T], init: U, f: (T, U) => U): U = when(xs) {
+    Nil  -> init
+    is Cons(h, t) -> fold(t, f(h, init), f)
+}
+
+fun stateName(s: OrderState): Str = when(s) {
+    Created -> "Created"
+    Paid -> "Paid"
+    Shipped -> "Shipped"
+    Delivered -> "Delivered"
+    Cancelled -> "Cancelled"
+}
+
+// 转移表：when × when（合法 → Some(次态)；非法 → None）
+fun nextState(s: OrderState, e: OrderEvent): Optional[OrderState] =
+    when (s) {
+        Created -> when (e) {
+            RequestPay -> Some(Paid)
+            RequestShip -> None
+            RequestDeliver -> None
+            RequestCancel -> Some(Cancelled)
+        }
+        Paid -> when (e) {
+            RequestPay -> None
+            RequestShip -> Some(Shipped)
+            RequestDeliver -> None
+            RequestCancel -> Some(Cancelled)
+        }
+        Shipped -> when (e) {
+            RequestPay -> None
+            RequestShip -> None
+            RequestDeliver -> Some(Delivered)
+            RequestCancel -> None
+        }
+        Delivered -> when (e) {
+            RequestPay -> None
+            RequestShip -> None
+            RequestDeliver -> None
+            RequestCancel -> None
+        }
+        Cancelled -> when (e) {
+            RequestPay -> None
+            RequestShip -> None
+            RequestDeliver -> None
+            RequestCancel -> None
+        }
+    }
+
+// 折叠驱动：状态推进 + 拒绝计数（结构体双槽累加）
+fun driveCount(start: OrderState, events: List[OrderEvent]): Drive =
+    fold(events, Drive(start, 0), { e, acc =>
+        when (nextState(acc.state, e)) {
+            is Some(v) -> Drive(v, acc.rejected)
+            None -> Drive(acc.state, acc.rejected + 1)
+        }
+    })
+
+@impure
+fun main() {
+    var events: List[OrderEvent] = Cons<OrderEvent>(RequestPay, Cons<OrderEvent>(RequestShip, Cons<OrderEvent>(RequestDeliver, Cons<OrderEvent>(RequestShip, Nil))))
+    var result = driveCount(Created, events)
+    unchecked print(stateName(result.state))   // Delivered
+    unchecked print(result.rejected)           // 1（已签收再发货：非法）
+
+    var events2: List[OrderEvent] = Cons<OrderEvent>(RequestPay, Cons<OrderEvent>(RequestCancel, Nil))
+    var r2 = driveCount(Created, events2)
+    unchecked print(stateName(r2.state))       // Cancelled
+    unchecked print(r2.rejected)               // 0
+
+    when (nextState(Created, RequestDeliver)) {
+        is Some(v) -> { unchecked print(concat("-> ", stateName(v))) }
+        None -> { unchecked print("非法转移：未支付不得签收") }
+    }
+}
