@@ -1,0 +1,7 @@
+// t128（S6 / R-21）差分对拍：R-01 调用边界 want 合成——双形态
+// 对侧形态（无 &）：同源零 warn——无借用无分派差异（R-04.3 双形态落点）
+@impure fun double(n : Nat) { print(n + n) }
+@impure fun main(): Null {
+  var x : Nat = 3
+  double(x)
+}

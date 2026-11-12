@@ -1,0 +1,7 @@
+// t128（S6 / R-21）差分对拍：R-01 调用边界 want 合成——双形态
+// 构造子位借用（callCtor want 合成）：只读字段位 ⇒ 共享 + 冗余 warn（R-04.3）
+@impure fun main(): Null {
+  var h : Nat = 1
+  var ys : List[Nat] = Cons(&h, Nil)
+  print(ys)
+}

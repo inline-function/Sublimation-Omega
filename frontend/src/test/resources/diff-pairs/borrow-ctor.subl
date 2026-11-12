@@ -1,0 +1,7 @@
+// t128（S6 / R-21）差分对拍：R-01 调用边界 want 合成——双形态
+// 对侧形态（无 &）：构造子字段位深拷/共享按既有矩阵
+@impure fun main(): Null {
+  var h : Nat = 1
+  var ys : List[Nat] = Cons(h, Nil)
+  print(ys)
+}

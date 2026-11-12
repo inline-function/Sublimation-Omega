@@ -1,0 +1,9 @@
+// t128（S6 / R-21）差分对拍：R-01 调用边界 want 合成——双形态
+// 对侧形态（无 &）：got=@mut × want=@mut ⇒ 矩阵深拷格（:104，R-01 双形态对照）
+@impure fun bump(xs : @mut List[Nat]) { xs.add(1) }
+@impure fun main(): Null {
+  var xs : @mut List[Nat] = MutableListOf(1)
+  unchecked bump(xs)
+  unchecked xs.add(2)
+  print(xs)
+}

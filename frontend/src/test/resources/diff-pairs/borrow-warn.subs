@@ -1,0 +1,7 @@
+// t128（S6 / R-21）差分对拍：R-01 调用边界 want 合成——双形态
+// W-BORROW-REDUNDANT 负例：只读形参（Nat）位点借用——分派不变（共享 vs 共享）⇒ warn
+@impure fun double(n : Nat) { print(n + n) }
+@impure fun main(): Null {
+  var x : Nat = 3
+  double(&x)
+}

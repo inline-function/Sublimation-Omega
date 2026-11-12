@@ -575,6 +575,13 @@ private class Elaborator(
      *  阶段 2 消费）。非产物通道（零 JSON 漂移）：@mut 注解结论只在闸/闭包相位用，HirCall 本身
      *  不携带注解字段（calleeImpure 位留给被调纯度口径）。 */
     private val mutMethodCalls = mutableSetOf<Int>()
+
+    /** t128（S6 / R-04.3）：借用冗余 warn 登记表（本轮调用点收集，runPurityGate 终轮发——
+     *  终轮回放口径见 [borrowArgNotes]：提升轮形参翻 @mut 后借用转为有效，免 warn）。 */
+    private val borrowWarns = mutableListOf<BorrowWarnRecord>()
+
+    /** t128：W-BORROW-REDUNDANT 登记项（& 位、被调名、形参名）。 */
+    private data class BorrowWarnRecord(val pos: SourceRange, val callee: String, val param: String)
     /** t125：提升应用——视图包 @mut（已 @mut 形态单调穿过不重包，R-06 混标单向蕴含）。 */
     private fun promotedView(tt: HirType, origin: SourceRange): HirType =
         if (tt is sublimation.frontend.hir.HirMutType) tt
@@ -860,7 +867,8 @@ private class Elaborator(
         val out = linkedMapOf<MetaSlotKey, MetaSolution>()
         fun export(m: InferMeta) {
             if (m.hasEvidence()) m.reResolve(solveCandidate(m))
-            val t = m.resolved ?: infer.namedT("Nothing")
+            // t128（R-21.1 视图规范化）：解归一——嵌套 @ref 折叠 + 联合别名归一（零命中时逐字原结构）
+            val t = normView(m.resolved ?: infer.namedT("Nothing"))
             // t118：上界约束随解映射跨轮传递（无解线复检原料）；unsolvable=无解旗（退化禁区）
             out[m.key] = MetaSolution(t, m.evidenceList(), m.owner,
                 uppers = m.upper.toList(), unsolvable = m.noSolution())
@@ -915,6 +923,69 @@ private class Elaborator(
             sublimation.frontend.hir.HirFunType(t.params.map { substMetas(it) }, substMetas(t.ret), t.purity,
                 t.theory, t.context, t.nid, t.origin, t.notes)
         else -> t
+    }
+
+    /**
+     * t128（R-21.1 视图规范化）：解集归一——
+     *  ① 嵌套 @ref 折叠（@ref @ref T ≡ @ref T——队长 R-21 裁决；want 合成 [refWrap] 同一等式的
+     *     解侧落点，全树递归）；
+     *  ② 联合别名归一（[normAlias]）——振荡同根治理。
+     *  壳节点复用原 nid/origin/notes——零分配、零 nid 漂移；无归一位逐字原节点。 */
+    private fun normView(t: HirType): HirType = when (t) {
+        is sublimation.frontend.hir.HirRefType ->
+            normView(t.inner).let { inner ->
+                if (inner is sublimation.frontend.hir.HirRefType) inner
+                else sublimation.frontend.hir.HirRefType(inner, t.nid, t.origin, t.notes)
+            }
+        is sublimation.frontend.hir.HirMutType ->
+            sublimation.frontend.hir.HirMutType(normView(t.inner), t.nid, t.origin, t.notes)
+        is sublimation.frontend.hir.HirAtomicType ->
+            sublimation.frontend.hir.HirAtomicType(normView(t.inner), t.nid, t.origin, t.notes)
+        is sublimation.frontend.hir.HirUnionType ->
+            normAlias(sublimation.frontend.hir.HirUnionType(
+                t.variants.map { normView(it) }, t.nid, t.origin, t.notes))
+        is sublimation.frontend.hir.HirNamedType ->
+            sublimation.frontend.hir.HirNamedType(t.name, t.args.map { normView(it) }, t.symbol, t.nid, t.origin, t.notes)
+        is sublimation.frontend.hir.HirTupleType ->
+            sublimation.frontend.hir.HirTupleType(t.items.map { normView(it) }, t.nid, t.origin, t.notes)
+        is sublimation.frontend.hir.HirFunType -> sublimation.frontend.hir.HirFunType(
+            t.params.map { normView(it) }, normView(t.ret), t.purity, t.theory, t.context, t.nid, t.origin, t.notes)
+        else -> t
+    }
+
+    /**
+     * t128（R-21.1）：联合 → 别名头归一——解为某别名目标联合的成员头同序形态时归一到别名头
+     *  （跨轮形态统一：List[Nat] 与 Nil | Cons[Nat] 不再振荡；成员头/元数/理论参数位代入全
+     *  对齐才归一，否则逐字原联合）。零 nid：壳复用原联合节点的 nid/origin。 */
+    private fun normAlias(u: sublimation.frontend.hir.HirUnionType): HirType {
+        if (u.variants.isEmpty()) return u
+        for ((name, decl) in aliasDecls) {
+            val tps = decl.theory.filterIsInstance<TypeParam>().map { it.name }
+            if (tps.isEmpty()) continue
+            enterTypeParams(decl.theory)
+            val target = try { type(decl.target) } finally { exitTypeParams() }
+            val flat = target as? sublimation.frontend.hir.HirUnionType
+            if (flat == null || flat.variants.size != u.variants.size) continue
+            val sigma = linkedMapOf<String, HirType>()
+            var ok = true
+            outer@ for (i in u.variants.indices) {
+                val sv = u.variants[i] as? sublimation.frontend.hir.HirNamedType
+                val tv = flat.variants[i] as? sublimation.frontend.hir.HirNamedType
+                if (sv == null || tv == null || sv.name != tv.name || sv.args.size != tv.args.size) { ok = false; break@outer }
+                for (j in sv.args.indices) {
+                    val sa = sv.args[j]; val ta = tv.args[j]
+                    val prev = if (ta is sublimation.frontend.hir.HirNamedType && ta.name in tps) sigma[ta.name] else null
+                    when {
+                        prev != null -> if (!infer.typeEq(prev, sa)) { ok = false; break@outer }
+                        ta is sublimation.frontend.hir.HirNamedType && ta.name in tps -> sigma[ta.name] = sa
+                        else -> if (!infer.typeEq(sa, ta)) { ok = false; break@outer }
+                    }
+                }
+            }
+            if (ok && tps.all { it in sigma })
+                return sublimation.frontend.hir.HirNamedType(name, tps.map { sigma[it]!! }, null, u.nid, u.origin, u.notes)
+        }
+        return u
     }
 
     /** R-08:implicit-It 糖 `{ e }` 的 `_` 用法预扫描（AST 体:嵌套 lambda / 匿名 fun 的 `_` 归其自身绑定,不外借）。 */
@@ -2541,6 +2612,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 gateBatchOpen()   // t122：实参批次（以调用位归并回放序）
                 val args = (listOf(c.target) + e.args).map { expr(it) }
                 val argTypes = args.map { etype(it) }
+                // t128（S6）：借用实参位旗标（接收者位不可借——R-03 解析位只在参数通道）
+                val borrowedFlags = args.map { it is sublimation.frontend.hir.HirBorrow }
                 // t47（ADR-31 R-27）：分派头保留**别名身份**——接收者静态类型经 expand 后是联合
                 // （None | Some[Nat] ← Opt[Nat]）时键取别名头，而非 Union/N（成员头集合反查）
                 val head = extHeadOf(argTypes.firstOrNull(), c.name)
@@ -2571,13 +2644,23 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                         demandMut(mutKey(t3Sym.origin, t3Name), e.pos, "传入 @mut 接收者位 T3")
                 }
                 val t: HirType = ext?.let { d ->
-                    extCallType(d, argTypes, e.pos)
+                    extCallType(d, argTypes, e.pos, borrowedFlags)
                 } ?: infer.builtinSig(c.name)?.let { (ps, rt) ->
                     infer.callFun(c.name, ps, null, retType = rt, argTypes = argTypes, pos = e.pos,
                             theoryNames = infer.builtinTheoryNames(c.name))
                 } ?: infer.syntheticT("方法" + c.name)
+                // t128（S6）：方法糖借用实参——留痕 + 冗余登记（零借用快路径：args 逐字原表——
+                //  形参视图求值须理论域包裹（虚拟扩展签名引用理论参数 a），无借用时零求值）
+                val args2 = if (ext != null && borrowedFlags.any { it }) {
+                    enterTypeParams(ext!!.theory)
+                    try {
+                        borrowArgNotes(args, argTypes,
+                            listOf(type(ext!!.receiver!!)) + sigOf(ext).first.map { expand(it) },
+                            listOf("self") + ext!!.params.map { it.name }, ext!!.name)
+                    } finally { exitTypeParams() }
+                } else args
                 val node = HirCall(
-                    callee = callee, args = args, symbol = calleeSymbol, type = t, dictionary = null,
+                    callee = callee, args = args2, symbol = calleeSymbol, type = t, dictionary = null,
                     slot = null, dictArgs = emptyList(), methodSugar = true, awaitPoint = false,
                     calleeImpure = false, nid = nid, origin = e.pos, notes = notesOf(e, listOf(note)),
                 )
@@ -2656,6 +2739,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 else notesOf(e)
                 // t8 调用签名核对（重排失败 → 已落 E-NAMED-ARG，跳过参数检查避免重复诊断）
                 val argTypes = args.map { etype(it) }
+                // t128（S6）：借用实参位旗标（want 合成实参位——调用边界）
+                val borrowedFlags = args.map { it is sublimation.frontend.hir.HirBorrow }
                 // P-8/D（卷 TS-12/TS-14）：扩展函数直接调用（f(x, a)）——静默名或 T::f 限定，
                 // 按实参 1 的类型头（或限定头）查扩展桶；自由函数优先（已在上面 resolveValue 判定）
                 if (symbol == null && c is NameRef) {
@@ -2673,11 +2758,20 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                             val d = exts
                             if (d != null) {
                                 val extSymbol = symbols.lookupExtFun(head!!, plan.second).firstOrNull()?.ref()
-                                val tExt = extCallType(d, argTypes, e.pos)
+                                val tExt = extCallType(d, argTypes, e.pos, borrowedFlags)
+                                // t128（S6）：借用实参留痕 + 冗余登记（直接扩展调用位；零借用免求值）
+                                val args2 = if (borrowedFlags.any { it }) {
+                                    enterTypeParams(d.theory)
+                                    try {
+                                        borrowArgNotes(args, argTypes,
+                                            listOf(type(d.receiver!!)) + sigOf(d).first.map { expand(it) },
+                                            listOf("self") + d.params.map { it.name }, d.name)
+                                    } finally { exitTypeParams() }
+                                } else args
                                 val extCallee = HirNameRef(plan.second, extSymbol, null, freshNid(), c.pos, notesOf(c))
                                 val node = HirCall(
                                     callee = extCallee,
-                                    args = args, symbol = extSymbol, type = tExt, dictionary = null,
+                                    args = args2, symbol = extSymbol, type = tExt, dictionary = null,
                                     slot = null, dictArgs = emptyList(), methodSugar = false, awaitPoint = false,
                                     calleeImpure = false, nid = nid, origin = e.pos, notes = notes,
                                 )
@@ -2700,10 +2794,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 else when (symbol?.kind) {
                     // t52：局部函数与全局函数同走 sigCheckedCall（一份真相，不另开特判通道）
                     SymbolKind.FUN, SymbolKind.THEOREM, SymbolKind.LOCAL -> calleeDecl?.let { d ->
-                        sigCheckedCall(d, calleeName, argTypes, e.pos, explicitTps)
-                    } ?: funValueCall(calleeName, argTypes, e.pos, explicitTps)
+                        sigCheckedCall(d, calleeName, argTypes, e.pos, explicitTps, borrowedFlags)
+                    } ?: funValueCall(calleeName, argTypes, e.pos, explicitTps, borrowedFlags)
                     SymbolKind.CTOR -> symbols.lookupCtor(calleeName)?.let { ci ->
-                        ctorCall(calleeName, ci, argTypes, e.pos, explicitTps)
+                        ctorCall(calleeName, ci, argTypes, e.pos, explicitTps, borrowedFlags)
                     } ?: infer.syntheticT("构造子" + calleeName)
                     SymbolKind.BUILTIN -> infer.builtinSig(calleeName)?.let { (ps, rt) ->
                         infer.callFun(calleeName, ps, null, retType = rt, argTypes = argTypes, pos = e.pos,
@@ -2725,8 +2819,24 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                             checkConstraints(d, infer.instCall(psD.map { expand(it) }, tpsD, argTypes, explicitTps).first, e.pos)
                         }
                     }
+                // t128（S6）：借用实参收尾——自由函数位按 calleeDecl 形参、构造子位按结构体字段；
+                //  内建与函数值位无具名声明（want 合成已在 callFun 生效，留痕免）。零借用快路径：
+                //  args 逐字原表——形参视图求值对零借用文件零执行，既有面逐字不变
+                val args3 = if (!borrowedFlags.any { it }) args else
+                    calleeDecl?.let { d -> borrowArgNotes(args, argTypes,
+                        sigOf(d).first.map { expand(it) }, d.params.map { it.name }, calleeName,
+                        d.params.mapIndexed { i, q -> q.type != null || metaForParam(d, i)?.hasEvidence() == true }) }
+                    ?: symbols.lookupCtor(calleeName)?.let { ci ->
+                        structDecls[ci.enumName]?.let { st ->
+                            enterTypeParams(st.theory)
+                            try {
+                                borrowArgNotes(args, argTypes, st.fields.map { f -> fieldSigType(st, f) },
+                                    st.fields.map { it.name }, calleeName)
+                            } finally { exitTypeParams() }
+                        }
+                    } ?: args
                 val node = HirCall(
-                    callee = callee, args = args, symbol = symbol, type = t, dictionary = null,
+                    callee = callee, args = args3, symbol = symbol, type = t, dictionary = null,
                     slot = null, dictArgs = emptyList(), methodSugar = false, awaitPoint = false,
                     calleeImpure = false, nid = nid, origin = e.pos, notes = notes,
                 )
@@ -2823,6 +2933,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
     private fun sigCheckedCall(
         d: FunDecl, calleeName: String, argTypes: List<HirType>,
         pos: SourceRange, explicitTps: List<HirType>,
+        borrowed: List<Boolean> = emptyList(),
     ): HirType {
         // B8：显式类型实参先绑定（instCall 内显式优先+不覆盖）；个数核对**不做**——
         // 角表三义：命题供给（witness<p>()）的 terms 非 types，旧 checkFnCall 亦只按
@@ -2832,7 +2943,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         // t48（R-30）：变长旗标随调用下传（末位 @list）
         val vp = d.params.map { "list" in it.annotations }
         return infer.callFun(calleeName, ps.map { expand(it) }, d.params.map { it.name },
-            d.params.map { it.default != null }, rt?.let { expand(it) }, argTypes, pos, tps, explicitTps, vp)
+            d.params.map { it.default != null }, rt?.let { expand(it) }, argTypes, pos, tps, explicitTps, vp,
+            borrowed = borrowed)
     }
 
     /** t52：lambda 两遍通道用——被调函数声明（局部优先于全局同名）。 */
@@ -2846,11 +2958,12 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
      */
     private fun funValueCall(
         name: String, argTypes: List<HirType>, pos: SourceRange, explicitTps: List<HirType>,
+        borrowed: List<Boolean> = emptyList(),
     ): HirType {
         val vt = symbols.lookupValue(name)?.type as? sublimation.frontend.hir.HirFunType
             ?: return infer.syntheticT("调用" + name)
         return infer.callFun(name, vt.params, null, vt.params.map { false }, vt.ret,
-            argTypes, pos, vt.theory.map { it.name }, explicitTps, vt.params.map { false })
+            argTypes, pos, vt.theory.map { it.name }, explicitTps, vt.params.map { false }, borrowed = borrowed)
     }
 
     private fun lambdaTwoPassArgs(
@@ -2891,6 +3004,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
     private fun ctorCall(
         calleeName: String, ci: CtorInfo, argTypes: List<HirType>, pos: SourceRange,
         explicitTps: List<HirType>,
+        borrowed: List<Boolean> = emptyList(),
     ): HirType {
         val st = structDecls[ci.enumName] ?: return infer.syntheticT("构造子" + calleeName)
         if (st.fields.isEmpty())
@@ -2905,7 +3019,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         val tps = st.theory.filterIsInstance<TypeParam>().map { it.name }
         // t115：构造位约束收集（位置式，脚本模式省略字段 ← 实参下界）
         recordCtorFields(st, st.fields.map { it.name }.zip(argTypes), pos)
-        return infer.callCtor(calleeName, ci.enumName, formals, tps, argTypes, pos, defaults, explicitTps)
+        return infer.callCtor(calleeName, ci.enumName, formals, tps, argTypes, pos, defaults, explicitTps, borrowed)
     }
 
 
@@ -3026,6 +3140,36 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 (if (dec.deep) "（深拷隔离——源端可写/目标无引用视图）" + elem else "（共享同一对象——目标持引用视图）" +
                     "（前端类型层判定，实际深拷随后端运行时，R2 §三）"),
             pos, infer.render(got), infer.render(want))
+    }
+
+    /**
+     * t128（S6 / R-01 调用边界）：借用实参收尾——
+     *  ① 分派留痕：want 合成（[TypeInfer.refWrap]）后的 D-REF-DISPATCH 挂 [HirBorrow.notes]（copy 保
+     *     nid/origin——零漂移；got 不动 wangt 加 @ref 衣逐字复用 [refDispatchNote] 矩阵）；
+     *  ② 冗余登记（R-04.3）：分派结论不因借用改变（深/共享同一）且合成态核对通过 ⇒ 只读形参位
+     *     的 `&` 无语义——登记 W-BORROW-REDUNDANT（mutDemand 零时由 runPurityGate 发：有提升
+     *     需求的轮形参视图未定终，免发后翻案的陈旧 warn）。
+     *  无借用实参时逐字原表（零分配快路径）。 */
+    private fun borrowArgNotes(
+        args: List<sublimation.frontend.hir.HirExpr>, argTypes: List<sublimation.frontend.hir.HirType>,
+        formals: List<sublimation.frontend.hir.HirType>, paramNames: List<String>, calleeName: String,
+        evidence: List<Boolean> = emptyList(),
+    ): List<sublimation.frontend.hir.HirExpr> {
+        if (args.none { it is sublimation.frontend.hir.HirBorrow }) return args
+        return args.mapIndexed { i, a ->
+            val b = a as? sublimation.frontend.hir.HirBorrow
+                ?: return@mapIndexed a
+            val formal = formals.getOrNull(i) ?: return@mapIndexed b
+            val got = argTypes[i]
+            val want = infer.refWrap(formal)
+            // R-04.3 判据：形参视图有证据（R-02 退化纪律——无证据不 warn）&& 分派不变 &&
+            // 合成态核对通过（拒格已落 E-TYPE-MISMATCH 不叠 warn）
+            if (evidence.getOrElse(i) { true } &&
+                infer.copyDispatch(got, formal).deep == infer.copyDispatch(got, want).deep &&
+                infer.borrowArgOk(got, formal))
+                borrowWarns.add(BorrowWarnRecord(b.origin, calleeName, paramNames.getOrNull(i) ?: ("实参" + (i + 1))))
+            b.copy(notes = b.notes + refDispatchNote(b.origin, got, want, "借用实参 " + (i + 1)))
+        }
     }
 
     // ============================ 模式 ============================
@@ -3222,6 +3366,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         else -> ident(nm) + " 是命题层连接词（命题专用）——表达式层没有等价写法"
     }
     /** R-07（裁决记录 §R-07）:类型含 @mut 即可变——@ref 只是视图（其背后可经别名变，R-07c 同计）,递归穿透判 inner。 */
+    /** R-07 现判据：@ref T 递归 inner 不计（只读视图捕获纯）；@ref @mut T 计（inner @mut）。
+     *  t128 度量（翻转实验，不翻只报）：68 样本 + 1058 测套 containsRef 同计 fire=0——
+     *  既有集零 @ref 捕获形态，:142「同待遇」翻动零样本冲击（留档后裁）。 */
     private fun containsMutT(t: sublimation.frontend.hir.HirType?): Boolean = when (t) {
         is sublimation.frontend.hir.HirMutType -> true
         is sublimation.frontend.hir.HirRefType -> containsMutT(t.inner)
@@ -3506,6 +3653,14 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         // 5) 事件回放（帧序=旧 walker 树序）：E-MUT-CAPTURE / E-IMPURE-CALL（判据逐字同旧）+ calleeImpure 真化
         val ctx = GateReplayCtx(enriched, axiomPure)
         gateReplay(root, ctx)
+        // 5.5) t128（S6 / R-04.3）：W-BORROW-REDUNDANT 终轮回放——仅本轮 mutDemand 为零时发
+        //  （有提升需求 ⇒ 下一轮形参翻 @mut 视图，借用转为有效（共享省深拷），免发陈旧 warn；
+        //   R2 闸族「报告 → 硬拒」两阶段纪律同源——R-04.3 本件落 warn 不落错）
+        if (mutDemands.isEmpty()) borrowWarns.forEach { w ->
+            diag.warn("W-BORROW-REDUNDANT", w.pos,
+                "借用 `&` 冗余：函数 " + ident(w.callee) + " 的参数 " + ident(w.param) +
+                " 未被推导为可写视图——本次借用不省任何深拷（去掉 `&` 等价；R-04.3）")
+        }
         // 6) 脚本顶层隐式不纯载体（OQ-2 裁：挂 unit 级 + 诊断可见——含顶层语句的脚本文件一条）
         if (scriptMode) gateScriptImplicit(hir)
         // 7) 上文上提（R-16 S4 第三机理，脚本模式）：失败义务签名位合成——共用闭包边集（零新增遍历）
@@ -4151,7 +4306,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
     }
 
     /** P-8/D（TS-12/TS-10）：扩展函数调用类型——接收者作首参的 callFun + 调用点约束检查（TS-22）。 */
-    private fun extCallType(d: FunDecl, argTypes: List<sublimation.frontend.hir.HirType>, pos: SourceRange): sublimation.frontend.hir.HirType {
+    private fun extCallType(
+        d: FunDecl, argTypes: List<sublimation.frontend.hir.HirType>, pos: SourceRange,
+        borrowed: List<Boolean> = emptyList(),
+    ): sublimation.frontend.hir.HirType {
         enterTypeParams(d.theory)
         return try {
             val recvT = type(d.receiver!!)
@@ -4165,7 +4323,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             checkConstraints(d, infer.instCall(formalTypes, tps, argTypes, varargIdx = varIdx).first, pos)
             infer.callFun(d.name, formalTypes, listOf("self") + d.params.map { it.name },
                 listOf(false) + d.params.map { it.default != null }, rt?.let { expand(it) }, argTypes, pos, tps,
-                variadic = listOf(false) + vp)
+                variadic = listOf(false) + vp, borrowed = borrowed)
         } finally { exitTypeParams() }
     }
 

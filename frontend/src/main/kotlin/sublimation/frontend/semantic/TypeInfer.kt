@@ -365,6 +365,21 @@ internal class TypeInfer(
         else -> false
     }
 
+    /**
+     * t128（S6 / R-01 want 合成）：借用实参的 want 侧 @ref 衣——T → @ref T、@mut T → @ref @mut T、
+     *  @ref T → @ref T（R-21.1 嵌套折叠：@ref @ref T ≡ @ref T——衣只加一件）。壳节点**复用 want 的
+     *  nid/origin**——零分配、零 nid 漂移（D-14 族：got 不动、want 加衣，设计 §1.1 锁定口径）。 */
+    fun refWrap(want: HirType): HirType {
+        // 嵌套 @ref 折叠至最内层（队长 R-21.1：@ref @ref ... T ≡ @ref T——while 逐层落衣）
+        var inner = want
+        while (inner is HirRefType) inner = inner.inner
+        return HirRefType(inner, want.nid, want.origin, want.notes)
+    }
+
+    /** t128（S6）：借用实参位类型核对（want 合成后）——供冗余 warn 的前置过滤：合成态拒格
+     *  （got 不可变 × want 可写视图）已落 E-TYPE-MISMATCH 时不再叠 warn（一因一码）。 */
+    fun borrowArgOk(got: HirType, want: HirType): Boolean = adaptOk(got, borrowView(got, refWrap(want)))
+
     /** t98（N2 @ref · 规则 3 拷贝分派矩阵坐标）：PLAIN=T / MUT=@mut T / REF=@ref T / REFMUT=@ref @mut T。 */
     enum class ViewKind { PLAIN, MUT, REF, REFMUT }
 
@@ -984,12 +999,17 @@ internal class TypeInfer(
      * - 理论参数：变长位的每个实参逐一参与 unifyInto（首解为准，后续须一致——不一致落 E-TYPE-MISMATCH）；
      * - 空变长调用（listOf()）时未解理论参数回退 synthetic（下游宽容，避免自由变量外泄）。
      */
+    /**
+     * t128（S6 / R-01 调用边界）：borrowed[i] = 实参 i 为借用（HirBorrow）——want 侧合成 @ref 衣
+     * （[refWrap]）后交既有 [borrowView] 核对：got 不动、矩阵 16 格逐字复用（两拒绝格经
+     * stripRefs 保留 @mut 不变性自动落 E-TYPE-MISMATCH）。默认全 false ⇒ 零借用态逐字旧行为。 */
     fun callFun(
         name: String, paramTypes: List<HirType>, paramNames: List<String>?,
         defaults: List<Boolean> = emptyList(), retType: HirType?,
         argTypes: List<HirType>, pos: SourceRange, theoryNames: List<String> = emptyList(),
         explicitTps: List<HirType> = emptyList(),
         variadic: List<Boolean> = emptyList(),
+        borrowed: List<Boolean> = emptyList(),
     ): HirType {
         val varIdx = variadic.lastIndexOf(true)
         // t45（ADR-30 R-24）：位置实参只能从尾部连续省略——缺省位（argTypes.size 起）必须全部
@@ -1027,7 +1047,9 @@ internal class TypeInfer(
             if (formal == null) return@forEachIndexed
             // t62（ST-11.1）+ t64（ADR-41）：实参位借用——got 为 @mut 视图时视图对视图（@mut 实参位不变性
             // 经子类型分派生效）；否则核 arg <: demoteView(formal)（型至 @mut 形参不构成真子类型）
-            val formal0 = borrowView(p.first, formal)
+            val formal0 = if (borrowed.getOrElse(i) { false })
+                borrowView(p.first, refWrap(formal))      // t128（S6）：want 合成 @ref 衣
+            else borrowView(p.first, formal)
             // D-11（R-08 配套）:函数型实参的**元数一致性**——元数是结构信息,与推导完成度无关,
             // 不受 synthetic 容忍位（reportMismatch 的未完成容忍）保护:0 参 call 打单参 lambda 等
             // 形态必落诊断（used canonical:applyZero({ _ + 1 }) 的调用位镜像）
@@ -1174,10 +1196,15 @@ internal class TypeInfer(
      * 位置式 arity 口径（B4/B5，ADR-19 §二）：fieldDefaults 空表=枚举构造子精确 arity
      * （旧 checkCtorCall）；非空=结构体构造入口，有默认值的尾字段可省（旧 checkStructCall O3）。
      */
+    /** t128（S6）：借用实参的 want 合成（构造子字段位——同 callFun 口径）。 */
+    /**
+     * t128（S6 / R-01 调用边界）：borrowed[i] = 实参 i 为借用（HirBorrow）——字段位 want 合成 @ref 衣
+     * （同 [callFun] 口径，默认全 false）。 */
     fun callCtor(
         ctorName: String, enumName: String, fieldTypes: List<HirType>,
         theoryNames: List<String>, argTypes: List<HirType>, pos: SourceRange,
         fieldDefaults: List<Boolean> = emptyList(), explicitTps: List<HirType> = emptyList(),
+        borrowed: List<Boolean> = emptyList(),
     ): HirType {
         // 位置式供给是前缀：必给量 = 字段数 - 尾部连续有默认值的后缀长（旧 checkStructCall 的 drop(any !default) 口径）
         val required = if (fieldDefaults.isEmpty()) fieldTypes.size
@@ -1191,10 +1218,11 @@ internal class TypeInfer(
                 diag.error("E-FIELD-MISSING", pos, "构造 " + ident(ctorName) + " 缺尾部字段且无默认值")
         }
         val (solved, fields) = instCall(fieldTypes, theoryNames, argTypes, explicitTps)
-        argTypes.zip(fields).forEach { p ->
+        argTypes.zip(fields).forEachIndexed { i, p ->
             val f = p.second
             val unsolvedTp = f is HirNamedType && f.args.isEmpty() && f.name in theoryNames
-            if (!unsolvedTp && !adaptOk(p.first, borrowView(p.first, f)))
+            if (!unsolvedTp && !adaptOk(p.first, if (borrowed.getOrElse(i) { false })
+                borrowView(p.first, refWrap(f)) else borrowView(p.first, f)))
                 reportMismatch(p.first, f, pos, "构造子 " + ident(ctorName) + " 实参 " + render(p.first) + " 与字段 " + render(p.second) + " 不符")
         }
         return namedT(enumName, theoryNames.map { solved[it] ?: syntheticT("类型参数" + it) })

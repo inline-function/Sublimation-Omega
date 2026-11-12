@@ -15,8 +15,9 @@ import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 /**
- * t101（R3 S6 语法层）：&v 借用的 HIR/JSON **中间态**断言——零语义（可解析、无效果）。
- * 视图推导/冗余 warn/copyDispatch 联动（R-01 want 合成 @ref）是 t96/t99 的域，本组不测。
+ * t101（R3 S6 语法层）：&v 借用的 HIR/JSON 节点断言。
+ * t128（S6 / R-21）后语义已激活：want 合成 @ref 衣 + D-REF-DISPATCH 留痕 + 只读形参位
+ * W-BORROW-REDUNDANT warn（R-04.3）——本组锚节点形态/JSON 序列化不变，诊断按新口径断言。
  */
 class BorrowInertTest {
 
@@ -43,18 +44,25 @@ class BorrowInertTest {
     private fun stmts(hir: HirFile) = hir.entries.mapNotNull { (it as? HirStmtEntry)?.stmt }
 
     @Test
-    fun `t101_hir_1_借用节点产出且零诊断`() {
+    fun `t101_hir_1_借用节点产出且零错误诊断`() {
         val (hir, bag) = script(src)
         val errors = bag.diags.filter { it.severity == Severity.ERROR }
         assertTrue(errors.isEmpty(), "中间态不应落任何 ERROR（借用透明过境）：${errors.map { it.message }}")
-        // t96 的冗余 warn 属后续阶段——本期不出任何借用相关诊断
-        assertTrue(bag.diags.none { it.message.contains("借用") }, "零语义中间态：不应有借用相关诊断")
+        // t128（S6 / R-04.3 落地后）：只读形参（Nat）位点的借用落 W-BORROW-REDUNDANT warn——
+        // want 合成 + 分派留痕在 HirBorrow.notes（D-REF-DISPATCH），唯此一条借用相关诊断
+        val borrowDiags = bag.diags.filter { it.message.contains("借用") }
+        assertEquals(1, borrowDiags.size, "仅 W-BORROW-REDUNDANT 一条：${borrowDiags.map { it.message }}")
+        assertEquals("W-BORROW-REDUNDANT", borrowDiags.first().code)
         val y = stmts(hir).filterIsInstance<HirVarStmt>().first { it.name == "y" }
         val call = assertIs<sublimation.frontend.hir.HirCall>(y.value)
         val b = assertIs<HirBorrow>(call.args[0])
         assertIs<HirNameRef>(b.operand).also { assertEquals("x", it.name) }
         // 类型透传内层（零语义口径）
         assertEquals("Nat", (b.type as sublimation.frontend.hir.HirNamedType).name)
+        // 分派留痕（want 合成 @ref 衣：Nat → @ref Nat —— 两格皆共享 ⇒ 冗余 warn 机械同源）
+        val note = b.notes.firstOrNull { it.code == "D-REF-DISPATCH" }
+        assertTrue(note != null && note.message.contains("借用实参 1 视图分派：Nat → @ref Nat"),
+            "D-REF-DISPATCH 留痕：${b.notes.map { it.message }}")
     }
 
     @Test

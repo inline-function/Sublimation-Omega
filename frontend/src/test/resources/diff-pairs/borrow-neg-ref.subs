@@ -1,0 +1,8 @@
+// t128（S6 / R-21）差分对拍：R-01 调用边界 want 合成——双形态
+// 拒绝格 2（@ref T → @ref @mut T）：只读引用实参借入 @mut 形参 ⇒ E-TYPE-MISMATCH
+@impure fun g(z : @mut Nat) { z = z + 1 }
+@impure fun main(): Null {
+  var v : @ref Nat = 3
+  unchecked g(&v)
+  print(v)
+}
