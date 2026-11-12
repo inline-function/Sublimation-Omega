@@ -1,0 +1,1 @@
+fun m(): list.List[Nat] { unchecked var xs : List[Nat] = Cons(1, Nil); return Cons(2, xs) }

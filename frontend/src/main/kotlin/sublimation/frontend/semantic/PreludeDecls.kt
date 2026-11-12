@@ -38,30 +38,28 @@ import sublimation.frontend.ast.Type as AstType
  */
 internal object PreludeDecls {
 
-    /** 虚拟 struct 族（构造子名 = struct 名；空字段 = 空构造子单例，判据 = 字段数 0，t41）。 */
+    /** 虚拟 struct 族（构造子名 = struct 名；空字段 = 空构造子单例，判据 = 字段数 0，t41）。
+     * t138（R-23 B1）：None/Some/Nil/Cons/Ok/Err/SetNil/SetCons/MapNil/MapCons 十项 retire →
+     * stdlib 源（各 collection 件内声明，形状逐字同构——见 [RETIRED_STRUCTS] 允许表）。
+     * Channel **保留虚拟**（无 stdlib/channel 件——登记下一批：B1.5 / B2 后另件）。 */
     val STRUCTS: List<StructDecl> = listOf(
-        struct("None"),
-        struct("Some", listOf("T"), listOf(field("value", "T"))),
-        struct("Nil"),
-        struct("Cons", listOf("T"), listOf(field("head", "T"), field("tail", "List", "T"))),
-        struct("Ok", listOf("T"), listOf(field("value", "T"))),
-        struct("Err", listOf("E"), listOf(field("value", "E"))),
-        struct("SetNil"),
-        struct("SetCons", listOf("T"), listOf(field("head", "T"), field("tail", "Set", "T"))),
-        struct("MapNil"),
-        struct("MapCons", listOf("K", "V"), listOf(field("key", "K"), field("value", "V"), field("tail", "Map", "K", "V"))),
         // B8（t23，ADR-21）：Channel——单构造子形态，cap: Nat 可省（默认 0=无缓冲，旧实现口径）。
         struct("Channel", listOf("T"), listOf(field("cap", "Nat", default = IntLit("0", SYNTHETIC_POS)))),
     )
 
-    /** 虚拟联合别名族（prelude 容器 = 空构造子 | 值构造子，同用户归纳联合形态）。 */
-    val ALIASES: List<TypeAliasDecl> = listOf(
-        alias("Optional", listOf("T"), named("None"), app("Some", "T")),
-        alias("List", listOf("T"), named("Nil"), app("Cons", "T")),
-        alias("Result", listOf("T", "E"), app("Ok", "T"), app("Err", "E")),
-        alias("Set", listOf("T"), named("SetNil"), app("SetCons", "T")),
-        alias("Map", listOf("K", "V"), named("MapNil"), app("MapCons", "K", "V")),
+    /** t138（R-23 B1）：retire 替身名表——非限定类型面（builtins 懒登记通道）只吃这些名；
+     * stdlib 件声明的其他类型保持**限定可见**（R-22 限定唯一通道，裸名面不扩）。 */
+    val RETIRED_STRUCTS: Set<String> = setOf(
+        "None", "Some", "Nil", "Cons", "Ok", "Err",
+        "SetNil", "SetCons", "MapNil", "MapCons",
     )
+
+    /** 虚拟联合别名族（prelude 容器 = 空构造子 | 值构造子，同用户归纳联合形态）。
+     * t138（R-23 B1）：五项全部 retire → stdlib 源（见 [RETIRED_ALIASES] 允许表）。 */
+    val ALIASES: List<TypeAliasDecl> = listOf()
+
+    /** t138（R-23 B1）：retire 别名替身名表（非限定类型面允许表）。 */
+    val RETIRED_ALIASES: Set<String> = setOf("Optional", "List", "Result", "Set", "Map")
 
     /** t126（S5c / R-15 容器面 · 队长裁 Alt A）：虚拟构造族——值实参解理论参数（既有 instCall 通道，
      *  零新推导机制）：`MutableListOf(x)` → `@mut List[T]`（可变容器，元素类型由实参定）;
@@ -100,10 +98,10 @@ internal object PreludeDecls {
     private val structIndex = STRUCTS.associateBy { it.name }
     private val aliasIndex = ALIASES.associateBy { it.name }
 
-    /** 虚拟 struct 查询（同名用户 struct 不在此——以用户为准）。 */
+    /** 虚拟 struct 查询（同名用户 struct 不在此——以用户为准）。t138 后仅 Channel（其余经快照注入）。 */
     fun structOf(name: String): StructDecl? = structIndex[name]
 
-    /** 虚拟联合别名查询（同名用户别名不在此——以用户为准）。 */
+    /** 虚拟联合别名查询（同名用户别名不在此——以用户为准）。t138 后空表（全部经快照注入）。 */
     fun aliasOf(name: String): TypeAliasDecl? = aliasIndex[name]
 
     private fun struct(name: String, tps: List<String> = emptyList(), fields: List<Param> = emptyList()): StructDecl =

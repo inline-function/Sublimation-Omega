@@ -1,0 +1,912 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "io.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "9:11-41:15",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "9:11-9:15",
+        "notes": [],
+        "name": "print",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "print"
+        },
+        "annotations": [
+          "impure",
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "9:17-9:17",
+            "notes": [],
+            "name": "v",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "9:20-9:22",
+              "notes": [],
+              "name": "Any",
+              "args": [],
+              "symbol": {
+                "id": 9,
+                "kind": "builtin",
+                "name": "Any"
+              }
+            },
+            "symbol": {
+              "id": 10,
+              "kind": "param",
+              "name": "v"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 5,
+          "pos": "9:26-9:29",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 11,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 6,
+        "pos": "14:11-14:18",
+        "notes": [],
+        "name": "readLine",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "readLine"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 17,
+          "pos": "9:21-9:22",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 15,
+              "pos": "9:21-9:22",
+              "notes": [],
+              "name": "Ok",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 8,
+                  "pos": "14:30-14:32",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 12,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 14,
+                "kind": "builtin",
+                "name": "Ok"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 16,
+              "pos": "9:29-9:31",
+              "notes": [],
+              "name": "Err",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 9,
+                  "pos": "14:35-14:37",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 12,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "Err"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 18,
+        "pos": "19:11-19:18",
+        "notes": [],
+        "name": "readFile",
+        "symbol": {
+          "id": 2,
+          "kind": "fun",
+          "name": "readFile"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 19,
+            "pos": "19:20-19:20",
+            "notes": [],
+            "name": "p",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 20,
+              "pos": "19:23-19:25",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 12,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 16,
+              "kind": "param",
+              "name": "p"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 31,
+          "pos": "9:21-9:22",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 29,
+              "pos": "9:21-9:22",
+              "notes": [],
+              "name": "Ok",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 22,
+                  "pos": "19:36-19:38",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 12,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 14,
+                "kind": "builtin",
+                "name": "Ok"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 30,
+              "pos": "9:29-9:31",
+              "notes": [],
+              "name": "Err",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 23,
+                  "pos": "19:41-19:43",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 12,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "Err"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 32,
+        "pos": "22:11-22:19",
+        "notes": [],
+        "name": "writeFile",
+        "symbol": {
+          "id": 3,
+          "kind": "fun",
+          "name": "writeFile"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 33,
+            "pos": "22:21-22:21",
+            "notes": [],
+            "name": "p",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 34,
+              "pos": "22:24-22:26",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 12,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 17,
+              "kind": "param",
+              "name": "p"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 35,
+            "pos": "22:29-22:29",
+            "notes": [],
+            "name": "c",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 36,
+              "pos": "22:32-22:34",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 12,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 18,
+              "kind": "param",
+              "name": "c"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 47,
+          "pos": "9:21-9:22",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 45,
+              "pos": "9:21-9:22",
+              "notes": [],
+              "name": "Ok",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 38,
+                  "pos": "22:45-22:48",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": {
+                    "id": 11,
+                    "kind": "builtin",
+                    "name": "Null"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 14,
+                "kind": "builtin",
+                "name": "Ok"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 46,
+              "pos": "9:29-9:31",
+              "notes": [],
+              "name": "Err",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 39,
+                  "pos": "22:51-22:53",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 12,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "Err"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 48,
+        "pos": "25:11-25:20",
+        "notes": [],
+        "name": "appendFile",
+        "symbol": {
+          "id": 4,
+          "kind": "fun",
+          "name": "appendFile"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 49,
+            "pos": "25:22-25:22",
+            "notes": [],
+            "name": "p",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 50,
+              "pos": "25:25-25:27",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 12,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 19,
+              "kind": "param",
+              "name": "p"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 51,
+            "pos": "25:30-25:30",
+            "notes": [],
+            "name": "c",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 52,
+              "pos": "25:33-25:35",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 12,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 20,
+              "kind": "param",
+              "name": "c"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 63,
+          "pos": "9:21-9:22",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 61,
+              "pos": "9:21-9:22",
+              "notes": [],
+              "name": "Ok",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 54,
+                  "pos": "25:46-25:49",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": {
+                    "id": 11,
+                    "kind": "builtin",
+                    "name": "Null"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 14,
+                "kind": "builtin",
+                "name": "Ok"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 62,
+              "pos": "9:29-9:31",
+              "notes": [],
+              "name": "Err",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 55,
+                  "pos": "25:52-25:54",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 12,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "Err"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 64,
+        "pos": "28:11-28:20",
+        "notes": [],
+        "name": "fileExists",
+        "symbol": {
+          "id": 5,
+          "kind": "fun",
+          "name": "fileExists"
+        },
+        "annotations": [
+          "impure",
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 65,
+            "pos": "28:22-28:22",
+            "notes": [],
+            "name": "p",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 66,
+              "pos": "28:25-28:27",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 12,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 21,
+              "kind": "param",
+              "name": "p"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 67,
+          "pos": "28:31-28:34",
+          "notes": [],
+          "name": "Bool",
+          "args": [],
+          "symbol": {
+            "id": 22,
+            "kind": "builtin",
+            "name": "Bool"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 68,
+        "pos": "31:11-31:17",
+        "notes": [],
+        "name": "readDir",
+        "symbol": {
+          "id": 6,
+          "kind": "fun",
+          "name": "readDir"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 69,
+            "pos": "31:19-31:19",
+            "notes": [],
+            "name": "p",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 70,
+              "pos": "31:22-31:24",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 12,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 23,
+              "kind": "param",
+              "name": "p"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 82,
+          "pos": "9:21-9:22",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 80,
+              "pos": "9:21-9:22",
+              "notes": [],
+              "name": "Ok",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 72,
+                  "pos": "31:35-31:38",
+                  "notes": [],
+                  "name": "List",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 73,
+                      "pos": "31:40-31:42",
+                      "notes": [],
+                      "name": "Str",
+                      "args": [],
+                      "symbol": {
+                        "id": 12,
+                        "kind": "builtin",
+                        "name": "Str"
+                      }
+                    }
+                  ],
+                  "symbol": {
+                    "id": 24,
+                    "kind": "builtin",
+                    "name": "List"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 14,
+                "kind": "builtin",
+                "name": "Ok"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 81,
+              "pos": "9:29-9:31",
+              "notes": [],
+              "name": "Err",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 74,
+                  "pos": "31:46-31:48",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 12,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "Err"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 83,
+        "pos": "36:11-36:17",
+        "notes": [],
+        "name": "getArgs",
+        "symbol": {
+          "id": 7,
+          "kind": "fun",
+          "name": "getArgs"
+        },
+        "annotations": [
+          "impure",
+          "root"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 91,
+          "pos": "12:16-12:18",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 86,
+              "pos": "12:16-12:18",
+              "notes": [],
+              "name": "Nil",
+              "args": [],
+              "symbol": {
+                "id": 25,
+                "kind": "builtin",
+                "name": "Nil"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 90,
+              "pos": "12:22-12:25",
+              "notes": [],
+              "name": "Cons",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 85,
+                  "pos": "36:27-36:29",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 12,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 26,
+                "kind": "builtin",
+                "name": "Cons"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 92,
+        "pos": "41:11-41:15",
+        "notes": [],
+        "name": "sleep",
+        "symbol": {
+          "id": 8,
+          "kind": "fun",
+          "name": "sleep"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 93,
+            "pos": "41:17-41:18",
+            "notes": [],
+            "name": "ms",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 94,
+              "pos": "41:21-41:23",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 27,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 28,
+              "kind": "param",
+              "name": "ms"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 98,
+          "pos": "41:27-41:30",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 11,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      }
+    ]
+  }
+}

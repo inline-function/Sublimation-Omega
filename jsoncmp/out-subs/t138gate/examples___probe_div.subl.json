@@ -1,0 +1,195 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "_probe_div.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "hint",
+      "code": "H-ARITH-PREC",
+      "pos": "1:39-1:39",
+      "message": "算术链混用了不同类算符（`*` 与 `+`）：中缀一律左结合，写出来的顺序就是计算顺序——如 `a + b * c` 实际是 `(a + b) * c`。请用圆括号显式指定本意（如 `a + (b * c)`）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-PURITY-INFERRED",
+      "pos": "1:5-1:8",
+      "message": "函数 `main` 推导为 impure（R-16 A2 自动 @impure;注解优先——可显式标 @impure 定型）。种子源：内建不纯 `print`；传播路径：main ← `print`@SourceRange(start=SourcePos(line=1, col=24), end=SourcePos(line=1, col=28))（闭包单调不动点：f 调 g 且 g 不纯 ⇒ f 不纯）",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:5-1:8",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:5-1:8",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 3,
+          "pos": "1:12-1:12",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirUnchecked",
+              "nid": 4,
+              "pos": "1:14-1:22",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 5,
+                "pos": "1:24-1:28",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 6,
+                  "pos": "1:24-1:28",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 7,
+                    "pos": "1:24-1:28",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 1,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirBinExpr",
+                      "nid": 26,
+                      "pos": "1:44-1:44",
+                      "notes": [],
+                      "op": "/",
+                      "left": {
+                        "kind": "HirBinExpr",
+                        "nid": 20,
+                        "pos": "1:39-1:39",
+                        "notes": [],
+                        "op": "+",
+                        "left": {
+                          "kind": "HirBinExpr",
+                          "nid": 15,
+                          "pos": "1:34-1:34",
+                          "notes": [],
+                          "op": "*",
+                          "left": {
+                            "kind": "HirIntLit",
+                            "nid": 8,
+                            "pos": "1:31-1:32",
+                            "notes": [],
+                            "value": "37"
+                          },
+                          "right": {
+                            "kind": "HirIntLit",
+                            "nid": 9,
+                            "pos": "1:36-1:37",
+                            "notes": [],
+                            "value": "18"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 10,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Nat",
+                            "args": [],
+                            "symbol": null
+                          }
+                        },
+                        "right": {
+                          "kind": "HirIntLit",
+                          "nid": 16,
+                          "pos": "1:41-1:41",
+                          "notes": [],
+                          "value": "5"
+                        },
+                        "type": {
+                          "kind": "HirNamedType",
+                          "nid": 10,
+                          "pos": "0:0",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": null
+                        }
+                      },
+                      "right": {
+                        "kind": "HirIntLit",
+                        "nid": 21,
+                        "pos": "1:46-1:47",
+                        "notes": [],
+                        "value": "10"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 24,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Rat",
+                        "args": [],
+                        "symbol": null
+                      }
+                    }
+                  ],
+                  "symbol": {
+                    "id": 1,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 43,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

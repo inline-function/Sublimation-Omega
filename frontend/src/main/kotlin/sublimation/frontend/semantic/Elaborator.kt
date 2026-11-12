@@ -184,9 +184,11 @@ internal fun elaborate(
     /** D-12:模式真值（compile 透传;默认 project——CLI 为唯一源） */
     scriptMode: Boolean = false,
     varianceSink: ((VarianceInfer) -> Unit)? = null,
+    /** t138（R-23 B1）：stdlib 挂载透传（retire 后虚拟层类型经快照注入——工具路径同构）。 */
+    mounted: Map<String, ModuleSnapshot> = emptyMap(),
 ): Pair<HirFile, DiagBag> {
     val diag = DiagBag()
-    val el = Elaborator(symbols, notes, diag, nids, scriptMode)
+    val el = Elaborator(symbols, notes, diag, nids, scriptMode, mounted = mounted)
     val hir = el.file(file)
     // t96（N1 纯度闸 · 阶段 A 报告态，R2 §一）:elaboration 完成后回看整树（lambda 纯度经 t94 推导底向可知）
     el.runPurityGate(hir)
@@ -279,9 +281,11 @@ internal data class MeasureProof(
 internal fun elaborateWithVariance(
     file: FileAst, symbols: SymbolTable, notes: Map<AstNode, List<ParseNote>>, nids: NodeIdSource,
     scriptMode: Boolean = false,
+    /** t138（R-23 B1）：stdlib 挂载透传（retire 后虚拟层类型经快照注入）。 */
+    mounted: Map<String, ModuleSnapshot> = emptyMap(),
 ): Triple<HirFile, DiagBag, Map<String, List<Pair<String, VariancePair>>>> {
     var table: Map<String, List<Pair<String, VariancePair>>> = emptyMap()
-    val (hir, diag) = elaborate(file, symbols, notes, nids, scriptMode) { v -> table = v.table() }
+    val (hir, diag) = elaborate(file, symbols, notes, nids, scriptMode, { v -> table = v.table() }, mounted)
     return Triple(hir, diag, table)
 }
 
@@ -553,13 +557,36 @@ private class Elaborator(
         // t134（S7 快照扩类型面 / R-23）：挂载模块类型面注入——结构体/别名入声明索引（P-7 用户覆盖：
         // file 预扫描重写覆盖；同 prelude 虚拟通道，查询链 用户 > 挂载子 > prelude），结构体构造器条目
         // 入 SymbolTable 的 moduleCtor 层（非限定构造经非限定名解析——R-23 非限定查询链）。
+        // t138（R-23 B1）：stdlib 快照类型面**只吃 retire 允许表**（裸名面不扩——stdlib 件声明的
+        // 其他类型保持限定可见）；构造器形状经 preludeCtor 通道（preludeCtorEntry 的 builtins
+        // 懒登记 → HIR 符号 id 序零漂移，68 样本 SAME 的机制保证）——**不走 declareModuleCtor**
+        // （模块符号 id 落 HIR 会漂移）。用户挂载件维持 t134 口径不变（moduleCtor 通道）。
+        val retiredStructShapes = LinkedHashMap<String, Boolean>()
+        val retiredAliasNames = mutableSetOf<String>()
         mounted.values.forEach { snap ->
-            snap.structs.forEach { (k, v) ->
-                structDecls[k] = v.decl
-                symbols.declareModuleCtor(k, v.symbol.id, v.decl.pos, v.decl.fields.isEmpty())
+            if (snap.stdlib) {
+                snap.structs.forEach { (k, v) ->
+                    if (k in PreludeDecls.RETIRED_STRUCTS) {
+                        structDecls[k] = v.decl
+                        retiredStructShapes[k] = v.decl.fields.isEmpty()
+                    }
+                }
+                snap.aliases.forEach { (k, v) ->
+                    if (k in PreludeDecls.RETIRED_ALIASES) {
+                        aliasDecls[k] = v.decl
+                        retiredAliasNames += k
+                    }
+                }
+            } else {
+                snap.structs.forEach { (k, v) ->
+                    structDecls[k] = v.decl
+                    symbols.declareModuleCtor(k, v.symbol.id, v.decl.pos, v.decl.fields.isEmpty())
+                }
+                snap.aliases.forEach { (k, v) -> aliasDecls[k] = v.decl }
             }
-            snap.aliases.forEach { (k, v) -> aliasDecls[k] = v.decl }
         }
+        symbols.declareModuleStructShapes(retiredStructShapes)
+        symbols.declareModuleAliasNames(retiredAliasNames)
     }
 
     /** P-8/D（卷 TS-11/TS-19）：扩展函数声明索引——(接收者类型头, 名字) → 声明集合；

@@ -600,13 +600,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 56,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 51,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -619,7 +619,7 @@
             {
               "kind": "HirNamedType",
               "nid": 55,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -1230,13 +1230,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 101,
-          "pos": "0:0",
+          "pos": "11:16-11:18",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 96,
-              "pos": "0:0",
+              "pos": "11:16-11:18",
               "notes": [],
               "name": "Nil",
               "args": [],
@@ -1249,7 +1249,7 @@
             {
               "kind": "HirNamedType",
               "nid": 100,
-              "pos": "0:0",
+              "pos": "11:22-11:25",
               "notes": [],
               "name": "Cons",
               "args": [
@@ -1358,13 +1358,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 114,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 109,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -1377,7 +1377,7 @@
             {
               "kind": "HirNamedType",
               "nid": 113,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [

@@ -120,3 +120,27 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 | `out-subs/t137gate*/` | 落实证据（68 门 SAME 重跑产物——同 t122n 逐字节） | 执行 t137 门的人 |
 
 **t137 侧基线口径**（R-23 裁决）：e2e 68 样本逐字节 SAME 为主门（retire 零差分机器证明）；stdlib 件本身是**新面**（B0-0 list/math + B0-1 五件全家），产物落 `out/t137stdlib/` 侧目录登记，不入 t74/t122n 基线判 diff。钻石形备忘按首次编译路径记 unitPath——optional/set 件产物见于 list 命名空间下（`examples__模块系统__list__optional.json` 形态），不重复入计。
+---
+
+## t138 分账（stdlib B1：虚拟 struct + 联合别名 retire，2026-11-13）
+
+| 目录/件 | 职责 | 谁可以写 |
+|---|---|---|
+| `out-subs/t138gate-ledger.txt` | B1 68 门差分台账（SAME/剥差同 逐样本登记） | 执行 t138 门的人 |
+| `scripts/t138-parity.ps1` | B1 机械证据四段：① PreludeDecls retire 核对（STRUCTS 仅 Channel、ALIASES 空、RETIRED 允许表 + stdlib 源声明在位）② 7 依赖样本 vs `out/t122n` 剥差门（逐字节同或 pos/message 盲同）③ 68 门台账导出 ④ 模块双导出确定性（1+7 件集合） | 执行 t138 门的人 |
+| `out-subs/t138gate*` / `t138work` / `t138det-*` | 落实证据（68 门重跑、7 依赖重跑、双导出产物） | 执行 t138 门的人 |
+
+**B1 侧基线口径**（队长死纪律：t122n 与 68 计数零动；B1 差异全入差分台账）:
+
+| 量 | 结果 | 性质 |
+|---|---|---|
+| 68 门（vs t131mod） | **SAME 52 + 剥差同 16 + 失败 0** | 16 例差异位**全部**为 `$.hir.entries.N.retType.pos` 联合展开位（含 `variants.N.pos`），共 138 处（message/其他位差异 = 0）——别名展开的变体位置由虚拟声明 SYNTHETIC `0:0` 变为 stdlib 模块源实坐标（如 list.subl:12 的 `Nil`/`Cons` 位）；**剥差（删除 pos 字段）后 16/16 逐字节同 ⇒ 行为零变**（OQ-10 B1 口径：差异限定在声明位/旁注形态变化） |
+| 脚本门（out-subs/t01） | **14/14 逐字节同**（12 件 + 2 件 --no-degrade） | 脚本模式 B1 零侵入 |
+| 模块双导出确定性 | **8/8 逐字节同** | B1 分层后件集合 1+7（主 + tool/list/optional/optional__result/set/map/math）；B0 时件集合同为 8（1+7，命名重排——optional/set 不再嵌于 list 下） |
+| 套件 | **1120/1120 全绿**（t137 1111 → +9 T138StdlibRetireTest） | 套件只增不减 |
+| 模块件全家绿 | list/optional/result/set/map/math + 嵌套 unit **8/8 ok=true** | DAG 分层（list 底层 + optional 托管产 Optional 访问器）后零红 |
+
+**DAG 分层登记（B1 纪律增量）**：模块图须 DAG 且「限定构造形态 V1 未通」⇒ 件间类型经**挂载**解决（list↔optional 互依成环不可）。分层：list 底层纯 List 域；optional 挂 list+result 托管 head/last/elementAt/find/indexOf/maxNat/minNat/get/firstOr/toResult/toList；set/map 各挂 list（map 兼挂 optional）并托管 toSet/toMap。九函数件属移位（函数全家与 e2e 冻红零变——裸名不可见，用户面不动）。
+
+**工具路径同构**：`compile/compileWithRounds/compileVariance/elaborate` 新增 `mounted` 透传参（默认空，非模块编译零影响）；12 件旧测试（PreludeDeEnum/AliasSemantics/T126/T128/T99/Subtype/Narrow/Union×2/Assign/When/Variance）script helper 改挂 stdlib 快照（同 t19 口径）。
+

@@ -1,6 +1,8 @@
 package sublimation.frontend.semantic
 
 import sublimation.frontend.diag.Severity
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.hir.HirBorrow
 import sublimation.frontend.hir.HirFunDecl
 import sublimation.frontend.hir.HirMutType
@@ -30,10 +32,15 @@ import kotlin.test.assertTrue
  * 差分对拍 fixture：frontend/src/test/resources/diff-pairs/borrow-*（5 对双形态样本）。 */
 class T128BorrowSemanticsTest {
 
+    // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
+
     private fun sc(src: String) =
-        parseScriptSourceWithNotes(src, "t128.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true) }
+        parseScriptSourceWithNotes(src, "t128.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true, mounted = stdlibMounts) }
     private fun pc2(src: String) =
-        parseSourceWithNotes(src, "t128.subl").let { compileWithRounds(it.file, it.notes, scriptMode = false) }
+        parseSourceWithNotes(src, "t128.subl").let { compileWithRounds(it.file, it.notes, scriptMode = false, mounted = stdlibMounts) }
     private fun errs(rs: RoundsReport): List<String> =
         rs.diag.diags.filter { it.severity == Severity.ERROR }.map { it.code }
     private fun warns(rs: RoundsReport): List<String> =
@@ -214,9 +221,9 @@ class T128BorrowSemanticsTest {
         val redGreen = listOf("borrow-neg-plain", "borrow-neg-ref")
         redGreen.forEach { name ->
             val rs = parseScriptSourceWithNotes(pairDir.resolve("$name.subs").readText(), "$name.subs")
-                .let { compileWithRounds(it.file, it.notes, scriptMode = true) }
+                .let { compileWithRounds(it.file, it.notes, scriptMode = true, mounted = stdlibMounts) }
             val rp = parseSourceWithNotes(pairDir.resolve("$name.subl").readText(), "$name.subl")
-                .let { compileWithRounds(it.file, it.notes, scriptMode = false) }
+                .let { compileWithRounds(it.file, it.notes, scriptMode = false, mounted = stdlibMounts) }
             assertTrue(errs(rs).any { it == "E-TYPE-MISMATCH" }, "$name.subs 拒绝格须红：${errs(rs)}")
             assertEquals(emptyList(), errs(rp), "$name.subl 对形态绿（造格放行）")
         }
@@ -227,14 +234,14 @@ class T128BorrowSemanticsTest {
         val pairDir = java.io.File("frontend/src/test/resources/diff-pairs")
         listOf("borrow-shared", "borrow-ctor", "borrow-warn").forEach { name ->
             val rs = parseScriptSourceWithNotes(pairDir.resolve("$name.subs").readText(), "$name.subs")
-                .let { compileWithRounds(it.file, it.notes, scriptMode = true) }
+                .let { compileWithRounds(it.file, it.notes, scriptMode = true, mounted = stdlibMounts) }
             val rp = parseSourceWithNotes(pairDir.resolve("$name.subl").readText(), "$name.subl")
-                .let { compileWithRounds(it.file, it.notes, scriptMode = false) }
+                .let { compileWithRounds(it.file, it.notes, scriptMode = false, mounted = stdlibMounts) }
             assertEquals(emptyList(), errs(rs), "$name.subs 零错误")
             assertEquals(emptyList(), errs(rp), "$name.subl 零错误")
         }
         val rsW = parseScriptSourceWithNotes(pairDir.resolve("borrow-warn.subs").readText(), "borrow-warn.subs")
-            .let { compileWithRounds(it.file, it.notes, scriptMode = true) }
+            .let { compileWithRounds(it.file, it.notes, scriptMode = true, mounted = stdlibMounts) }
         assertEquals(listOf("W-BORROW-REDUNDANT"), warns(rsW), "负例对借形态落 warn")
     }
 }

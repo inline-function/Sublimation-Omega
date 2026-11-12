@@ -1,6 +1,8 @@
 package sublimation.frontend.semantic
 
 import sublimation.frontend.diag.DiagBag
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.diag.Severity
 import sublimation.frontend.parser.parseScriptSourceWithNotes
 import kotlin.test.Test
@@ -12,9 +14,15 @@ import kotlin.test.assertFalse
  * 正负例成对覆盖 ST-1~ST-15 承诺形态（每条负例配同族正例或结构对照例）。
  */
 class SubtypeOrderTest {
+
+    // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构；
+    // 虚拟 struct/别名数据源已换 stdlib 源——P-7 用户同名优先口径不变）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
     private fun script(src: String): DiagBag {
         val pr = parseScriptSourceWithNotes(src, "t62.subl")
-        val (_, bag) = compile(pr.file, pr.notes)
+        val (_, bag) = compile(pr.file, pr.notes, scriptMode = false, mounted = stdlibMounts)
         pr.diag.forEach { d -> when (d.severity) {
             Severity.ERROR -> bag.error(d.code, d.pos, d.message)
             Severity.SUPPLEMENT -> bag.supplement(d.code, d.pos, d.message)

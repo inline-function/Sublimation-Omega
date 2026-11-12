@@ -1,6 +1,8 @@
 package sublimation.frontend.semantic
 
 import sublimation.frontend.diag.Severity
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.hir.HirDeclEntry
 import sublimation.frontend.hir.HirMutType
 import sublimation.frontend.hir.HirNamedType
@@ -28,10 +30,15 @@ import kotlin.test.assertTrue
  * 68+14 基线样本零 @mut 方法糖 ⇒ 零触发样（既有基线机械零风险，提案 §3.4 影响面口径）。 */
 class T126ContainerFaceTest {
 
+    // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
+
     private fun sc(src: String) =
-        parseScriptSourceWithNotes(src, "t126.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true) }
+        parseScriptSourceWithNotes(src, "t126.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true, mounted = stdlibMounts) }
     private fun pc(src: String) =
-        parseSourceWithNotes(src, "t126.subl").let { compileWithRounds(it.file, it.notes, scriptMode = false) }
+        parseSourceWithNotes(src, "t126.subl").let { compileWithRounds(it.file, it.notes, scriptMode = false, mounted = stdlibMounts) }
     private fun errs(rs: sublimation.frontend.semantic.RoundsReport): List<String> =
         rs.diag.diags.filter { it.severity == Severity.ERROR }.map { it.code }
     private fun supps(rs: sublimation.frontend.semantic.RoundsReport): List<String> =
@@ -152,9 +159,9 @@ class T126ContainerFaceTest {
         val pairDir = java.io.File("frontend/src/test/resources/diff-pairs")
         val src = pairDir.resolve("mut-container.subs").readText()
         val rs = parseScriptSourceWithNotes(src, "mut-container.subs")
-            .let { compileWithRounds(it.file, it.notes, scriptMode = true) }
+            .let { compileWithRounds(it.file, it.notes, scriptMode = true, mounted = stdlibMounts) }
         val rp = parseSourceWithNotes(pairDir.resolve("mut-container.subl").readText(), "mut-container.subl")
-            .let { compileWithRounds(it.file, it.notes, scriptMode = false) }
+            .let { compileWithRounds(it.file, it.notes, scriptMode = false, mounted = stdlibMounts) }
         assertEquals(emptyList(), errs(rs), "subs 侧零错误")
         assertEquals(emptyList(), errs(rp), "subl 侧零错误")
         val v1 = varStmtOf(rs, "xs"); val v2 = varStmtOf(rp, "xs")

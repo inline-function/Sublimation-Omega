@@ -3213,13 +3213,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 379,
-          "pos": "0:0",
+          "pos": "8:21-8:22",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 377,
-              "pos": "0:0",
+              "pos": "8:21-8:22",
               "notes": [],
               "name": "Ok",
               "args": [
@@ -3242,7 +3242,7 @@
             {
               "kind": "HirNamedType",
               "nid": 378,
-              "pos": "0:0",
+              "pos": "8:29-8:31",
               "notes": [],
               "name": "Err",
               "args": [
@@ -3609,13 +3609,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 424,
-          "pos": "0:0",
+          "pos": "11:16-11:18",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 419,
-              "pos": "0:0",
+              "pos": "11:16-11:18",
               "notes": [],
               "name": "Nil",
               "args": [],
@@ -3628,7 +3628,7 @@
             {
               "kind": "HirNamedType",
               "nid": 423,
-              "pos": "0:0",
+              "pos": "11:22-11:25",
               "notes": [],
               "name": "Cons",
               "args": [

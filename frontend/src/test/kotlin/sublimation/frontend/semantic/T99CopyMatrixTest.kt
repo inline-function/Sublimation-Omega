@@ -5,6 +5,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import sublimation.frontend.diag.Diag
 import sublimation.frontend.diag.DiagBag
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.diag.Severity
 import sublimation.frontend.hir.HirBlock
 import sublimation.frontend.hir.HirDeclEntry
@@ -25,12 +27,18 @@ import sublimation.frontend.parser.parseScriptSourceWithNotes
  */
 class T99CopyMatrixTest {
 
+    // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构；
+    // 虚拟 struct/别名数据源已换 stdlib 源——P-7 用户同名优先口径不变）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
+
     private val prelude = "@mut struct Box(@mut n: Nat)"
 
     /** 判定：share / copy / reject / none（无 @ref 涉及——留痕策略不落 note）。 */
     private fun judge(src: String): Triple<String, List<String>, String> {
         val pr = parseScriptSourceWithNotes(src, "t99.subl")
-        val (hir, bag) = compile(pr.file, pr.notes)
+        val (hir, bag) = compile(pr.file, pr.notes, scriptMode = false, mounted = stdlibMounts)
         pr.diag.forEach { d ->
             when (d.severity) {
                 Severity.ERROR -> bag.error(d.code, d.pos, d.message)

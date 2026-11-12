@@ -1,4 +1,4 @@
 ﻿cmd: java ... sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/core/regex/regex.subl -o jsoncmp/out/t131mod/core__regex__regex.subl.json
 exit: 0
 ----- output -----
-[完成] 已生成 F:\Sublimation\jsoncmp\out\t131mod\core__regex__regex.subl.json（16480 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t131mod\core__regex__regex.subl.json（16528 字节）

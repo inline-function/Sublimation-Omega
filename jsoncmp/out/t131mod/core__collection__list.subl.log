@@ -22,4 +22,4 @@ exit: 1
 [警告][226:23] W-NON-EXHAUSTIVE: when 非穷尽（缺 else 或覆盖不全），作为表达式时值类型退化为 Null
   226 |     is Cons(pr, t) -> when(pr) {
       |                       ^
-[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out\t131mod\core__collection__list.subl.json（742260 字节）
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out\t131mod\core__collection__list.subl.json（742464 字节）

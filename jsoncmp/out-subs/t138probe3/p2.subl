@@ -1,0 +1,1 @@
+fun g(xs: list.List[Nat], i: Nat)<i < list.size(xs)>: Nat = i

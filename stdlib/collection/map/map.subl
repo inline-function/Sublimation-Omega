@@ -1,6 +1,11 @@
-// stdlib.collection.map —— Map[K, V] 自由函数全家（B0-1 迁源；e2e core/collection/map 同构）
-// 依赖：Map/MapNil/MapCons/Some/None/Optional/Nil/Cons 经 prelude 虚拟声明（名义同构，B1 后同源）；
-// 本件无跨件函数依赖。
+// stdlib.collection.map —— Map[K, V]：挂 list + optional（DAG 上层；经挂载注入）。
+// 结构体/别名 B1 retire 虚拟声明（形状逐字同构）。托管 List→Map 转换（toMap——差分台账登记）。
+
+struct MapNil
+
+struct MapCons[K, V](key: K, value: V, tail: Map[K, V])
+
+type Map[K, V] = MapNil | MapCons[K, V]
 
 // ---------- 构造 ----------
 fun mapEmpty[K, V](): Map[K, V] = MapNil
@@ -69,3 +74,11 @@ fun merge[K, V](m1: Map[K, V], m2: Map[K, V]): Map[K, V] = when(m2) {
 }
 
 fun toList[K, V](m: Map[K, V]): List[V] = values(m)
+
+// List→Map 转换（DAG 分层托管于本件——e2e 原在 list 件，差分台账登记）。
+fun toMap[K, V](xs: List[(K, V)]): Map[K, V] = when(xs) {
+    Nil -> MapNil
+    is Cons(pr, t) -> when(pr) {
+        (k, v) -> put(toMap(t), k, v)
+    }
+}

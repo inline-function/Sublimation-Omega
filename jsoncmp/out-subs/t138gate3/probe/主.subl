@@ -1,0 +1,6 @@
+fun main() {
+    unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    unchecked print(optional.getOrElse(optional.head(xs), 0))
+    unchecked print(summation(1, 11))
+    unchecked print(optional.firstOr(xs, 7))
+}

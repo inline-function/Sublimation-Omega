@@ -1,0 +1,8 @@
+fun m(): Nat {
+    unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    unchecked var o : Optional[Nat] = Some(list.size(xs))
+    unchecked var r : Result[Nat, Str] = Ok(1)
+    unchecked var s : Set[Nat] = SetCons(1, SetNil)
+    unchecked var mp : Map[Nat, Str] = MapCons(1, "a", MapNil)
+    return optional.getOrElse(o, 0)
+}

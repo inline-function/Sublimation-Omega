@@ -1,4 +1,4 @@
 ﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/标准库集合.subl -o jsoncmp/out/t123check/examples__标准库集合.subl.json
 exit: 0
 ----- output -----
-[完成] 已生成 F:\Sublimation\jsoncmp\out\t123check\examples__标准库集合.subl.json（379725 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t123check\examples__标准库集合.subl.json（379749 字节）

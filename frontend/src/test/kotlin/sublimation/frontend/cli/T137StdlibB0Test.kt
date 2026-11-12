@@ -108,7 +108,7 @@ class T137StdlibB0Test {
         // B0-1 后 list = 全家（B0-0 阶段断言不可硬编小集——retire 三项须在内）
         val listFuns = byAlias["list"]?.snapshot?.funs?.keys ?: emptySet()
         assertTrue(setOf("range", "sum").all { it in listFuns }, "list 件含 retire 的 range/sum")
-        assertTrue(setOf("head", "slice", "toSet", "firstOr").all { it in listFuns }, "list 件含 B0-1 全家")
+        assertTrue(setOf("slice", "joinToString").all { it in listFuns }, "list 件含 B0-1 全家")
         assertEquals(setOf("summation"), byAlias["math"]?.snapshot?.funs?.keys, "math 件 = retire 的 summation")
         assertNotNull(byAlias["list"]?.snapshot?.exts?.get("List")?.get("fold"), "list 件 fold 扩展入快照 ext 面")
     }

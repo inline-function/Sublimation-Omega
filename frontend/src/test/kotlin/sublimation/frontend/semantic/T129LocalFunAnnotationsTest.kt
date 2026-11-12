@@ -1,6 +1,8 @@
 package sublimation.frontend.semantic
 
 import sublimation.frontend.diag.Severity
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.hir.HirLocalFun
 import sublimation.frontend.parser.parseScriptSourceWithNotes
 import sublimation.frontend.semantic.compileWithRounds
@@ -16,8 +18,13 @@ import kotlin.test.assertTrue
  *   @impure 局部 fun 的 HIR purity 与顶层同判；@pure 局部 fun 的 @mut 体调用判据与顶层一致（R-16 A2）。 */
 class T129LocalFunAnnotationsTest {
 
+    // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
+
     private fun sc(src: String) =
-        parseScriptSourceWithNotes(src, "t129.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true) }
+        parseScriptSourceWithNotes(src, "t129.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true, mounted = stdlibMounts) }
     private fun errs(rs: RoundsReport): List<String> =
         rs.diag.diags.filter { it.severity == Severity.ERROR }.map { it.code }
 

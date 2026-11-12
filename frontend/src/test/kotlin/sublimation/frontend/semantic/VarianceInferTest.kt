@@ -1,6 +1,8 @@
 package sublimation.frontend.semantic
 
 import java.io.File
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -20,9 +22,14 @@ import sublimation.frontend.parser.parseScriptSourceWithNotes
  */
 class VarianceInferTest {
 
+    // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
+
     private fun reportOf(src: String, fileName: String = "t64.subl"): VarianceReport {
         val pr = parseScriptSourceWithNotes(src, fileName)
-        val r = compileVariance(pr.file, pr.notes)
+        val r = compileVariance(pr.file, pr.notes, mounted = stdlibMounts)
         pr.diag.forEach { d -> if (d.severity == Severity.ERROR) r.diag.error(d.code, d.pos, d.message) }
         return r
     }

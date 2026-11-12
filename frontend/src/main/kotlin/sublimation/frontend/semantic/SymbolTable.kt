@@ -396,12 +396,14 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
 
     /** t44（ADR-29）：prelude 虚拟 struct 的类型位条目（Some[Nat] 等同 struct 类型位可用；用户同名声明优先）。 */
     fun lookupPreludeStructType(name: String): SymbolEntry? =
-        if (PreludeDecls.structOf(name) != null) builtinEntry(name) else null
+        // t138（B1）：retire 替身经 moduleStructShapes 懒登记 builtinEntry（id 序零漂移）
+        if (PreludeDecls.structOf(name) != null || name in moduleStructShapes) builtinEntry(name) else null
 
     /** t47（ADR-31 R-26）：prelude 虚拟联合别名的类型位条目（Optional[Nat] 等容器让位后的唯一来源；
      *  用户同名 alias 声明优先——aliases 表先查）。 */
     fun lookupPreludeAliasType(name: String): SymbolEntry? =
-        if (PreludeDecls.aliasOf(name) != null) builtinEntry(name) else null
+        // t138（B1）：retire 替身经 moduleAliasNames 懒登记 builtinEntry（id 序零漂移）
+        if (PreludeDecls.aliasOf(name) != null || name in moduleAliasNames) builtinEntry(name) else null
 
     /** 该名是否为可解析类型（I2 前置件：类型优先，同名 struct/enum 不改写为构造子）。 */
     fun isTypeName(name: String): Boolean = lookupType(name) != null
@@ -417,6 +419,10 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
      *  单例语义），enumName 即 struct 名（构造调用返回 struct 名，同用户 struct 口径）；
      *  符号 kind 为 CTOR——调用位与 nameRefType 同用户构造子通道（旧 BUILTIN 通道随之删除）。 */
     fun preludeCtor(name: String): CtorInfo? = preludeCtorCache.getOrPut(name) {
+        // t138（R-23 B1）：retire 替身形状源 = 挂载 stdlib 快照（经 declareModuleStructShapes 注入；
+        // 保持 preludeCtorEntry 的 builtins 懒登记 → HIR 符号 id 序零漂移——68 样本 SAME 的机制保证）
+        if (name in moduleStructShapes)
+            return@getOrPut CtorInfo(preludeCtorEntry(name), moduleStructShapes.getValue(name), name)
         val sd = PreludeDecls.structOf(name) ?: return null
         CtorInfo(preludeCtorEntry(name), sd.fields.isEmpty(), name)
     }
@@ -445,6 +451,14 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
      * builtinEntry 懒登记 → 用户裸名调用 HIR 形态零差分，67 逐字节 SAME 由之成立）。 */
     private val moduleFunNames = mutableSetOf<String>()
     fun declareModuleFunNames(names: Collection<String>) { moduleFunNames += names }
+
+    /** t138（R-23 B1）：retire 替身 struct/alias 名面——形状源 = 挂载 stdlib 快照（经允许表过滤后注入）。
+     *  同 B0-0 纪律：仅替换**数据源**，SymbolEntry 创建仍走 builtins 懒登记（nextId 序零漂移 →
+     *  HIR 逐字节同；preludeCtor/lookupPrelude*Type 查询链形态不变）。 */
+    private val moduleStructShapes = LinkedHashMap<String, Boolean>()
+    fun declareModuleStructShapes(shapes: Map<String, Boolean>) { moduleStructShapes.putAll(shapes) }
+    private val moduleAliasNames = mutableSetOf<String>()
+    fun declareModuleAliasNames(names: Collection<String>) { moduleAliasNames += names }
     fun preludeFun(name: String): SymbolEntry? = if (name in moduleFunNames) builtinEntry(name) else null
 
     /** t126（S5c / R-15 容器面）：虚拟自由构造族（MutableListOf/ListOf）——符号**懒登记**（零命中零

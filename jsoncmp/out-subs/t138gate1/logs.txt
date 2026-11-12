@@ -1,0 +1,86 @@
+[模块 tool]
+[模块 list/optional]
+[错误][57:43] E-UNBOUND-NAME: 未知类型 `Result`
+  57 | fun toResult[T, E](o: Optional[T], e: E): Result[T, E] = when(o) {
+     |                                           ^
+[错误][58:19] E-UNBOUND-NAME: 未定义的名称 `Ok`（作用域中无此变量/函数/构造子）
+  58 |     is Some(v) -> Ok(v)
+     |                   ^
+[错误][59:13] E-UNBOUND-NAME: 未定义的名称 `Err`（作用域中无此变量/函数/构造子）
+  59 |     None -> Err(e)
+     |             ^
+[错误][62:32] E-UNBOUND-NAME: 未知类型 `List`
+  62 | fun toList[T](o: Optional[T]): List[T] = when(o) {
+     |                                ^
+[错误][63:19] E-UNBOUND-NAME: 未定义的名称 `Cons`（作用域中无此变量/函数/构造子）
+  63 |     is Some(v) -> Cons(v, Nil)
+     |                   ^
+[错误][63:27] E-UNBOUND-NAME: 未定义的名称 `Nil`（作用域中无此变量/函数/构造子）
+  63 |     is Some(v) -> Cons(v, Nil)
+     |                           ^
+[错误][64:13] E-UNBOUND-NAME: 未定义的名称 `Nil`（作用域中无此变量/函数/构造子）
+  64 |     None -> Nil
+     |             ^
+[模块 list/set]
+[错误][85:27] E-UNBOUND-NAME: 未知类型 `List`
+  85 | fun toList[T](s: Set[T]): List[T] = when(s) {
+     |                           ^
+[错误][86:15] E-UNBOUND-NAME: 未定义的名称 `Nil`（作用域中无此变量/函数/构造子）
+  86 |     SetNil -> Nil
+     |               ^
+[错误][87:25] E-UNBOUND-NAME: 未定义的名称 `Cons`（作用域中无此变量/函数/构造子）
+  87 |     is SetCons(h, t) -> Cons(h, toList(t))
+     |                         ^
+[模块 list/map]
+[错误][25:36] E-UNBOUND-NAME: 未知类型 `Optional`
+  25 | fun get[K, V](m: Map[K, V], k: K): Optional[V] = when(m) {
+     |                                    ^
+[错误][26:15] E-UNBOUND-NAME: 未定义的名称 `None`（作用域中无此变量/函数/构造子）
+  26 |     MapNil -> None
+     |               ^
+[错误][27:44] E-UNBOUND-NAME: 未定义的名称 `Some`（作用域中无此变量/函数/构造子）
+  27 |     is MapCons(k2, v, t) -> if (k == k2) { Some(v) } else { get(t, k) }
+     |                                            ^
+[错误][35:31] E-UNBOUND-NAME: 未知类型 `List`
+  35 | fun keys[K, V](m: Map[K, V]): List[K] = when(m) {
+     |                               ^
+[错误][36:15] E-UNBOUND-NAME: 未定义的名称 `Nil`（作用域中无此变量/函数/构造子）
+  36 |     MapNil -> Nil
+     |               ^
+[错误][37:28] E-UNBOUND-NAME: 未定义的名称 `Cons`（作用域中无此变量/函数/构造子）
+  37 |     is MapCons(k, _, t) -> Cons(k, keys(t))
+     |                            ^
+[错误][40:33] E-UNBOUND-NAME: 未知类型 `List`
+  40 | fun values[K, V](m: Map[K, V]): List[V] = when(m) {
+     |                                 ^
+[错误][41:15] E-UNBOUND-NAME: 未定义的名称 `Nil`（作用域中无此变量/函数/构造子）
+  41 |     MapNil -> Nil
+     |               ^
+[错误][42:28] E-UNBOUND-NAME: 未定义的名称 `Cons`（作用域中无此变量/函数/构造子）
+  42 |     is MapCons(_, v, t) -> Cons(v, values(t))
+     |                            ^
+[错误][76:33] E-UNBOUND-NAME: 未知类型 `List`
+  76 | fun toList[K, V](m: Map[K, V]): List[V] = values(m)
+     |                                 ^
+[模块 list]
+[提示][10:16] H-SHADOW: 这里的 `head` 遮蔽了全局（58:5）的同名字段：本作用域内只会解析到这里的声明，外层同名者不可见（不回退）。
+   10 | struct Cons[T](head: T, tail: List[T])
+      |                ^
+[警告][222:23] W-NON-EXHAUSTIVE: when 非穷尽（缺 else 或覆盖不全），作为表达式时值类型退化为 Null
+  222 |     is Cons(pr, t) -> when(pr) {
+      |                       ^
+[模块 result]
+[错误][45:36] E-UNBOUND-NAME: 未知类型 `List`
+  45 | fun toList[T, E](r: Result[T, E]): List[T] = when(r) {
+     |                                    ^
+[错误][46:17] E-UNBOUND-NAME: 未定义的名称 `Cons`（作用域中无此变量/函数/构造子）
+  46 |     is Ok(v) -> Cons(v, Nil)
+     |                 ^
+[错误][46:25] E-UNBOUND-NAME: 未定义的名称 `Nil`（作用域中无此变量/函数/构造子）
+  46 |     is Ok(v) -> Cons(v, Nil)
+     |                         ^
+[错误][47:18] E-UNBOUND-NAME: 未定义的名称 `Nil`（作用域中无此变量/函数/构造子）
+  47 |     is Err(_) -> Nil
+     |                  ^
+[模块 math]
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out-subs\t138gate1\examples__模块系统.json（9525 字节）

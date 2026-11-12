@@ -8055,13 +8055,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 2091,
-          "pos": "0:0",
+          "pos": "11:16-11:18",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 2086,
-              "pos": "0:0",
+              "pos": "11:16-11:18",
               "notes": [],
               "name": "Nil",
               "args": [],
@@ -8074,7 +8074,7 @@
             {
               "kind": "HirNamedType",
               "nid": 2090,
-              "pos": "0:0",
+              "pos": "11:22-11:25",
               "notes": [],
               "name": "Cons",
               "args": [

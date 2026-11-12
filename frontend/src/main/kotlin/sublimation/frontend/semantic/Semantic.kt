@@ -249,12 +249,14 @@ internal data class VarianceReport(
 )
 internal fun compileVariance(
     file: FileAst, parseNotes: Map<AstNode, List<ParseNote>> = emptyMap(),
+    /** t138（R-23 B1）：stdlib 挂载透传（retire 后虚拟层类型经快照注入）。 */
+    mounted: Map<String, ModuleSnapshot> = emptyMap(),
 ): VarianceReport {
     val nids = NodeIdSource()
     val symbols = SymbolTable(nids::alloc)
     val collectDiag = DiagBag()
     symbols.collectFile(file, collectDiag)
-    val (hir, elaborateDiag, table) = elaborateWithVariance(file, symbols, parseNotes, nids)
+    val (hir, elaborateDiag, table) = elaborateWithVariance(file, symbols, parseNotes, nids, mounted = mounted)
     val diag = DiagBag()
     diag.absorb(collectDiag)
     diag.absorb(elaborateDiag)

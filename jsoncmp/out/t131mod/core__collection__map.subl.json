@@ -1133,13 +1133,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 199,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 194,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -1152,7 +1152,7 @@
             {
               "kind": "HirNamedType",
               "nid": 198,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -2318,13 +2318,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 438,
-          "pos": "0:0",
+          "pos": "11:16-11:18",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 433,
-              "pos": "0:0",
+              "pos": "11:16-11:18",
               "notes": [],
               "name": "Nil",
               "args": [],
@@ -2337,7 +2337,7 @@
             {
               "kind": "HirNamedType",
               "nid": 437,
-              "pos": "0:0",
+              "pos": "11:22-11:25",
               "notes": [],
               "name": "Cons",
               "args": [
@@ -2823,13 +2823,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 565,
-          "pos": "0:0",
+          "pos": "11:16-11:18",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 560,
-              "pos": "0:0",
+              "pos": "11:16-11:18",
               "notes": [],
               "name": "Nil",
               "args": [],
@@ -2842,7 +2842,7 @@
             {
               "kind": "HirNamedType",
               "nid": 564,
-              "pos": "0:0",
+              "pos": "11:22-11:25",
               "notes": [],
               "name": "Cons",
               "args": [
@@ -7647,13 +7647,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 1822,
-          "pos": "0:0",
+          "pos": "11:16-11:18",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 1817,
-              "pos": "0:0",
+              "pos": "11:16-11:18",
               "notes": [],
               "name": "Nil",
               "args": [],
@@ -7666,7 +7666,7 @@
             {
               "kind": "HirNamedType",
               "nid": 1821,
-              "pos": "0:0",
+              "pos": "11:22-11:25",
               "notes": [],
               "name": "Cons",
               "args": [

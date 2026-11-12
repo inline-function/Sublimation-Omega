@@ -1,0 +1,109 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "p.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:5-1:5",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:5-1:5",
+        "notes": [],
+        "name": "m",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "m"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 10,
+          "pos": "12:16-12:18",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 5,
+              "pos": "12:16-12:18",
+              "notes": [],
+              "name": "Nil",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Nil"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 9,
+              "pos": "12:22-12:25",
+              "notes": [],
+              "name": "Cons",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 4,
+                  "pos": "1:15-1:17",
+                  "notes": [],
+                  "name": "Nat",
+                  "args": [],
+                  "symbol": {
+                    "id": 1,
+                    "kind": "builtin",
+                    "name": "Nat"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 4,
+                "kind": "builtin",
+                "name": "Cons"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirNameRef",
+          "nid": 12,
+          "pos": "1:22-1:24",
+          "notes": [],
+          "name": "Nil",
+          "symbol": {
+            "id": 5,
+            "kind": "ctor",
+            "name": "Nil"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 11,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Nil",
+            "args": [],
+            "symbol": null
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,4 +1,4 @@
 ﻿cmd: java -cp lib/* sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/core/io/io.subl -o jsoncmp/out/t123check/core__io__io.subl.json
 exit: 0
 ----- output -----
-[完成] 已生成 F:\Sublimation\jsoncmp\out\t123check\core__io__io.subl.json（22441 字节）
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t123check\core__io__io.subl.json（22555 字节）

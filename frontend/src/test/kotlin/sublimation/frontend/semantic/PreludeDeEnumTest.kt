@@ -1,6 +1,8 @@
 package sublimation.frontend.semantic
 
 import sublimation.frontend.diag.DiagBag
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.diag.Severity
 import sublimation.frontend.hir.HirDeclEntry
 import sublimation.frontend.hir.HirFile
@@ -25,9 +27,15 @@ import kotlin.test.assertTrue
  */
 class PreludeDeEnumTest {
 
+    // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构；
+    // 虚拟 struct/别名数据源已换 stdlib 源——P-7 用户同名优先口径不变）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
+
     private fun script(src: String): Pair<HirFile, DiagBag> {
         val pr = parseScriptSourceWithNotes(src, "prelude44.subl")
-        val (hir, bag) = compile(pr.file, pr.notes)
+        val (hir, bag) = compile(pr.file, pr.notes, scriptMode = false, mounted = stdlibMounts)
         pr.diag.forEach { d ->
             when (d.severity) {
                 Severity.ERROR -> bag.error(d.code, d.pos, d.message)

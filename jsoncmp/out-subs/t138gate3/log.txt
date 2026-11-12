@@ -1,0 +1,10 @@
+[模块 list]
+[模块 optional/result]
+[模块 optional]
+[模块 set]
+[模块 map]
+[警告][81:23] W-NON-EXHAUSTIVE: when 非穷尽（缺 else 或覆盖不全），作为表达式时值类型退化为 Null
+  81 |     is Cons(pr, t) -> when(pr) {
+     |                       ^
+[模块 math]
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\t138gate3\probe.json（29835 字节）+ 6 个挂载模块产物

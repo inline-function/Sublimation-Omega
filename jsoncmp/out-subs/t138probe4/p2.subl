@@ -1,0 +1,2 @@
+fun m(): Nat { unchecked var xs : List[Nat] = Cons(1, Nil)
+    return optional.getOrElse(Some(list.size(xs)), 0) }

@@ -1,0 +1,154 @@
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → list → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → list → optional → result 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → list → set 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → list → map 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → list → map → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → list → map → optional → result 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../optional（挂载链 stdlib → optional → list 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → optional → list → set 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → optional → list → map 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][2:1] E-MOUNT-CYCLE: 挂载环：../optional（挂载链 stdlib → optional → list → map 已含该目录——模块图须 DAG）
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../optional（挂载链 stdlib → optional → result → list 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → optional → result → list → set 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → optional → result → list → map 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][2:1] E-MOUNT-CYCLE: 挂载环：../optional（挂载链 stdlib → optional → result → list → map 已含该目录——模块图须 DAG）
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → result → list → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][2:1] E-MOUNT-CYCLE: 挂载环：../result（挂载链 stdlib → result → list → optional 已含该目录——模块图须 DAG）
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → result → list → set 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → result → list → map 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → result → list → map → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][2:1] E-MOUNT-CYCLE: 挂载环：../result（挂载链 stdlib → result → list → map → optional 已含该目录——模块图须 DAG）
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → set → list → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → set → list → optional → result 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][2:1] E-MOUNT-CYCLE: 挂载环：../set（挂载链 stdlib → set → list 已含该目录——模块图须 DAG）
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → set → list → map 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → set → list → map → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → set → list → map → optional → result 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → map → list → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → map → list → optional → result 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → map → list → set 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][3:1] E-MOUNT-CYCLE: 挂载环：../map（挂载链 stdlib → map → list 已含该目录——模块图须 DAG）
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../optional（挂载链 stdlib → map → optional → list 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → map → optional → list → set 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][3:1] E-MOUNT-CYCLE: 挂载环：../map（挂载链 stdlib → map → optional → list 已含该目录——模块图须 DAG）
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../optional（挂载链 stdlib → map → optional → result → list 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → map → optional → result → list → set 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][3:1] E-MOUNT-CYCLE: 挂载环：../map（挂载链 stdlib → map → optional → result → list 已含该目录——模块图须 DAG）
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → math → list → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → math → list → optional → result 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → math → list → set 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → math → list → map 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → math → list → map → optional 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][1:1] E-MOUNT-CYCLE: 挂载环：../list（挂载链 stdlib → math → list → map → optional → result 已含该目录——模块图须 DAG）
+  1 | fun main() {
+    | ^
+[错误][2:24] E-UNBOUND-NAME: 未知类型 `List`
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    |                        ^
+[错误][2:36] E-UNBOUND-NAME: 未定义的名称 `Cons`（作用域中无此变量/函数/构造子）
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    |                                    ^
+[错误][2:44] E-UNBOUND-NAME: 未定义的名称 `Cons`（作用域中无此变量/函数/构造子）
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    |                                            ^
+[错误][2:52] E-UNBOUND-NAME: 未定义的名称 `Nil`（作用域中无此变量/函数/构造子）
+  2 |     unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))
+    |                                                    ^
+[错误][3:21] E-UNBOUND-NAME: 未定义的名称 `optional`（作用域中无此变量/函数/构造子）
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    |                     ^
+[错误][3:40] E-UNBOUND-NAME: 未定义的名称 `list`（作用域中无此变量/函数/构造子）
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    |                                        ^
+[错误][3:45] E-UNBOUND-NAME: 方法 .`head` 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    |                                             ^
+[错误][3:30] E-UNBOUND-NAME: 方法 .`getOrElse` 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    |                              ^
+[错误][4:21] E-UNBOUND-NAME: 未定义的名称 `summation`（作用域中无此变量/函数/构造子）
+  4 |     unchecked print(summation(1, 11))
+    |                     ^
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out-subs\t138gate2\probe.json（28637 字节）

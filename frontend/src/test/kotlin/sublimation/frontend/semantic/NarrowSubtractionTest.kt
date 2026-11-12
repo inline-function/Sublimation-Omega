@@ -1,6 +1,8 @@
 package sublimation.frontend.semantic
 
 import kotlin.test.Test
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertFalse
@@ -19,17 +21,22 @@ import sublimation.frontend.parser.parseScriptSourceWithNotes
  */
 class NarrowSubtractionTest {
 
+    // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
+
 
     private fun errCodes(src: String, file: String = "t66.subl"): List<String> {
         val pr = parseScriptSourceWithNotes(src, file)
-        val (_, diag) = compile(pr.file, pr.notes)
+        val (_, diag) = compile(pr.file, pr.notes, scriptMode = false, mounted = stdlibMounts)
         val parseErrs = pr.diag.filter { it.severity == Severity.ERROR }.map { it.code }
         return parseErrs + diag.diags.filter { it.severity == Severity.ERROR }.map { it.code }
     }
 
     private fun allDiags(src: String, file: String = "t66.subl"): List<String> {
         val pr = parseScriptSourceWithNotes(src, file)
-        val (_, diag) = compile(pr.file, pr.notes)
+        val (_, diag) = compile(pr.file, pr.notes, scriptMode = false, mounted = stdlibMounts)
         val msgs = diag.diags.map { it.code + " :: " + it.message }
         return pr.diag.map { it.code + " :: " + it.message } + msgs
     }

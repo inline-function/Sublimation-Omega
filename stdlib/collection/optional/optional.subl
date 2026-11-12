@@ -1,6 +1,13 @@
-// stdlib.collection.optional —— Optional[T] 自由函数全家（B0-1 迁源；e2e core/collection/optional 同构）
-// 依赖：Some/None/Optional/Ok/Err/Result/List/Nil/Cons 经 prelude 虚拟声明（名义同构，B1 后同源）；
-// 本件无跨件函数依赖（e2e 形态直迁）。
+// stdlib.collection.optional —— Optional[T]：挂 list（DAG 上层；List 类型/ctor 经挂载注入）。
+// 结构体/别名 B1 retire 虚拟声明（形状逐字同构）。托管**产出 Optional 的 List 访问器**
+// （head/last/elementAt/find/indexOf/maxNat/minNat/get/firstOr——差分台账登记：e2e 原在 list 件，
+// DAG 分层移入本件）+ List↔Optional 转换（toList）与 Optional↔Result 转换（toResult）。
+
+struct None
+
+struct Some[T](value: T)
+
+type Optional[T] = None | Some[T]
 
 // 扩展函数（特质成员 map/fold/pure/flatMap；self 绑定接收者，TS-10）。
 fun Optional[a].map[a, b](f: (a) => b): Optional[b] = when(self) {
@@ -49,6 +56,71 @@ fun filter[T](o: Optional[T], p: (T) => Bool): Optional[T] = when(o) {
     None -> None
 }
 
+// ---------- List 访问器（产出 Optional——DAG 分层托管于本件）----------
+fun head[T](xs: List[T]): Optional[T] = when(xs) {
+    Nil -> None
+    is Cons(h, _) -> Some(h)
+}
+
+fun last[T](xs: List[T]): Optional[T] = when(xs) {
+    Nil -> None
+    is Cons(h, Nil) -> Some(h)
+    is Cons(_, t) -> last(t)
+}
+
+fun elementAt[T](xs: List[T], i: Nat): Optional[T] = when(xs) {
+    Nil -> None
+    is Cons(h, t) -> if (i == 0) { Some(h) } else { elementAt(t, i - 1) }
+}
+
+fun find[T](xs: List[T], p: (T) => Bool): Optional[T] = when(xs) {
+    Nil -> None
+    is Cons(h, t) -> if (p(h)) { Some(h) } else { find(t, p) }
+}
+
+fun indexOf[T](xs: List[T], x: T): Optional[Nat] = when(xs) {
+    Nil -> None
+    is Cons(h, t) ->
+        if (h == x) { Some(0) }
+        else { when(indexOf(t, x)) {
+            is Some(n) -> Some(n + 1)
+            None -> None
+        } }
+}
+
+fun maxNat(xs: List[Nat]): Optional[Nat] = when(xs) {
+    Nil -> None
+    is Cons(h, t) -> when(t) {
+        Nil -> Some(h)
+        is Cons(_, _) -> when(maxNat(t)) {
+            is Some(v) -> if (h > v) { Some(h) } else { Some(v) }
+            None -> Some(h)
+        }
+    }
+}
+
+fun minNat(xs: List[Nat]): Optional[Nat] = when(xs) {
+    Nil -> None
+    is Cons(h, t) -> when(t) {
+        Nil -> Some(h)
+        is Cons(_, _) -> when(minNat(t)) {
+            is Some(v) -> if (h < v) { Some(h) } else { Some(v) }
+            None -> Some(h)
+        }
+    }
+}
+
+// 下标取值：前置条件由调用方证明（i 在范围内）；越界位置理论不可达，panic 兜底。
+// 细化位用限定调用 list.size（refinement 域）——本件挂 list。
+fun get[T](xs: List[T], i: Nat)<i < list.size(xs)>: T = when(elementAt(xs, i)) {
+    is Some(v) -> v
+    None -> panic()
+}
+
+// 首元素兜底：空列表回退默认值。
+fun firstOr[T](xs: List[T], d: T): T = getOrElse(head(xs), d)
+
+// ---------- 转换 ----------
 fun toResult[T, E](o: Optional[T], e: E): Result[T, E] = when(o) {
     is Some(v) -> Ok(v)
     None -> Err(e)

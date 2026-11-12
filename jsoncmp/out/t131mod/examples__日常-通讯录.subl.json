@@ -688,13 +688,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 116,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 111,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -707,7 +707,7 @@
             {
               "kind": "HirNamedType",
               "nid": 115,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [

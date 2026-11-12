@@ -1,0 +1,147 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "conv-field.subs",
+    "mode": "script"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 12,
+    "pos": "2:5-3:8",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 13,
+        "pos": "2:5-2:6",
+        "notes": [],
+        "name": "mk",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "mk"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 18,
+          "pos": "0:0",
+          "notes": [],
+          "name": "P",
+          "args": [],
+          "symbol": null
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "inferred": true,
+        "evidence": [
+          "use:2:12"
+        ],
+        "body": {
+          "kind": "HirCall",
+          "nid": 14,
+          "pos": "2:12-2:12",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 15,
+            "pos": "2:12-2:12",
+            "notes": [],
+            "name": "P",
+            "symbol": {
+              "id": 2,
+              "kind": "ctor",
+              "name": "P"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirIntLit",
+              "nid": 16,
+              "pos": "2:14-2:14",
+              "notes": [],
+              "value": "5"
+            }
+          ],
+          "symbol": {
+            "id": 2,
+            "kind": "ctor",
+            "name": "P"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 18,
+            "pos": "0:0",
+            "notes": [],
+            "name": "P",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": false
+        }
+      },
+      {
+        "kind": "HirStructDecl",
+        "nid": 19,
+        "pos": "3:8-3:8",
+        "notes": [],
+        "name": "P",
+        "symbol": {
+          "id": 1,
+          "kind": "struct",
+          "name": "P"
+        },
+        "theory": [],
+        "fields": [
+          {
+            "kind": "HirParam",
+            "nid": 20,
+            "pos": "3:10-3:10",
+            "notes": [],
+            "name": "x",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 6,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": null
+            },
+            "symbol": {
+              "id": 4,
+              "kind": "field",
+              "name": "x"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null,
+            "inferred": true,
+            "evidence": [
+              "use:2:12"
+            ]
+          }
+        ],
+        "annotations": [],
+        "props": [],
+        "nullary": false
+      }
+    ]
+  }
+}

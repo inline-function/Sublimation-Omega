@@ -64,13 +64,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 12,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 7,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -83,7 +83,7 @@
             {
               "kind": "HirNamedType",
               "nid": 11,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -192,13 +192,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 25,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 20,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -211,7 +211,7 @@
             {
               "kind": "HirNamedType",
               "nid": 24,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -320,13 +320,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 41,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 36,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -339,7 +339,7 @@
             {
               "kind": "HirNamedType",
               "nid": 40,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -420,13 +420,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 52,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 47,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -439,7 +439,7 @@
             {
               "kind": "HirNamedType",
               "nid": 51,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -520,13 +520,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 63,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 58,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -539,7 +539,7 @@
             {
               "kind": "HirNamedType",
               "nid": 62,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -620,13 +620,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 74,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 69,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -639,7 +639,7 @@
             {
               "kind": "HirNamedType",
               "nid": 73,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -720,13 +720,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 85,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 80,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -739,7 +739,7 @@
             {
               "kind": "HirNamedType",
               "nid": 84,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -1015,13 +1015,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 108,
-          "pos": "0:0",
+          "pos": "11:16-11:18",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 103,
-              "pos": "0:0",
+              "pos": "11:16-11:18",
               "notes": [],
               "name": "Nil",
               "args": [],
@@ -1034,7 +1034,7 @@
             {
               "kind": "HirNamedType",
               "nid": 107,
-              "pos": "0:0",
+              "pos": "11:22-11:25",
               "notes": [],
               "name": "Cons",
               "args": [

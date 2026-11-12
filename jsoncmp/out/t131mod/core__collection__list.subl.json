@@ -3984,13 +3984,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 837,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 832,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -4003,7 +4003,7 @@
             {
               "kind": "HirNamedType",
               "nid": 836,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -4317,13 +4317,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 889,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 884,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -4336,7 +4336,7 @@
             {
               "kind": "HirNamedType",
               "nid": 888,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -4864,13 +4864,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 1014,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 1009,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -4883,7 +4883,7 @@
             {
               "kind": "HirNamedType",
               "nid": 1013,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -6699,13 +6699,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 1435,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 1430,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -6718,7 +6718,7 @@
             {
               "kind": "HirNamedType",
               "nid": 1434,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -8916,13 +8916,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 1822,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 1817,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -8935,7 +8935,7 @@
             {
               "kind": "HirNamedType",
               "nid": 1821,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -17531,13 +17531,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 3873,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 3868,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -17550,7 +17550,7 @@
             {
               "kind": "HirNamedType",
               "nid": 3872,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -18618,13 +18618,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 4013,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 4008,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -18637,7 +18637,7 @@
             {
               "kind": "HirNamedType",
               "nid": 4012,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [
@@ -21179,13 +21179,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 4513,
-          "pos": "0:0",
+          "pos": "8:15-8:20",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 4508,
-              "pos": "0:0",
+              "pos": "8:15-8:20",
               "notes": [],
               "name": "SetNil",
               "args": [],
@@ -21198,7 +21198,7 @@
             {
               "kind": "HirNamedType",
               "nid": 4512,
-              "pos": "0:0",
+              "pos": "8:24-8:30",
               "notes": [],
               "name": "SetCons",
               "args": [
@@ -21648,13 +21648,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 4614,
-          "pos": "0:0",
+          "pos": "8:18-8:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 4608,
-              "pos": "0:0",
+              "pos": "8:18-8:23",
               "notes": [],
               "name": "MapNil",
               "args": [],
@@ -21667,7 +21667,7 @@
             {
               "kind": "HirNamedType",
               "nid": 4613,
-              "pos": "0:0",
+              "pos": "8:27-8:33",
               "notes": [],
               "name": "MapCons",
               "args": [

@@ -188,3 +188,12 @@ builtinSig（TypeInfer:790）60+ 内建函数按域分类登记——**语言定
 - **B0-0（零差分 retire）**：PRELUDE_FUNS 三项（range/sum/summation）退役为 stdlib 源（collection/list + math）——数据源替换、分发机制不变（同名经挂载 stdlib 快照 → builtinEntry 懒登记 → HIR 逐字节同 t122n）；编译根默认挂载 stdlib（并入挂载表，用户优先）+ `--no-stdlib` 旗；非限定链注入经 RETIRED_BARE_NAMES 允许表（裸名只吃替身三项，R-22 限定通道口径不变）。实测：e2e 68/68 SAME、套件 +15（T137StdlibB0×9 + T137StdlibCollection×6）。
 - **B0-1（collection 五件迁源）**：list/optional/result/set/map 自由函数全家（含 ext map/fold/pure/flatMap）入 stdlib，跨件调用走**限定引用**（list 的 firstOr→`optional.getOrElse`、toSet→`set.add`、toMap→`map.put`）——裸名链隔离（getOrElse/add/put 在用户域保持未解析 → e2e 冻红态不变，68/68 SAME 保持）；stdlib 全件零红（list 的 slice 因 Nat 减法 Int 化改 take/drop 复合，e2e 原文该处亦红）；钻石形备忘按首次路径记 unitPath（optional/set 见于 list 命名空间下）。
 - **配套件**：`documents/kernel-内建面规格.md`（附录 A 抽出扩写的 71 名独立登记件）；`jsoncmp/scripts/t137-parity.ps1` + 侧基线 `jsoncmp/out/t137stdlib/`。
+
+---
+
+## 批史 · t138 落地（B1：虚拟 struct + 联合别名 retire）
+
+- **B1（11 虚拟 struct + 5 联合别名 retire → stdlib 源）**：Nil/Cons → list、None/Some → optional、Ok/Err → result、SetNil/SetCons → set、MapNil/MapCons → map 五件**源声明**（形状逐字同构）；联合别名 Optional/List/Result/Set/Map 同件 retire；**Channel 留虚拟**（无 stdlib/channel 件，登记下一件）。机制同 B0 数据源替换纪律：PreludeDecls 虚拟层撤（`STRUCTS` 仅余 Channel、`ALIASES` 置空），新设 `RETIRED_STRUCTS`/`RETIRED_ALIASES` 允许表门——std 挂载快照注入父域经 SymbolTable 注入名集 + Elaborator allowlist 过滤（stdlib 件内非 retired 名裸名不扩散，R-22 限定口径不变）；**不用 declareModuleCtor**（模块符号 id 不入 HIR，builtins 懒登记 id 顺序零动）。
+- **DAG 分层重排（B1 纪律增量）**：模块图须 DAG 且「限定构造形态 V1 未通」（结构体经非限定构造名解析、挂载注入父域）——stdlib 件互依赖类型须靠挂载解决，list↔optional 互依成环。分层落：**list 为底层纯 List 域**（不产 Optional/Set/Map）；optional 挂 list+result 并托管**产出 Optional 的 List 访问器**（head/last/elementAt/find/indexOf/maxNat/minNat/get/firstOr，细化命题经限定调用 `list.size(xs)`）；set/map 各挂 list（+optional）并托管 toSet/toMap。9 个函数件属移位登差分台账（函数全家与 e2e 冻红零变——裸名不可见故用户面不动）。
+- **差分台账（OQ-10 B1 口径）**：基线 t131mod，最终 68 门 = SAME 52 + **剥差同 16**（差异位全部为 `retType` 联合展开位 pos，共 138 处，message/其他位差异=0——别名展开的变体位置由虚拟声明 SYNTHETIC 位变为 stdlib 模块源实坐标；剥差（仅删 pos）后 16/16 逐字节同，行为零变）；脚本门 14/14 逐字节同（out-subs/t01）；模块双导出确定性 8/8（1+7 件集合）；套件 1111 → **1120**（+9：T138StdlibRetireTest 快照条目在位/用户面解析等价/形状同构/负例先红/裸名面隔离/--no-stdlib 红/Channel 留虚拟/双导出确定性/DAG 分层绿）。
+- **工具路径同构**：`compile()`/`compileWithRounds()`/`compileVariance()`/`elaborate()` 新增 `mounted` 透传参数（默认空——非模块编译零影响），虚拟层依赖的 12 件旧测试 script helper 改挂 stdlib 快照（同 t19 口径）；机械证据件 `jsoncmp/scripts/t138-parity.ps1`（四段：retire 核对 / 7 依赖样本剥差门 / 68 门台账导出 `out-subs/t138gate-ledger.txt` / 模块确定性）。

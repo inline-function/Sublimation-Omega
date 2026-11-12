@@ -1,0 +1,4 @@
+[错误][2:5] E-INFER-DEGRADE-FORBIDDEN: 脚本模式发生 R-02 退化（a、b 的推导位 R=8 轮未收敛），--no-degrade 门要求退化即失败——建议在声明位加一处类型标注打破类型环（P-11 §3.5）
+  2 | fun a(x: Nat) = (b(x), 0)
+    |     ^
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out-subs\t138gate-subs\degrade-tuple-grow.subs.nd.json（125625 字节）

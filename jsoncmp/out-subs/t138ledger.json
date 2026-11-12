@@ -1,0 +1,406 @@
+[
+ {
+  "base": "core__async__async.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__async__channel.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 3,
+  "sample": [
+   "$.hir.entries.1.retType.pos",
+   "$.hir.entries.1.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__async__flow.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 3,
+  "sample": [
+   "$.hir.entries.0.retType.pos",
+   "$.hir.entries.0.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__async__mutex.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__async__task.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__classic__classic.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__collection__list.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 27,
+  "sample": [
+   "$.hir.entries.13.retType.pos",
+   "$.hir.entries.13.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__collection__map.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 12,
+  "sample": [
+   "$.hir.entries.6.retType.pos",
+   "$.hir.entries.6.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__collection__optional.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 6,
+  "sample": [
+   "$.hir.entries.12.retType.pos",
+   "$.hir.entries.12.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__collection__result.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 3,
+  "sample": [
+   "$.hir.entries.9.retType.pos",
+   "$.hir.entries.9.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__collection__set.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 3,
+  "sample": [
+   "$.hir.entries.18.retType.pos",
+   "$.hir.entries.18.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__collection__traits.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__collection__tuple.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__encoding__encoding.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__io__io.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 18,
+  "sample": [
+   "$.hir.entries.1.retType.pos",
+   "$.hir.entries.1.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__json__json.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 24,
+  "sample": [
+   "$.hir.entries.0.retType.pos",
+   "$.hir.entries.0.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__logic__logic.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__math__inequality.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__math__math.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__math__number.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__math__order.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__math__peano.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__math__series.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__net__net.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 9,
+  "sample": [
+   "$.hir.entries.0.retType.pos",
+   "$.hir.entries.0.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__number__num.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__random__random.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__real__real.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 3,
+  "sample": [
+   "$.hir.entries.2.retType.pos",
+   "$.hir.entries.2.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__regex__regex.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 6,
+  "sample": [
+   "$.hir.entries.1.retType.pos",
+   "$.hir.entries.1.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__script__script.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 6,
+  "sample": [
+   "$.hir.entries.0.retType.pos",
+   "$.hir.entries.0.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__string__string.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 9,
+  "sample": [
+   "$.hir.entries.6.retType.pos",
+   "$.hir.entries.6.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "core__time__time.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__zfc__derived.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "core__zfc__zfc.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__JSON内建.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples___probe_div.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples___scratch_bill.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__lambda与闭包.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__上下文弥散.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__值与字面量.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__公理化.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__函数与调用形式.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__副作用与unchecked.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__变量与绑定.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__可变性控制.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__命题基础.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__字符串与插值.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__异步与并发.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__手动证明.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__日常-容器范型.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__日常-异步任务.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__日常-数列与区间.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__日常-文本处理.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__日常-温度与BMI.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__日常-账单统计.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__日常-通讯录.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 3,
+  "sample": [
+   "$.hir.entries.5.retType.pos",
+   "$.hir.entries.5.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "examples__标准库集合.subl.json",
+  "kind": "DIFF→剥差同",
+  "n": 3,
+  "sample": [
+   "$.hir.entries.11.retType.pos",
+   "$.hir.entries.11.retType.variants.0.pos"
+  ]
+ },
+ {
+  "base": "examples__模式匹配.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__特性巡礼.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__特质.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__空安全.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__类型系统.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__结构体与枚举.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__脚本求值桥.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__自动证明.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__错误处理.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__高阶函数与lambda.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__高阶类型.subl.json",
+  "kind": "SAME",
+  "n": 0
+ },
+ {
+  "base": "examples__模块系统.json",
+  "kind": "SAME",
+  "n": 0
+ }
+]

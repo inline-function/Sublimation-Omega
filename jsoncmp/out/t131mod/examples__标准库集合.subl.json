@@ -4940,13 +4940,13 @@
         "retType": {
           "kind": "HirUnionType",
           "nid": 1085,
-          "pos": "0:0",
+          "pos": "10:20-10:23",
           "notes": [],
           "variants": [
             {
               "kind": "HirNamedType",
               "nid": 1080,
-              "pos": "0:0",
+              "pos": "10:20-10:23",
               "notes": [],
               "name": "None",
               "args": [],
@@ -4959,7 +4959,7 @@
             {
               "kind": "HirNamedType",
               "nid": 1084,
-              "pos": "0:0",
+              "pos": "10:27-10:30",
               "notes": [],
               "name": "Some",
               "args": [

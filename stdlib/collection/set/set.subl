@@ -1,5 +1,11 @@
-// stdlib.collection.set —— Set[T] 自由函数全家（B0-1 迁源；e2e core/collection/set 同构）
-// 依赖：Set/SetNil/SetCons/Nil/Cons 经 prelude 虚拟声明（名义同构，B1 后同源）；本件无跨件函数依赖。
+// stdlib.collection.set —— Set[T]：挂 list（DAG 上层；List/Nil/Cons 经挂载注入）。
+// 结构体/别名 B1 retire 虚拟声明（形状逐字同构）。托管 List→Set 转换（toSet——差分台账登记）。
+
+struct SetNil
+
+struct SetCons[T](head: T, tail: Set[T])
+
+type Set[T] = SetNil | SetCons[T]
 
 // 扩展函数（特质成员 map/fold；self 绑定接收者，TS-10）。
 fun Set[a].map[a, b](f: (a) => b): Set[b] = when(self) {
@@ -79,4 +85,10 @@ fun flatMap[T, U](s: Set[T], f: (T) => Set[U]): Set[U] = when(s) {
 fun toList[T](s: Set[T]): List[T] = when(s) {
     SetNil -> Nil
     is SetCons(h, t) -> Cons(h, toList(t))
+}
+
+// List→Set 转换（DAG 分层托管于本件——e2e 原在 list 件，差分台账登记）。
+fun toSet[A](xs: List[A]): Set[A] = when(xs) {
+    Nil -> SetNil
+    is Cons(h, t) -> add(toSet(t), h)
 }

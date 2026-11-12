@@ -29,12 +29,13 @@ class T137StdlibCollectionTest {
         assertFalse(sd.hasError, "stdlib 全件编译零红: " + sd.diags.map { it.code + it.message }.joinToString(";"))
     }
 
-    /** 门 2：限定引用通道——optional.getOrElse(list.head(xs), d) 跨件解析绿。 */
+    /** 门 2：限定引用通道——optional.getOrElse(optional.head(xs), d) + list.sum(xs) 跨件解析绿
+     * （B1 分层后：head/firstOr 归 optional 件托管，list 件只留纯 List 域——DAG 无环）。 */
     @Test fun 限定引用全家绿() {
         val o = scriptStd(
             "fun m(): Nat {\n" +
             "    unchecked var xs : List[Nat] = Cons(1, Cons(2, Nil))\n" +
-            "    return optional.getOrElse(list.head(xs), 0)\n" +
+            "    return optional.getOrElse(optional.head(xs), 0) + list.sum(xs)\n" +
             "}")
         assertEquals(emptyList<String>(), errs(o), "限定引用跨件解析绿: " + errs(o))
     }
@@ -57,14 +58,16 @@ class T137StdlibCollectionTest {
         val by = su.associateBy { it.alias }
         assertEquals(setOf("list", "optional", "result", "set", "map", "math"), by.keys, "五件 + math")
         val opt = by["optional"]!!
-        assertTrue("getOrElse" in opt.snapshot.funs && "isSome" in opt.snapshot.funs, "optional 全家条目")
+        assertTrue("getOrElse" in opt.snapshot.funs && "isSome" in opt.snapshot.funs &&
+            setOf("head", "firstOr", "get", "toResult").all { it in opt.snapshot.funs.keys },
+            "optional 全家条目（含 B1 分层托管的 List→Optional 访问器 head/firstOr/get、toResult）")
         val lst = by["list"]!!
-        assertTrue(setOf("range", "sum", "head", "firstOr", "slice", "toSet").all { it in lst.snapshot.funs.keys },
-            "list 全家条目（含 B0-1 迁源自由函数）")
+        assertTrue(setOf("range", "sum", "slice", "joinToString").all { it in lst.snapshot.funs.keys },
+            "list 全家条目（含 B0-1 迁源自由函数；产 Optional 访问器按 B1 DAG 分层移 optional 件）")
         val set = by["set"]!!.snapshot
-        assertTrue("add" in set.funs && "union" in set.funs, "set 全家条目")
+        assertTrue("add" in set.funs && "union" in set.funs && "toSet" in set.funs, "set 全家条目（含 B1 托管 toSet）")
         val mp = by["map"]!!.snapshot
-        assertTrue("put" in mp.funs && "get" in mp.funs, "map 全家条目")
+        assertTrue("put" in mp.funs && "get" in mp.funs && "toMap" in mp.funs, "map 全家条目（含 B1 托管 toMap）")
         val res = by["result"]!!.snapshot
         assertTrue("unwrapOr" in res.funs && "mapOk" in res.funs, "result 全家条目")
     }
