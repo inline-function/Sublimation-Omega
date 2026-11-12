@@ -72,6 +72,8 @@ internal class InferenceRound(
     val closureSize: Int,
     /** t125（S5b / R-06）：本轮登记的可变性提升需求（声明位键 → 赋值位证据清单）——驱动器跨轮唯一通道。 */
     val mutPromotions: Map<String, List<SourceRange>> = emptyMap(),
+    /** t126（S5c）：提升需求的触发分类账（T1/T2/T3）——驱动器跨轮唯一通道。 */
+    val mutPromotionTriggers: Map<String, String> = emptyMap(),
 )
 
 /** t117（附录 B H3）：R 池按轮 label 观测条目——每轮一全新 FUEL_DEFAULT 池（每轮新 Elaborator）；
@@ -170,7 +172,8 @@ internal fun compileWithRounds(
                         "建议在声明位加一处类型标注打破类型环（P-11 §3.5）")
             } else {
                 val deg = elaborateRound(file, symbols, parseNotes, nids, scriptMode, degSeeds, "infer-degraded",
-                    finalRound.changedOwners, noLift = noLift, mutPromoted = finalRound.mutPromotions)
+                    finalRound.changedOwners, noLift = noLift, mutPromoted = finalRound.mutPromotions,
+                    mutPromotedTriggers = finalRound.mutPromotionTriggers)
                 rounds.add(RoundObservation(round + 1, "infer-degraded", deg.metaCount, deg.fuelMaxConsumed, deg.converged, deg.closureSize))
                 hir = deg.hir
                 degraded = true
@@ -187,7 +190,8 @@ internal fun compileWithRounds(
     var mutPromotedRound = false
     if (scriptMode && last!!.mutPromotions.isNotEmpty() && !degraded) {
         val mr = elaborateRound(file, symbols, parseNotes, nids, true, last.solutions, "mut-promoted",
-            last.changedOwners, noLift = noLift, mutPromoted = last.mutPromotions)
+            last.changedOwners, noLift = noLift, mutPromoted = last.mutPromotions,
+            mutPromotedTriggers = last.mutPromotionTriggers)
         rounds.add(RoundObservation(round + 1, "mut-promoted", mr.metaCount, mr.fuelMaxConsumed, mr.converged, mr.closureSize))
         hir = mr.hir
         mutPromotedRound = true

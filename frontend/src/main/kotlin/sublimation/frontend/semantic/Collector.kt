@@ -67,6 +67,8 @@ private fun SymbolTable.collectFun(decl: FunDecl, diag: DiagBag) {
     // 头经 ExtFunHeads 唯一规范化（元组/函数/联合按 形状/元数 取键，ADR-26）；
     // 同 (接收者头, 名字) 重复 → 两处位置均报 E-DUP-EXT（V1 禁止重载，不看形参列表/arity）。
     if (decl.receiver != null) {
+        // t126（S5c / R-15）：用户同 (头, 名) 扩展优先——先摘虚拟扩展方法条目再登记（P-7 口径）
+        dropPreludeVirtualExt(ExtFunHeads.ofAst(decl.receiver) ?: "", decl.name)
         val head = ExtFunHeads.ofAst(decl.receiver)
         if (head == null) return                // 头不可规范化（ErrorType 接收者）：解析层已落诊断，不登记
         val tpNames = decl.theory.filterIsInstance<TypeParam>().map { it.name }
@@ -77,6 +79,8 @@ private fun SymbolTable.collectFun(decl: FunDecl, diag: DiagBag) {
             "扩展函数 " + ident(head) + "." + ident(decl.name) + "(" + sigKey + ") 重复声明（同接收者类型头/名字即重复——V1 禁止重载，TS-13 两处均报）") }
         return
     }
+    // t126（S5c / R-15）：用户同名自由函数优先——先摘虚拟构造族符号再登记（P-7 口径）
+    if (decl.name != "_") dropPreludeVirtualFun(decl.name)
     val isTheorem = "theorem" in decl.annotations
     val names = decl.params.map { it.name }
     val destruct = decl.params.any { it.destruct != null }

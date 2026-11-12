@@ -1,7 +1,9 @@
 package sublimation.frontend.semantic
 
 import sublimation.frontend.ast.Expr
+import sublimation.frontend.ast.FunDecl
 import sublimation.frontend.ast.IntLit
+import sublimation.frontend.ast.MutType
 import sublimation.frontend.ast.NamedType
 import sublimation.frontend.ast.Param
 import sublimation.frontend.ast.StructDecl
@@ -60,6 +62,40 @@ internal object PreludeDecls {
         alias("Set", listOf("T"), named("SetNil"), app("SetCons", "T")),
         alias("Map", listOf("K", "V"), named("MapNil"), app("MapCons", "K", "V")),
     )
+
+    /** t126（S5c / R-15 容器面 · 队长裁 Alt A）：虚拟构造族——值实参解理论参数（既有 instCall 通道，
+     *  零新推导机制）：`MutableListOf(x)` → `@mut List[T]`（可变容器，元素类型由实参定）;
+     *  `ListOf(x)` → `List[T]`（不可变同构）。零参 per-call ?T 形态登记后版（P-11 §5.1，R-20）。
+     *  用户同名声明优先（Collector 先摘虚拟条目再登记——P-7 口径）。 */
+    val FUNS: List<FunDecl> = listOf(
+        ctorFun("MutableListOf", mut = true),
+        ctorFun("ListOf", mut = false),
+    )
+
+    /** t126（S5c / R-15 容器面）：虚拟 @mut 扩展方法族——去糖模型 R-18.1（self = 接收者首参，持可写
+     *  视图 @mut；方法体写接收者无罪 R-18.2，罪恶在调用边界 R-18.3）。V1 签名面：方法体随后端/
+     *  标准库源（S2 迁源形态 C）落。 */
+    val EXT_METHODS: List<FunDecl> = listOf(
+        methodFun("add", "List", "a",
+            Param("v", NamedType("a", emptyList(), SYNTHETIC_POS), emptyList(), null, null, SYNTHETIC_POS),
+            NamedType("List", listOf(NamedType("a", emptyList(), SYNTHETIC_POS)), SYNTHETIC_POS)),
+    )
+
+    private fun ctorFun(name: String, mut: Boolean): FunDecl {
+        val elem = NamedType("T", emptyList(), SYNTHETIC_POS)
+        val ret = NamedType("List", listOf(elem), SYNTHETIC_POS)
+        return FunDecl(name, if (mut) listOf("mut") else emptyList(),
+            listOf(TypeParam("T", null, 0, SYNTHETIC_POS)),
+            listOf(Param("first", elem, emptyList(), null, null, SYNTHETIC_POS)),
+            emptyList(), if (mut) MutType(ret, SYNTHETIC_POS) else ret, emptyList(),
+            null, emptyList(), SYNTHETIC_POS)
+    }
+
+    private fun methodFun(name: String, recvHead: String, elem: String, param: Param, ret: sublimation.frontend.ast.Type): FunDecl =
+        FunDecl(name, listOf("mut"),
+            listOf(TypeParam(elem, null, 0, SYNTHETIC_POS)), listOf(param), emptyList(), ret, emptyList(), null,
+            emptyList(), SYNTHETIC_POS,
+            receiver = MutType(NamedType(recvHead, listOf(NamedType(elem, emptyList(), SYNTHETIC_POS)), SYNTHETIC_POS), SYNTHETIC_POS))
 
     private val structIndex = STRUCTS.associateBy { it.name }
     private val aliasIndex = ALIASES.associateBy { it.name }

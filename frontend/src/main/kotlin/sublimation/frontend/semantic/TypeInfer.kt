@@ -385,11 +385,53 @@ internal class TypeInfer(
      *  want = @ref @mut T 仅当源可写（@mut / @ref @mut T——:113/:131）;want 非 ref 时仅 PLAIN→PLAIN
      *  共享（:149-156 不可变互传不拷贝）;want = @mut T 皆深拷（造格，:97/:104）。
      *  前端只做**类型层判定 + HIR 留痕**——实际深拷随后端运行时（R2 §三）。 */
-    fun copyDispatch(got: HirType, want: HirType): Boolean = when (viewKindOf(want)) {
-        ViewKind.REF -> false
-        ViewKind.REFMUT -> viewKindOf(got) != ViewKind.MUT && viewKindOf(got) != ViewKind.REFMUT
-        ViewKind.PLAIN -> viewKindOf(got) != ViewKind.PLAIN
-        ViewKind.MUT -> true
+    /** t125（S5c · R-14 元素层递归）：深拷分派判定树——顶层 [viewKindOf] 四格判定 + 元素位递归。
+     *  deep=顶层深拷（false 含共享与平凡同值——不可变位无运行时拷贝需求）;elements=深拷下钻的
+     *  容器泛型实参位判定（共享路径元素随整体共享——want 持 @ref 无需下钻，R2 §三）;
+     *  头名不齐（联合别名展开等）→ 零元素结论（保守）。 */
+    data class CopyDecision(val deep: Boolean, val elements: List<CopyDecision>) {
+        /** 元素层深拷位数（递归累计——嵌套容器同型计数）。 */
+        val deepElements: Int get() = if (deep) elements.fold(0) { acc, d -> acc + (if (d.deep) 1 else 0) + d.deepElements } else 0
+    }
+
+    /** t98 四格顶层判定 + t125（R-14）元素层递归（先判顶后下钻）。 */
+    fun copyDispatch(got: HirType, want: HirType): CopyDecision {
+        val top = when (viewKindOf(want)) {
+            ViewKind.REF -> false
+            ViewKind.REFMUT -> viewKindOf(got) != ViewKind.MUT && viewKindOf(got) != ViewKind.REFMUT
+            ViewKind.PLAIN -> viewKindOf(got) != ViewKind.PLAIN
+            ViewKind.MUT -> true
+        }
+        return CopyDecision(top, if (top) elementDecisions(got, want) else emptyList())
+    }
+
+    /** R-14：容器实参位——剥除外层视图层后，按**元数对齐**成对递归。
+     *  want 为联合别名展开形态（Nil | Cons[Nat]）时取与源端实参元数相符的变体位；
+     *  头名/元数不齐（结构异形）→ 零元素结论（保守，骨架不越位）。 */
+    private fun elementDecisions(got: HirType, want: HirType): List<CopyDecision> {
+        val gArgs = argsOf(stripViews(got))
+        if (gArgs.isEmpty()) return emptyList()
+        return wantLeaves(stripViews(want)).firstOrNull { wArgs -> wArgs.size == gArgs.size }
+            ?.let { wArgs -> gArgs.zip(wArgs).map { (a, b) -> copyDispatch(a, b) } } ?: emptyList()
+    }
+
+    /** t125（R-14）：具名头实参位；联合 → 逐变体实参位候选。 */
+    private fun argsOf(t: HirType): List<HirType> = (t as? HirNamedType)?.args ?: emptyList()
+
+    /** t125（R-14）：want 侧实参位候选清单（联合别名展开后逐变体）。 */
+    private fun wantLeaves(w: HirType): List<List<HirType>> = when (w) {
+        is HirUnionType -> w.variants.map { argsOf(it) }
+        is HirNamedType -> listOf(w.args)
+        else -> emptyList()
+    }
+
+    /** t125（R-14）：剥除外层视图层（@ref/@mut）取容器核心（元素位判定前置）。 */
+    private fun stripViews(t: HirType): HirType {
+        var cur = t
+        while (true) {
+            val inner = (cur as? HirRefType)?.inner ?: (cur as? HirMutType)?.inner ?: return cur
+            cur = inner
+        }
     }
     /** t64（ADR-41，ST-13.1）:借用/造格目标（t98 @ref 口径见下）。 */
     /** t64 ADR-41 造格/借用目标 + t98（N2 @ref）：got 已是 @mut 视图时按**视图对视图**比对;

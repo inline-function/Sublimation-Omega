@@ -189,14 +189,18 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     fun lookupExtFunVisible(receiverHead: String, name: String): List<SymbolEntry> {
         val key = receiverHead to name
         for (i in frames.indices.reversed()) frames[i].extFuns[key]?.let { return listOf(it.entry) }
-        return extFuns[key] ?: emptyList()
+        if (extFuns[key] != null) return extFuns.getValue(key)
+        // t126（S5c / R-15）：虚拟 @mut 扩展方法兜底（用户同键扩展优先——extFuns 表先查）
+        return preludeVirtualExt(receiverHead, name)?.let { listOf(it) } ?: emptyList()
     }
 
     /** t39：扩展函数 AST 声明可见集查询（方法糖/直接调用的签名核对 + TS-19 满足判定）；同键遮蔽同上。 */
     fun lookupExtDeclVisible(receiverHead: String, name: String): sublimation.frontend.ast.FunDecl? {
         val key = receiverHead to name
         for (i in frames.indices.reversed()) frames[i].extFuns[key]?.let { return it.decl }
-        return extFunDecls[key]
+        if (extFunDecls[key] != null) return extFunDecls.getValue(key)
+        // t126（S5c / R-15）：虚拟 @mut 扩展方法声明兜底（方法糖签名核对 + @mut 注解读取）
+        return PreludeDecls.EXT_METHODS.firstOrNull { ExtFunHeads.ofAst(it.receiver!!) == receiverHead && it.name == name }
     }
 
     /** t39：名字级前置判定（TS-14 直接调用）——任一可见帧或全局存在该名的扩展函数。 */
@@ -295,6 +299,7 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     private fun lookupValueOuter(name: String): SymbolEntry? {
         for (i in 0 until frames.size - 1) frames[i].bindings[name]?.let { return it }
         return ctors[name]?.entry ?: preludeCtor(name)?.entry ?: funs[name] ?: theorems[name]
+            ?: preludeVirtualFun(name)
     }
 
     /** t39：被遮蔽条目的来源标签（外层帧 / 全局分表）。 */
@@ -341,6 +346,7 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         }
         return ctors[name]?.entry ?: preludeCtor(name)?.entry ?: funs[name] ?: theorems[name]
             ?: lookupBuiltinFun(name) ?: preludeFun(name) ?: lookupBuiltinValue(name)
+            ?: preludeVirtualFun(name)
     }
 
     /** t109（R3-V1 §四 P2）:项名 → 登记型（(e:T) 通道的 termType 判据原料——遮蔽同 lookupValue,
@@ -409,8 +415,41 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     /** prelude 自由函数名（旧「可见 core 模块」的单文件等价物；用户自声明 fun 优先于本表）。 */
     fun preludeFun(name: String): SymbolEntry? = if (name in PRELUDE_FUNS) builtinEntry(name) else null
 
+    /** t126（S5c / R-15 容器面）：虚拟自由构造族（MutableListOf/ListOf）——符号**懒登记**（零命中零
+     *  nextId 消费，68+14 样本 SAME 基线逐字保护）。用户同名 fun 优先（funs 表先查）。
+     *  声明索引在 Elaborator 侧预注入（funDecls 种子位），签名核对与理论参数推导走既有自由函数通道。 */
+    private val virtualFuns = PreludeDecls.FUNS.associateBy { it.name }
+    private val virtualFunEntries = mutableMapOf<String, SymbolEntry>()
+    fun preludeVirtualFun(name: String): SymbolEntry? {
+        if (name !in virtualFuns) return null
+        return virtualFunEntries.getOrPut(name) {
+            val d = virtualFuns.getValue(name)
+            SymbolEntry(nextId++, SymbolKind.FUN, name, d.pos, d.params.map { it.name },
+                d.params.any { it.destruct != null })
+        }
+    }
+
+    /** t126（S5c / R-15）：虚拟 @mut 扩展方法族（add 等）——符号懒登记（同保护口径）;声明索引侧
+     *  [lookupExtDeclVisible] 的虚拟兜底供方法糖签名核对。用户同 (头, 名) 扩展优先。 */
+    private val virtualExtMethods = PreludeDecls.EXT_METHODS.associateBy {
+        ExtFunHeads.ofAst(it.receiver!!)!! to it.name
+    }
+    private val virtualExtEntries = mutableMapOf<Pair<String, String>, SymbolEntry>()
+    fun preludeVirtualExt(head: String, name: String): SymbolEntry? {
+        val key = head to name
+        if (key !in virtualExtMethods) return null
+        return virtualExtEntries.getOrPut(key) {
+            SymbolEntry(nextId++, SymbolKind.FUN, name, virtualExtMethods.getValue(key).pos)
+        }
+    }
+
     /** prelude 自由函数签名规格（params/ret；Elaborator 转为 HIR 类型形态供调用点核对）。 */
     fun preludeFunSpec(name: String): PreludeFun? = PRELUDE_FUNS[name]
+
+    /** t126（S5c / R-15）：用户同名声明优先——摘除虚拟构造族符号/虚拟扩展方法条目（Collector pass1 前）。
+     *  符号侧摘除（声明索引侧由 file 预扫描自然覆盖：funDecls[d.name] = d 逐字覆盖虚拟种子）。 */
+    fun dropPreludeVirtualFun(name: String) { virtualFunEntries.remove(name) }
+    fun dropPreludeVirtualExt(head: String, name: String) { virtualExtEntries.remove(head to name) }
 
     /** 方法名查询；恰一个实现 → 条目，多实现 / 无 → null（接收者类型分派见 t8/t9）。 */
 

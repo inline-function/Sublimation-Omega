@@ -213,12 +213,14 @@ internal fun elaborateRound(
     noLift: Boolean = false,
     /** t125（S5b / R-06）：轮外驱动可变性提升映射（上一轮需求，声明位预应用）。 */
     mutPromoted: Map<String, List<SourceRange>> = emptyMap(),
+    mutPromotedTriggers: Map<String, String> = emptyMap(),
 ): InferenceRound {
     val diag = DiagBag()
     // t117 H8：sink 轮内接管（编译期袋的 collect 单趟专用，轮内重复落袋消除）
     wireShadowHint(symbols, diag)
     wireNativeRecl(symbols, diag)
-    val el = Elaborator(symbols, notes, diag, nids, scriptMode, injected, roundLabel, degradedFuns, noLift, mutPromoted)
+    val el = Elaborator(symbols, notes, diag, nids, scriptMode, injected, roundLabel, degradedFuns, noLift, mutPromoted,
+        mutPromotedTriggers)
     el.setFuelLabel(roundLabel)
     val hir = el.file(file)
     el.runPurityGate(hir)
@@ -237,7 +239,8 @@ internal fun elaborateRound(
     if (metaCount == 0) converged = true                                  // 零元变量直通（保护条款）
     return InferenceRound(hir, diag, solutions, metaCount, converged, changed, changedSolutions, el.fuelMaxConsumed(),
         el.gateClosureSize,   // t122：本轮闭包规模（runPurityGate 记）
-        el.mutPromotions())   // t125（S5b）：本轮提升需求导出
+        el.mutPromotions(),   // t125（S5b）：本轮提升需求导出
+        el.mutPromotionTriggers())   // t126（S5c）：触发分类账导出
 }
 
 /** t66（ADR-43）：compileNarrowAudit 的配套——收窄审计观察通道（不改变 elaborate 行为）。 */
@@ -492,6 +495,9 @@ private class Elaborator(
      *  证据清单）。单调（只加不减）+ 静态键（AST 声明位 + 名跨轮稳定）⇒ **一轮预应用重跑即收敛**
      * （声明先于赋值，词法序天然无环）。工程模式恒空（R-06 工程侧声明制）。 */
     private val mutPromoted: Map<String, List<SourceRange>> = emptyMap(),
+    /** t126（S5c / R-06 T3）：轮外驱动触发分类映射（声明位键 → T1/T2/T3 文本）——预应用位据此渲染
+     *  D-MUT-INFERRED 审计四元组的触发分类（S5b 仅 T1/T2，S5c 增 T3「传入 @mut 接收者位」）。 */
+    private val mutPromotedTriggers: Map<String, String> = emptyMap(),
 ) {
     private val resolver = NameResolver(symbols, diag)
 
@@ -536,6 +542,8 @@ private class Elaborator(
         // 亦不参与声明级检查（重复/环/归纳判定——prelude 内容既定良构）。
         PreludeDecls.STRUCTS.forEach { structDecls[it.name] = it }
         PreludeDecls.ALIASES.forEach { aliasDecls[it.name] = it }
+        // t126（S5c / R-15 容器面）：虚拟构造族声明索引预注入（用户同名 file 预扫描覆盖——P-7 口径）
+        PreludeDecls.FUNS.forEach { if (it.receiver == null) funDecls[it.name] = it }
     }
 
     /** P-8/D（卷 TS-11/TS-19）：扩展函数声明索引——(接收者类型头, 名字) → 声明集合；
@@ -556,9 +564,17 @@ private class Elaborator(
         val p = pos.start
         return p.line.toString() + ":" + p.col + "#" + name
     }
-    private fun demandMut(key: String, pos: SourceRange) {
+    /** t126（S5c）：提升需求触发分类账（键 → T1/T2/T3）——预应用位据此渲染 D-MUT-INFERRED
+     *  审计四元组的触发分类（S5b 原仅 T1/T2：S5c 增 T3「传入 @mut 接收者位」）。 */
+    private val mutDemandTriggers = mutableMapOf<String, String>()
+    private fun demandMut(key: String, pos: SourceRange, trigger: String) {
         mutDemands.getOrPut(key) { mutableListOf() }.add(pos)
+        mutDemandTriggers[key] = trigger
     }
+    /** t126（S5c / R-17/R-18）：@mut 方法调用登记表（HirCall.nid 集合——方法糖改道位注册，纯度闸
+     *  阶段 2 消费）。非产物通道（零 JSON 漂移）：@mut 注解结论只在闸/闭包相位用，HirCall 本身
+     *  不携带注解字段（calleeImpure 位留给被调纯度口径）。 */
+    private val mutMethodCalls = mutableSetOf<Int>()
     /** t125：提升应用——视图包 @mut（已 @mut 形态单调穿过不重包，R-06 混标单向蕴含）。 */
     private fun promotedView(tt: HirType, origin: SourceRange): HirType =
         if (tt is sublimation.frontend.hir.HirMutType) tt
@@ -837,6 +853,8 @@ private class Elaborator(
      *  未决占位经 normPlaceholder 归一，**解映射零占位**。 */
     /** t125（S5b）：可变性提升需求导出——驱动器跨轮唯一传递通道（与 metaSolutions 同族）。 */
     internal fun mutPromotions(): Map<String, List<SourceRange>> = mutDemands
+    /** t126（S5c）：触发分类账导出（驱动器跨轮唯一通道）。 */
+    internal fun mutPromotionTriggers(): Map<String, String> = mutDemandTriggers
 
     internal fun metaSolutions(): Map<MetaSlotKey, MetaSolution> {
         val out = linkedMapOf<MetaSlotKey, MetaSolution>()
@@ -1579,7 +1597,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 val sym = symbols.lookupValue(lhsName)
                 when {
                     sym == null -> { /* E-UNBOUND-NAME 已于 expr 解析路径落，不重复报 */ }
-                    scriptMode && sym.scriptPromotable -> demandMut(mutKey(sym.origin, lhsName), s.pos)
+                    scriptMode && sym.scriptPromotable -> demandMut(mutKey(sym.origin, lhsName), s.pos, "形参被赋值 T2")
                     else -> diag.error("E-IMMUT-ASSIGN", s.pos,
                         ident(lhsName) + " 是不可变的，不能赋值。要改它？声明时写成 `var " + lhsName + " : @mut T`")
                 }
@@ -2515,6 +2533,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     diag.error("E-NAMED-ARG", e.pos,
                         "方法 ." + ident(c.name) + "(x: 1) 不支持命名参数。命名实参只用于自由函数：f(x: 1)")
                 }
+                // t126（S5c / R-18.1 去糖模型·工程侧口径注释落位）：方法糖 ≡ 扩展函数 + 接收者入首参位
+                //  「fun T.f()」 ≡ 「fun f(self: @mut @ref T)」——self 持借用可写视图（REFMUT：写穿透共享
+                //  引用——viewKindOf=REFMUT / isWritableView=true）。注：队长 R-17 原话嵌套序 @mut @ref T
+                //  （MUT(REF(T))）在当前视图族是不可写形态——实现按 REFMUT 语义落（提案 §3.4 机械定序项）。
                 // P-8/D（卷 TS-12）：方法糖改道——按 x 的静态类型头查**扩展函数桶**
                 gateBatchOpen()   // t122：实参批次（以调用位归并回放序）
                 val args = (listOf(c.target) + e.args).map { expr(it) }
@@ -2537,6 +2559,17 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     symbols.lookupValue(c.name) == null && !symbols.preludeMethod(head, c.name))
                     diag.error("E-UNBOUND-NAME", c.pos, "方法 ." + ident(c.name) +
                         " 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）")
+                // t126（S5c / R-17/R-18.3）：@mut 标方法（注解位）调用登记——纯度闸（E-IMPURE-REQUIRED）
+                //  判据不看实参视图（队长裁 V1 一刀：深拷实参照门，逃逸分析留后版）。
+                if (ext != null && "mut" in ext.annotations) mutMethodCalls.add(nid)
+                // t125（S5c / R-06 T3）：@mut 方法的接收者位——可提升名登记单调需求（提升通道复用 S5b：
+                //  形参/局部被传入 @mut 接收者位 ⇒ 提升为 @mut 视图，免深拷绕路）。
+                if (scriptMode && ext != null && "mut" in ext.annotations && c.target is NameRef) {
+                    val t3Name = (c.target as NameRef).name
+                    val t3Sym = symbols.lookupValue(t3Name)
+                    if (t3Sym?.scriptPromotable == true)
+                        demandMut(mutKey(t3Sym.origin, t3Name), e.pos, "传入 @mut 接收者位 T3")
+                }
                 val t: HirType = ext?.let { d ->
                     extCallType(d, argTypes, e.pos)
                 } ?: infer.builtinSig(c.name)?.let { (ps, rt) ->
@@ -2984,10 +3017,13 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
 
     /** t98（规则 3 拷贝分派留痕）：got→want 的共享/深拷判定落 D-REF-DISPATCH 备注下（@ref 涉及时）。 */
     private fun refDispatchNote(pos: SourceRange, got: sublimation.frontend.hir.HirType, want: sublimation.frontend.hir.HirType, what: String): sublimation.frontend.hir.HirNote {
-        val copy = infer.copyDispatch(got, want)
+        val dec = infer.copyDispatch(got, want)
+        // t125（S5c · R-14）：元素层深拷结论随顶层深拷下钻（共享路径零下钻——文本字节兼容）
+        val elem = if (dec.deep && dec.deepElements > 0)
+            "（元素层：" + dec.deepElements + " 位深拷——容器实参位随顶层下钻）" else ""
         return sublimation.frontend.hir.HirNote(sublimation.frontend.hir.HirNoteKind.SUPPLEMENT, "D-REF-DISPATCH",
             what + " 视图分派：" + infer.render(got) + " → " + infer.render(want) +
-                (if (copy) "（深拷隔离——源端可写/目标无引用视图）" else "（共享同一对象——目标持引用视图）" +
+                (if (dec.deep) "（深拷隔离——源端可写/目标无引用视图）" + elem else "（共享同一对象——目标持引用视图）" +
                     "（前端类型层判定，实际深拷随后端运行时，R2 §三）"),
             pos, infer.render(got), infer.render(want))
     }
@@ -3536,6 +3572,14 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     if (!exempt && caller != null && nm != null) {
                         val slot = item.frame.lookupLocal(nm)
                         val target = slot?.key ?: ("g:" + nm).takeIf { it in nodes }
+                        // t126（S5c / R-17/R-18）：种子第 5 类「引用可变调用」——@mut 方法调用在纯函数体内
+                        //  ⇒ 闭包 impure 种子（D-PURITY-INFERRED seedClass 同口径；无三路豁免——接收者写效应不可借）。
+                        if (n.nid in mutMethodCalls) {
+                            val mn = nodes[caller]!!
+                            mn.impure = true
+                            mn.seedClass = mn.seedClass ?: "引用可变调用（R-17/R-18：@mut 方法调用）"
+                            mn.path = mn.path ?: (ident(nm) + "@" + n.origin.toString())
+                        }
                         if (target != null) {
                             outEdges.getOrPut(caller) { mutableListOf() }.add(target to n.origin)
                             liftEdges.add(GateLiftEdge(caller, target, nm, n.origin))   // t123：闭包边集同源视图
@@ -3623,6 +3667,14 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                                 "三路放行任选其一：给调用方函数标 @impure（效应沿调用链向上传播）、" +
                                 "unchecked 前缀包住该语句（单语句豁免）、或经上文 <pure<名>> / axiom pure<名> 供给 pure 命题")
                     }
+                    // t126（S5c / R-18.3）：@mut 方法调用闸——调用方声明口径非纯（@impure / R-07 捕获 /
+                    //  unchecked 降闸帧）⇒ E-IMPURE-REQUIRED。V1 一刀：判据不看实参视图（深拷照门）。
+                    if (node.nid in mutMethodCalls && !item.frame.chainImpure())
+                        diag.error("E-IMPURE-REQUIRED", node.origin,
+                            "纯函数不能调用 @mut 方法 " + ident(calleeNameOf(node.callee) ?: node.callee.toString()) +
+                            "——方法对接收者有写效应（R-17/R-18）。两路放行任选其一：" +
+                            "给调用方函数标 @impure（效应沿调用链向上传播）、" +
+                            "或调用位写 unchecked 前缀包住该语句（S-25 单语句豁免）")
                 }
                 is GateFrame -> gateReplay(item, ctx)
                 else -> {}
@@ -4345,7 +4397,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         //  即形参推导类型」：视图入签名 ⇒ 调用按 R-01 表深拷核）。C-5：字段（FIELD）不提升。
         val mutEvi = if (scriptMode && kind != SymbolKind.FIELD) mutPromoted[mutKey(p.pos, p.name)] else null
         val t2 = if (mutEvi != null) promotedView(t, p.pos) else t
-        if (mutEvi != null) mutNote(p.name, t2, p.pos, "形参被赋值 T2", mutEvi)
+        // t126（S5c）：触发分类按需求账渲染（T2 形参被赋值 / T3 传入 @mut 接收者位）
+        if (mutEvi != null) {
+            val trigger = mutPromotedTriggers[mutKey(p.pos, p.name)] ?: "形参被赋值 T2"
+            mutNote(p.name, t2, p.pos, trigger, mutEvi)
+        }
         // t48（ADR-32 R-30）：@list 变长形参——HirParam 保留**元素类型** + 注解旗标（D-9），
         // 体位符号按 List[元素] 登记（序列值）；调用位按元素类型核对剩余实参。
         val isVararg = "list" in p.annotations

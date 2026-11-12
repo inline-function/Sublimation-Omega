@@ -108,4 +108,45 @@ class T99CopyMatrixTest {
         assertEquals("none", got, "@mut 侧不落分派留痕")
         assertTrue(errs.none { it.startsWith("E") }, "@mut σ 既有行为不变")
     }
+
+    /** t125（S5c / R-14）：元素层深拷递归——容器泛型实参位的深拷判定随顶层深拷下钻
+     *  （共享时元素随整体共享——want 持 @ref 无需下钻）。判定骨架先扩测后改签名。 */
+    @Test fun R14元素层深拷下钻() {
+        // @ref 容器（元素 @mut）→ 不可变目标：顶层深拷 + 元素层深拷
+        val (got1, errs1, note1) = judge(prelude + "\n@impure fun main() {\n" +
+            " var x : @mut Nat = 1\n" +
+            " var a : @mut List[@mut Nat] = Cons(x, Nil)\n" +
+            " var b : @ref List[@mut Nat] = a\n" +
+            " var u : List[Nat] = b\n" +
+            "}")
+        assertEquals("copy", got1, "顶层 @ref → 不可变目标：深拷")
+        assertTrue(errs1.none { it.startsWith("E") }, "可编译示例")
+        assertTrue(note1.contains("元素层"), "R-14：元素层深拷结论入留痕（note=$note1）")
+        assertTrue(note1.contains("深拷隔离"), "顶层判定文本基线不变（contains 断言）")
+    }
+
+    /** R-14：共享路径不下钻元素层（want 持 @ref ⇒ 整体共享，元素随行）。 */
+    @Test fun R14共享路径不下钻() {
+        val (got2, errs2, note2) = judge(prelude + "\n@impure fun main() {\n" +
+            " var x : @mut Nat = 1\n" +
+            " var a : @mut List[@mut Nat] = Cons(x, Nil)\n" +
+            " var b : @ref List[@mut Nat] = a\n" +
+            " var u : @ref List[Nat] = b\n" +
+            "}")
+        assertEquals("share", got2, "@ref → @ref：共享")
+        assertTrue(errs2.none { it.startsWith("E") })
+        assertTrue(!note2.contains("元素层"), "共享路径零元素层下钻")
+    }
+
+    /** R-14：不可变元素位不产生元素层结论（Nat → Nat 无深拷需求）。 */
+    @Test fun R14不可变元素零结论() {
+        val (got3, errs3, note3) = judge(prelude + "\n@impure fun main() {\n" +
+            " var a : List[Nat] = Cons(1, Nil)\n" +
+            " var b : @ref List[Nat] = a\n" +
+            " var u : List[Nat] = b\n" +
+            "}")
+        assertEquals("copy", got3, "@ref → 不可变：深拷（元素不可变——无元素层深拷）")
+        assertTrue(errs3.none { it.startsWith("E") })
+        assertTrue(!note3.contains("元素层"), "元素不可变 ⇒ 零元素层结论（note=$note3）")
+    }
 }
