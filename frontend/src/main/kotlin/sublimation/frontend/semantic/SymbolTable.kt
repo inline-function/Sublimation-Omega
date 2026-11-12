@@ -3,6 +3,7 @@ package sublimation.frontend.semantic
 import sublimation.frontend.ast.Param
 import sublimation.frontend.diag.SourcePos
 import sublimation.frontend.diag.SourceRange
+import sublimation.frontend.ast.FunDecl
 import sublimation.frontend.hir.SymbolKind
 import sublimation.frontend.hir.SymbolRef
 
@@ -209,9 +210,36 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         return extFuns.values.any { list -> list.any { it.name == name } }
     }
 
+    /** t134（S7 / R-23）：挂载模块结构体的**构造器条目层**（lookupCtor/lookupValue 链：用户 ctor > 挂载
+     *  模块结构体 > prelude 虚拟——P-7 用户优先；模块私有结构体的构造经非限定名解析（R-23 非限定链））。 */
+    private val moduleCtors = LinkedHashMap<String, SymbolEntry>()
+
+    /** t134：构造器形状面（CtorInfo 查询层——nullary 位由注入方按结构体字段决，enumName=结构体名）。 */
+    private val moduleCtorInfos = LinkedHashMap<String, CtorInfo>()
+
+    /** t134：父域注入挂载模块结构体构造器条目（Elaborator init 期——先于 Collector 用户声明）。 */
+    fun declareModuleCtor(name: String, moduleId: Int, origin: SourceRange, nullary: Boolean) {
+        val entry = SymbolEntry(moduleId, SymbolKind.CTOR, name, origin, null, false)
+        moduleCtors[name] = entry
+        moduleCtorInfos[name] = CtorInfo(entry, nullary, name)
+    }
+
     /** 扩展函数桶查询——可见集口径（帧链内→外按键遮蔽 + 全局；t39 封装于 lookupExtFunVisible）。 */
     fun lookupExtFun(receiverHead: String, name: String): List<SymbolEntry> =
         lookupExtFunVisible(receiverHead, name)
+
+    /** t134（S7 / R-23）：本模块扩展函数（帧链→全局，不含 prelude 虚拟/挂载面）——方法糖查询链第一层。 */
+    fun lookupExtLocal(receiverHead: String, name: String): Pair<FunDecl, SymbolEntry>? {
+        val key = receiverHead to name
+        for (i in frames.indices.reversed()) frames[i].extFuns[key]?.let { return it.decl to it.entry }
+        if (extFuns[key] != null && extFunDecls[key] != null)
+            return extFunDecls.getValue(key) to extFuns.getValue(key).first()
+        return null
+    }
+
+    /** t134：prelude 虚拟扩展方法声明（方法糖查询链第三层兜底——virtualExtMethods 直查）。 */
+    fun preludeVirtualExtDecl(receiverHead: String, name: String): FunDecl? =
+        virtualExtMethods[receiverHead to name]
 
     /** 该名是否存在可见的扩展函数（直接调用形态的静默前置判定，TS-14；t39 可见集）。 */
     fun hasExtFun(name: String): Boolean = hasExtFunVisible(name)
@@ -298,7 +326,7 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     /** t39：值位名查询（跳过当前帧）——遮蔽探测：外层帧 → 全局分表；内层命中由调用方自行判定。 */
     private fun lookupValueOuter(name: String): SymbolEntry? {
         for (i in 0 until frames.size - 1) frames[i].bindings[name]?.let { return it }
-        return ctors[name]?.entry ?: preludeCtor(name)?.entry ?: funs[name] ?: theorems[name]
+        return ctors[name]?.entry ?: moduleCtors[name] ?: preludeCtor(name)?.entry ?: funs[name] ?: theorems[name]
             ?: preludeVirtualFun(name)
     }
 
@@ -344,7 +372,7 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         for (i in frames.indices.reversed()) {
             frames[i].bindings[name]?.let { return it }
         }
-        return ctors[name]?.entry ?: preludeCtor(name)?.entry ?: funs[name] ?: theorems[name]
+        return ctors[name]?.entry ?: moduleCtors[name] ?: preludeCtor(name)?.entry ?: funs[name] ?: theorems[name]
             ?: lookupBuiltinFun(name) ?: preludeFun(name) ?: lookupBuiltinValue(name)
             ?: preludeVirtualFun(name)
     }
@@ -355,7 +383,7 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         for (i in frames.indices.reversed()) {
             frames[i].bindings[name]?.let { return it.type }
         }
-        val value = ctors[name]?.entry ?: preludeCtor(name)?.entry ?: funs[name] ?: theorems[name]
+        val value = ctors[name]?.entry ?: moduleCtors[name] ?: preludeCtor(name)?.entry ?: funs[name] ?: theorems[name]
             ?: lookupBuiltinFun(name) ?: preludeFun(name) ?: lookupBuiltinValue(name)
         return value?.type ?: lookupType(name)?.type
     }
@@ -379,7 +407,7 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     fun isTypeName(name: String): Boolean = lookupType(name) != null
 
     /** 构造子查询（裸名 / Enum::C 复合名；用户声明优先，prelude 构造子名字层兜底）。 */
-    fun lookupCtor(name: String): CtorInfo? = ctors[name] ?: preludeCtor(name)
+    fun lookupCtor(name: String): CtorInfo? = ctors[name] ?: moduleCtorInfos[name] ?: preludeCtor(name)
 
     /** prelude 构造子实例级缓存（编译实例内 lazy——跨编译不可共享：条目携带本实例的符号 id）。 */
     private val preludeCtorCache = LinkedHashMap<String, CtorInfo>()

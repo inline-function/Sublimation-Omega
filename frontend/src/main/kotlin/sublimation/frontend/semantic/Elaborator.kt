@@ -549,6 +549,16 @@ private class Elaborator(
         PreludeDecls.ALIASES.forEach { aliasDecls[it.name] = it }
         // t126（S5c / R-15 容器面）：虚拟构造族声明索引预注入（用户同名 file 预扫描覆盖——P-7 口径）
         PreludeDecls.FUNS.forEach { if (it.receiver == null) funDecls[it.name] = it }
+        // t134（S7 快照扩类型面 / R-23）：挂载模块类型面注入——结构体/别名入声明索引（P-7 用户覆盖：
+        // file 预扫描重写覆盖；同 prelude 虚拟通道，查询链 用户 > 挂载子 > prelude），结构体构造器条目
+        // 入 SymbolTable 的 moduleCtor 层（非限定构造经非限定名解析——R-23 非限定查询链）。
+        mounted.values.forEach { snap ->
+            snap.structs.forEach { (k, v) ->
+                structDecls[k] = v.decl
+                symbols.declareModuleCtor(k, v.symbol.id, v.decl.pos, v.decl.fields.isEmpty())
+            }
+            snap.aliases.forEach { (k, v) -> aliasDecls[k] = v.decl }
+        }
     }
 
     /** P-8/D（卷 TS-11/TS-19）：扩展函数声明索引——(接收者类型头, 名字) → 声明集合；
@@ -2616,6 +2626,41 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             "模块名.函数", "模块名.函数")
 
     /**
+     * t134（S7 快照扩 ext 面 / R-22·R-23 查询链）：方法糖扩展函数解析链——
+     * 本模块（帧链→全局） > 挂载模块扩展面（S7 快照，moduleFace=true） > prelude 虚拟扩展方法。
+     * 返回（声明 + 符号引用 + 模块面旗标）；挂载表为空时即原 lookupExtDeclVisible 全链零差分。 */
+    private data class SugarExtHit(
+        val decl: sublimation.frontend.ast.FunDecl,
+        val symbol: SymbolRef,
+        val moduleFace: Boolean,
+    )
+
+    /** 方法糖扩展解析链（head=接收者类型头；详见 [SugarExtHit] 查询序）。 */
+    private fun sugarExt(head: String, name: String): SugarExtHit? {
+        symbols.lookupExtLocal(head, name)?.let { return SugarExtHit(it.first, it.second.ref(), false) }
+        if (mounted.isNotEmpty()) {
+            for (mod in mounted.values) {
+                val mex = mod.lookupExt(head, name)
+                if (mex != null) return SugarExtHit(mex.decl, mex.symbol, true)
+            }
+        }
+        val vd = symbols.preludeVirtualExtDecl(head, name)
+        if (vd != null) {
+            val ve = symbols.preludeVirtualExt(head, name)
+            if (ve != null) return SugarExtHit(vd, ve.ref(), false)
+        }
+        return null
+    }
+
+    /** t134：限定类型解析留痕（D-MODULE-REF 旁注附于展开结果——同 OQ-3 口径）。 */
+    private fun withModuleNote(t: sublimation.frontend.hir.HirType, pos: SourceRange): sublimation.frontend.hir.HirType =
+        when (t) {
+            is sublimation.frontend.hir.HirUnionType -> t.copy(notes = listOf(moduleRefNote(pos)) + t.notes)
+            is sublimation.frontend.hir.HirNamedType -> t.copy(notes = listOf(moduleRefNote(pos)) + t.notes)
+            else -> t
+        }
+
+    /**
      * 限定引用**调用位**：tool.triple(4) → HirCall(callee=HirField(target=HirNameRef(模块别名),
      * name=函数名, field=模块函数符号), symbol=模块函数符号) + D-MODULE-REF 旁注（提案 §2.4 B-i：零 schema 变动）。
      * 消歧序 1（模块限定 > 字段/方法糖 > 双错保形）——命中模块别名后**不走**方法糖接收者入首参通道。
@@ -2629,7 +2674,13 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         val borrowedFlags = args.map { it is sublimation.frontend.hir.HirBorrow }
         val t: sublimation.frontend.hir.HirType = if (mf != null)
             sigCheckedCall(mf.decl, mf.decl.name, argTypes, e.pos, emptyList(), borrowedFlags)
-        else {
+        else if (mod.structs[c.name] != null) {
+            diag.error("E-UNBOUND-NAME", c.pos,
+                "模块 " + ident(mod.alias) + " 的结构体 " + ident(c.name) +
+                    " 的限定构造形态 V1 未通——结构体经非限定构造名解析（" + ident(c.name) +
+                    "(...)) 解析：挂载类型面已注入父域，P-7 用户同名优先）。")
+            infer.syntheticT("调用" + c.name)
+        } else {
             diag.error("E-UNBOUND-NAME", c.pos,
                 "方法 ." + ident(c.name) + " 不可解析：模块 " + ident(mod.alias) +
                     " 的自由函数面无该名（限定引用未命中——接收者位是挂载模块别名，非字段/方法糖姿势）")
@@ -2703,9 +2754,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 // t47（ADR-31 R-27）：分派头保留**别名身份**——接收者静态类型经 expand 后是联合
                 // （None | Some[Nat] ← Opt[Nat]）时键取别名头，而非 Union/N（成员头集合反查）
                 val head = extHeadOf(argTypes.firstOrNull(), c.name)
-                // t39：扩展函数按可见集解析（帧链内→外按键遮蔽 + 全局）
-                val ext = if (head != null) symbols.lookupExtDeclVisible(head, c.name) else null
-                val calleeSymbol = if (head != null) symbols.lookupExtFun(head, c.name).firstOrNull()?.ref() else null
+                // t134（S7 / R-23）：方法糖扩展查询链——本模块 > 挂载子 > prelude 虚拟扩展
+// （挂载表为空时零成本直落 prelude 虚拟层——非模块编译零差分，R-22 纪律）
+                val sugarHit = if (head != null) sugarExt(head, c.name) else null
+                val ext = sugarHit?.decl
+                val calleeSymbol = sugarHit?.symbol
                 val callee = HirNameRef(c.name, calleeSymbol, null, freshNid(), c.pos, emptyList())
                 val note = HirNote(HirNoteKind.DESUGAR, "D-METHOD-SUGAR",
                     "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）", e.pos,
@@ -2748,7 +2801,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 val node = HirCall(
                     callee = callee, args = args2, symbol = calleeSymbol, type = t, dictionary = null,
                     slot = null, dictArgs = emptyList(), methodSugar = true, awaitPoint = false,
-                    calleeImpure = false, nid = nid, origin = e.pos, notes = notesOf(e, listOf(note)),
+                    calleeImpure = false, nid = nid, origin = e.pos,
+                    notes = notesOf(e, if (sugarHit?.moduleFace == true) listOf(note, moduleRefNote(e.pos)) else listOf(note)),
                 )
                 onCall(node, c.name)   // t97+t94+t122 订阅（事件化；接收者入首实参位）
                 return node
@@ -4366,10 +4420,32 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             // t41（ADR-28 R-16）：联合构造即展平——变体里的具名别名就地展开（嵌套联合拼接，S-15 既有规则沿联合外沿）
             flattenUnion(HirUnionType(t.variants.map { type(it) }, freshNid(), t.pos, notesOf(t)))
         is QualifiedType -> {
-            // 本期单文件：模块段折叠留给后期模块挂载任务（ADR-1 §3.2）——形态保留、不落诊断
-            val nid = freshNid()
-            val args = t.args.map { type(it) }
-            sublimation.frontend.hir.HirQualifiedType(t.module, t.name, args, null, nid, t.pos, notesOf(t))
+            // t134（S7 / R-23）：模块段折叠——单段前缀命中挂载别名时按**限定类型面**解析：
+            // 别名→expand 展开（域代入 + 变体名在父域解析）；结构体→具名 + 模块符号引用。
+            // 未命中挂载的前缀：单文件期形态保留（NameResolver 口径——不落诊断、symbol=null）。
+            val mod = if (t.module.size == 1) mounted[t.module.first()] else null
+            val mAlias = mod?.aliases?.get(t.name)
+            val mStruct = mod?.structs?.get(t.name)
+            when {
+                mod != null && mAlias == null && mStruct == null -> {
+                    diag.error("E-UNBOUND-NAME", t.pos,
+                        "类型 " + ident(t.name) + " 不可解析：模块 " + ident(mod.alias) +
+                            " 的类型面无该别名/结构体（限定类型引用未命中）")
+                    sublimation.frontend.hir.HirErrorType(
+                        "模块类型面无 " + t.name, freshNid(), t.pos, notesOf(t, listOf(moduleRefNote(t.pos))))
+                }
+                mAlias != null -> withModuleNote(expand(sublimation.frontend.hir.HirNamedType(
+                    t.name, t.args.map { type(it) }, mAlias.symbol, freshNid(), t.pos, emptyList())), t.pos)
+                mStruct != null -> sublimation.frontend.hir.HirNamedType(
+                    t.name, t.args.map { type(it) }, mStruct.symbol, freshNid(), t.pos,
+                    notesOf(t, listOf(moduleRefNote(t.pos))))
+                else -> {
+                    // 本期单文件：模块段折叠留给后期模块挂载任务（ADR-1 §3.2）——形态保留、不落诊断
+                    val nid = freshNid()
+                    val args = t.args.map { type(it) }
+                    sublimation.frontend.hir.HirQualifiedType(t.module, t.name, args, null, nid, t.pos, notesOf(t))
+                }
+            }
         }
         is ErrorType -> HirErrorType(t.message, freshNid(), t.pos, notesOf(t))
     }
