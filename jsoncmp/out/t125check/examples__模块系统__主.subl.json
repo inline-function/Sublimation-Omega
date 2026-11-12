@@ -1,0 +1,328 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "主.subl",
+    "mode": "project"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "9:21-9:24",
+      "message": "未定义的名称 `tool`（作用域中无此变量/函数/构造子）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "9:26-9:31",
+      "message": "方法 .`triple` 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "10:21-10:24",
+      "message": "未定义的名称 `tool`（作用域中无此变量/函数/构造子）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "10:26-10:31",
+      "message": "方法 .`square` 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-PURITY-INFERRED",
+      "pos": "8:5-8:8",
+      "message": "函数 `main` 推导为 impure（R-16 A2 自动 @impure;注解优先——可显式标 @impure 定型）。种子源：内建不纯 `print`；传播路径：main ← `print`@SourceRange(start=SourcePos(line=10, col=15), end=SourcePos(line=10, col=19))（闭包单调不动点：f 调 g 且 g 不纯 ⇒ f 不纯）",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "8:5-8:8",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "8:5-8:8",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 3,
+          "pos": "8:12-8:12",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirUnchecked",
+              "nid": 4,
+              "pos": "9:5-9:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 5,
+                "pos": "9:15-9:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 6,
+                  "pos": "9:15-9:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 7,
+                    "pos": "9:15-9:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 1,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirCall",
+                      "nid": 8,
+                      "pos": "9:26-9:31",
+                      "notes": [
+                        {
+                          "kind": "desugar",
+                          "code": "D-METHOD-SUGAR",
+                          "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                          "pos": "9:26-9:31",
+                          "from": "target.triple(args)",
+                          "to": "triple(target, args)"
+                        }
+                      ],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 13,
+                        "pos": "9:26-9:31",
+                        "notes": [],
+                        "name": "triple",
+                        "symbol": null,
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirNameRef",
+                          "nid": 10,
+                          "pos": "9:21-9:24",
+                          "notes": [],
+                          "name": "tool",
+                          "symbol": null,
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 9,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "(推导:未定义tool)",
+                            "args": [],
+                            "symbol": null
+                          }
+                        },
+                        {
+                          "kind": "HirIntLit",
+                          "nid": 11,
+                          "pos": "9:33-9:33",
+                          "notes": [],
+                          "value": "4"
+                        }
+                      ],
+                      "symbol": null,
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 30,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "(推导:方法triple)",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": true,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    }
+                  ],
+                  "symbol": {
+                    "id": 1,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 47,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 48,
+              "pos": "10:5-10:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 49,
+                "pos": "10:15-10:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 50,
+                  "pos": "10:15-10:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 51,
+                    "pos": "10:15-10:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 1,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirCall",
+                      "nid": 52,
+                      "pos": "10:26-10:31",
+                      "notes": [
+                        {
+                          "kind": "desugar",
+                          "code": "D-METHOD-SUGAR",
+                          "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                          "pos": "10:26-10:31",
+                          "from": "target.square(args)",
+                          "to": "square(target, args)"
+                        }
+                      ],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 57,
+                        "pos": "10:26-10:31",
+                        "notes": [],
+                        "name": "square",
+                        "symbol": null,
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirNameRef",
+                          "nid": 54,
+                          "pos": "10:21-10:24",
+                          "notes": [],
+                          "name": "tool",
+                          "symbol": null,
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 53,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "(推导:未定义tool)",
+                            "args": [],
+                            "symbol": null
+                          }
+                        },
+                        {
+                          "kind": "HirIntLit",
+                          "nid": 55,
+                          "pos": "10:33-10:33",
+                          "notes": [],
+                          "value": "3"
+                        }
+                      ],
+                      "symbol": null,
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 74,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "(推导:方法square)",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": true,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    }
+                  ],
+                  "symbol": {
+                    "id": 1,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 91,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

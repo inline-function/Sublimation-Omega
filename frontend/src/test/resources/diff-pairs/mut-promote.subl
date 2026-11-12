@@ -1,0 +1,10 @@
+// t125 S5b 差分对拍：工程模式同源（提升通道零——声明制，a 未标 @mut ⇒ E-IMMUT-ASSIGN 拒绝位）
+@impure fun bump(a: Nat): Nat {
+    a = a + 1
+    return a
+}
+@impure fun main(): Null {
+    var x = bump(1)
+    x = x + 1
+    print(x)
+}

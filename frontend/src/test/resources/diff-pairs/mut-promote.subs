@@ -1,0 +1,10 @@
+// t125 S5b 差分对拍：R-06 脚本模式可变性提升（脚本侧 a 提升为 @mut Nat）
+@impure fun bump(a: Nat): Nat {
+    a = a + 1
+    return a
+}
+@impure fun main(): Null {
+    var x = bump(1)
+    x = x + 1
+    print(x)
+}

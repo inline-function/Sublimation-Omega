@@ -24,7 +24,10 @@ internal data class SymbolEntry(
     val paramNames: List<String>? = null,
     val destructParams: Boolean = false,
     val type: sublimation.frontend.hir.HirType? = null,
-    val mutable: Boolean = false,
+    /** t125（S5b）：声明位可提升旗——仅 VarStmt 局部/脚本顶层 var 与 PARAM 形参在**脚本模式**置位；
+     *  其余声明位（字段 C-5 / 循环变量 / 模式绑定 / lambda 形参）恒 false ⇒ 赋值位不登记提升需求。 */
+    val scriptPromotable: Boolean = false,
+    var mutable: Boolean = false,
 ) {
     fun ref(): SymbolRef = SymbolRef(id, kind, name)
 }
@@ -217,6 +220,8 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         kind: SymbolKind, name: String, origin: SourceRange,
         type: sublimation.frontend.hir.HirType? = null, mutable: Boolean = false,
         what: String = "不可用作变量名",
+        /** t125（S5b）：声明位可提升旗透传（赋值位按此过滤提升候选——仅局部/形参/脚本顶层 var）。 */
+        scriptPromotable: Boolean = false,
     ): SymbolEntry {
         // 脚本顶层无显式帧——隐式开一帧（同旧 Frame 链的根帧口径），绑定才能被查到
         if (frames.isEmpty()) enterFrame(ScopeKind.BLOCK)
@@ -230,7 +235,8 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         } ?: lookupValueOuter(name)?.let { b ->
             shadowHintSink?.invoke(name, kindLabel(kind), whereLabel(b) + "（" + b.origin.posStr() + "）", origin)
         }
-        val entry = SymbolEntry(nextId++, kind, name, origin, type = type, mutable = if (mutable) true else false)
+        val entry = SymbolEntry(nextId++, kind, name, origin, type = type,
+            mutable = if (mutable) true else false, scriptPromotable = scriptPromotable)
         frame.bindings.put(name, entry)
         return entry
     }
@@ -269,14 +275,18 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     fun declareScriptTopVar(
         name: String, origin: SourceRange,
         type: sublimation.frontend.hir.HirType? = null, mutable: Boolean = false,
+        /** t125（S5b）：脚本顶层 var 可提升旗（R-06 脚本自动提升 T1 顶层族）。 */
+        scriptPromotable: Boolean = false,
     ): SymbolEntry? {
         if (frames.isEmpty()) enterFrame(ScopeKind.SCRIPT_TOP)
         val frame = frames.last()
-        if (frame.kind != ScopeKind.SCRIPT_TOP) return declareLocal(SymbolKind.LOCAL, name, origin, type, mutable)
+        if (frame.kind != ScopeKind.SCRIPT_TOP) return declareLocal(SymbolKind.LOCAL, name, origin, type, mutable,
+            scriptPromotable = scriptPromotable)
         guardNativeName(name, "不可重定义", origin)   // t86（F6）：var 声明位（替代原 Elaborator E:785 守卫）
         frame.bindings[name]?.let { return null }        // var↔var 顶层重名
         if (funs[name] != null) return null              // var↔fun 顶层重名（Collector 已登记）
-        val entry = SymbolEntry(nextId++, SymbolKind.LOCAL, name, origin, type = type, mutable = if (mutable) true else false)
+        val entry = SymbolEntry(nextId++, SymbolKind.LOCAL, name, origin, type = type,
+            mutable = if (mutable) true else false, scriptPromotable = scriptPromotable)
         frame.bindings.put(name, entry)
         return entry
     }

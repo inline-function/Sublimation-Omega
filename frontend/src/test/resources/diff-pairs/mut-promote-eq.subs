@@ -1,0 +1,6 @@
+// t125 S5b 差分对拍（标注等价）：脚本侧省略标注——形参 a 提升为推导类型 @mut Nat（调用位供元变量证据）
+@impure fun bump(a): Nat {
+    a = a + 1
+    return a
+}
+print(bump(1))

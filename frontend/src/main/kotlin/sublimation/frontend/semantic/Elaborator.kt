@@ -211,12 +211,14 @@ internal fun elaborateRound(
     degradedFuns: Set<String> = emptySet(),
     /** t123（R-16 S4 / OQ-5）：--no-lift 透传（上提即失败的 CI 门）。 */
     noLift: Boolean = false,
+    /** t125（S5b / R-06）：轮外驱动可变性提升映射（上一轮需求，声明位预应用）。 */
+    mutPromoted: Map<String, List<SourceRange>> = emptyMap(),
 ): InferenceRound {
     val diag = DiagBag()
     // t117 H8：sink 轮内接管（编译期袋的 collect 单趟专用，轮内重复落袋消除）
     wireShadowHint(symbols, diag)
     wireNativeRecl(symbols, diag)
-    val el = Elaborator(symbols, notes, diag, nids, scriptMode, injected, roundLabel, degradedFuns, noLift)
+    val el = Elaborator(symbols, notes, diag, nids, scriptMode, injected, roundLabel, degradedFuns, noLift, mutPromoted)
     el.setFuelLabel(roundLabel)
     val hir = el.file(file)
     el.runPurityGate(hir)
@@ -234,7 +236,8 @@ internal fun elaborateRound(
     val metaCount = el.metaCount()
     if (metaCount == 0) converged = true                                  // 零元变量直通（保护条款）
     return InferenceRound(hir, diag, solutions, metaCount, converged, changed, changedSolutions, el.fuelMaxConsumed(),
-        el.gateClosureSize)   // t122：本轮闭包规模（runPurityGate 记）
+        el.gateClosureSize,   // t122：本轮闭包规模（runPurityGate 记）
+        el.mutPromotions())   // t125（S5b）：本轮提升需求导出
 }
 
 /** t66（ADR-43）：compileNarrowAudit 的配套——收窄审计观察通道（不改变 elaborate 行为）。 */
@@ -485,6 +488,10 @@ private class Elaborator(
     private val degradedFuns: Set<String> = emptySet(),
     /** t123（R-16 S4 / OQ-5 队长裁=给）：--no-lift——脚本模式「上文上提即失败」CI 门（同 --no-degrade 双口形态）。 */
     private val noLift: Boolean = false,
+    /** t125（S5b / R-06）：轮外驱动可变性提升映射——上一轮登记的提升需求（声明位键 "行:列#名" → 赋值位
+     *  证据清单）。单调（只加不减）+ 静态键（AST 声明位 + 名跨轮稳定）⇒ **一轮预应用重跑即收敛**
+     * （声明先于赋值，词法序天然无环）。工程模式恒空（R-06 工程侧声明制）。 */
+    private val mutPromoted: Map<String, List<SourceRange>> = emptyMap(),
 ) {
     private val resolver = NameResolver(symbols, diag)
 
@@ -541,6 +548,28 @@ private class Elaborator(
 
     /** t97:unchecked 语句深度（放行闸检查——不豁免效应存在，见 ADR-55 §unchecked 不对称口径）。 */
     private var uncheckedDepth = 0
+
+    /** t125（S5b / R-06）：可变性提升需求累计（脚本模式）——赋值位按声明位键登记，轮末导出供驱动器重跑。
+     *  需求=单调证据清单（赋值位源序）；非提升候选（字段 C-5 / 循环变量 / lambda 形参）不登记。 */
+    private val mutDemands = linkedMapOf<String, MutableList<SourceRange>>()
+    private fun mutKey(pos: SourceRange, name: String): String {
+        val p = pos.start
+        return p.line.toString() + ":" + p.col + "#" + name
+    }
+    private fun demandMut(key: String, pos: SourceRange) {
+        mutDemands.getOrPut(key) { mutableListOf() }.add(pos)
+    }
+    /** t125：提升应用——视图包 @mut（已 @mut 形态单调穿过不重包，R-06 混标单向蕴含）。 */
+    private fun promotedView(tt: HirType, origin: SourceRange): HirType =
+        if (tt is sublimation.frontend.hir.HirMutType) tt
+        else sublimation.frontend.hir.HirMutType(tt, freshNid(), origin)
+    /** t125：D-MUT-INFERRED 审计四元组（名 + 提升视图 + 触发分类 + 证据尝试清单），supplement 级。 */
+    private fun mutNote(name: String, tt: HirType, origin: SourceRange, trigger: String, evidence: List<SourceRange>) {
+        diag.supplement("D-MUT-INFERRED", origin,
+            ident(name) + " 可变性提升为 <" + infer.render(tt) + ">（R-06 脚本模式自动提升：" + trigger +
+                ";单调只加不减;工程模式须显式 @mut)。证据：" +
+                evidence.joinToString(",") { e -> "use:" + e.start.line + ":" + e.start.col })
+    }
 
     /**
      * t97（N1 停机闸形态①）：when 臂的模式槽位来源栈——名 → when 主题名（臂级生命周期）。`
@@ -806,6 +835,9 @@ private class Elaborator(
     /** t117（附录 B H2）：本轮解映射导出——**轮末收口**：对全部元变量按本轮完整约束袋复解
      *  （含声明位后才到达的后到约束——单轮 D-INFER-PENDING 在此消化为闭合），种子并入单调合并。
      *  未决占位经 normPlaceholder 归一，**解映射零占位**。 */
+    /** t125（S5b）：可变性提升需求导出——驱动器跨轮唯一传递通道（与 metaSolutions 同族）。 */
+    internal fun mutPromotions(): Map<String, List<SourceRange>> = mutDemands
+
     internal fun metaSolutions(): Map<MetaSlotKey, MetaSolution> {
         val out = linkedMapOf<MetaSlotKey, MetaSolution>()
         fun export(m: InferMeta) {
@@ -1481,31 +1513,41 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 val partTypes = infer.varDestruct(initT, s.destruct, s.pos)
                 s.destruct.forEachIndexed { i, n ->
                     val partT = partTypes.getOrElse(i) { infer.syntheticT("分量" + n) }
-                    declareLocal(n, SymbolKind.LOCAL, s.pos, partT)
-                    injectTypeFacts(n, partT, s.pos)   // t65
+                    // t125（S5b）：解构分量按名提升（分量同属 T1 局部族;键=声明位+分量名，不与变量名撞键）
+                    val pEvi = if (scriptMode) mutPromoted[mutKey(s.pos, n)] else null
+                    val pT = if (pEvi != null) promotedView(partT, s.pos) else partT
+                    if (pEvi != null) mutNote(n, pT, s.pos, "局部二次赋值 T1", pEvi)
+                    declareLocal(n, SymbolKind.LOCAL, s.pos, pT, scriptPromotable = scriptMode)
+                    injectTypeFacts(n, pT, s.pos)   // t65
                 }
                 HirVarStmt(s.name, null, s.annotations, initT, value, s.destruct, false, nid, s.pos, notesOf(s))
             } else {
                 val finalT = infer.checkScope(s.pos) { infer.varAnnotated(s.name, declared, initT, s.pos) }
-                // 可写来源：语句注解 @mut 或类型位 @mut T（旧 Frame.isMut 两个口径）
+                // t125（S5b / R-06）：脚本模式可变性提升**预应用**——上一轮登记的需求在此落位（声明先于赋值，
+                // 词法序天然;单调：已 @mut 穿过不重包——混标单向蕴含）。工程模式零此通道（声明制）。
+                val mutEvi = if (scriptMode) mutPromoted[mutKey(s.pos, s.name)] else null
+                val varT = if (mutEvi != null) promotedView(declared ?: finalT, s.pos) else (declared ?: finalT)
+                if (mutEvi != null) mutNote(s.name, varT, s.pos, "局部二次赋值 T1", mutEvi)
+                // 可写来源：语句注解 @mut 或类型位 @mut T（旧 Frame.isMut 两个口径）或提升预应用
                 // t39：脚本模式顶层 var 与顶层自由变量/函数同域唯一（E-DUP-DECL）；块内重名走遮蔽（H-SHADOW）
                 // t39：脚本模式顶层 var 与顶层自由变量/函数同域唯一（E-DUP-DECL）；块内重名走遮蔽（H-SHADOW）
                 val symbol: SymbolRef? = if (symbols.isScriptTopFrame() && s.name != "_") {
-                    val entry = symbols.declareScriptTopVar(s.name, s.pos, finalT,
-                        "mut" in s.annotations || declared is sublimation.frontend.hir.HirMutType)
+                    val entry = symbols.declareScriptTopVar(s.name, s.pos, varT,
+                        "mut" in s.annotations || declared is sublimation.frontend.hir.HirMutType || mutEvi != null,
+                        scriptPromotable = scriptMode)
                     if (entry == null) {
                         diag.error("E-DUP-DECL", s.pos,
                             "顶层名称 " + ident(s.name) + " 重复声明（脚本模式顶层自由变量与函数不允许重名，t39）")
                         null
                     } else entry.ref()
-                } else declareLocal(s.name, SymbolKind.LOCAL, s.pos, finalT,
-                    "mut" in s.annotations || declared is sublimation.frontend.hir.HirMutType,
-                    what = "不可重定义")
-                injectTypeFacts(s.name, declared ?: finalT, s.pos)   // t65
+                } else declareLocal(s.name, SymbolKind.LOCAL, s.pos, varT,
+                    "mut" in s.annotations || declared is sublimation.frontend.hir.HirMutType || mutEvi != null,
+                    what = "不可重定义", scriptPromotable = scriptMode)
+                injectTypeFacts(s.name, varT, s.pos)   // t65
                 // t98（规则 3 拷贝分派留痕）：仅 @ref 涉及时落 D-REF-DISPATCH（@mut 侧维持既有产物）
                 val dn = if (declared?.let { infer.containsRef(it) } == true || infer.containsRef(initT))
-                    listOf(refDispatchNote(s.pos, initT, declared ?: finalT, s.name)) else emptyList()
-                HirVarStmt(s.name, symbol, s.annotations, declared ?: finalT, value, null, false, nid, s.pos, notesOf(s) + dn)
+                    listOf(refDispatchNote(s.pos, initT, varT, s.name)) else emptyList()
+                HirVarStmt(s.name, symbol, s.annotations, varT, value, null, false, nid, s.pos, notesOf(s) + dn)
             }
         }
         is AssignStmt -> {
@@ -1529,10 +1571,18 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     false
                 }
             }
-            if (!mutable && s.target is NameRef && symbols.lookupValue((s.target as NameRef).name) != null) {
+            // t125（S5b / R-06）：脚本模式可变性提升登记——不可写**名字目标**若为提升候选（scriptPromotable）
+            //  ⇒ 登记单调需求（本轮不落错;轮末驱动器以 mutPromoted 预应用重跑：符号 mutable + 视图 @mut
+            //  一次性就位，树一致）。工程模式逐字 E-IMMUT-ASSIGN（R-06 工程侧声明制）。
+            if (!mutable && s.target is NameRef) {
                 val lhsName = (s.target as NameRef).name
-                diag.error("E-IMMUT-ASSIGN", s.pos,
-                    ident(lhsName) + " 是不可变的，不能赋值。要改它？声明时写成 `var " + lhsName + " : @mut T`")
+                val sym = symbols.lookupValue(lhsName)
+                when {
+                    sym == null -> { /* E-UNBOUND-NAME 已于 expr 解析路径落，不重复报 */ }
+                    scriptMode && sym.scriptPromotable -> demandMut(mutKey(sym.origin, lhsName), s.pos)
+                    else -> diag.error("E-IMMUT-ASSIGN", s.pos,
+                        ident(lhsName) + " 是不可变的，不能赋值。要改它？声明时写成 `var " + lhsName + " : @mut T`")
+                }
             }
             // t60-1：赋值类型核对——右值 <: 目标（与形参/返回值/var 标注同一条 adaptOk 判据，R-38 落点闸同住）
             // t60-1b：@mut 接收者的字段目标型按字段声明核（读路径的 @mut 剥离不在 t60 范围）
@@ -1749,8 +1799,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
     private fun declareLocal(
         name: String, kind: SymbolKind, pos: SourceRange,
         type: HirType? = null, mutable: Boolean = false, what: String = "不可用作变量名",
+        /** t125（S5b）：声明位可提升旗透传（R-06 提升候选过滤）。 */
+        scriptPromotable: Boolean = false,
     ): SymbolRef? =
-        if (name == "_") null else symbols.declareLocal(kind, name, pos, type, mutable, what).let { sym ->
+        if (name == "_") null else symbols.declareLocal(kind, name, pos, type, mutable, what,
+            scriptPromotable = scriptPromotable).let { sym ->
             gateRecordVarBound(sym.ref())   // t122：R-07 绑定集统一登记位（声明即绑定——词序同旧 walker 树序）
             sym.ref()
         }
@@ -2327,13 +2380,17 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             d.params.mapIndexed { i, q -> paramSigType(d, q, i) } to retSigType(d)
         } finally { exitTypeParams() }
     }
-    private fun paramSigType(d: FunDecl, q: Param, i: Int): HirType =
-        if (q.type != null) type(q.type)
+    /** t125（S5b）：调用方签名同步提升——与 param() 声明位同源（视图位 @mut ⇒ 调用按 R-01 表深拷核）。 */
+    private fun paramSigType(d: FunDecl, q: Param, i: Int): HirType {
+        val base = if (q.type != null) type(q.type)
         else if (scriptMode) {
             val m = metaForParam(d, i)
             if (m != null && m.resolved != null && m.hasEvidence()) m.resolved!! else infer.namedT("Any")
         }
         else type(ErrorType("形参类型标注省略", q.pos))
+        val evi = if (scriptMode) mutPromoted[mutKey(q.pos, q.name)] else null
+        return if (evi != null) promotedView(base, q.pos) else base
+    }
     private fun retSigType(d: FunDecl): HirType? {
         if (d.retType != null) return type(d.retType)
         val m = metaForRet(d) ?: return null
@@ -4284,12 +4341,18 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 else m.resolved ?: m.slot(infer)
             }
         }
+        // t125（S5b / R-06）：形参可变性提升**预应用**（T2 形参被赋值 ⇒ @mut——R-06 原话「提升出的 @mut
+        //  即形参推导类型」：视图入签名 ⇒ 调用按 R-01 表深拷核）。C-5：字段（FIELD）不提升。
+        val mutEvi = if (scriptMode && kind != SymbolKind.FIELD) mutPromoted[mutKey(p.pos, p.name)] else null
+        val t2 = if (mutEvi != null) promotedView(t, p.pos) else t
+        if (mutEvi != null) mutNote(p.name, t2, p.pos, "形参被赋值 T2", mutEvi)
         // t48（ADR-32 R-30）：@list 变长形参——HirParam 保留**元素类型** + 注解旗标（D-9），
         // 体位符号按 List[元素] 登记（序列值）；调用位按元素类型核对剩余实参。
         val isVararg = "list" in p.annotations
         val symbol = declareLocal(p.name, kind, p.pos,
-            if (isVararg) infer.namedT("List", listOf(t)) else t)
-        if (kind != SymbolKind.FIELD) injectTypeFacts(p.name, t, p.pos)   // t65（字段声明位无事实帧——跳过）
+            if (isVararg) infer.namedT("List", listOf(t2)) else t2,
+            scriptPromotable = scriptMode && kind != SymbolKind.FIELD)
+        if (kind != SymbolKind.FIELD) injectTypeFacts(p.name, t2, p.pos)   // t65（字段声明位无事实帧——跳过）
         // t45（ADR-30 R-22）：默认值求值环境=声明处——前序形参/字段（+ self，由 funDecl 先行登记）可见；
         // 引用**后序**名落 E-DEFAULT-ORDER，且跳过本处 elaborate（不再重复报 E-UNBOUND-NAME）
         val default = p.default?.let { def ->
@@ -4298,17 +4361,18 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 diag.error("E-DEFAULT-ORDER", def.pos,
                     "默认值只能引用先于它声明的参数；" + ident(forward) + " 声明在 " + ident(p.name) + " 之后")
                 null
-            } else expectAt(expand(t)) { expr(def) }   // t66：默认值的直接期望 = 形参声明类型
+            } else expectAt(expand(t2)) { expr(def) }   // t66：默认值的直接期望 = 形参声明类型
         }
         if (default != null) {
             // t60-3：默认值类型核对（声明位，与形参/返回值/var 标注同一 adaptOk 判据；E-DEFAULT-TYPE）
-            infer.checkScope(p.pos) { infer.defaultType(p.name, expand(t), etype(default), p.pos) }
+            infer.checkScope(p.pos) { infer.defaultType(p.name, expand(t2), etype(default), p.pos) }
         }
-        p.destruct?.forEach { n -> declareLocal(n, SymbolKind.PARAM, p.pos, infer.syntheticT("分量" + n)) }
+        p.destruct?.forEach { n -> declareLocal(n, SymbolKind.PARAM, p.pos, infer.syntheticT("分量" + n),
+            scriptPromotable = scriptMode && kind != SymbolKind.FIELD) }
         // t115/t117：载体回填（t108 槽位）——证据源序去重落表（种子证据 + 本轮收据合并）；
         // 默认填充零证据零标记（零发射）
         // t118（R-02）：退化空位零发射（inferred=false——Any 填充不冒充有证据的解）
-        return HirParam(p.name, t, symbol, p.annotations, default, p.destruct, nid, p.pos, emptyList(),
+        return HirParam(p.name, t2, symbol, p.annotations, default, p.destruct, nid, p.pos, emptyList(),
             inferred = meta != null && meta.hasEvidence() && !meta.degradedSlot,
             evidence = if (meta != null && meta.hasEvidence() && !meta.degradedSlot) meta.evidenceList()
                 else emptyList())

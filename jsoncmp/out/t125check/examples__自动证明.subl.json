@@ -1,0 +1,2104 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "自动证明.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-BTS",
+      "pos": "10:5-10:5",
+      "message": "因为-所以：∵…∴ ≤<a, c> 成立",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-BTS",
+      "pos": "15:5-15:5",
+      "message": "因为-所以：∵…∴ =<x, 7> 成立",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-BTS",
+      "pos": "19:5-19:5",
+      "message": "因为-所以：∵…∴ =<2, 2> 成立",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-BTS",
+      "pos": "23:5-23:5",
+      "message": "因为-所以：∵…∴ tagged<9> 成立",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "6:13-6:16",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "6:13-6:16",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 3,
+          "pos": "6:20-6:20",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirAxiom",
+              "nid": 4,
+              "pos": "8:5-8:9",
+              "notes": [],
+              "props": [
+                {
+                  "kind": "HirPAtom",
+                  "nid": 7,
+                  "pos": "8:13-8:13",
+                  "notes": [],
+                  "head": "≤",
+                  "terms": [
+                    {
+                      "kind": "HirTName",
+                      "nid": 5,
+                      "pos": "8:11-8:11",
+                      "notes": [],
+                      "name": "a",
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirTName",
+                      "nid": 6,
+                      "pos": "8:15-8:15",
+                      "notes": [],
+                      "name": "b",
+                      "symbol": null
+                    }
+                  ]
+                }
+              ],
+              "proofContext": {
+                "facts": [],
+                "matched": null
+              },
+              "rule": "R-AXIOM",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirAxiom",
+              "nid": 8,
+              "pos": "9:5-9:9",
+              "notes": [],
+              "props": [
+                {
+                  "kind": "HirPAtom",
+                  "nid": 11,
+                  "pos": "9:13-9:13",
+                  "notes": [],
+                  "head": "≤",
+                  "terms": [
+                    {
+                      "kind": "HirTName",
+                      "nid": 9,
+                      "pos": "9:11-9:11",
+                      "notes": [],
+                      "name": "b",
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirTName",
+                      "nid": 10,
+                      "pos": "9:15-9:15",
+                      "notes": [],
+                      "name": "c",
+                      "symbol": null
+                    }
+                  ]
+                }
+              ],
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "R-AXIOM",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirBecause",
+              "nid": 12,
+              "pos": "10:5-10:5",
+              "notes": [],
+              "form": {
+                "kind": "HirPAtom",
+                "nid": 15,
+                "pos": "10:9-10:9",
+                "notes": [],
+                "head": "≤",
+                "terms": [
+                  {
+                    "kind": "HirTName",
+                    "nid": 13,
+                    "pos": "10:7-10:7",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  },
+                  {
+                    "kind": "HirTName",
+                    "nid": 14,
+                    "pos": "10:11-10:11",
+                    "notes": [],
+                    "name": "b",
+                    "symbol": null
+                  }
+                ]
+              },
+              "premises": [
+                {
+                  "kind": "HirPAtom",
+                  "nid": 18,
+                  "pos": "10:16-10:16",
+                  "notes": [],
+                  "head": "≤",
+                  "terms": [
+                    {
+                      "kind": "HirTName",
+                      "nid": 16,
+                      "pos": "10:14-10:14",
+                      "notes": [],
+                      "name": "b",
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirTName",
+                      "nid": 17,
+                      "pos": "10:18-10:18",
+                      "notes": [],
+                      "name": "c",
+                      "symbol": null
+                    }
+                  ]
+                }
+              ],
+              "conclusion": {
+                "kind": "HirPAtom",
+                "nid": 21,
+                "pos": "10:24-10:24",
+                "notes": [],
+                "head": "≤",
+                "terms": [
+                  {
+                    "kind": "HirTName",
+                    "nid": 19,
+                    "pos": "10:22-10:22",
+                    "notes": [],
+                    "name": "a",
+                    "symbol": null
+                  },
+                  {
+                    "kind": "HirTName",
+                    "nid": 20,
+                    "pos": "10:26-10:26",
+                    "notes": [],
+                    "name": "c",
+                    "symbol": null
+                  }
+                ]
+              },
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 11,
+                    "pos": "9:13-9:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 9,
+                        "pos": "9:11-9:11",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 10,
+                        "pos": "9:15-9:15",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "A-LINARITH",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirAxiom",
+              "nid": 22,
+              "pos": "13:5-13:9",
+              "notes": [],
+              "props": [
+                {
+                  "kind": "HirPAtom",
+                  "nid": 25,
+                  "pos": "13:13-13:13",
+                  "notes": [],
+                  "head": "=",
+                  "terms": [
+                    {
+                      "kind": "HirTName",
+                      "nid": 23,
+                      "pos": "13:11-13:11",
+                      "notes": [],
+                      "name": "x",
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirTName",
+                      "nid": 24,
+                      "pos": "13:15-13:15",
+                      "notes": [],
+                      "name": "y",
+                      "symbol": null
+                    }
+                  ]
+                }
+              ],
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 11,
+                    "pos": "9:13-9:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 9,
+                        "pos": "9:11-9:11",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 10,
+                        "pos": "9:15-9:15",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 21,
+                    "pos": "10:24-10:24",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 19,
+                        "pos": "10:22-10:22",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 20,
+                        "pos": "10:26-10:26",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "R-AXIOM",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirAxiom",
+              "nid": 26,
+              "pos": "14:5-14:9",
+              "notes": [],
+              "props": [
+                {
+                  "kind": "HirPAtom",
+                  "nid": 29,
+                  "pos": "14:13-14:13",
+                  "notes": [],
+                  "head": "=",
+                  "terms": [
+                    {
+                      "kind": "HirTName",
+                      "nid": 27,
+                      "pos": "14:11-14:11",
+                      "notes": [],
+                      "name": "y",
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirTInt",
+                      "nid": 28,
+                      "pos": "14:15-14:15",
+                      "notes": [],
+                      "value": "7"
+                    }
+                  ]
+                }
+              ],
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 11,
+                    "pos": "9:13-9:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 9,
+                        "pos": "9:11-9:11",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 10,
+                        "pos": "9:15-9:15",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 21,
+                    "pos": "10:24-10:24",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 19,
+                        "pos": "10:22-10:22",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 20,
+                        "pos": "10:26-10:26",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 25,
+                    "pos": "13:13-13:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 23,
+                        "pos": "13:11-13:11",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 24,
+                        "pos": "13:15-13:15",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      }
+                    ]
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "R-AXIOM",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirBecause",
+              "nid": 30,
+              "pos": "15:5-15:5",
+              "notes": [],
+              "form": {
+                "kind": "HirPAtom",
+                "nid": 33,
+                "pos": "15:9-15:9",
+                "notes": [],
+                "head": "=",
+                "terms": [
+                  {
+                    "kind": "HirTName",
+                    "nid": 31,
+                    "pos": "15:7-15:7",
+                    "notes": [],
+                    "name": "x",
+                    "symbol": null
+                  },
+                  {
+                    "kind": "HirTName",
+                    "nid": 32,
+                    "pos": "15:11-15:11",
+                    "notes": [],
+                    "name": "y",
+                    "symbol": null
+                  }
+                ]
+              },
+              "premises": [
+                {
+                  "kind": "HirPAtom",
+                  "nid": 36,
+                  "pos": "15:16-15:16",
+                  "notes": [],
+                  "head": "=",
+                  "terms": [
+                    {
+                      "kind": "HirTName",
+                      "nid": 34,
+                      "pos": "15:14-15:14",
+                      "notes": [],
+                      "name": "y",
+                      "symbol": null
+                    },
+                    {
+                      "kind": "HirTInt",
+                      "nid": 35,
+                      "pos": "15:18-15:18",
+                      "notes": [],
+                      "value": "7"
+                    }
+                  ]
+                }
+              ],
+              "conclusion": {
+                "kind": "HirPAtom",
+                "nid": 39,
+                "pos": "15:24-15:24",
+                "notes": [],
+                "head": "=",
+                "terms": [
+                  {
+                    "kind": "HirTName",
+                    "nid": 37,
+                    "pos": "15:22-15:22",
+                    "notes": [],
+                    "name": "x",
+                    "symbol": null
+                  },
+                  {
+                    "kind": "HirTInt",
+                    "nid": 38,
+                    "pos": "15:26-15:26",
+                    "notes": [],
+                    "value": "7"
+                  }
+                ]
+              },
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 11,
+                    "pos": "9:13-9:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 9,
+                        "pos": "9:11-9:11",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 10,
+                        "pos": "9:15-9:15",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 21,
+                    "pos": "10:24-10:24",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 19,
+                        "pos": "10:22-10:22",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 20,
+                        "pos": "10:26-10:26",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 25,
+                    "pos": "13:13-13:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 23,
+                        "pos": "13:11-13:11",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 24,
+                        "pos": "13:15-13:15",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 29,
+                    "pos": "14:13-14:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 27,
+                        "pos": "14:11-14:11",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 28,
+                        "pos": "14:15-14:15",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "R-SUBST",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirAxiom",
+              "nid": 46,
+              "pos": "18:5-18:9",
+              "notes": [],
+              "props": [
+                {
+                  "kind": "HirPAtom",
+                  "nid": 51,
+                  "pos": "18:19-18:19",
+                  "notes": [],
+                  "head": "=",
+                  "terms": [
+                    {
+                      "kind": "HirTBin",
+                      "nid": 49,
+                      "pos": "18:14-18:14",
+                      "notes": [],
+                      "op": "+",
+                      "left": {
+                        "kind": "HirTInt",
+                        "nid": 47,
+                        "pos": "18:12-18:12",
+                        "notes": [],
+                        "value": "1"
+                      },
+                      "right": {
+                        "kind": "HirTInt",
+                        "nid": 48,
+                        "pos": "18:16-18:16",
+                        "notes": [],
+                        "value": "1"
+                      }
+                    },
+                    {
+                      "kind": "HirTInt",
+                      "nid": 50,
+                      "pos": "18:21-18:21",
+                      "notes": [],
+                      "value": "2"
+                    }
+                  ]
+                }
+              ],
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 11,
+                    "pos": "9:13-9:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 9,
+                        "pos": "9:11-9:11",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 10,
+                        "pos": "9:15-9:15",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 21,
+                    "pos": "10:24-10:24",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 19,
+                        "pos": "10:22-10:22",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 20,
+                        "pos": "10:26-10:26",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 25,
+                    "pos": "13:13-13:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 23,
+                        "pos": "13:11-13:11",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 24,
+                        "pos": "13:15-13:15",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 29,
+                    "pos": "14:13-14:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 27,
+                        "pos": "14:11-14:11",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 28,
+                        "pos": "14:15-14:15",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 39,
+                    "pos": "15:24-15:24",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 37,
+                        "pos": "15:22-15:22",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 38,
+                        "pos": "15:26-15:26",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "R-AXIOM",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirBecause",
+              "nid": 52,
+              "pos": "19:5-19:5",
+              "notes": [],
+              "form": {
+                "kind": "HirPAtom",
+                "nid": 57,
+                "pos": "19:15-19:15",
+                "notes": [],
+                "head": "=",
+                "terms": [
+                  {
+                    "kind": "HirTBin",
+                    "nid": 55,
+                    "pos": "19:10-19:10",
+                    "notes": [],
+                    "op": "+",
+                    "left": {
+                      "kind": "HirTInt",
+                      "nid": 53,
+                      "pos": "19:8-19:8",
+                      "notes": [],
+                      "value": "1"
+                    },
+                    "right": {
+                      "kind": "HirTInt",
+                      "nid": 54,
+                      "pos": "19:12-19:12",
+                      "notes": [],
+                      "value": "1"
+                    }
+                  },
+                  {
+                    "kind": "HirTInt",
+                    "nid": 56,
+                    "pos": "19:17-19:17",
+                    "notes": [],
+                    "value": "2"
+                  }
+                ]
+              },
+              "premises": [],
+              "conclusion": {
+                "kind": "HirPAtom",
+                "nid": 60,
+                "pos": "19:23-19:23",
+                "notes": [],
+                "head": "=",
+                "terms": [
+                  {
+                    "kind": "HirTInt",
+                    "nid": 58,
+                    "pos": "19:21-19:21",
+                    "notes": [],
+                    "value": "2"
+                  },
+                  {
+                    "kind": "HirTInt",
+                    "nid": 59,
+                    "pos": "19:25-19:25",
+                    "notes": [],
+                    "value": "2"
+                  }
+                ]
+              },
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 11,
+                    "pos": "9:13-9:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 9,
+                        "pos": "9:11-9:11",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 10,
+                        "pos": "9:15-9:15",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 21,
+                    "pos": "10:24-10:24",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 19,
+                        "pos": "10:22-10:22",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 20,
+                        "pos": "10:26-10:26",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 25,
+                    "pos": "13:13-13:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 23,
+                        "pos": "13:11-13:11",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 24,
+                        "pos": "13:15-13:15",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 29,
+                    "pos": "14:13-14:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 27,
+                        "pos": "14:11-14:11",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 28,
+                        "pos": "14:15-14:15",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 39,
+                    "pos": "15:24-15:24",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 37,
+                        "pos": "15:22-15:22",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 38,
+                        "pos": "15:26-15:26",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 51,
+                    "pos": "18:19-18:19",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTBin",
+                        "nid": 49,
+                        "pos": "18:14-18:14",
+                        "notes": [],
+                        "op": "+",
+                        "left": {
+                          "kind": "HirTInt",
+                          "nid": 47,
+                          "pos": "18:12-18:12",
+                          "notes": [],
+                          "value": "1"
+                        },
+                        "right": {
+                          "kind": "HirTInt",
+                          "nid": 48,
+                          "pos": "18:16-18:16",
+                          "notes": [],
+                          "value": "1"
+                        }
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 50,
+                        "pos": "18:21-18:21",
+                        "notes": [],
+                        "value": "2"
+                      }
+                    ]
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "R-CONST",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirAxiom",
+              "nid": 61,
+              "pos": "22:5-22:9",
+              "notes": [],
+              "props": [
+                {
+                  "kind": "HirPForall",
+                  "nid": 64,
+                  "pos": "22:18-22:18",
+                  "notes": [],
+                  "names": [
+                    "n"
+                  ],
+                  "body": {
+                    "kind": "HirPAtom",
+                    "nid": 63,
+                    "pos": "22:21-22:26",
+                    "notes": [],
+                    "head": "tagged",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 62,
+                        "pos": "22:28-22:28",
+                        "notes": [],
+                        "name": "n",
+                        "symbol": {
+                          "id": 1,
+                          "kind": "param",
+                          "name": "n"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 11,
+                    "pos": "9:13-9:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 9,
+                        "pos": "9:11-9:11",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 10,
+                        "pos": "9:15-9:15",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 21,
+                    "pos": "10:24-10:24",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 19,
+                        "pos": "10:22-10:22",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 20,
+                        "pos": "10:26-10:26",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 25,
+                    "pos": "13:13-13:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 23,
+                        "pos": "13:11-13:11",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 24,
+                        "pos": "13:15-13:15",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 29,
+                    "pos": "14:13-14:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 27,
+                        "pos": "14:11-14:11",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 28,
+                        "pos": "14:15-14:15",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 39,
+                    "pos": "15:24-15:24",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 37,
+                        "pos": "15:22-15:22",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 38,
+                        "pos": "15:26-15:26",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 51,
+                    "pos": "18:19-18:19",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTBin",
+                        "nid": 49,
+                        "pos": "18:14-18:14",
+                        "notes": [],
+                        "op": "+",
+                        "left": {
+                          "kind": "HirTInt",
+                          "nid": 47,
+                          "pos": "18:12-18:12",
+                          "notes": [],
+                          "value": "1"
+                        },
+                        "right": {
+                          "kind": "HirTInt",
+                          "nid": 48,
+                          "pos": "18:16-18:16",
+                          "notes": [],
+                          "value": "1"
+                        }
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 50,
+                        "pos": "18:21-18:21",
+                        "notes": [],
+                        "value": "2"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 60,
+                    "pos": "19:23-19:23",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTInt",
+                        "nid": 58,
+                        "pos": "19:21-19:21",
+                        "notes": [],
+                        "value": "2"
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 59,
+                        "pos": "19:25-19:25",
+                        "notes": [],
+                        "value": "2"
+                      }
+                    ]
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "R-AXIOM",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirBecause",
+              "nid": 65,
+              "pos": "23:5-23:5",
+              "notes": [],
+              "form": {
+                "kind": "HirPForall",
+                "nid": 68,
+                "pos": "23:14-23:14",
+                "notes": [],
+                "names": [
+                  "m"
+                ],
+                "body": {
+                  "kind": "HirPAtom",
+                  "nid": 67,
+                  "pos": "23:17-23:22",
+                  "notes": [],
+                  "head": "tagged",
+                  "terms": [
+                    {
+                      "kind": "HirTName",
+                      "nid": 66,
+                      "pos": "23:24-23:24",
+                      "notes": [],
+                      "name": "m",
+                      "symbol": {
+                        "id": 2,
+                        "kind": "param",
+                        "name": "m"
+                      }
+                    }
+                  ]
+                }
+              },
+              "premises": [],
+              "conclusion": {
+                "kind": "HirPAtom",
+                "nid": 70,
+                "pos": "23:29-23:34",
+                "notes": [],
+                "head": "tagged",
+                "terms": [
+                  {
+                    "kind": "HirTInt",
+                    "nid": 69,
+                    "pos": "23:36-23:36",
+                    "notes": [],
+                    "value": "9"
+                  }
+                ]
+              },
+              "proofContext": {
+                "facts": [
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 7,
+                    "pos": "8:13-8:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 5,
+                        "pos": "8:11-8:11",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 6,
+                        "pos": "8:15-8:15",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 11,
+                    "pos": "9:13-9:13",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 9,
+                        "pos": "9:11-9:11",
+                        "notes": [],
+                        "name": "b",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 10,
+                        "pos": "9:15-9:15",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 21,
+                    "pos": "10:24-10:24",
+                    "notes": [],
+                    "head": "≤",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 19,
+                        "pos": "10:22-10:22",
+                        "notes": [],
+                        "name": "a",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 20,
+                        "pos": "10:26-10:26",
+                        "notes": [],
+                        "name": "c",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 25,
+                    "pos": "13:13-13:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 23,
+                        "pos": "13:11-13:11",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTName",
+                        "nid": 24,
+                        "pos": "13:15-13:15",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 29,
+                    "pos": "14:13-14:13",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 27,
+                        "pos": "14:11-14:11",
+                        "notes": [],
+                        "name": "y",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 28,
+                        "pos": "14:15-14:15",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 39,
+                    "pos": "15:24-15:24",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTName",
+                        "nid": 37,
+                        "pos": "15:22-15:22",
+                        "notes": [],
+                        "name": "x",
+                        "symbol": null
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 38,
+                        "pos": "15:26-15:26",
+                        "notes": [],
+                        "value": "7"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 51,
+                    "pos": "18:19-18:19",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTBin",
+                        "nid": 49,
+                        "pos": "18:14-18:14",
+                        "notes": [],
+                        "op": "+",
+                        "left": {
+                          "kind": "HirTInt",
+                          "nid": 47,
+                          "pos": "18:12-18:12",
+                          "notes": [],
+                          "value": "1"
+                        },
+                        "right": {
+                          "kind": "HirTInt",
+                          "nid": 48,
+                          "pos": "18:16-18:16",
+                          "notes": [],
+                          "value": "1"
+                        }
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 50,
+                        "pos": "18:21-18:21",
+                        "notes": [],
+                        "value": "2"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPAtom",
+                    "nid": 60,
+                    "pos": "19:23-19:23",
+                    "notes": [],
+                    "head": "=",
+                    "terms": [
+                      {
+                        "kind": "HirTInt",
+                        "nid": 58,
+                        "pos": "19:21-19:21",
+                        "notes": [],
+                        "value": "2"
+                      },
+                      {
+                        "kind": "HirTInt",
+                        "nid": 59,
+                        "pos": "19:25-19:25",
+                        "notes": [],
+                        "value": "2"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "HirPForall",
+                    "nid": 64,
+                    "pos": "22:18-22:18",
+                    "notes": [],
+                    "names": [
+                      "n"
+                    ],
+                    "body": {
+                      "kind": "HirPAtom",
+                      "nid": 63,
+                      "pos": "22:21-22:26",
+                      "notes": [],
+                      "head": "tagged",
+                      "terms": [
+                        {
+                          "kind": "HirTName",
+                          "nid": 62,
+                          "pos": "22:28-22:28",
+                          "notes": [],
+                          "name": "n",
+                          "symbol": {
+                            "id": 1,
+                            "kind": "param",
+                            "name": "n"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "matched": null
+              },
+              "rule": "R-MP",
+              "verdict": {
+                "status": "proven",
+                "diagCode": null
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 104,
+              "pos": "25:5-25:9",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 105,
+                "pos": "25:5-25:9",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 106,
+                  "pos": "25:5-25:9",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 3,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirStrLit",
+                    "nid": 107,
+                    "pos": "25:11-25:18",
+                    "notes": [],
+                    "value": "le-trans"
+                  }
+                ],
+                "symbol": {
+                  "id": 3,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 125,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 126,
+              "pos": "26:5-26:9",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 127,
+                "pos": "26:5-26:9",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 128,
+                  "pos": "26:5-26:9",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 3,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirStrLit",
+                    "nid": 129,
+                    "pos": "26:11-26:18",
+                    "notes": [],
+                    "value": "eq-chain"
+                  }
+                ],
+                "symbol": {
+                  "id": 3,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 147,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 148,
+              "pos": "27:5-27:9",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 149,
+                "pos": "27:5-27:9",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 150,
+                  "pos": "27:5-27:9",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 3,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirStrLit",
+                    "nid": 151,
+                    "pos": "27:11-27:17",
+                    "notes": [],
+                    "value": "folding"
+                  }
+                ],
+                "symbol": {
+                  "id": 3,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 169,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 170,
+              "pos": "28:5-28:9",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 171,
+                "pos": "28:5-28:9",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 172,
+                  "pos": "28:5-28:9",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 3,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirStrLit",
+                    "nid": 173,
+                    "pos": "28:11-28:16",
+                    "notes": [],
+                    "value": "forall"
+                  }
+                ],
+                "symbol": {
+                  "id": 3,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 191,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 192,
+              "pos": "29:5-29:9",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 193,
+                "pos": "29:5-29:9",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 194,
+                  "pos": "29:5-29:9",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 3,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirStrLit",
+                    "nid": 195,
+                    "pos": "29:11-29:14",
+                    "notes": [],
+                    "value": "done"
+                  }
+                ],
+                "symbol": {
+                  "id": 3,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 213,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

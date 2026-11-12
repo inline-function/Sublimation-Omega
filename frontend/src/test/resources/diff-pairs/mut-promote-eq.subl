@@ -1,0 +1,8 @@
+// t125 S5b 差分对拍（标注等价）：工程侧显式标注 @mut Nat（提升结果的双门形态）
+@impure fun bump(a: @mut Nat): Nat {
+    a = a + 1
+    return a
+}
+@impure fun main(): Null {
+    print(bump(1))
+}

@@ -33,6 +33,8 @@ internal class RoundsReport(
     val roundsUsed: Int,
     val notConverged: Boolean,
     val degraded: Boolean,
+    /** t125（S5b）：可变性提升重跑发生（测试观察位）。 */
+    val mutPromoted: Boolean = false,
     val changedOwners: Set<String>,
 )
 
@@ -68,6 +70,8 @@ internal class InferenceRound(
     val fuelMaxConsumed: Int,
     /** t122（R-16 A2）：不纯闭包单轮规模（v+e，O(v+E) 单列——提案 OQ-9 观测）。 */
     val closureSize: Int,
+    /** t125（S5b / R-06）：本轮登记的可变性提升需求（声明位键 → 赋值位证据清单）——驱动器跨轮唯一通道。 */
+    val mutPromotions: Map<String, List<SourceRange>> = emptyMap(),
 )
 
 /** t117（附录 B H3）：R 池按轮 label 观测条目——每轮一全新 FUEL_DEFAULT 池（每轮新 Elaborator）；
@@ -166,7 +170,7 @@ internal fun compileWithRounds(
                         "建议在声明位加一处类型标注打破类型环（P-11 §3.5）")
             } else {
                 val deg = elaborateRound(file, symbols, parseNotes, nids, scriptMode, degSeeds, "infer-degraded",
-                    finalRound.changedOwners, noLift = noLift)
+                    finalRound.changedOwners, noLift = noLift, mutPromoted = finalRound.mutPromotions)
                 rounds.add(RoundObservation(round + 1, "infer-degraded", deg.metaCount, deg.fuelMaxConsumed, deg.converged, deg.closureSize))
                 hir = deg.hir
                 degraded = true
@@ -177,8 +181,20 @@ internal fun compileWithRounds(
     } else {
         diag.absorb(finalRound.diag)
     }
+    // t125（S5b / R-06）：脚本模式可变性提升重跑——终轮有提升需求 ⇒ 单轮预应用重跑（声明先于赋值 +
+    //  单调 ⇒ 一轮收敛;静态键同输入同需求 ⇒ 轮次确定性 P-11 §9.3）。退化（R-02）已并行携带 mutPromoted。
+    //  工程模式 mutPromotions 恒空（零触发——R-06 工程侧声明制，SAME 门机械保护）。
+    var mutPromotedRound = false
+    if (scriptMode && last!!.mutPromotions.isNotEmpty() && !degraded) {
+        val mr = elaborateRound(file, symbols, parseNotes, nids, true, last.solutions, "mut-promoted",
+            last.changedOwners, noLift = noLift, mutPromoted = last.mutPromotions)
+        rounds.add(RoundObservation(round + 1, "mut-promoted", mr.metaCount, mr.fuelMaxConsumed, mr.converged, mr.closureSize))
+        hir = mr.hir
+        mutPromotedRound = true
+        diag.absorb(mr.diag)
+    }
     diag.dedupe()
-    return RoundsReport(hir, diag, rounds.toList(), round, notConverged, degraded, finalRound.changedOwners)
+    return RoundsReport(hir, diag, rounds.toList(), round, notConverged, degraded, mutPromotedRound, finalRound.changedOwners)
 }
 
 /** t117（附录 B H8）：sink 下挂——文案逐字不变（collect 期=编译级袋；轮内=轮袋，逐轮重复落袋消除）。 */
