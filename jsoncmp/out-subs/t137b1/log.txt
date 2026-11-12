@@ -1,0 +1,22 @@
+[错误][3:45] E-TYPE-MISMATCH: 实参 1 Cons[Nat] 与形参 Nil | Cons[T] 不符
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    |                                             ^
+[错误][3:30] E-TYPE-MISMATCH: 实参 2 Nat 与形参 T 不符
+  3 |     unchecked print(optional.getOrElse(list.head(xs), 0))
+    |                              ^
+[模块 list/optional]
+[模块 list/set]
+[模块 list/map]
+[模块 list]
+[错误][140:48] E-TYPE-MISMATCH: 实参 3 Int 与形参 Nat 不符
+  140 |             if (from == 0) { unchecked var r = slice(t, 0, to - 1); Cons(h, r) }
+      |                                                ^
+[错误][141:20] E-TYPE-MISMATCH: 实参 3 Int 与形参 Nat 不符
+  141 |             else { slice(t, from - 1, to - 1) }
+      |                    ^
+[警告][221:23] W-NON-EXHAUSTIVE: when 非穷尽（缺 else 或覆盖不全），作为表达式时值类型退化为 Null
+  221 |     is Cons(pr, t) -> when(pr) {
+      |                       ^
+[模块 result]
+[模块 math]
+[错误] 前端检查未通过，已生成带诊断产物 F:\Sublimation\jsoncmp\out-subs\t137b1\probe.json（20663 字节）

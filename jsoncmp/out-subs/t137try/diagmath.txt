@@ -1,0 +1,10 @@
+[错误][1:1] E-MOUNT-OUT-OF-ROOT: 挂载 ../collection/list 逃逸编译根（F:\Sublimation\stdlib\math 以外不可挂——模块拓扑须可审计，提案 OQ-11）
+  1 | // stdlib.math —— 数论面（B0-0：PRELUDE_FUNS retire 迁源——summation）。
+    | ^
+[错误][5:41] E-UNBOUND-NAME: 未定义的名称 `sum`（作用域中无此变量/函数/构造子）
+  5 | fun summation(a : Nat, b : Nat) : Nat = sum(range(a, b))
+    |                                         ^
+[错误][5:45] E-UNBOUND-NAME: 未定义的名称 `range`（作用域中无此变量/函数/构造子）
+  5 | fun summation(a : Nat, b : Nat) : Nat = sum(range(a, b))
+    |                                             ^
+[错误] 前端检查未通过

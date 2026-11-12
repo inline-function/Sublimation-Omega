@@ -1,0 +1,4 @@
+fun main() {
+    unchecked var xs = Cons(1, Cons(2, Cons(3, Nil)))
+    unchecked print(sum(xs))
+}

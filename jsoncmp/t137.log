@@ -1,0 +1,34 @@
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:compileTestKotlin UP-TO-DATE
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T137StdlibB0Test > stdlib缺件早死红() FAILED
+    org.opentest4j.AssertionFailedError at T137StdlibB0Test.kt:69
+
+T137StdlibB0Test > noStdlib旗预言红() FAILED
+    org.opentest4j.AssertionFailedError at T137StdlibB0Test.kt:59
+
+9 tests completed, 2 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 6s
+5 actionable tasks: 1 executed, 4 up-to-date

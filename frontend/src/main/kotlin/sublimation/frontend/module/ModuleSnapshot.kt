@@ -35,6 +35,9 @@ internal class ModuleSnapshot(
     val structs: Map<String, ModuleStruct>,
     /** t134：扩展函数（接收者头 → 名 → 符号引用 + AST 声明；方法糖查询链兜底层）。 */
     val exts: Map<String, Map<String, ModuleExt>>,
+    /** t137（R-23）：stdlib 默认挂载件旗标——非限定链符号面（preludeFun 数据源）只吃 stdlib 件；
+     *  用户件走 R-22 限定唯一通道，裸名不泄漏。默认 false（零侵入非 stdlib 快照）。 */
+    val stdlib: Boolean = false,
 ) {
     fun lookupFun(name: String): ModuleFun? = funs[name]
 
@@ -59,7 +62,7 @@ internal object ModuleSnapshots {
      * 由模块体的 FileAst 建快照：顶层声明按声明序进四表（自由函数/别名/结构体/扩展函数），
      * 符号 id 按序（零 nid 消费——SymbolRef 是跨模块引用标识，与 NodeIdSource 无关；R-22 nid 纪律）。
      * 同名取后者（模块内重复落 E-DUP-DECL 于模块自身编译——快照为符号视图，红模块的父域门由编排层把关）。 */
-    fun fromAst(name: String, alias: String, file: FileAst): ModuleSnapshot {
+    fun fromAst(name: String, alias: String, file: FileAst, stdlib: Boolean = false): ModuleSnapshot {
         val funs = LinkedHashMap<String, ModuleFun>()
         val aliases = LinkedHashMap<String, ModuleAlias>()
         val structs = LinkedHashMap<String, ModuleStruct>()
@@ -83,7 +86,7 @@ internal object ModuleSnapshots {
                 else -> { }
             }
         }
-        return ModuleSnapshot(name, alias, funs, aliases, structs, exts)
+        return ModuleSnapshot(name, alias, funs, aliases, structs, exts, stdlib)
     }
 
     /** 扩展函数接收者头（ExtFunHeads.ofAst 的模块内最小镜像：具名/限定段链 + 视图族解包）。 */

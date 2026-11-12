@@ -108,3 +108,15 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 
 约束登记：跨模块**不纯**调用的纯度记账 V1 不贯通（calleeImpure 落位、effect 记账未接——提案 §9 限制面）；
 跨模块**类型别名/结构体/扩展函数**限定通道 V1 未通（仅自由函数面）。
+
+---
+
+## t137 分账（stdlib B0-0 + B0-1，2026-11-12）
+
+| 目录/件 | 职责 | 谁可以写 |
+|---|---|---|
+| `out/t137stdlib/` | stdlib 件**侧基线**（e2e 主样本零动的差异收敛口径——stdlib 件不入主基线判 diff） | 执行 t137 门的人 |
+| `scripts/t137-parity.ps1` | retire 机械证据三段：① SymbolTable.kt retire 活动件核对（val PRELUDE_FUNS/preludeFunSpec/PreludeField/PreludeFun 地毯式零命中）② 7 依赖样本 vs `out/t122n/` 逐字节零差分 ③ stdlib 件基线导出（list/math/… 于模块系统样本内） | 执行 t137 门的人 |
+| `out-subs/t137gate*/` | 落实证据（68 门 SAME 重跑产物——同 t122n 逐字节） | 执行 t137 门的人 |
+
+**t137 侧基线口径**（R-23 裁决）：e2e 68 样本逐字节 SAME 为主门（retire 零差分机器证明）；stdlib 件本身是**新面**（B0-0 list/math + B0-1 五件全家），产物落 `out/t137stdlib/` 侧目录登记，不入 t74/t122n 基线判 diff。钻石形备忘按首次编译路径记 unitPath——optional/set 件产物见于 list 命名空间下（`examples__模块系统__list__optional.json` 形态），不重复入计。

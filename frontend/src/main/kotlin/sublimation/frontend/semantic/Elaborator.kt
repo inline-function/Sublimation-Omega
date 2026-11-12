@@ -78,6 +78,7 @@ import sublimation.frontend.diag.ident
 import sublimation.frontend.diag.NodeId
 import sublimation.frontend.diag.SourcePos
 import sublimation.frontend.diag.SourceRange
+import sublimation.frontend.module.ModuleFun
 import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.hir.HirAxiom
 import sublimation.frontend.hir.HirBecause
@@ -2468,18 +2469,22 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         }
     }
 
-    /** prelude 自由函数签名（t19 B1：core 模块声明的名字层兜底，调用点实参核对按本签名）。
-     *  t44（ADR-29）：PreludeField → HIR 类型形态自此内联（旧 ctor 字段规格通道已随枚举表删除，
-     *  本函数只服务自由函数签名表 PRELUDE_FUNS）。 */
-    private fun preludeFunSig(name: String): Pair<List<HirType>, HirType>? =
-        symbols.preludeFunSpec(name)?.let { spec ->
-            spec.params.map { field -> preludeFieldType(field) } to preludeFieldType(spec.ret)
-        }
+    /** prelude 自由函数签名（t19 B1 → t137 R-23 retire）：自由函数签名的名字层兜底。数据源由
+     *  PRELUDE_FUNS Kotlin 表退役为 **挂载 stdlib 模块快照**（R-23 非限定链）——签名经 sigOf 在
+     *  父域解析，形态与旧 PreludeField 规格等价（具名 + 参数类型表；形参类型不入产物 HIR——67 逐字节同）。 */
+    private fun preludeFunSig(name: String): Pair<List<HirType>, HirType>? {
+        val mf = unqualifiedModuleFun(name) ?: return null
+        val (ps, rt) = sigOf(mf.decl)
+        return ps to (rt ?: infer.syntheticT(name))
+    }
 
-    /** prelude 字段规格 → HIR 类型形态（root 应用 params 为零实参具名类型；自由函数签名用）。 */
-    private fun preludeFieldType(field: PreludeField): HirType =
-        HirNamedType(field.root, field.params.map { HirNamedType(it, emptyList(), null, freshNid(), SYNTHETIC_POS, emptyList()) },
-            null, freshNid(), SYNTHETIC_POS, emptyList())
+    /** t137（R-23 非限定链）：stdlib 默认挂载件的自由函数（名 → 条目）。仅吃 stdlib 快照——
+     *  用户挂载件仍走 R-22「限定唯一通道」，裸名不泄漏（门：--no-stdlib 下空集直落）。 */
+    private fun unqualifiedModuleFun(name: String): ModuleFun? {
+        if (mounted.isEmpty()) return null
+        for (mod in mounted.values) if (mod.stdlib) mod.lookupFun(name)?.let { return it }
+        return null
+    }
 
     /** 函数声明签名（形参/返回类型，调用点与值引用共用）。
      *  重解析时压入被引用声明的类型参数作用域（ADR-14：调用点签名里的 T 须可解析，

@@ -1,0 +1,7 @@
+[错误][2:21] E-TYPE-MISMATCH: 函数 `summation` 缺实参：#2
+  2 |     unchecked print(summation(range(1, 101)))
+    |                     ^
+[错误][2:21] E-TYPE-MISMATCH: 实参 1 List[Nat] 与形参 Nat 不符
+  2 |     unchecked print(summation(range(1, 101)))
+    |                     ^
+[错误] 前端检查未通过

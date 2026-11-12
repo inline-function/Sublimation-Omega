@@ -1,0 +1,4 @@
+fun main() {
+    unchecked var xs = [1, 2, 3]
+    unchecked print(sum(xs))
+}

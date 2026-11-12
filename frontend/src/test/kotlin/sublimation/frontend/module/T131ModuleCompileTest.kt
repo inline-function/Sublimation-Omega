@@ -95,8 +95,10 @@ class T131ModuleCompileTest {
         val r = greenSample("compile-green")
         val out = compileModuleFrontend(r)
         assertTrue(out.ok, "主+子模块皆绿")
-        assertEquals(1, out.children.size, "一个挂载子模块")
-        assertEquals("tool", out.children.first().unitPath, "子单元路径 = 挂载相对路径")
+        // t137（R-23）：stdlib 默认挂载并入编译根——子产物 = 用户挂载 tool + stdlib 件（B0-1 后 6 件；
+        // 钻石形备忘按规范路径记一次：optional/set 记在 list 命名空间下（unit.path 口径）
+        assertEquals(7, out.children.size, "用户挂载 tool + stdlib（list/result/math + list/* 嵌套 3）")
+        assertEquals("tool", out.children.first { it.unitPath == "tool" }.unitPath, "子单元路径 = 挂载相对路径")
         val f = findField(out.main, "triple")
         assertNotNull(f, "限定调用载体 = HirField（提案 B-i 零 schema）")
         assertNotNull(f.field, "field 位挂模块函数符号")

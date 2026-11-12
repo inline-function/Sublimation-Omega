@@ -1,0 +1,31 @@
+Starting a Gradle Daemon, 1 incompatible and 4 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+
+> Task :frontend:compileTestKotlin FAILED
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:32:13 No value passed for parameter 'noDegrade'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:32:13 No value passed for parameter 'noLift'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:55:23 Unresolved reference 'ok'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:114:28 Unresolved reference 'output'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:114:43 Unresolved reference 'output'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:114:56 Argument type mismatch: actual type is 'String', but 'Double' was expected.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:compileTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 28s
+3 actionable tasks: 1 executed, 2 up-to-date

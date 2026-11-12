@@ -1,5 +1,6 @@
 package sublimation.frontend.semantic
 
+import sublimation.frontend.cli.compileStdlibUnits
 import sublimation.frontend.diag.DiagBag
 import sublimation.frontend.diag.Severity
 import sublimation.frontend.hir.HirCall
@@ -327,12 +328,30 @@ class TypeInferTest {
 
     @Test
     fun stdlibNamesAndPanicBodyT19() {
-        val (_, bagA) = script("fun m(): Nat = sum(range(1, 10))")
-        assertFalse(bagA.hasError, "sum/range 按 core 声明的签名核对通过")
-        val (_, bagB) = script("fun m(): Nat = sum(strTrim(\" x \"))")
+        // t137（R-23 retire）：sum/range/summation 的数据源由 PRELUDE_FUNS Kotlin 表退役为 **stdlib
+        // 默认挂载快照**——本测按生产路径同构（compileStdlibUnits 取快照 → compile mounted 面）。
+        val (su, sd) = compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+        assertFalse(sd.hasError, "stdlib 件编译零红（B0-0: list + math）")
+        val mounted = su.associate { it.alias to it.snapshot }
+        fun scriptStd(src: String): Pair<HirFile, DiagBag> {
+            val pr = parseScriptSourceWithNotes(src, "infer.subl")
+            val (hir, bag) = compile(pr.file, pr.notes, true, false, false, mounted)
+            pr.diag.forEach { d ->
+                when (d.severity) {
+                    Severity.ERROR -> bag.error(d.code, d.pos, d.message)
+                    Severity.WARN -> bag.warn(d.code, d.pos, d.message)
+                    Severity.HINT -> bag.hint(d.code, d.pos, d.message)
+                    else -> bag.supplement(d.code, d.pos, d.message)
+                }
+            }
+            return hir to bag
+        }
+        val (_, bagA) = scriptStd("fun m(): Nat = sum(range(1, 10))")
+        assertFalse(bagA.hasError, "sum/range 按 stdlib 迁源的签名核对通过")
+        val (_, bagB) = scriptStd("fun m(): Nat = sum(strTrim(\" x \"))")
         assertTrue(bagB.diags.any { it.severity == Severity.ERROR && it.message.contains("实参 1 Str 与形参 List[Nat] 不符") },
-            "core 声明签名参与实参核对：strTrim Str 不入 sum(List[Nat])")
-        val (_, bagC) = script("fun nativeOp(x: Nat): Str = panic()")
+            "stdlib 迁源签名参与实参核对：strTrim Str 不入 sum(List[Nat])")
+        val (_, bagC) = scriptStd("fun nativeOp(x: Nat): Str = panic()")
         assertFalse(bagC.hasError, "panic() 体不再误判「函数体是 Nothing」与声明不符")
     }
 

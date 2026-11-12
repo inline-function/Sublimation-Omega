@@ -1,0 +1,4 @@
+fun sum(x : Str) : Nat = 42
+fun main() {
+    unchecked print(sum("abc"))
+}

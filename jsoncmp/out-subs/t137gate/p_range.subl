@@ -1,0 +1,4 @@
+fun main() {
+    unchecked print(range(1, 4))
+    unchecked print(sum(range(1, 4)))
+}

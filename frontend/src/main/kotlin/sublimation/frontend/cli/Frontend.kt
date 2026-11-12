@@ -8,6 +8,7 @@ import sublimation.frontend.json.HirJson
 import sublimation.frontend.parser.ParseResult
 import sublimation.frontend.parser.parseScriptSourceWithNotes
 import sublimation.frontend.parser.parseSourceWithNotes
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.semantic.compile
 
 /**
@@ -36,6 +37,15 @@ fun compileFrontend(
     noDegrade: Boolean = false,
     /** t123（R-16 S4 / OQ-5）：--no-lift——脚本模式「上文上提即失败」CI 门（同 --no-degrade 双口形态）。 */
     noLift: Boolean = false,
+): FrontendOutput = compileFrontendImpl(source, unitPath, scriptMode, noDegrade, noLift)
+
+/** t137（R-23）：单文件入口的**内部全参数**实现（stdlib 默认挂载快照 + 件诊断并入——
+ * ModuleSnapshot 为 internal 类型：公共 5 参数契约零动，本 internal 重载承载挂载面）。 */
+internal fun compileFrontendImpl(
+    source: String, unitPath: String, scriptMode: Boolean,
+    noDegrade: Boolean, noLift: Boolean,
+    mounted: Map<String, ModuleSnapshot> = emptyMap(),
+    extraDiag: DiagBag = DiagBag(),
 ): FrontendOutput {
     val pr: ParseResult = if (scriptMode) {
         parseScriptSourceWithNotes(source, unitPath)
@@ -44,7 +54,8 @@ fun compileFrontend(
     }
     val diag = DiagBag()
     diag.absorbAll(pr.diag)
-    val (hir, semDiag) = compile(pr.file, pr.notes, scriptMode, noDegrade, noLift)
+    val (hir, semDiag) = compile(pr.file, pr.notes, scriptMode, noDegrade, noLift, mounted)
+    diag.absorb(extraDiag)
     diag.absorb(semDiag)
     val json = HirJson.emit(hir, diag, unitPath, scriptMode)
     return FrontendOutput(hir, diag, json)

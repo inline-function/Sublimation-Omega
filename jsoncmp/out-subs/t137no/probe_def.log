@@ -1,0 +1,28 @@
+[错误][2:24] E-SYNTAX: 期望表达式
+  2 |     unchecked var xs = [1, 2, 3]
+    |                        ^
+[错误][2:24] E-SYNTAX: 期望表达式
+  2 |     unchecked var xs = [1, 2, 3]
+    |                        ^
+[错误][2:24] E-SYNTAX: 无法继续解析，跳过符号 '['
+  2 |     unchecked var xs = [1, 2, 3]
+    |                        ^
+[错误][2:26] E-SYNTAX: 期望表达式
+  2 |     unchecked var xs = [1, 2, 3]
+    |                          ^
+[错误][2:26] E-SYNTAX: 无法继续解析，跳过符号 ','
+  2 |     unchecked var xs = [1, 2, 3]
+    |                          ^
+[错误][2:29] E-SYNTAX: 期望表达式
+  2 |     unchecked var xs = [1, 2, 3]
+    |                             ^
+[错误][2:29] E-SYNTAX: 无法继续解析，跳过符号 ','
+  2 |     unchecked var xs = [1, 2, 3]
+    |                             ^
+[错误][2:32] E-SYNTAX: 期望表达式
+  2 |     unchecked var xs = [1, 2, 3]
+    |                                ^
+[错误][2:32] E-SYNTAX: 无法继续解析，跳过符号 ']'
+  2 |     unchecked var xs = [1, 2, 3]
+    |                                ^
+[错误] 前端检查未通过

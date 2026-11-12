@@ -1,0 +1,1377 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "日常-异步任务.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "15:5-15:7",
+      "message": "var `t` 推导为 Task[(推导:T)]",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "7:5-7:8",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "7:5-7:8",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 3,
+          "pos": "7:12-7:12",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirVarStmt",
+              "nid": 4,
+              "pos": "8:5-8:7",
+              "notes": [],
+              "name": "ch",
+              "symbol": {
+                "id": 4,
+                "kind": "local",
+                "name": "ch"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 5,
+                "pos": "8:13-8:19",
+                "notes": [],
+                "name": "Channel",
+                "args": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 6,
+                    "pos": "8:21-8:23",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": {
+                      "id": 1,
+                      "kind": "builtin",
+                      "name": "Nat"
+                    }
+                  }
+                ],
+                "symbol": {
+                  "id": 2,
+                  "kind": "builtin",
+                  "name": "Channel"
+                }
+              },
+              "value": {
+                "kind": "HirCall",
+                "nid": 7,
+                "pos": "8:28-8:34",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 8,
+                  "pos": "8:28-8:34",
+                  "notes": [],
+                  "name": "Channel",
+                  "symbol": {
+                    "id": 3,
+                    "kind": "ctor",
+                    "name": "Channel"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 10,
+                    "pos": "8:41-8:41",
+                    "notes": [],
+                    "value": "4"
+                  }
+                ],
+                "symbol": {
+                  "id": 3,
+                  "kind": "ctor",
+                  "name": "Channel"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 15,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Channel",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 9,
+                      "pos": "8:36-8:38",
+                      "notes": [],
+                      "name": "Nat",
+                      "args": [],
+                      "symbol": {
+                        "id": 1,
+                        "kind": "builtin",
+                        "name": "Nat"
+                      }
+                    }
+                  ],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 16,
+              "pos": "9:8-9:11",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 17,
+                "pos": "9:8-9:11",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "9:8-9:11",
+                    "from": "target.send(args)",
+                    "to": "send(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 21,
+                  "pos": "9:8-9:11",
+                  "notes": [],
+                  "name": "send",
+                  "symbol": null,
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 18,
+                    "pos": "9:5-9:6",
+                    "notes": [],
+                    "name": "ch",
+                    "symbol": {
+                      "id": 4,
+                      "kind": "local",
+                      "name": "ch"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 5,
+                      "pos": "8:13-8:19",
+                      "notes": [],
+                      "name": "Channel",
+                      "args": [
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 6,
+                          "pos": "8:21-8:23",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": {
+                            "id": 1,
+                            "kind": "builtin",
+                            "name": "Nat"
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 2,
+                        "kind": "builtin",
+                        "name": "Channel"
+                      }
+                    }
+                  },
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 19,
+                    "pos": "9:13-9:14",
+                    "notes": [],
+                    "value": "40"
+                  }
+                ],
+                "symbol": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 38,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:方法send)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 39,
+              "pos": "10:8-10:11",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 40,
+                "pos": "10:8-10:11",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "10:8-10:11",
+                    "from": "target.send(args)",
+                    "to": "send(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 44,
+                  "pos": "10:8-10:11",
+                  "notes": [],
+                  "name": "send",
+                  "symbol": null,
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 41,
+                    "pos": "10:5-10:6",
+                    "notes": [],
+                    "name": "ch",
+                    "symbol": {
+                      "id": 4,
+                      "kind": "local",
+                      "name": "ch"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 5,
+                      "pos": "8:13-8:19",
+                      "notes": [],
+                      "name": "Channel",
+                      "args": [
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 6,
+                          "pos": "8:21-8:23",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": {
+                            "id": 1,
+                            "kind": "builtin",
+                            "name": "Nat"
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 2,
+                        "kind": "builtin",
+                        "name": "Channel"
+                      }
+                    }
+                  },
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 42,
+                    "pos": "10:13-10:13",
+                    "notes": [],
+                    "value": "2"
+                  }
+                ],
+                "symbol": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 61,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:方法send)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            },
+            {
+              "kind": "HirVarStmt",
+              "nid": 62,
+              "pos": "11:5-11:7",
+              "notes": [],
+              "name": "a",
+              "symbol": {
+                "id": 5,
+                "kind": "local",
+                "name": "a"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 63,
+                "pos": "11:12-11:14",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": {
+                  "id": 1,
+                  "kind": "builtin",
+                  "name": "Nat"
+                }
+              },
+              "value": {
+                "kind": "HirCall",
+                "nid": 64,
+                "pos": "11:21-11:27",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "11:21-11:27",
+                    "from": "target.receive(args)",
+                    "to": "receive(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 66,
+                  "pos": "11:21-11:27",
+                  "notes": [],
+                  "name": "receive",
+                  "symbol": null,
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 65,
+                    "pos": "11:18-11:19",
+                    "notes": [],
+                    "name": "ch",
+                    "symbol": {
+                      "id": 4,
+                      "kind": "local",
+                      "name": "ch"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 5,
+                      "pos": "8:13-8:19",
+                      "notes": [],
+                      "name": "Channel",
+                      "args": [
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 6,
+                          "pos": "8:21-8:23",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": {
+                            "id": 1,
+                            "kind": "builtin",
+                            "name": "Nat"
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 2,
+                        "kind": "builtin",
+                        "name": "Channel"
+                      }
+                    }
+                  }
+                ],
+                "symbol": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 83,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:方法receive)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": false
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirVarStmt",
+              "nid": 87,
+              "pos": "12:5-12:7",
+              "notes": [],
+              "name": "b",
+              "symbol": {
+                "id": 6,
+                "kind": "local",
+                "name": "b"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 88,
+                "pos": "12:12-12:14",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": {
+                  "id": 1,
+                  "kind": "builtin",
+                  "name": "Nat"
+                }
+              },
+              "value": {
+                "kind": "HirCall",
+                "nid": 89,
+                "pos": "12:21-12:27",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "12:21-12:27",
+                    "from": "target.receive(args)",
+                    "to": "receive(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 91,
+                  "pos": "12:21-12:27",
+                  "notes": [],
+                  "name": "receive",
+                  "symbol": null,
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 90,
+                    "pos": "12:18-12:19",
+                    "notes": [],
+                    "name": "ch",
+                    "symbol": {
+                      "id": 4,
+                      "kind": "local",
+                      "name": "ch"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 5,
+                      "pos": "8:13-8:19",
+                      "notes": [],
+                      "name": "Channel",
+                      "args": [
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 6,
+                          "pos": "8:21-8:23",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": {
+                            "id": 1,
+                            "kind": "builtin",
+                            "name": "Nat"
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 2,
+                        "kind": "builtin",
+                        "name": "Channel"
+                      }
+                    }
+                  }
+                ],
+                "symbol": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 108,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:方法receive)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": false
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 112,
+              "pos": "13:5-13:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 113,
+                "pos": "13:15-13:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 114,
+                  "pos": "13:15-13:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 115,
+                    "pos": "13:15-13:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 7,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirCall",
+                      "nid": 116,
+                      "pos": "13:21-13:26",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 117,
+                        "pos": "13:21-13:26",
+                        "notes": [],
+                        "name": "concat",
+                        "symbol": {
+                          "id": 8,
+                          "kind": "builtin",
+                          "name": "concat"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirStrLit",
+                          "nid": 118,
+                          "pos": "13:28-13:41",
+                          "notes": [],
+                          "value": "receive total "
+                        },
+                        {
+                          "kind": "HirCall",
+                          "nid": 119,
+                          "pos": "13:46-13:50",
+                          "notes": [],
+                          "callee": {
+                            "kind": "HirNameRef",
+                            "nid": 120,
+                            "pos": "13:46-13:50",
+                            "notes": [],
+                            "name": "toStr",
+                            "symbol": {
+                              "id": 9,
+                              "kind": "builtin",
+                              "name": "toStr"
+                            },
+                            "type": null
+                          },
+                          "args": [
+                            {
+                              "kind": "HirBinExpr",
+                              "nid": 124,
+                              "pos": "13:54-13:54",
+                              "notes": [],
+                              "op": "+",
+                              "left": {
+                                "kind": "HirNameRef",
+                                "nid": 121,
+                                "pos": "13:52-13:52",
+                                "notes": [],
+                                "name": "a",
+                                "symbol": {
+                                  "id": 5,
+                                  "kind": "local",
+                                  "name": "a"
+                                },
+                                "type": {
+                                  "kind": "HirNamedType",
+                                  "nid": 63,
+                                  "pos": "11:12-11:14",
+                                  "notes": [],
+                                  "name": "Nat",
+                                  "args": [],
+                                  "symbol": {
+                                    "id": 1,
+                                    "kind": "builtin",
+                                    "name": "Nat"
+                                  }
+                                }
+                              },
+                              "right": {
+                                "kind": "HirNameRef",
+                                "nid": 122,
+                                "pos": "13:56-13:56",
+                                "notes": [],
+                                "name": "b",
+                                "symbol": {
+                                  "id": 6,
+                                  "kind": "local",
+                                  "name": "b"
+                                },
+                                "type": {
+                                  "kind": "HirNamedType",
+                                  "nid": 88,
+                                  "pos": "12:12-12:14",
+                                  "notes": [],
+                                  "name": "Nat",
+                                  "args": [],
+                                  "symbol": {
+                                    "id": 1,
+                                    "kind": "builtin",
+                                    "name": "Nat"
+                                  }
+                                }
+                              },
+                              "type": {
+                                "kind": "HirNamedType",
+                                "nid": 63,
+                                "pos": "11:12-11:14",
+                                "notes": [],
+                                "name": "Nat",
+                                "args": [],
+                                "symbol": {
+                                  "id": 1,
+                                  "kind": "builtin",
+                                  "name": "Nat"
+                                }
+                              }
+                            }
+                          ],
+                          "symbol": {
+                            "id": 9,
+                            "kind": "builtin",
+                            "name": "toStr"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 142,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Str",
+                            "args": [],
+                            "symbol": null
+                          },
+                          "dictionary": null,
+                          "slot": null,
+                          "dictArgs": [],
+                          "methodSugar": false,
+                          "awaitPoint": false,
+                          "calleeImpure": false
+                        }
+                      ],
+                      "symbol": {
+                        "id": 8,
+                        "kind": "builtin",
+                        "name": "concat"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 160,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    }
+                  ],
+                  "symbol": {
+                    "id": 7,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 177,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            },
+            {
+              "kind": "HirVarStmt",
+              "nid": 178,
+              "pos": "15:5-15:7",
+              "notes": [],
+              "name": "t",
+              "symbol": {
+                "id": 10,
+                "kind": "local",
+                "name": "t"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 204,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Task",
+                "args": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 203,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "(推导:T)",
+                    "args": [],
+                    "symbol": null
+                  }
+                ],
+                "symbol": null
+              },
+              "value": {
+                "kind": "HirTask",
+                "nid": 205,
+                "pos": "15:13-15:16",
+                "notes": [],
+                "body": {
+                  "kind": "HirBlock",
+                  "nid": 179,
+                  "pos": "15:18-15:18",
+                  "notes": [],
+                  "stmts": [
+                    {
+                      "kind": "HirUnchecked",
+                      "nid": 180,
+                      "pos": "15:20-15:28",
+                      "notes": [],
+                      "inner": {
+                        "kind": "HirExprStmt",
+                        "nid": 181,
+                        "pos": "15:30-15:34",
+                        "notes": [],
+                        "expr": {
+                          "kind": "HirCall",
+                          "nid": 182,
+                          "pos": "15:30-15:34",
+                          "notes": [],
+                          "callee": {
+                            "kind": "HirNameRef",
+                            "nid": 183,
+                            "pos": "15:30-15:34",
+                            "notes": [],
+                            "name": "print",
+                            "symbol": {
+                              "id": 7,
+                              "kind": "builtin",
+                              "name": "print"
+                            },
+                            "type": null
+                          },
+                          "args": [
+                            {
+                              "kind": "HirStrLit",
+                              "nid": 184,
+                              "pos": "15:36-15:45",
+                              "notes": [],
+                              "value": "child task"
+                            }
+                          ],
+                          "symbol": {
+                            "id": 7,
+                            "kind": "builtin",
+                            "name": "print"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 202,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Null",
+                            "args": [],
+                            "symbol": null
+                          },
+                          "dictionary": null,
+                          "slot": null,
+                          "dictArgs": [],
+                          "methodSugar": false,
+                          "awaitPoint": false,
+                          "calleeImpure": true
+                        }
+                      }
+                    }
+                  ]
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 204,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Task",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 203,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(推导:T)",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ],
+                  "symbol": null
+                }
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 206,
+              "pos": "16:7-16:11",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 207,
+                "pos": "16:7-16:11",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "16:7-16:11",
+                    "from": "target.start(args)",
+                    "to": "start(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 209,
+                  "pos": "16:7-16:11",
+                  "notes": [],
+                  "name": "start",
+                  "symbol": null,
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 208,
+                    "pos": "16:5-16:5",
+                    "notes": [],
+                    "name": "t",
+                    "symbol": {
+                      "id": 10,
+                      "kind": "local",
+                      "name": "t"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 204,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Task",
+                      "args": [
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 203,
+                          "pos": "0:0",
+                          "notes": [],
+                          "name": "(推导:T)",
+                          "args": [],
+                          "symbol": null
+                        }
+                      ],
+                      "symbol": null
+                    }
+                  }
+                ],
+                "symbol": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 226,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:方法start)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 227,
+              "pos": "17:7-17:10",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 228,
+                "pos": "17:7-17:10",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "17:7-17:10",
+                    "from": "target.join(args)",
+                    "to": "join(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 230,
+                  "pos": "17:7-17:10",
+                  "notes": [],
+                  "name": "join",
+                  "symbol": null,
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 229,
+                    "pos": "17:5-17:5",
+                    "notes": [],
+                    "name": "t",
+                    "symbol": {
+                      "id": 10,
+                      "kind": "local",
+                      "name": "t"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 204,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Task",
+                      "args": [
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 203,
+                          "pos": "0:0",
+                          "notes": [],
+                          "name": "(推导:T)",
+                          "args": [],
+                          "symbol": null
+                        }
+                      ],
+                      "symbol": null
+                    }
+                  }
+                ],
+                "symbol": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 247,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:方法join)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 248,
+              "pos": "19:8-19:12",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 249,
+                "pos": "19:8-19:12",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "19:8-19:12",
+                    "from": "target.close(args)",
+                    "to": "close(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 251,
+                  "pos": "19:8-19:12",
+                  "notes": [],
+                  "name": "close",
+                  "symbol": null,
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 250,
+                    "pos": "19:5-19:6",
+                    "notes": [],
+                    "name": "ch",
+                    "symbol": {
+                      "id": 4,
+                      "kind": "local",
+                      "name": "ch"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 5,
+                      "pos": "8:13-8:19",
+                      "notes": [],
+                      "name": "Channel",
+                      "args": [
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 6,
+                          "pos": "8:21-8:23",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": {
+                            "id": 1,
+                            "kind": "builtin",
+                            "name": "Nat"
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 2,
+                        "kind": "builtin",
+                        "name": "Channel"
+                      }
+                    }
+                  }
+                ],
+                "symbol": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 268,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:方法close)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 269,
+              "pos": "20:5-20:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 270,
+                "pos": "20:15-20:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 271,
+                  "pos": "20:15-20:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 272,
+                    "pos": "20:15-20:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 7,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirCall",
+                      "nid": 273,
+                      "pos": "20:21-20:26",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 274,
+                        "pos": "20:21-20:26",
+                        "notes": [],
+                        "name": "concat",
+                        "symbol": {
+                          "id": 8,
+                          "kind": "builtin",
+                          "name": "concat"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirStrLit",
+                          "nid": 275,
+                          "pos": "20:28-20:36",
+                          "notes": [],
+                          "value": "closed = "
+                        },
+                        {
+                          "kind": "HirCall",
+                          "nid": 276,
+                          "pos": "20:41-20:45",
+                          "notes": [],
+                          "callee": {
+                            "kind": "HirNameRef",
+                            "nid": 277,
+                            "pos": "20:41-20:45",
+                            "notes": [],
+                            "name": "toStr",
+                            "symbol": {
+                              "id": 9,
+                              "kind": "builtin",
+                              "name": "toStr"
+                            },
+                            "type": null
+                          },
+                          "args": [
+                            {
+                              "kind": "HirCall",
+                              "nid": 278,
+                              "pos": "20:50-20:57",
+                              "notes": [
+                                {
+                                  "kind": "desugar",
+                                  "code": "D-METHOD-SUGAR",
+                                  "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                                  "pos": "20:50-20:57",
+                                  "from": "target.isClosed(args)",
+                                  "to": "isClosed(target, args)"
+                                }
+                              ],
+                              "callee": {
+                                "kind": "HirNameRef",
+                                "nid": 280,
+                                "pos": "20:50-20:57",
+                                "notes": [],
+                                "name": "isClosed",
+                                "symbol": null,
+                                "type": null
+                              },
+                              "args": [
+                                {
+                                  "kind": "HirNameRef",
+                                  "nid": 279,
+                                  "pos": "20:47-20:48",
+                                  "notes": [],
+                                  "name": "ch",
+                                  "symbol": {
+                                    "id": 4,
+                                    "kind": "local",
+                                    "name": "ch"
+                                  },
+                                  "type": {
+                                    "kind": "HirNamedType",
+                                    "nid": 5,
+                                    "pos": "8:13-8:19",
+                                    "notes": [],
+                                    "name": "Channel",
+                                    "args": [
+                                      {
+                                        "kind": "HirNamedType",
+                                        "nid": 6,
+                                        "pos": "8:21-8:23",
+                                        "notes": [],
+                                        "name": "Nat",
+                                        "args": [],
+                                        "symbol": {
+                                          "id": 1,
+                                          "kind": "builtin",
+                                          "name": "Nat"
+                                        }
+                                      }
+                                    ],
+                                    "symbol": {
+                                      "id": 2,
+                                      "kind": "builtin",
+                                      "name": "Channel"
+                                    }
+                                  }
+                                }
+                              ],
+                              "symbol": null,
+                              "type": {
+                                "kind": "HirNamedType",
+                                "nid": 297,
+                                "pos": "0:0",
+                                "notes": [],
+                                "name": "(推导:方法isClosed)",
+                                "args": [],
+                                "symbol": null
+                              },
+                              "dictionary": null,
+                              "slot": null,
+                              "dictArgs": [],
+                              "methodSugar": true,
+                              "awaitPoint": false,
+                              "calleeImpure": false
+                            }
+                          ],
+                          "symbol": {
+                            "id": 9,
+                            "kind": "builtin",
+                            "name": "toStr"
+                          },
+                          "type": {
+                            "kind": "HirNamedType",
+                            "nid": 316,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "Str",
+                            "args": [],
+                            "symbol": null
+                          },
+                          "dictionary": null,
+                          "slot": null,
+                          "dictArgs": [],
+                          "methodSugar": false,
+                          "awaitPoint": false,
+                          "calleeImpure": false
+                        }
+                      ],
+                      "symbol": {
+                        "id": 8,
+                        "kind": "builtin",
+                        "name": "concat"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 334,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    }
+                  ],
+                  "symbol": {
+                    "id": 7,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 351,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

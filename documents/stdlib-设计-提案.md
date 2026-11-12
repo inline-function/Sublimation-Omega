@@ -180,3 +180,11 @@ builtinSig（TypeInfer:790）60+ 内建函数按域分类登记——**语言定
 
 - prelude 类型面（B1 后 retire）：BUILTIN_TYPES 标量/单例/异步泛类型（Nat/Int/Rat/Real/Str/Bool/Null/Nothing/Any/EmptyTuple/SingleTuple/Task/Channel/Mutex/Flow/Range/Json）；容器五件（List/Optional/Result/Map/Set）由 PreludeDecls 虚拟声明。
 - retire 路线（R-22 形态 C）：B0-0 PRELUDE_FUNS(3) → B1 STRUCTS(11)+ALIASES(5) → B2 EXT_METHODS(1)+FUNS(2)；BUILTIN_FUNS/builtinSig 60+ **不在 retire 路线**（kernel 层常驻）。
+
+---
+
+## 批史 · t137 落地（B0-0 + B0-1）
+
+- **B0-0（零差分 retire）**：PRELUDE_FUNS 三项（range/sum/summation）退役为 stdlib 源（collection/list + math）——数据源替换、分发机制不变（同名经挂载 stdlib 快照 → builtinEntry 懒登记 → HIR 逐字节同 t122n）；编译根默认挂载 stdlib（并入挂载表，用户优先）+ `--no-stdlib` 旗；非限定链注入经 RETIRED_BARE_NAMES 允许表（裸名只吃替身三项，R-22 限定通道口径不变）。实测：e2e 68/68 SAME、套件 +15（T137StdlibB0×9 + T137StdlibCollection×6）。
+- **B0-1（collection 五件迁源）**：list/optional/result/set/map 自由函数全家（含 ext map/fold/pure/flatMap）入 stdlib，跨件调用走**限定引用**（list 的 firstOr→`optional.getOrElse`、toSet→`set.add`、toMap→`map.put`）——裸名链隔离（getOrElse/add/put 在用户域保持未解析 → e2e 冻红态不变，68/68 SAME 保持）；stdlib 全件零红（list 的 slice 因 Nat 减法 Int 化改 take/drop 复合，e2e 原文该处亦红）；钻石形备忘按首次路径记 unitPath（optional/set 见于 list 命名空间下）。
+- **配套件**：`documents/kernel-内建面规格.md`（附录 A 抽出扩写的 71 名独立登记件）；`jsoncmp/scripts/t137-parity.ps1` + 侧基线 `jsoncmp/out/t137stdlib/`。

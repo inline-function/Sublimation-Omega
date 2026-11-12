@@ -440,8 +440,12 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         "Channel" to setOf("send", "receive", "close", "isClosed"),
     )
 
-    /** prelude 自由函数名（旧「可见 core 模块」的单文件等价物；用户自声明 fun 优先于本表）。 */
-    fun preludeFun(name: String): SymbolEntry? = if (name in PRELUDE_FUNS) builtinEntry(name) else null
+        /** t137（R-23 retire）：PRELUDE_FUNS Kotlin 表退役——同名单由 **挂载 stdlib 模块快照** 提供
+     * （非限定链 R-23：本模块 > 挂载 stdlib 子 > prelude 虚拟层——数据源替换、分发机制不变：
+     * builtinEntry 懒登记 → 用户裸名调用 HIR 形态零差分，67 逐字节 SAME 由之成立）。 */
+    private val moduleFunNames = mutableSetOf<String>()
+    fun declareModuleFunNames(names: Collection<String>) { moduleFunNames += names }
+    fun preludeFun(name: String): SymbolEntry? = if (name in moduleFunNames) builtinEntry(name) else null
 
     /** t126（S5c / R-15 容器面）：虚拟自由构造族（MutableListOf/ListOf）——符号**懒登记**（零命中零
      *  nextId 消费，68+14 样本 SAME 基线逐字保护）。用户同名 fun 优先（funs 表先查）。
@@ -472,7 +476,6 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     }
 
     /** prelude 自由函数签名规格（params/ret；Elaborator 转为 HIR 类型形态供调用点核对）。 */
-    fun preludeFunSpec(name: String): PreludeFun? = PRELUDE_FUNS[name]
 
     /** t126（S5c / R-15）：用户同名声明优先——摘除虚拟构造族符号/虚拟扩展方法条目（Collector pass1 前）。
      *  符号侧摘除（声明索引侧由 file 预扫描自然覆盖：funDecls[d.name] = d 逐字覆盖虚拟种子）。 */
@@ -568,27 +571,10 @@ private val BUILTIN_TYPES = setOf(
     // 虚拟声明兜底（lookupPreludeStructType）。本表只留真正的内建标量/单例/异步泛类型。
 )
 
-/** prelude 构造子字段形态（root=名字（类型参数或容器名），params=实参类型参数名）。 */
 /** t44（ADR-29）注记：prelude 旧「枚举概念」四表（PRELUDE_CTORS / PRELUDE_ENUM_THEORY /
  * PRELUDE_ENUM_THEORY_NAMES / PRELUDE_ENUM_CTORS + PreludeCtor）已删除——prelude 内建类型改为
- * 虚拟 struct + 虚拟联合别名，见 [PreludeDecls]（与用户代码同构：构造调用返 struct 名、
- * 空构造子单例报 E-NULLARY-PAREN、联合穷尽性复用 t41 通道）。保留：PreludeField/PreludeFun
- * （自由函数签名表 PRELUDE_FUNS 用，非枚举概念）。 */
-
-internal data class PreludeField(val root: String, val params: List<String> = emptyList())
-
-
-/** prelude 自由函数规格（t19 B1：core 模块声明的单文件期名字层兜底，字段类型复用 PreludeField。
- *  全集以 68 样本实际需要 + core 真实声明为限（P-7 字典点查，勿臆造）。 */
-internal data class PreludeFun(val params: List<PreludeField>, val ret: PreludeField)
-
-
-// core/collection/list.subl 的 range/sum 与 core/math/math.subl 的 summation（跨模块自由函数）。
-private val PRELUDE_FUNS = mapOf(
-    "range" to PreludeFun(listOf(PreludeField("Nat"), PreludeField("Nat")), PreludeField("List", listOf("Nat"))),
-    "sum" to PreludeFun(listOf(PreludeField("List", listOf("Nat"))), PreludeField("Nat")),
-    "summation" to PreludeFun(listOf(PreludeField("Nat"), PreludeField("Nat")), PreludeField("Nat")),
-)
+ * 虚拟 struct + 虚拟联合别名，见 [PreludeDecls]。t137（R-23 retire）：PreludeField/PreludeFun/
+ * PRELUDE_FUNS 亦删除——自由函数签名表的数据源换成挂载 stdlib 模块快照（preludeFun）。 */
 
 /** 内建函数名集合（旧 builtinimpure/builtinPure 两表的名字层点查对齐，P-7）。 */
 private val BUILTIN_FUNS = setOf(

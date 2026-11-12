@@ -1,0 +1,5 @@
+// stdlib.math —— 数论面（B0-0：PRELUDE_FUNS retire 迁源——summation）。
+// 依赖：list 的 sum/range（经 .settings 挂载——限定/非限定链按 R-22/R-23）。
+
+// 等差求和：summation(1, 100) = 5050（右开区间，递推自 range + sum）。
+fun summation(a : Nat, b : Nat) : Nat = sum(range(a, b))

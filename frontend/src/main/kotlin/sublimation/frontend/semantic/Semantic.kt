@@ -130,6 +130,13 @@ internal fun compileWithRounds(
     // t86（F6 收口）：原生命题名占用——声明通道中央守卫（文案按位置分化，码复用 E-NATIVE-REDECL）
     wireNativeRecl(symbols, collectDiag)
     symbols.collectFile(file, collectDiag)
+    // t137（R-23）：stdlib 默认挂载件的自由函数名入非限定链符号面（preludeFun 数据源——PRELUDE_FUNS
+    // 表已 retire；stdlib 件旗过滤：用户挂载件不经此通道，R-22 限定唯一口径不变）
+    // t137（R-23）：**retire 替身名表**——裸名（非限定）链只吃 retire 迁源的自由函数（B0-0:
+    // range/sum/summation）。B0-1 collection 全家经**限定引用通道**（optional.getOrElse 形态）——
+    // 不入裸名链：e2e 冻红样本的 getOrElse/add/put 未解析态保持不变（67/67 零差分保证）。
+    val retired = setOf("range", "sum", "summation")
+    symbols.declareModuleFunNames(mounted.values.filter { it.stdlib }.flatMap { it.funs.keys }.filter { it in retired })
     // R 轮循环
     var injected: Map<MetaSlotKey, MetaSolution> = emptyMap()
     var round = 0

@@ -51,7 +51,7 @@ fun runCli(args: Array<String>, out: PrintStream = System.out, err: PrintStream 
             err.println("[错误] 目录形态仅支持 compile/check（模块挂载是解析前层——parse/tokens 需单源文件）")
             return 2
         }
-        val r = compileModuleFrontend(srcFile, scriptMode, opts.noDegrade, opts.noLift)
+        val r = compileModuleFrontend(srcFile, scriptMode, opts.noDegrade, opts.noLift, opts.noStdlib)
         return when (cmd) {
             "check" -> {
                 report(r.main.diag, r.mainSource, opts.verbose, out)
@@ -87,13 +87,17 @@ fun runCli(args: Array<String>, out: PrintStream = System.out, err: PrintStream 
             if (bag.hasError) { err.println("[错误] 语法分析未通过"); 1 } else 0
         }
         "check" -> {
-            val r = compileFrontend(source, unitPath, scriptMode, opts.noDegrade, opts.noLift)
+            val (su, sd) = compileStdlibUnits(opts.noStdlib, scriptMode, opts.noDegrade, opts.noLift)
+            val r = compileFrontendImpl(source, unitPath, scriptMode, opts.noDegrade, opts.noLift,
+                su.associate { it.alias to it.snapshot }, sd)
             report(r.diag, source, opts.verbose, out)
             if (r.diag.hasError) { err.println("[错误] 前端检查未通过"); 1 }
             else { out.println("[完成] 前端检查通过"); 0 }
         }
         "compile" -> {
-            val r = compileFrontend(source, unitPath, scriptMode, opts.noDegrade, opts.noLift)
+            val (su, sd) = compileStdlibUnits(opts.noStdlib, scriptMode, opts.noDegrade, opts.noLift)
+            val r = compileFrontendImpl(source, unitPath, scriptMode, opts.noDegrade, opts.noLift,
+                su.associate { it.alias to it.snapshot }, sd)
             val target = File(opts.output ?: srcFile.path + ".hir.json")
             target.writeText(r.json, Charsets.UTF_8)
             report(r.diag, source, opts.verbose, out)
@@ -118,6 +122,7 @@ private fun parseArgs(args: List<String>, err: PrintStream): Pair<List<String>, 
     var verbose = false
     var noDegrade = false
     var noLift = false   // t123（R-16 S4 / OQ-5）：--no-lift 旗标
+    var noStdlib = false  // t137（R-23）：--no-stdlib 旗标（stdlib 默认挂载关闭门）
     var output: String? = null
     var i = 0
     while (i < args.size) {
@@ -130,12 +135,13 @@ private fun parseArgs(args: List<String>, err: PrintStream): Pair<List<String>, 
             args[i] == "--script" -> { script = true; i++ }
             args[i] == "--no-degrade" -> { noDegrade = true; i++ }
             args[i] == "--no-lift" -> { noLift = true; i++ }
+            args[i] == "--no-stdlib" -> { noStdlib = true; i++ }
             args[i] == "-v" -> { verbose = true; i++ }
             args[i].startsWith('-') -> { err.println("[错误] 未知选项 ${args[i]}"); return null }
             else -> { positional += args[i]; i++ }
         }
     }
-    return positional to CliOptions(script, verbose, output, noDegrade, noLift)
+    return positional to CliOptions(script, verbose, output, noDegrade, noLift, noStdlib)
 }
 
 private data class CliOptions(
@@ -144,6 +150,8 @@ private data class CliOptions(
     val noDegrade: Boolean = false,
     /** t123（R-16 S4 / OQ-5 队长裁=给）：--no-lift——脚本上文上提即失败的 CI 门。 */
     val noLift: Boolean = false,
+    /** t137（R-23）：--no-stdlib——stdlib 默认挂载关闭（裸名 sum/range/summation 落 E-UNBOUND-NAME）。 */
+    val noStdlib: Boolean = false,
 )
 
 /** 诊断报告（带源码上下文；-v 打开补充族）。 */

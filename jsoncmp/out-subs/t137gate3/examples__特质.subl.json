@@ -1,0 +1,1398 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "特质.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "38:5-38:7",
+      "message": "var `o` 推导为 A",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "6:8-37:8",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirStructDecl",
+        "nid": 2,
+        "pos": "6:8-6:16",
+        "notes": [],
+        "name": "Excellent",
+        "symbol": {
+          "id": 0,
+          "kind": "struct",
+          "name": "Excellent"
+        },
+        "theory": [],
+        "fields": [],
+        "annotations": [],
+        "props": [],
+        "nullary": true
+      },
+      {
+        "kind": "HirStructDecl",
+        "nid": 3,
+        "pos": "7:8-7:11",
+        "notes": [],
+        "name": "Good",
+        "symbol": {
+          "id": 2,
+          "kind": "struct",
+          "name": "Good"
+        },
+        "theory": [],
+        "fields": [],
+        "annotations": [],
+        "props": [],
+        "nullary": true
+      },
+      {
+        "kind": "HirStructDecl",
+        "nid": 4,
+        "pos": "8:8-8:11",
+        "notes": [],
+        "name": "Pass",
+        "symbol": {
+          "id": 4,
+          "kind": "struct",
+          "name": "Pass"
+        },
+        "theory": [],
+        "fields": [],
+        "annotations": [],
+        "props": [],
+        "nullary": true
+      },
+      {
+        "kind": "HirStructDecl",
+        "nid": 5,
+        "pos": "9:8-9:11",
+        "notes": [],
+        "name": "Fail",
+        "symbol": {
+          "id": 6,
+          "kind": "struct",
+          "name": "Fail"
+        },
+        "theory": [],
+        "fields": [],
+        "annotations": [],
+        "props": [],
+        "nullary": true
+      },
+      {
+        "kind": "HirTypeAlias",
+        "nid": 6,
+        "pos": "10:1-10:4",
+        "notes": [],
+        "name": "Grade",
+        "symbol": {
+          "id": 8,
+          "kind": "alias",
+          "name": "Grade"
+        },
+        "theory": [],
+        "target": {
+          "kind": "HirUnionType",
+          "nid": 11,
+          "pos": "10:14-10:22",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 7,
+              "pos": "10:14-10:22",
+              "notes": [],
+              "name": "Excellent",
+              "args": [],
+              "symbol": {
+                "id": 0,
+                "kind": "struct",
+                "name": "Excellent"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 8,
+              "pos": "10:26-10:29",
+              "notes": [],
+              "name": "Good",
+              "args": [],
+              "symbol": {
+                "id": 2,
+                "kind": "struct",
+                "name": "Good"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 9,
+              "pos": "10:33-10:36",
+              "notes": [],
+              "name": "Pass",
+              "args": [],
+              "symbol": {
+                "id": 4,
+                "kind": "struct",
+                "name": "Pass"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 10,
+              "pos": "10:40-10:43",
+              "notes": [],
+              "name": "Fail",
+              "args": [],
+              "symbol": {
+                "id": 6,
+                "kind": "struct",
+                "name": "Fail"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "HirTraitDecl",
+        "nid": 12,
+        "pos": "13:7-13:10",
+        "notes": [],
+        "name": "Show",
+        "symbol": {
+          "id": 9,
+          "kind": "trait",
+          "name": "Show"
+        },
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 13,
+            "pos": "13:12-13:12",
+            "notes": [],
+            "name": "T",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "annotations": [],
+        "members": [
+          {
+            "kind": "HirFunDecl",
+            "nid": 14,
+            "pos": "13:21-13:24",
+            "notes": [],
+            "name": "show",
+            "symbol": null,
+            "annotations": [],
+            "theory": [],
+            "params": [],
+            "preps": [],
+            "retType": {
+              "kind": "HirNamedType",
+              "nid": 15,
+              "pos": "13:29-13:31",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "posts": [],
+            "constraints": [],
+            "purity": "pure",
+            "async": false,
+            "body": null
+          }
+        ],
+        "parents": [],
+        "constants": []
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 16,
+        "pos": "16:11-16:14",
+        "notes": [],
+        "name": "show",
+        "receiver": {
+          "kind": "HirNamedType",
+          "nid": 17,
+          "pos": "16:5-16:9",
+          "notes": [],
+          "name": "Grade",
+          "args": [],
+          "symbol": {
+            "id": 8,
+            "kind": "alias",
+            "name": "Grade"
+          }
+        },
+        "symbol": null,
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 18,
+          "pos": "16:19-16:21",
+          "notes": [],
+          "name": "Str",
+          "args": [],
+          "symbol": {
+            "id": 16,
+            "kind": "builtin",
+            "name": "Str"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirWhen",
+          "nid": 19,
+          "pos": "16:25-16:28",
+          "notes": [],
+          "subject": {
+            "kind": "HirNameRef",
+            "nid": 20,
+            "pos": "16:30-16:33",
+            "notes": [],
+            "name": "self",
+            "symbol": {
+              "id": 17,
+              "kind": "param",
+              "name": "self"
+            },
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 17,
+              "pos": "16:5-16:9",
+              "notes": [],
+              "name": "Grade",
+              "args": [],
+              "symbol": {
+                "id": 8,
+                "kind": "alias",
+                "name": "Grade"
+              }
+            }
+          },
+          "subjectBinding": null,
+          "arms": [
+            {
+              "kind": "HirWhenArm",
+              "nid": 21,
+              "pos": "17:9-17:17",
+              "notes": [],
+              "pattern": {
+                "kind": "HirPatCtor",
+                "nid": 22,
+                "pos": "17:9-17:17",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-PAT-CTOR",
+                    "message": "裸名构造子归一为构造子模式",
+                    "pos": "17:9-17:17",
+                    "from": "Excellent",
+                    "to": "Excellent()"
+                  }
+                ],
+                "name": "Excellent",
+                "args": [],
+                "ctor": {
+                  "id": 1,
+                  "kind": "ctor",
+                  "name": "Excellent"
+                }
+              },
+              "guard": null,
+              "body": {
+                "kind": "HirStrLit",
+                "nid": 23,
+                "pos": "17:22-17:23",
+                "notes": [],
+                "value": "优秀"
+              },
+              "cond": null
+            },
+            {
+              "kind": "HirWhenArm",
+              "nid": 24,
+              "pos": "18:9-18:12",
+              "notes": [],
+              "pattern": {
+                "kind": "HirPatCtor",
+                "nid": 25,
+                "pos": "18:9-18:12",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-PAT-CTOR",
+                    "message": "裸名构造子归一为构造子模式",
+                    "pos": "18:9-18:12",
+                    "from": "Good",
+                    "to": "Good()"
+                  }
+                ],
+                "name": "Good",
+                "args": [],
+                "ctor": {
+                  "id": 3,
+                  "kind": "ctor",
+                  "name": "Good"
+                }
+              },
+              "guard": null,
+              "body": {
+                "kind": "HirStrLit",
+                "nid": 26,
+                "pos": "18:17-18:18",
+                "notes": [],
+                "value": "良好"
+              },
+              "cond": null
+            },
+            {
+              "kind": "HirWhenArm",
+              "nid": 27,
+              "pos": "19:9-19:12",
+              "notes": [],
+              "pattern": {
+                "kind": "HirPatCtor",
+                "nid": 28,
+                "pos": "19:9-19:12",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-PAT-CTOR",
+                    "message": "裸名构造子归一为构造子模式",
+                    "pos": "19:9-19:12",
+                    "from": "Pass",
+                    "to": "Pass()"
+                  }
+                ],
+                "name": "Pass",
+                "args": [],
+                "ctor": {
+                  "id": 5,
+                  "kind": "ctor",
+                  "name": "Pass"
+                }
+              },
+              "guard": null,
+              "body": {
+                "kind": "HirStrLit",
+                "nid": 29,
+                "pos": "19:17-19:18",
+                "notes": [],
+                "value": "及格"
+              },
+              "cond": null
+            },
+            {
+              "kind": "HirWhenArm",
+              "nid": 30,
+              "pos": "20:9-20:12",
+              "notes": [],
+              "pattern": {
+                "kind": "HirPatCtor",
+                "nid": 31,
+                "pos": "20:9-20:12",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-PAT-CTOR",
+                    "message": "裸名构造子归一为构造子模式",
+                    "pos": "20:9-20:12",
+                    "from": "Fail",
+                    "to": "Fail()"
+                  }
+                ],
+                "name": "Fail",
+                "args": [],
+                "ctor": {
+                  "id": 7,
+                  "kind": "ctor",
+                  "name": "Fail"
+                }
+              },
+              "guard": null,
+              "body": {
+                "kind": "HirStrLit",
+                "nid": 32,
+                "pos": "20:17-20:18",
+                "notes": [],
+                "value": "挂科"
+              },
+              "cond": null
+            },
+            {
+              "kind": "HirWhenArm",
+              "nid": 33,
+              "pos": "21:9-21:9",
+              "notes": [],
+              "pattern": {
+                "kind": "HirPatBind",
+                "nid": 34,
+                "pos": "21:9-21:9",
+                "notes": [],
+                "name": "_",
+                "symbol": null
+              },
+              "guard": null,
+              "body": {
+                "kind": "HirStrLit",
+                "nid": 35,
+                "pos": "21:14-21:14",
+                "notes": [],
+                "value": "?"
+              },
+              "cond": null
+            }
+          ],
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 41,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Str",
+            "args": [],
+            "symbol": null
+          },
+          "diverges": false,
+          "exhaustive": true
+        }
+      },
+      {
+        "kind": "HirStructDecl",
+        "nid": 46,
+        "pos": "26:8-26:8",
+        "notes": [],
+        "name": "A",
+        "symbol": {
+          "id": 11,
+          "kind": "struct",
+          "name": "A"
+        },
+        "theory": [],
+        "fields": [
+          {
+            "kind": "HirParam",
+            "nid": 47,
+            "pos": "26:10-26:13",
+            "notes": [],
+            "name": "name",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 48,
+              "pos": "26:16-26:18",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 18,
+              "kind": "field",
+              "name": "name"
+            },
+            "annotations": [],
+            "default": {
+              "kind": "HirStrLit",
+              "nid": 49,
+              "pos": "26:22-26:28",
+              "notes": [],
+              "value": "unknown"
+            },
+            "destruct": null
+          }
+        ],
+        "annotations": [],
+        "props": [],
+        "nullary": false
+      },
+      {
+        "kind": "HirTraitDecl",
+        "nid": 51,
+        "pos": "27:7-27:11",
+        "notes": [],
+        "name": "Boast",
+        "symbol": {
+          "id": 13,
+          "kind": "trait",
+          "name": "Boast"
+        },
+        "theory": [],
+        "annotations": [],
+        "members": [
+          {
+            "kind": "HirFunDecl",
+            "nid": 52,
+            "pos": "29:9-29:19",
+            "notes": [],
+            "name": "printMyself",
+            "symbol": null,
+            "annotations": [
+              "impure"
+            ],
+            "theory": [],
+            "params": [],
+            "preps": [],
+            "retType": null,
+            "posts": [],
+            "constraints": [],
+            "purity": "impure",
+            "async": false,
+            "body": null
+          }
+        ],
+        "parents": [],
+        "constants": []
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 53,
+        "pos": "32:7-32:17",
+        "notes": [],
+        "name": "printMyself",
+        "receiver": {
+          "kind": "HirNamedType",
+          "nid": 54,
+          "pos": "32:5-32:5",
+          "notes": [],
+          "name": "A",
+          "args": [],
+          "symbol": {
+            "id": 11,
+            "kind": "struct",
+            "name": "A"
+          }
+        },
+        "symbol": null,
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 56,
+          "pos": "32:21-32:21",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirExprStmt",
+              "nid": 57,
+              "pos": "33:5-33:9",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 58,
+                "pos": "33:5-33:9",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 59,
+                  "pos": "33:5-33:9",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 20,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirField",
+                    "nid": 70,
+                    "pos": "33:16-33:19",
+                    "notes": [],
+                    "target": {
+                      "kind": "HirNameRef",
+                      "nid": 60,
+                      "pos": "33:11-33:14",
+                      "notes": [],
+                      "name": "self",
+                      "symbol": {
+                        "id": 19,
+                        "kind": "param",
+                        "name": "self"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 54,
+                        "pos": "32:5-32:5",
+                        "notes": [],
+                        "name": "A",
+                        "args": [],
+                        "symbol": {
+                          "id": 11,
+                          "kind": "struct",
+                          "name": "A"
+                        }
+                      }
+                    },
+                    "name": "name",
+                    "field": null,
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 69,
+                      "pos": "26:16-26:18",
+                      "notes": [],
+                      "name": "Str",
+                      "args": [],
+                      "symbol": {
+                        "id": 16,
+                        "kind": "builtin",
+                        "name": "Str"
+                      }
+                    }
+                  }
+                ],
+                "symbol": {
+                  "id": 20,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 87,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 89,
+        "pos": "37:5-37:8",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 15,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 90,
+          "pos": "37:12-37:12",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirVarStmt",
+              "nid": 91,
+              "pos": "38:5-38:7",
+              "notes": [],
+              "name": "o",
+              "symbol": {
+                "id": 21,
+                "kind": "local",
+                "name": "o"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 96,
+                "pos": "0:0",
+                "notes": [],
+                "name": "A",
+                "args": [],
+                "symbol": null
+              },
+              "value": {
+                "kind": "HirStructCtor",
+                "nid": 92,
+                "pos": "38:13-38:13",
+                "notes": [],
+                "struct": "A",
+                "assigns": [
+                  {
+                    "field": "name",
+                    "value": {
+                      "kind": "HirStrLit",
+                      "nid": 93,
+                      "pos": "38:22-38:25",
+                      "notes": [],
+                      "value": "test"
+                    }
+                  }
+                ],
+                "symbol": {
+                  "id": 11,
+                  "kind": "struct",
+                  "name": "A"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 96,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "A",
+                  "args": [],
+                  "symbol": null
+                }
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 98,
+              "pos": "39:7-39:17",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 99,
+                "pos": "39:7-39:17",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "39:7-39:17",
+                    "from": "target.printMyself(args)",
+                    "to": "printMyself(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 101,
+                  "pos": "39:7-39:17",
+                  "notes": [],
+                  "name": "printMyself",
+                  "symbol": {
+                    "id": 14,
+                    "kind": "fun",
+                    "name": "printMyself"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 100,
+                    "pos": "39:5-39:5",
+                    "notes": [],
+                    "name": "o",
+                    "symbol": {
+                      "id": 21,
+                      "kind": "local",
+                      "name": "o"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 96,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "A",
+                      "args": [],
+                      "symbol": null
+                    }
+                  }
+                ],
+                "symbol": {
+                  "id": 14,
+                  "kind": "fun",
+                  "name": "printMyself"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 103,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:函数printMyself)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            },
+            {
+              "kind": "HirVarStmt",
+              "nid": 104,
+              "pos": "42:5-42:7",
+              "notes": [],
+              "name": "g",
+              "symbol": {
+                "id": 22,
+                "kind": "local",
+                "name": "g"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirUnionType",
+                "nid": 110,
+                "pos": "10:14-10:22",
+                "notes": [],
+                "variants": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 106,
+                    "pos": "10:14-10:22",
+                    "notes": [],
+                    "name": "Excellent",
+                    "args": [],
+                    "symbol": {
+                      "id": 0,
+                      "kind": "struct",
+                      "name": "Excellent"
+                    }
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 107,
+                    "pos": "10:26-10:29",
+                    "notes": [],
+                    "name": "Good",
+                    "args": [],
+                    "symbol": {
+                      "id": 2,
+                      "kind": "struct",
+                      "name": "Good"
+                    }
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 108,
+                    "pos": "10:33-10:36",
+                    "notes": [],
+                    "name": "Pass",
+                    "args": [],
+                    "symbol": {
+                      "id": 4,
+                      "kind": "struct",
+                      "name": "Pass"
+                    }
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 109,
+                    "pos": "10:40-10:43",
+                    "notes": [],
+                    "name": "Fail",
+                    "args": [],
+                    "symbol": {
+                      "id": 6,
+                      "kind": "struct",
+                      "name": "Fail"
+                    }
+                  }
+                ]
+              },
+              "value": {
+                "kind": "HirNameRef",
+                "nid": 112,
+                "pos": "42:20-42:23",
+                "notes": [],
+                "name": "Good",
+                "symbol": {
+                  "id": 3,
+                  "kind": "ctor",
+                  "name": "Good"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 111,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Good",
+                  "args": [],
+                  "symbol": null
+                }
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirVarStmt",
+              "nid": 113,
+              "pos": "43:5-43:7",
+              "notes": [],
+              "name": "f",
+              "symbol": {
+                "id": 23,
+                "kind": "local",
+                "name": "f"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirUnionType",
+                "nid": 119,
+                "pos": "10:14-10:22",
+                "notes": [],
+                "variants": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 115,
+                    "pos": "10:14-10:22",
+                    "notes": [],
+                    "name": "Excellent",
+                    "args": [],
+                    "symbol": {
+                      "id": 0,
+                      "kind": "struct",
+                      "name": "Excellent"
+                    }
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 116,
+                    "pos": "10:26-10:29",
+                    "notes": [],
+                    "name": "Good",
+                    "args": [],
+                    "symbol": {
+                      "id": 2,
+                      "kind": "struct",
+                      "name": "Good"
+                    }
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 117,
+                    "pos": "10:33-10:36",
+                    "notes": [],
+                    "name": "Pass",
+                    "args": [],
+                    "symbol": {
+                      "id": 4,
+                      "kind": "struct",
+                      "name": "Pass"
+                    }
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 118,
+                    "pos": "10:40-10:43",
+                    "notes": [],
+                    "name": "Fail",
+                    "args": [],
+                    "symbol": {
+                      "id": 6,
+                      "kind": "struct",
+                      "name": "Fail"
+                    }
+                  }
+                ]
+              },
+              "value": {
+                "kind": "HirNameRef",
+                "nid": 121,
+                "pos": "43:20-43:23",
+                "notes": [],
+                "name": "Fail",
+                "symbol": {
+                  "id": 7,
+                  "kind": "ctor",
+                  "name": "Fail"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 120,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Fail",
+                  "args": [],
+                  "symbol": null
+                }
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 122,
+              "pos": "44:5-44:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 123,
+                "pos": "44:15-44:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 124,
+                  "pos": "44:15-44:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 125,
+                    "pos": "44:15-44:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 20,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirCall",
+                      "nid": 126,
+                      "pos": "44:21-44:24",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 151,
+                        "pos": "44:21-44:24",
+                        "notes": [],
+                        "name": "show",
+                        "symbol": {
+                          "id": 10,
+                          "kind": "fun",
+                          "name": "show"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirNameRef",
+                          "nid": 128,
+                          "pos": "44:26-44:26",
+                          "notes": [],
+                          "name": "g",
+                          "symbol": {
+                            "id": 22,
+                            "kind": "local",
+                            "name": "g"
+                          },
+                          "type": {
+                            "kind": "HirUnionType",
+                            "nid": 110,
+                            "pos": "10:14-10:22",
+                            "notes": [],
+                            "variants": [
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 106,
+                                "pos": "10:14-10:22",
+                                "notes": [],
+                                "name": "Excellent",
+                                "args": [],
+                                "symbol": {
+                                  "id": 0,
+                                  "kind": "struct",
+                                  "name": "Excellent"
+                                }
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 107,
+                                "pos": "10:26-10:29",
+                                "notes": [],
+                                "name": "Good",
+                                "args": [],
+                                "symbol": {
+                                  "id": 2,
+                                  "kind": "struct",
+                                  "name": "Good"
+                                }
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 108,
+                                "pos": "10:33-10:36",
+                                "notes": [],
+                                "name": "Pass",
+                                "args": [],
+                                "symbol": {
+                                  "id": 4,
+                                  "kind": "struct",
+                                  "name": "Pass"
+                                }
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 109,
+                                "pos": "10:40-10:43",
+                                "notes": [],
+                                "name": "Fail",
+                                "args": [],
+                                "symbol": {
+                                  "id": 6,
+                                  "kind": "struct",
+                                  "name": "Fail"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 10,
+                        "kind": "fun",
+                        "name": "show"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 150,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    }
+                  ],
+                  "symbol": {
+                    "id": 20,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 168,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 169,
+              "pos": "45:5-45:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 170,
+                "pos": "45:15-45:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 171,
+                  "pos": "45:15-45:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 172,
+                    "pos": "45:15-45:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 20,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirCall",
+                      "nid": 173,
+                      "pos": "45:21-45:24",
+                      "notes": [],
+                      "callee": {
+                        "kind": "HirNameRef",
+                        "nid": 198,
+                        "pos": "45:21-45:24",
+                        "notes": [],
+                        "name": "show",
+                        "symbol": {
+                          "id": 10,
+                          "kind": "fun",
+                          "name": "show"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirNameRef",
+                          "nid": 175,
+                          "pos": "45:26-45:26",
+                          "notes": [],
+                          "name": "f",
+                          "symbol": {
+                            "id": 23,
+                            "kind": "local",
+                            "name": "f"
+                          },
+                          "type": {
+                            "kind": "HirUnionType",
+                            "nid": 119,
+                            "pos": "10:14-10:22",
+                            "notes": [],
+                            "variants": [
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 115,
+                                "pos": "10:14-10:22",
+                                "notes": [],
+                                "name": "Excellent",
+                                "args": [],
+                                "symbol": {
+                                  "id": 0,
+                                  "kind": "struct",
+                                  "name": "Excellent"
+                                }
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 116,
+                                "pos": "10:26-10:29",
+                                "notes": [],
+                                "name": "Good",
+                                "args": [],
+                                "symbol": {
+                                  "id": 2,
+                                  "kind": "struct",
+                                  "name": "Good"
+                                }
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 117,
+                                "pos": "10:33-10:36",
+                                "notes": [],
+                                "name": "Pass",
+                                "args": [],
+                                "symbol": {
+                                  "id": 4,
+                                  "kind": "struct",
+                                  "name": "Pass"
+                                }
+                              },
+                              {
+                                "kind": "HirNamedType",
+                                "nid": 118,
+                                "pos": "10:40-10:43",
+                                "notes": [],
+                                "name": "Fail",
+                                "args": [],
+                                "symbol": {
+                                  "id": 6,
+                                  "kind": "struct",
+                                  "name": "Fail"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 10,
+                        "kind": "fun",
+                        "name": "show"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 197,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Str",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    }
+                  ],
+                  "symbol": {
+                    "id": 20,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 215,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

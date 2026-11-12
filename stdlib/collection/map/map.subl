@@ -1,0 +1,71 @@
+// stdlib.collection.map —— Map[K, V] 自由函数全家（B0-1 迁源；e2e core/collection/map 同构）
+// 依赖：Map/MapNil/MapCons/Some/None/Optional/Nil/Cons 经 prelude 虚拟声明（名义同构，B1 后同源）；
+// 本件无跨件函数依赖。
+
+// ---------- 构造 ----------
+fun mapEmpty[K, V](): Map[K, V] = MapNil
+
+// ---------- 观察 ----------
+fun size[K, V](m: Map[K, V]): Nat = when(m) {
+    MapNil -> 0
+    is MapCons(_, _, t) -> size(t) + 1
+}
+
+fun isEmpty[K, V](m: Map[K, V]): Bool = when(m) {
+    MapNil -> True
+    is MapCons(_, _, _) -> False
+}
+
+// 查找：命中返回 Some(v)，不命中沿尾链递归，末端返回 None。
+fun get[K, V](m: Map[K, V], k: K): Optional[V] = when(m) {
+    MapNil -> None
+    is MapCons(k2, v, t) -> if (k == k2) { Some(v) } else { get(t, k) }
+}
+
+fun containsKey[K, V](m: Map[K, V], k: K): Bool = when(m) {
+    MapNil -> False
+    is MapCons(k2, _, t) -> if (k == k2) { True } else { containsKey(t, k) }
+}
+
+fun keys[K, V](m: Map[K, V]): List[K] = when(m) {
+    MapNil -> Nil
+    is MapCons(k, _, t) -> Cons(k, keys(t))
+}
+
+fun values[K, V](m: Map[K, V]): List[V] = when(m) {
+    MapNil -> Nil
+    is MapCons(_, v, t) -> Cons(v, values(t))
+}
+
+// ---------- 增删改 ----------
+// 覆盖写入：先移除旧 key 再前插（get 查找恒命中新值）。
+fun put[K, V](m: Map[K, V], k: K, v: V): Map[K, V] = MapCons(k, v, remove(m, k))
+
+fun remove[K, V](m: Map[K, V], k: K): Map[K, V] = when(m) {
+    MapNil -> MapNil
+    is MapCons(k0, v0, t) -> if (k0 == k) { t } else { MapCons(k0, v0, remove(t, k)) }
+}
+
+fun filter[K, V](m: Map[K, V], p: (V) => Bool): Map[K, V] = when(m) {
+    MapNil -> MapNil
+    is MapCons(k, v, t) -> if (p(v)) { MapCons(k, v, filter(t, p)) } else { filter(t, p) }
+}
+
+// ---------- 转换 ----------
+fun mapValues[K, V, W](m: Map[K, V], f: (V) => W): Map[K, W] = when(m) {
+    MapNil -> MapNil
+    is MapCons(k, v, t) -> MapCons(k, f(v), mapValues(t, f))
+}
+
+fun mapKeys[K, V, W](m: Map[K, V], f: (K) => W): Map[W, V] = when(m) {
+    MapNil -> MapNil
+    is MapCons(k, v, t) -> MapCons(f(k), v, mapKeys(t, f))
+}
+
+// 合并：m2 的键覆盖 m1 的同键。
+fun merge[K, V](m1: Map[K, V], m2: Map[K, V]): Map[K, V] = when(m2) {
+    MapNil -> m1
+    is MapCons(k, v, t) -> merge(put(m1, k, v), t)
+}
+
+fun toList[K, V](m: Map[K, V]): List[V] = values(m)

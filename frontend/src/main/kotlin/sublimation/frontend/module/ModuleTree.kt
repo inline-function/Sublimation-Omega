@@ -84,7 +84,10 @@ internal const val E_MODULE_EMPTY = "E-MODULE-EMPTY"
  *
  * - 路径相对**本 .settings 所在目录**；目标须为**目录**且在**编译根内**（可审计拓扑边界，提案 OQ-11 裁：拒逃逸）。
  * - 挂载图须 DAG：当前挂载链上重访即环（钻石形重复挂载允许——编译侧按规范路径记一次，见编译入口备忘）。 */
-internal class ModuleScanner(private val root: File, private val diag: DiagBag) {
+/** requireRootSource：编译根本身是否须有 .subl（用户根=true；
+ * t137（R-23）stdlib 根=纯挂载容器——零源自容，不报 E-MODULE-EMPTY）。 */
+internal class ModuleScanner(private val root: File, private val diag: DiagBag,
+                             private val requireRootSource: Boolean = true) {
 
     fun scan(): ModuleNode {
         val rootDir = root.absoluteFile.normalize()
@@ -97,7 +100,7 @@ internal class ModuleScanner(private val root: File, private val diag: DiagBag) 
     private fun makeNode(dir: File, alias: String, isRoot: Boolean = false): ModuleNode {
         val files = dir.listFiles { f -> f.isFile && f.name.endsWith(".subl") }
             ?.sortedBy { it.name } ?: emptyList()
-        if (files.isEmpty())
+        if (files.isEmpty() && !(isRoot && !requireRootSource))
             diag.error(E_MODULE_EMPTY, SourceRange(SourcePos(1, 1), null),
                 "模块 ${dir.name} 无 .subl 源文件（目录即模块——模块体须至少一个 .subl）")
         return ModuleNode(dir.name, alias, dir, files, isRoot)
