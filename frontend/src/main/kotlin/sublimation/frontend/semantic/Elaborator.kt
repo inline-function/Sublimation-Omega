@@ -78,6 +78,7 @@ import sublimation.frontend.diag.ident
 import sublimation.frontend.diag.NodeId
 import sublimation.frontend.diag.SourcePos
 import sublimation.frontend.diag.SourceRange
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.hir.HirAxiom
 import sublimation.frontend.hir.HirBecause
 import sublimation.frontend.hir.HirBinExpr
@@ -214,13 +215,15 @@ internal fun elaborateRound(
     /** t125（S5b / R-06）：轮外驱动可变性提升映射（上一轮需求，声明位预应用）。 */
     mutPromoted: Map<String, List<SourceRange>> = emptyMap(),
     mutPromotedTriggers: Map<String, String> = emptyMap(),
+    /** t131（S7 / R-22）：挂载模块只读快照（默认空——非模块编译零影响）。 */
+    mounted: Map<String, ModuleSnapshot> = emptyMap(),
 ): InferenceRound {
     val diag = DiagBag()
     // t117 H8：sink 轮内接管（编译期袋的 collect 单趟专用，轮内重复落袋消除）
     wireShadowHint(symbols, diag)
     wireNativeRecl(symbols, diag)
     val el = Elaborator(symbols, notes, diag, nids, scriptMode, injected, roundLabel, degradedFuns, noLift, mutPromoted,
-        mutPromotedTriggers)
+        mutPromotedTriggers, mounted)
     el.setFuelLabel(roundLabel)
     val hir = el.file(file)
     el.runPurityGate(hir)
@@ -498,6 +501,8 @@ private class Elaborator(
     /** t126（S5c / R-06 T3）：轮外驱动触发分类映射（声明位键 → T1/T2/T3 文本）——预应用位据此渲染
      *  D-MUT-INFERRED 审计四元组的触发分类（S5b 仅 T1/T2，S5c 增 T3「传入 @mut 接收者位」）。 */
     private val mutPromotedTriggers: Map<String, String> = emptyMap(),
+    /** t131（S7 / R-22）：挂载模块只读符号快照——限定引用语义层消歧的模块表（空=非模块编译）。 */
+    private val mounted: Map<String, ModuleSnapshot> = emptyMap(),
 ) {
     private val resolver = NameResolver(symbols, diag)
 
@@ -1996,8 +2001,15 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             HirInst(target, terms, symbol, t, freshNid(), e.pos, notesOf(e))
         }
         is FieldExpr -> {
+            // t131（S7 / R-22）：值位限定引用消歧——消解序 1（模块限定 > 字段 > 内建属性行）
+            val qref = e.target as? NameRef
+            val mod = qref?.let { mounted[it.name] }
+            val shadowed = mod != null && qref != null && symbols.lookupValue(qref.name) != null
+            if (shadowed) diag.hint("H-MODULE-SHADOW", qref.pos, "这里的 " + ident(qref.name) +
+                " 遮蔽了同名挂载模块：" + ident(qref.name) + " 的符号仅经限定引用可见，" +
+                " 此处按本模块符号解析（提示不拦——换挂载别名可显式消歧）。")
+            if (mod != null && !shadowed) moduleQualifiedValue(e, qref!!, mod) else {
             val target = expr(e.target)
-            // t8 字段类型：声明索引按接收者类型查（@mut 字段视图不在此核），未登记字段命中内建属性行 | synthetic
             val tt = etype(target)
             val structName = (tt as? sublimation.frontend.hir.HirNamedType)?.name
             val field = structDecls[structName]?.fields?.firstOrNull { it.name == e.name }
@@ -2014,6 +2026,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 else -> infer.syntheticT("字段" + e.name)
             }
             HirField(target, e.name, null, t, freshNid(), e.pos, notesOf(e))
+            }
         }
         is FunRefExpr -> {
             val target = expr(e.target)
@@ -2595,10 +2608,83 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
      * - 命名参数按形参声明序重排（仅全局 FUN/THEOREM callee 有 paramNames）——D-NAMED-ARG 留痕；
      * - callee 解析结论落 symbol（NameRef → 值域；InstExpr → 实例化目标名引用结论）。
      */
+    // ---------- t131（S7 / R-22）：限定引用语义层消歧（提案 §2.2 方案 B——解析层零动） ----------
+
+    /** D-MODULE-REF 旁注（提案 OQ-3：复用 HirField 载体 + 旁注示模块限定解析路径）。 */
+    private fun moduleRefNote(pos: SourceRange): HirNote =
+        HirNote(HirNoteKind.SUPPLEMENT, "D-MODULE-REF", "限定引用消歧为挂载模块符号（模块面命中）", pos,
+            "模块名.函数", "模块名.函数")
+
+    /**
+     * 限定引用**调用位**：tool.triple(4) → HirCall(callee=HirField(target=HirNameRef(模块别名),
+     * name=函数名, field=模块函数符号), symbol=模块函数符号) + D-MODULE-REF 旁注（提案 §2.4 B-i：零 schema 变动）。
+     * 消歧序 1（模块限定 > 字段/方法糖 > 双错保形）——命中模块别名后**不走**方法糖接收者入首参通道。
+     * 签名核对复用 sigCheckedCall——实参类型在**父域**解析/展开（跨模块类型别名 V1 不通，提案 §4.4/OQ-9）。 */
+    private fun moduleQualifiedCall(e: CallExpr, c: FieldExpr, qref: NameRef, mod: ModuleSnapshot): HirCall {
+        val nid = freshNid()
+        gateBatchOpen()   // t122 实参批次（调用位归并回放序；onCall 内 gateBatchCloseWithCall 配对收尾）
+        val mf = mod.lookupFun(c.name)
+        val args = e.args.map { expr(it) }
+        val argTypes = args.map { etype(it) }
+        val borrowedFlags = args.map { it is sublimation.frontend.hir.HirBorrow }
+        val t: sublimation.frontend.hir.HirType = if (mf != null)
+            sigCheckedCall(mf.decl, mf.decl.name, argTypes, e.pos, emptyList(), borrowedFlags)
+        else {
+            diag.error("E-UNBOUND-NAME", c.pos,
+                "方法 ." + ident(c.name) + " 不可解析：模块 " + ident(mod.alias) +
+                    " 的自由函数面无该名（限定引用未命中——接收者位是挂载模块别名，非字段/方法糖姿势）")
+            infer.syntheticT("调用" + c.name)
+        }
+        val callee = sublimation.frontend.hir.HirField(
+            sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref)),
+            c.name, mf?.symbol, null, freshNid(), c.pos, emptyList())
+        val node = sublimation.frontend.hir.HirCall(
+            callee = callee, args = args, symbol = mf?.symbol, type = t, dictionary = null,
+            slot = null, dictArgs = emptyList(), methodSugar = false, awaitPoint = false,
+            calleeImpure = mf != null && mf.decl.annotations.contains("impure"),
+            nid = nid, origin = e.pos, notes = notesOf(e, listOf(moduleRefNote(e.pos))),
+        )
+        onCall(node, mf?.decl?.name)   // 订阅（停机判定读本地声明表——跨模块递归分析 V1 不通，提案 §9 限制面）
+        return node
+    }
+
+    /** 限定引用**值位**：tool.triple 作为函数值——HirField(模块别名, 名, field=模块函数符号, type=函数类型) + D-MODULE-REF。 */
+    private fun moduleQualifiedValue(e: FieldExpr, qref: NameRef, mod: ModuleSnapshot): sublimation.frontend.hir.HirExpr {
+        val mf = mod.lookupFun(e.name)
+        if (mf == null) {
+            diag.error("E-UNBOUND-NAME", e.pos,
+                "模块 " + ident(mod.alias) + " 无函数 " + ident(e.name) + "（限定引用未命中：模块自由函数面无该名）")
+            return sublimation.frontend.hir.HirField(
+                sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref)),
+                e.name, null, infer.syntheticT("字段" + e.name), freshNid(), e.pos,
+                notesOf(e, listOf(moduleRefNote(e.pos))))
+        }
+        val (ps, rt) = sigOf(mf.decl)
+        val funT = sublimation.frontend.hir.HirFunType(
+            params = ps.map { expand(it) },
+            ret = rt?.let { expand(it) } ?: infer.syntheticT(mf.decl.name),
+            purity = if (mf.decl.annotations.contains("impure")) sublimation.frontend.hir.HirPurity.IMPURE
+                else sublimation.frontend.hir.HirPurity.PURE,
+            theory = emptyList(), context = null, nid = freshNid(), origin = e.pos, notes = emptyList())
+        return sublimation.frontend.hir.HirField(
+            sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref)),
+            e.name, mf.symbol, funT, freshNid(), e.pos, notesOf(e, listOf(moduleRefNote(e.pos))))
+    }
+
     private fun callExpr(e: CallExpr): HirCall {
         val nid = freshNid()
         when (val c = e.callee) {
             is FieldExpr -> {
+                // t131（S7 / R-22）：限定引用消歧·消解序 1——模块段链先查（挂载别名命中→限定调用通道）。
+                // 挂载期表为空（非模块编译）时 contains/lookup 皆零成本直落既有方法糖路径。
+                val qref = c.target as? NameRef
+                val mod = qref?.let { mounted[it.name] }
+                // R-22 查询链（本模块 > 挂载子）：本作用域同名声明的值符号遮蔽模块别名——提示不拦，取本模块符号
+                val shadowed = mod != null && qref != null && symbols.lookupValue(qref.name) != null
+                if (shadowed) diag.hint("H-MODULE-SHADOW", qref.pos, "这里的 " + ident(qref.name) +
+                    " 遮蔽了同名挂载模块：" + ident(qref.name) + " 的符号仅经限定引用可见，" +
+                    " 此处按本模块符号解析（提示不拦——换挂载别名可显式消歧）。")
+                if (mod != null && !shadowed) return moduleQualifiedCall(e, c, qref!!, mod)
                 // 消解闭名单 1：方法糖（S-5 无特质 impl 方法 → self 首参自由函数）
                 if (e.namedArgs.isNotEmpty()) {
                     diag.error("E-NAMED-ARG", e.pos,

@@ -1,0 +1,5 @@
+﻿cmd: java ... sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/模块系统 -o jsoncmp/out/t131mod/examples__模块系统.json
+exit: 0
+----- output -----
+[模块 tool]
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t131mod\examples__模块系统.json（9525 字节）+ 1 个挂载模块产物

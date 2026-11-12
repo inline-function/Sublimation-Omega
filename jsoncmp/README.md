@@ -89,3 +89,22 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 **分型红线（R-16）**：仅纯度族（`pure<f>` 契约）可上提——停机族（E-NON-STRUCTURAL-REC）/类型确立族（E-INFER-NO-SOLUTION）**不可**（R-02 健全性优先，未开绕过口子）。**三级正交**：Γ 帧级（t108 factFrames）/签名级（本件 preps）/产物级（t118 inferred/evidence）载体互不流动。
 
 脚本体（out-subs 14 样本）无 lift 触发样 ⇒ 脚本门 14/14 重跑**逐字节同**（t01 基线延续，未重落）。差分对拍集扩面（护栏③）：新增 `dp-lift-chain.subl/.subs`（三层链式上提）入 `frontend/src/test/resources/diff-pairs/`——`T123LiftTest` 锁定「双模式忽略 preps/inferred 后 hir 结构签相等 + 脚本侧三层欠条入产物」。
+## 2026-11-12 t131（S7 / R-22 落地：目录即模块 + 限定引用）——SAME 基线 t122n 不动 + 模块新侧基线
+
+**67 非模块样本逐字节 SAME 67/67 vs t122n**（模块系统零侵入的机器证明：`mounted` 默认空 ⇒ 语义层零改）。
+冻红 2 项（core__collection__list / examples__手动证明）与既有基线同态（红态 json 逐字同）。
+
+**模块系统样本**按 OQ-10 队长裁：**基线走新侧目录 `out/t131mod/`**（t122n 不翻、68 计数零动）：
+
+| 产物 | 形态 | 状态 |
+ |---|---|---|
+ | `examples__模块系统.json` | 目录形态主 envelope（unit.path=模块系统） | **冻红→绿**（ok=true，零 E- 诊断） |
+ | `examples__模块系统__tool.json` | 挂载子模块 envelope（unit.path=tool） | 绿（ok=true） |
+ | 脚本 | `scripts/t131mod-export.ps1` + `manifest/export-t131mod-list.txt` | 68 行（67 单文件 + 1 目录行） |
+
+模块产物双编译逐字节 SAME （内置确定性，nid 纪律：模块挂载零新 nid 面）。模块样本的**单文件形态**
+（manifest 旧行 compile 主.subl）与 t122n 逐字同——冻红保形（限定引用无通道的既有态原样保留）。
+限定引用 HIR 载体 = HirCall(callee=HirField(field=模块函数符号)) + D-MODULE-REF 旁注（提案 OQ-3 B-i 零 schema）。
+
+约束登记：跨模块**不纯**调用的纯度记账 V1 不贯通（calleeImpure 落位、effect 记账未接——提案 §9 限制面）；
+跨模块**类型别名/结构体/扩展函数**限定通道 V1 未通（仅自由函数面）。

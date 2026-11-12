@@ -6,6 +6,7 @@ import sublimation.frontend.diag.DiagBag
 import sublimation.frontend.diag.SourcePos
 import sublimation.frontend.diag.SourceRange
 import sublimation.frontend.diag.ident
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.hir.HirFile
 import sublimation.frontend.parser.ParseNote
 
@@ -50,10 +51,23 @@ fun compile(
     scriptMode: Boolean = false,
     /** t118（OQ-5 队长裁=给）：--no-degrade——脚本模式「退化即失败」CI 门（--no-trust 族同设）。 */
     noDegrade: Boolean = false,
-    /** t123（R-16 S4 / OQ-5 队长裁=给）：--no-lift——脚本模式「上文上提即失败」CI 门（同 --no-degrade 双口形态）。 */
     noLift: Boolean = false,
 ): Pair<HirFile, DiagBag> {
     val report = compileWithRounds(file, parseNotes, scriptMode, noDegrade, noLift)
+    return report.hir to report.diag
+}
+
+/** t131（S7 / R-22）：compile 的**模块形态**重载（internal——公共 API 契约零动；仅供模块编译入口调用）。
+ * 挂载模块快照按别名入表，限定引用语义层消歧（提案 §2.3）。 */
+internal fun compile(
+    file: FileAst,
+    parseNotes: Map<AstNode, List<ParseNote>> = emptyMap(),
+    scriptMode: Boolean = false,
+    noDegrade: Boolean = false,
+    noLift: Boolean = false,
+    mounted: Map<String, ModuleSnapshot> = emptyMap(),
+): Pair<HirFile, DiagBag> {
+    val report = compileWithRounds(file, parseNotes, scriptMode, noDegrade, noLift, mounted)
     return report.hir to report.diag
 }
 
@@ -103,8 +117,9 @@ internal fun compileWithRounds(
     scriptMode: Boolean = false,
     /** t118（OQ-5 队长裁=给）：--no-degrade——脚本模式「退化即失败」CI 门（--no-trust 族同设）。 */
     noDegrade: Boolean = false,
-    /** t123（R-16 S4 / OQ-5 队长裁=给）：--no-lift——脚本模式「上文上提即失败」CI 门（同 --no-degrade 双口形态）。 */
     noLift: Boolean = false,
+    /** t131（S7 / R-22）：挂载模块只读快照透传（默认空——非模块编译零影响）。 */
+    mounted: Map<String, ModuleSnapshot> = emptyMap(),
 ): RoundsReport {
     val nids = NodeIdSource()   // HIR 节点 id 唯一源（ADR-14）：跨轮共享单调（附录 B H1）
     val symbols = SymbolTable(nids::alloc)
@@ -123,7 +138,7 @@ internal fun compileWithRounds(
     while (round < INFER_ROUNDS_DEFAULT) {
         round++
         val label = "infer-r" + round
-        val r = elaborateRound(file, symbols, parseNotes, nids, scriptMode, injected, label, noLift = noLift)
+        val r = elaborateRound(file, symbols, parseNotes, nids, scriptMode, injected, label, noLift = noLift, mounted = mounted)
         rounds.add(RoundObservation(round, label, r.metaCount, r.fuelMaxConsumed, r.converged, r.closureSize))
         last = r
         if (r.metaCount == 0) break               // 零元变量：单趟直通（保护条款）
@@ -173,7 +188,7 @@ internal fun compileWithRounds(
             } else {
                 val deg = elaborateRound(file, symbols, parseNotes, nids, scriptMode, degSeeds, "infer-degraded",
                     finalRound.changedOwners, noLift = noLift, mutPromoted = finalRound.mutPromotions,
-                    mutPromotedTriggers = finalRound.mutPromotionTriggers)
+                    mutPromotedTriggers = finalRound.mutPromotionTriggers, mounted = mounted)
                 rounds.add(RoundObservation(round + 1, "infer-degraded", deg.metaCount, deg.fuelMaxConsumed, deg.converged, deg.closureSize))
                 hir = deg.hir
                 degraded = true
@@ -191,7 +206,7 @@ internal fun compileWithRounds(
     if (scriptMode && last!!.mutPromotions.isNotEmpty() && !degraded) {
         val mr = elaborateRound(file, symbols, parseNotes, nids, true, last.solutions, "mut-promoted",
             last.changedOwners, noLift = noLift, mutPromoted = last.mutPromotions,
-            mutPromotedTriggers = last.mutPromotionTriggers)
+            mutPromotedTriggers = last.mutPromotionTriggers, mounted = mounted)
         rounds.add(RoundObservation(round + 1, "mut-promoted", mr.metaCount, mr.fuelMaxConsumed, mr.converged, mr.closureSize))
         hir = mr.hir
         mutPromotedRound = true

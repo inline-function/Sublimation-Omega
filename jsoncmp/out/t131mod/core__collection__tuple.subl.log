@@ -1,0 +1,4 @@
+﻿cmd: java ... sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/core/collection/tuple.subl -o jsoncmp/out/t131mod/core__collection__tuple.subl.json
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t131mod\core__collection__tuple.subl.json（79326 字节）

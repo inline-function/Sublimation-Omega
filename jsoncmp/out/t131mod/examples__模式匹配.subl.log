@@ -1,0 +1,7 @@
+﻿cmd: java ... sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/模式匹配.subl -o jsoncmp/out/t131mod/examples__模式匹配.subl.json
+exit: 0
+----- output -----
+[警告][20:5] W-NON-EXHAUSTIVE: when 非穷尽（缺 else 或覆盖不全），作为表达式时值类型退化为 Null
+  20 |     when(c) {
+     |     ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t131mod\examples__模式匹配.subl.json（86892 字节）

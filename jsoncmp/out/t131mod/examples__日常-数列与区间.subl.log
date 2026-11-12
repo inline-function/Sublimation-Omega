@@ -1,0 +1,4 @@
+﻿cmd: java ... sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/examples/日常-数列与区间.subl -o jsoncmp/out/t131mod/examples__日常-数列与区间.subl.json
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t131mod\examples__日常-数列与区间.subl.json（220958 字节）

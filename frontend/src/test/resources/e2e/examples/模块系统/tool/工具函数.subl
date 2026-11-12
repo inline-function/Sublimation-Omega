@@ -1,0 +1,5 @@
+// tool 模块：工具函数子模块（父→子可见——主模块经限定引用 tool.f 调用）
+
+fun triple(n : Nat) : Nat = n * 3   // 4 → 12
+
+fun square(n : Nat) : Nat = n * n   // 3 → 9

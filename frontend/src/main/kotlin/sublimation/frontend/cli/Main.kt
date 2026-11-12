@@ -42,10 +42,37 @@ fun runCli(args: Array<String>, out: PrintStream = System.out, err: PrintStream 
     if (positional.size > 1) { err.println("[错误] 只接受单个源文件"); return 2 }
     val srcFile = File(positional[0])
     if (!srcFile.exists()) { err.println("[错误] 文件不存在: ${positional[0]}"); return 2 }
+    // R3-S0（t100，S-1 §5）：.subs 扩展名自动开 scriptMode（等价 --script）；.subl 与其他扩展名保持默认工程模式。
+    val scriptMode = opts.script || positional[0].endsWith(".subs")
+    // t131（S7 / R-22）：目录即模块——compile/check 支持目录形态（.settings 挂载层是解析前层，
+    // parse/tokens 按单文件精度工作，目录形态不支持）。
+    if (srcFile.isDirectory) {
+        if (cmd != "compile" && cmd != "check") {
+            err.println("[错误] 目录形态仅支持 compile/check（模块挂载是解析前层——parse/tokens 需单源文件）")
+            return 2
+        }
+        val r = compileModuleFrontend(srcFile, scriptMode, opts.noDegrade, opts.noLift)
+        return when (cmd) {
+            "check" -> {
+                report(r.main.diag, r.mainSource, opts.verbose, out)
+                r.children.forEach { out.println("[模块 ${it.unitPath}]"); report(it.output.diag, it.source, opts.verbose, out) }
+                if (!r.ok) { err.println("[错误] 前端检查未通过"); 1 }
+                else { out.println("[完成] 前端检查通过：主模块 + ${r.children.size} 个挂载模块"); 0 }
+            }
+            "compile" -> {
+                val target = File(opts.output ?: srcFile.path + ".hir.json")
+                target.writeText(r.main.json, Charsets.UTF_8)
+                r.children.forEach { File(childJsonName(target.path, it.unitPath)).writeText(it.output.json, Charsets.UTF_8) }
+                report(r.main.diag, r.mainSource, opts.verbose, out)
+                r.children.forEach { out.println("[模块 ${it.unitPath}]"); report(it.output.diag, it.source, opts.verbose, out) }
+                if (!r.ok) { err.println("[错误] 前端检查未通过，已生成带诊断产物 ${target.path}（${r.main.json.length} 字节）"); 1 }
+                else { out.println("[完成] 已生成 ${target.path}（${r.main.json.length} 字节）+ ${r.children.size} 个挂载模块产物"); 0 }
+            }
+            else -> 2
+        }
+    }
     val source = srcFile.readText(Charsets.UTF_8)
     val unitPath = srcFile.name
-    // R3-S0（t100，S-1 §5）：.subs 扩展名自动开 scriptMode（等价 --script）；.subl 与其他扩展名保持默认工程模式。
-    val scriptMode = opts.script || unitPath.endsWith(".subs")
     return when (cmd) {
         "tokens" -> {
             Lexer(source, unitPath).tokenize().forEach { out.println(tokenLine(it)) }

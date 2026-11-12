@@ -1,0 +1,4 @@
+﻿cmd: java ... sublimation.frontend.cli.MainKt compile frontend/src/test/resources/e2e/core/random/random.subl -o jsoncmp/out/t131mod/core__random__random.subl.json
+exit: 0
+----- output -----
+[完成] 已生成 F:\Sublimation\jsoncmp\out\t131mod\core__random__random.subl.json（7346 字节）
