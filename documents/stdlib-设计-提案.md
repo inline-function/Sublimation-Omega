@@ -197,3 +197,44 @@ builtinSig（TypeInfer:790）60+ 内建函数按域分类登记——**语言定
 - **DAG 分层重排（B1 纪律增量）**：模块图须 DAG 且「限定构造形态 V1 未通」（结构体经非限定构造名解析、挂载注入父域）——stdlib 件互依赖类型须靠挂载解决，list↔optional 互依成环。分层落：**list 为底层纯 List 域**（不产 Optional/Set/Map）；optional 挂 list+result 并托管**产出 Optional 的 List 访问器**（head/last/elementAt/find/indexOf/maxNat/minNat/get/firstOr，细化命题经限定调用 `list.size(xs)`）；set/map 各挂 list（+optional）并托管 toSet/toMap。9 个函数件属移位登差分台账（函数全家与 e2e 冻红零变——裸名不可见故用户面不动）。
 - **差分台账（OQ-10 B1 口径）**：基线 t131mod，最终 68 门 = SAME 52 + **剥差同 16**（差异位全部为 `retType` 联合展开位 pos，共 138 处，message/其他位差异=0——别名展开的变体位置由虚拟声明 SYNTHETIC 位变为 stdlib 模块源实坐标；剥差（仅删 pos）后 16/16 逐字节同，行为零变）；脚本门 14/14 逐字节同（out-subs/t01）；模块双导出确定性 8/8（1+7 件集合）；套件 1111 → **1120**（+9：T138StdlibRetireTest 快照条目在位/用户面解析等价/形状同构/负例先红/裸名面隔离/--no-stdlib 红/Channel 留虚拟/双导出确定性/DAG 分层绿）。
 - **工具路径同构**：`compile()`/`compileWithRounds()`/`compileVariance()`/`elaborate()` 新增 `mounted` 透传参数（默认空——非模块编译零影响），虚拟层依赖的 12 件旧测试 script helper 改挂 stdlib 快照（同 t19 口径）；机械证据件 `jsoncmp/scripts/t138-parity.ps1`（四段：retire 核对 / 7 依赖样本剥差门 / 68 门台账导出 `out-subs/t138gate-ledger.txt` / 模块确定性）。
+
+---
+
+## 12 批史 t139（stdlib B2: EXT_METHODS retire + ext 限定调位，2026-11-13）
+
+**完成面**（R-23 批表 B2 行 + OQ-4 结论 b 落地）:
+
+1. **add 落体**：`@mut fun (@mut List[a]).add[a](v: a): List[a]` 落 stdlib collection list 源（基础件），**体仍空**（OQ-4 队长裁 b 签名面延续——结构性体 a 方案在 codegen 数组特判语义下假；体随「运行时桥规格」R4 落，R-15 兑现债登记）。去糖签名面与旧虚拟 EXT_METHODS 逐字同构（@mut 注解 + (@mut List[a]) 接收者首参 + 形参 v:a + 返回 List[a]）。
+2. **EXT_METHODS retire**（同 B0/B1 数据源替换纪律）：`EXT_METHODS = listOf()`，新增 `RETIRED_EXT_METHODS = setOf("List" to "add")` 允许表；`SymbolTable.virtualExtMethods` 改可变注入表 + `declareModuleExt(head, name, decl)`（父域注入唯一入口），`lookupExtDeclVisible` 虚拟兜底与 `preludeVirtualExt` 懒登记链零改（builtins id 序零漂移 ⇒ 方法糖/直接调用面 HIR 形态零差分）。`sugarExt` 对 **stdlib 快照**的 retire 键跳过模块面命中（注入虚拟层承接——否则模块符号 id 落 HIR 漂移）；用户件挂载面维持 t134 口径。
+3. **ext 跨模块限定通道（ext 限定调位）**: 自由函数面未命中时，`moduleQualifiedCall` 查快照 ext 面（实参 1 = 接收者位，头推导复用 `extHeadOf`）——`list.add(xs, v)` / `list.map(xs, f)` / `optional.map(o, f)` 形态解析到 ext 符号，HIR = `HirField(模块别名, 名, field=ext 符号)` + D-MODULE-REF 旁注 + `methodSugar=false`（限定去糖形态）；签名核对复用 `extCallType`（接收者首参），借用实参位 borrowArgNotes 同方法糖口径，@mut 调用登记 mutMethodCalls。诊断文案升格「自由函数面与扩展函数面均无该名」。负例先红：未挂载早死、缺件早死、裸名直接调不解析（R-22 方法糖/限定唯一通道）。
+4. **不动面**: BUILTIN_TYPES/builtins 内建懒登记序、FUNS（MutableListOf/ListOf 分 B2.1 后置）、ext 方法糖/限定通道对 stdlib-local 非 retire 名的隔离（R-22: 不注入非限定直接调链）、68 计数与 t122n 基线（差异入差分台账——见下）。
+
+**B2 差分台账**（jsoncmp/README.md t139 分账 + out-subs/t139gate-ledger.txt 机械证据）:
+
+- 68 门（vs t131mod）：**SAME 68/68**（B2 全样本逐字节同；重跑 t138-parity 同得 68/68，两证一致）。当 7 依赖样本（vs t122n）：SAME 6 + 剥差同 1（stdlib 集合：联合展开 pos 位，延续 B1 剥差口径）。
+- stdlib 侧基线（vs t137stdlib): 逐字节同 3 件 + 预期差 **list 件** = add 声明位（HirFunDecl 新条目 + 源位）; optional/result/set/map 件不在 t137 基线覆盖面（模块样本挂载集差异），以模块双导出确定性 8/8 + 套件门 3/4 兜底。
+- 套件 1128/1128（+8 T139StdlibExtTest: 快照条目/体空/方法糖零差分/限定调位绿/负例先红/用户优先/确定性/全件零红）; 脚本门 14/14; 模块双导出 8/8; 模块件全家零红（DAG 分层不变）。
+- **方法糖解析源差异的机械证明**（队长裁：由语义层定义解析源元数据域）: B2 将 add 的解析源由虚拟 Kotlin 声明换为 stdlib 源声明（注入虚拟层），可能漂移的元数据域有三——**声明 pos、签名类型 pos、符号 origin**; 实测 《probe》 `xs.add(2)` 用户产物：① 方法糖调用位 `HirNameRef(name=add, symbol={id:6, kind:fun, name:add})`——**SymbolRef schema 仅 {id, kind, name}，不含 pos**（stdlib 声明位 18:25-18:27 不入用户产物，实测未出现）; ② 调用节点 pos = 用户调用位（3:16-3:18）——源位不透传; ③ 符号 id 由 `preludeVirtualExt` builtins 懒登记 `nextId++` 依**首次解析序**分配，注入层与虚拟层同码路径 ⇒ id 序零改。④ 旁注面 D-METHOD-SUGAR 在位、D-MODULE-REF 缺席（模块面命中未走）。故「剥 pos/旁注 ⇒ 逐字节同」的剥差证明在本批**无需启用**（68 门全 SAME 逐字节通过），解析源替换的行为零变由上述 schema 边界直接成立。
+- 机械证据脚本 `jsoncmp/scripts/t139-parity.ps1` 五段（retire 核对 / 7 依赖剥差门 / 68 门台账 / 侧基线比对 / 确定性 + 脚本门）。
+
+**R-15 兑现债（B2 登记口径）**：add 体仍空——签名面已迁源，体随「运行时桥规格」（提案 §9 后续件 R4）落；落体裁决 = OQ-4 b（队长裁）。下一批触及体的工程面（codegen 数组特判/运行时桥）时一并处理，B2 不越界。
+
+## 13 B2 毕翻新提案（t122n → 新锚一次性翻新 · **仅提案，未执行**）
+
+**提案目的**（OQ-10 队长裁「B2 毕一次性翻新——防每批翻基线漂移难追」）: 当前主基线 `jsoncmp/out/t122n`（t122 时代产物）+ 68 门对拍基线 `jsoncmp/out/t131mod` 已承载 B0/B1/B2 三轮「虚拟源 → stdlib 模块源」的数据源替换；正常态以剥差（pos/message 盲）双层比较维持行为零变。B2 后 stdlib 数据源替换闭环（FUNS 除外，分 B2.1），可一次性把主基线翻到 **B2 树态导出锚**，从而：
+
+- 消除剥差比较的常设噪声（联合展开 pos 位 1 例 + 侧基线预期差集合），门态回归「逐字节同」单一判据;
+- 翻新锚固化「stdlib 快照注入位 + builtins id 序」这一稳定形态，后续批（B2.1/B3/运行时桥）差异不再混入历史 pos 漂移。
+
+**执行方案（提案）**:
+
+| 步 | 动作 | 责任 | 风险/对冲 |
+|---|---|---|---|
+| 1 | 定锚名 `jsoncmp/out/t139mod` 并导出 68 样本 + 侧基线（模块系统 8 件）双编译 | 执行翻新批的人 | 同 t131mod 导出口径（compile 而非 check） |
+| 2 | 7 依赖样本 t122n 比较改为 t139mod 比较（剥差门退化为逐字节门） | 同上 | 历史账目保留：旧账（README t137/t138/t139 分账）不删，仅标注「翻新后基线」 |
+| 3 | t122n 产物**归档不删**（rename 至 `out/archive/t122n-pre-b2`?），保留三批差分台账的可回溯链 | 队长裁归档名 | 删除即丢审计链 |
+| 4 | 翻新门实测：68 门对 t139mod 全 SAME + 脚本门 14/14 + 套件门 | 同 1 | 翻新失败 = 回滚至旧基线（删 t139mod 即可，零破坏） |
+
+**不在本提案内**: B2.1（FUNS: MutableListOf/ListOf 落 stdlib 源——ext 快照注入通道就绪后构造件落地）、B3 axioms、运行时桥（R4）。翻新执行须队长批准后另批（提案者：semantics；执行门号待队长定）。
+
+**本批未越界声明**: B2 不翻任何基线；上述提案仅登记。

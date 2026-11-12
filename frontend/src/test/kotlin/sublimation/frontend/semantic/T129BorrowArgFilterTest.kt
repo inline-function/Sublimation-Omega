@@ -1,6 +1,8 @@
 package sublimation.frontend.semantic
 
 import sublimation.frontend.diag.Severity
+import sublimation.frontend.cli.compileStdlibUnits
+import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.hir.HirBorrow
 import sublimation.frontend.parser.parseScriptSourceWithNotes
 import sublimation.frontend.semantic.compileWithRounds
@@ -17,8 +19,13 @@ import kotlin.test.assertTrue
  * - 对照：具体类型只读形参位（Nat）的借用照常落 warn（过滤未越界）。 */
 class T129BorrowArgFilterTest {
 
+    // t139（R-23 B2）：prelude 虚拟扩展方法 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构）
+    private val stdlibMounts: Map<String, ModuleSnapshot> =
+        compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
+            .let { (u, _) -> u.associate { it.alias to it.snapshot } }
+
     private fun sc(src: String) =
-        parseScriptSourceWithNotes(src, "t129.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true) }
+        parseScriptSourceWithNotes(src, "t129.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true, mounted = stdlibMounts) }
     private fun warns(rs: RoundsReport): List<String> =
         rs.diag.diags.filter { it.severity == Severity.WARN }.map { it.code }
     private fun borrowNote(rs: RoundsReport): String? {

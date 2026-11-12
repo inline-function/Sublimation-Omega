@@ -10,6 +10,13 @@ struct Cons[T](head: T, tail: List[T])
 
 type List[T] = Nil | Cons[T]
 
+// t139（R-23 B2 / OQ-4 = b 签名面延续）：@mut 扩展方法 add 虚拟表 retire 迁源——体**仍空**
+// （体随「运行时桥规格」（R4）后续件落；R-15 兑现债登记——提案 §4 裁 b：别写结构性体，
+// a 方案在 codegen 数组特判下语义假）。去糖签名面与旧虚拟 EXT_METHODS 逐字同构
+// （@mut 注解 + (@mut List[a]) 接收者首参 + 形参 v : a + 返回 List[a]），经
+// declareModuleExt 注入父域虚拟层：sugarExt/direct 调用面零差分。
+@mut fun (@mut List[a]).add[a](v: a): List[a]
+
 // 扩展函数（特质成员 map/fold/pure/flatMap；方法糖 xs.map(f) 与自由式同桶路由，TS-12）。
 fun List[a].map[a, b](f: (a) => b): List[b] = when(self) {
     Nil -> Nil

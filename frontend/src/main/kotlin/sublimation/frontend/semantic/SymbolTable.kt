@@ -200,8 +200,10 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         val key = receiverHead to name
         for (i in frames.indices.reversed()) frames[i].extFuns[key]?.let { return it.decl }
         if (extFunDecls[key] != null) return extFunDecls.getValue(key)
-        // t126（S5c / R-15）：虚拟 @mut 扩展方法声明兜底（方法糖签名核对 + @mut 注解读取）
-        return PreludeDecls.EXT_METHODS.firstOrNull { ExtFunHeads.ofAst(it.receiver!!) == receiverHead && it.name == name }
+        // t126（S5c / R-15）：虚拟 @mut 扩展方法声明兜底（方法糖签名核对 + @mut 注解读取）。
+        // t139（R-23 B2）：数据源改注入面——EXT_METHODS retire，替身经 declareModuleExt 落表
+        // （同 B1 结构体口径：查询链不变、SymbolEntry builtins 懒登记零漂移）。
+        return virtualExtMethods[receiverHead to name]
     }
 
     /** t39：名字级前置判定（TS-14 直接调用）——任一可见帧或全局存在该名的扩展函数。 */
@@ -476,9 +478,16 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     }
 
     /** t126（S5c / R-15）：虚拟 @mut 扩展方法族（add 等）——符号懒登记（同保护口径）;声明索引侧
-     *  [lookupExtDeclVisible] 的虚拟兜底供方法糖签名核对。用户同 (头, 名) 扩展优先。 */
-    private val virtualExtMethods = PreludeDecls.EXT_METHODS.associateBy {
-        ExtFunHeads.ofAst(it.receiver!!)!! to it.name
+     *  [lookupExtDeclVisible] 的虚拟兜底供方法糖签名核对。用户同 (头, 名) 扩展优先。
+     *  t139（R-23 B2）：EXT_METHODS retire 后本表改**快照注入面**（替身源 = 挂载 stdlib 件经
+     *  RETIRED_EXT_METHODS 允许表过滤的 ext 声明，Elaborator init 注入）——同 B0/B1 纪律：
+     *  数据源替换，[preludeVirtualExt] 的 builtins 懒登记与 id 序零改。 */
+    private val virtualExtMethods = LinkedHashMap<Pair<String, String>, FunDecl>()
+
+    /** t139（R-23 B2）：父域注入 retire 扩展方法替身（Elaborator init 期——先于 Collector 用户
+     *  声明；用户同名 file 预扫描覆盖，P-7）。仅 RETIRED_EXT_METHODS 允许表内键可入。 */
+    fun declareModuleExt(head: String, name: String, decl: FunDecl) {
+        virtualExtMethods[head to name] = decl
     }
     private val virtualExtEntries = mutableMapOf<Pair<String, String>, SymbolEntry>()
     fun preludeVirtualExt(head: String, name: String): SymbolEntry? {

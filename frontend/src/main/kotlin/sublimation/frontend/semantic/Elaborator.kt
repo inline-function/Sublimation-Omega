@@ -79,6 +79,7 @@ import sublimation.frontend.diag.NodeId
 import sublimation.frontend.diag.SourcePos
 import sublimation.frontend.diag.SourceRange
 import sublimation.frontend.module.ModuleFun
+import sublimation.frontend.module.ModuleExt
 import sublimation.frontend.module.ModuleSnapshot
 import sublimation.frontend.hir.HirAxiom
 import sublimation.frontend.hir.HirBecause
@@ -575,6 +576,15 @@ private class Elaborator(
                     if (k in PreludeDecls.RETIRED_ALIASES) {
                         aliasDecls[k] = v.decl
                         retiredAliasNames += k
+                    }
+                }
+                // t139（R-23 B2）：retire 扩展方法替身注入(RETIRED_EXT_METHODS 允许表过滤——
+                // 查询链不变:virtualExtMethods 层 + preludeVirtualExt 懒登记 id 序零漂移;stdlib
+                // 件声明的其他 ext 保持方法糖/限定通道,不注入非限定直接调链)
+                snap.exts.forEach { (head, byName) ->
+                    byName.forEach { (name, ext) ->
+                        if ((head to name) in PreludeDecls.RETIRED_EXT_METHODS)
+                            symbols.declareModuleExt(head, name, ext.decl)
                     }
                 }
             } else {
@@ -2673,7 +2683,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         if (mounted.isNotEmpty()) {
             for (mod in mounted.values) {
                 val mex = mod.lookupExt(head, name)
-                if (mex != null) return SugarExtHit(mex.decl, mex.symbol, true)
+                // t139(R-23 B2):stdlib 快照的 **retire 键跳过**——retired ext 由注入虚拟层承接
+                // (符号走 builtins 懒登记、HIR 形态零差分;模块面命中会落模块符号 id 而漂移)。
+                // 用户件(snap.stdlib=false)维持 t134 口径:挂载面命中即模块面答案。
+                if (mex != null && !(mod.stdlib && (head to name) in PreludeDecls.RETIRED_EXT_METHODS))
+                    return SugarExtHit(mex.decl, mex.symbol, true)
             }
         }
         val vd = symbols.preludeVirtualExtDecl(head, name)
@@ -2704,8 +2718,19 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         val args = e.args.map { expr(it) }
         val argTypes = args.map { etype(it) }
         val borrowedFlags = args.map { it is sublimation.frontend.hir.HirBorrow }
+        // t139（R-23 B2）：**ext 限定调位**——自由函数面未命中时查快照 ext 面（实参 1 = 接收者位;
+        // 头推导复用方法糖口径 extHeadOf）。命中则扩展签名核对（extCallType 接收者首参）+
+        // 限定调 HIR（HirField 模块别名/field=ext 符号 + D-MODULE-REF），methodSugar=false（限定
+        // 去糖形态——接收者显式入首参位）。stdlib 快照/用户件同通道（retire 键不经此路：sugarExt
+        // 已就位，而限定形态按模块面符号解析是 B2 新增绿面）。@mut 注解与借用实参位同方法糖口径。
+        val mext: ModuleExt? = if (mf == null && e.args.isNotEmpty()) {
+            val head = extHeadOf(argTypes.firstOrNull(), c.name)
+            head?.let { mod.lookupExt(it, c.name) }
+        } else null
         val t: sublimation.frontend.hir.HirType = if (mf != null)
             sigCheckedCall(mf.decl, mf.decl.name, argTypes, e.pos, emptyList(), borrowedFlags)
+        else if (mext != null)
+            extCallType(mext.decl, argTypes, e.pos, borrowedFlags)
         else if (mod.structs[c.name] != null) {
             diag.error("E-UNBOUND-NAME", c.pos,
                 "模块 " + ident(mod.alias) + " 的结构体 " + ident(c.name) +
@@ -2715,19 +2740,32 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         } else {
             diag.error("E-UNBOUND-NAME", c.pos,
                 "方法 ." + ident(c.name) + " 不可解析：模块 " + ident(mod.alias) +
-                    " 的自由函数面无该名（限定引用未命中——接收者位是挂载模块别名，非字段/方法糖姿势）")
+                    " 的自由函数面与扩展函数面均无该名（限定引用未命中——接收者位是挂载模块别名，" +
+                    "非字段/方法糖姿势；扩展函数须经「模块名.扩展名(接收者, 实参)」形态调用）")
             infer.syntheticT("调用" + c.name)
         }
+        // t139（B2 ext 限定调位）：@mut 扩展的调用登记（纯度闸同方法糖口径）
+        if (mf == null && mext != null && "mut" in mext.decl.annotations) mutMethodCalls.add(nid)
+        // t128（S6）：借用实参留痕 + 冗余登记（限定 ext 调用位；零借用免求值）
+        val args2 = if (mf == null && mext != null && borrowedFlags.any { it }) {
+            enterTypeParams(mext.decl.theory)
+            try {
+                borrowArgNotes(args, argTypes,
+                    listOf(type(mext.decl.receiver!!)) + sigOf(mext.decl).first.map { expand(it) },
+                    listOf("self") + mext.decl.params.map { it.name }, mext.decl.name)
+            } finally { exitTypeParams() }
+        } else args
+        val extField = mext?.symbol
         val callee = sublimation.frontend.hir.HirField(
             sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref)),
-            c.name, mf?.symbol, null, freshNid(), c.pos, emptyList())
+            c.name, mf?.symbol ?: extField, null, freshNid(), c.pos, emptyList())
         val node = sublimation.frontend.hir.HirCall(
-            callee = callee, args = args, symbol = mf?.symbol, type = t, dictionary = null,
+            callee = callee, args = args2, symbol = mf?.symbol ?: extField, type = t, dictionary = null,
             slot = null, dictArgs = emptyList(), methodSugar = false, awaitPoint = false,
-            calleeImpure = mf != null && mf.decl.annotations.contains("impure"),
+            calleeImpure = mf?.let { it.decl.annotations.contains("impure") } ?: false,
             nid = nid, origin = e.pos, notes = notesOf(e, listOf(moduleRefNote(e.pos))),
         )
-        onCall(node, mf?.decl?.name)   // 订阅（停机判定读本地声明表——跨模块递归分析 V1 不通，提案 §9 限制面）
+        onCall(node, mf?.decl?.name ?: mext?.decl?.name)   // 订阅（停机判定读本地声明表——跨模块递归分析 V1 不通，提案 §9 限制面）
         return node
     }
 

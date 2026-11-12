@@ -70,14 +70,16 @@ internal object PreludeDecls {
         ctorFun("ListOf", mut = false),
     )
 
-    /** t126（S5c / R-15 容器面）：虚拟 @mut 扩展方法族——去糖模型 R-18.1（self = 接收者首参，持可写
-     *  视图 @mut；方法体写接收者无罪 R-18.2，罪恶在调用边界 R-18.3）。V1 签名面：方法体随后端/
-     *  标准库源（S2 迁源形态 C）落。 */
-    val EXT_METHODS: List<FunDecl> = listOf(
-        methodFun("add", "List", "a",
-            Param("v", NamedType("a", emptyList(), SYNTHETIC_POS), emptyList(), null, null, SYNTHETIC_POS),
-            NamedType("List", listOf(NamedType("a", emptyList(), SYNTHETIC_POS)), SYNTHETIC_POS)),
-    )
+    /** t139（R-23 B2 / OQ-4 = b 签名面延续）：EXT_METHODS 虚拟表 retire——@mut 扩展方法 add 迁
+     *  stdlib list 源声明（体**仍空**——体随「运行时桥规格」（R4）后续件落；R-15 兑现债登记，别写
+     *  结构性体：a 方案在 codegen 数组特判下语义假，提案 §4）。同 B0/B1 数据源替换纪律：替身经
+     *  [RETIRED_EXT_METHODS] 允许表注入虚拟查询层（SymbolTable.virtualExtMethods——SymbolEntry 走
+     *  builtins 懒登记，id 序零漂移）。V1 签名面：方法体随后端/标准库源（S2 迁源形态 C）落。 */
+    val EXT_METHODS: List<FunDecl> = listOf()
+
+    /** t139（R-23 B2）：retire 扩展方法键面（接收者头 to 名）——快照 ext 注入父域虚拟层的允许表
+     *  （stdlib 件内声明的其他 ext 保持方法糖/限定通道，不注入非限定直接调链——R-22 纪律）。 */
+    val RETIRED_EXT_METHODS: Set<Pair<String, String>> = setOf("List" to "add")
 
     private fun ctorFun(name: String, mut: Boolean): FunDecl {
         val elem = NamedType("T", emptyList(), SYNTHETIC_POS)
@@ -88,13 +90,6 @@ internal object PreludeDecls {
             emptyList(), if (mut) MutType(ret, SYNTHETIC_POS) else ret, emptyList(),
             null, emptyList(), SYNTHETIC_POS)
     }
-
-    private fun methodFun(name: String, recvHead: String, elem: String, param: Param, ret: sublimation.frontend.ast.Type): FunDecl =
-        FunDecl(name, listOf("mut"),
-            listOf(TypeParam(elem, null, 0, SYNTHETIC_POS)), listOf(param), emptyList(), ret, emptyList(), null,
-            emptyList(), SYNTHETIC_POS,
-            receiver = MutType(NamedType(recvHead, listOf(NamedType(elem, emptyList(), SYNTHETIC_POS)), SYNTHETIC_POS), SYNTHETIC_POS))
-
     private val structIndex = STRUCTS.associateBy { it.name }
     private val aliasIndex = ALIASES.associateBy { it.name }
 

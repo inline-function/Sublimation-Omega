@@ -144,3 +144,31 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 
 **工具路径同构**：`compile/compileWithRounds/compileVariance/elaborate` 新增 `mounted` 透传参（默认空，非模块编译零影响）；12 件旧测试（PreludeDeEnum/AliasSemantics/T126/T128/T99/Subtype/Narrow/Union×2/Assign/When/Variance）script helper 改挂 stdlib 快照（同 t19 口径）。
 
+
+---
+
+## t139 分账（stdlib B2：EXT_METHODS retire + ext 限定调位，2026-11-13）
+
+| 目录/件 | 职责 | 谁可以写 |
+|---|---|---|
+| `out-subs/t139gate-ledger.txt` | B2 68 门差分台账（SAME/剥差同 逐样本登记） | 执行 t139 门的人 |
+| `scripts/t139-parity.ps1` | B2 机械证据五段：① PreludeDecls retire 核对（EXT_METHODS 空表、RETIRED_EXT_METHODS((List,add))、list.subl add 落体/体空）② 7 依赖样本剥差门（vs t122n）③ 68 门台账导出（vs t131mod）④ stdlib 侧基线比对（vs t137stdlib：预期仅 list 件差 = add 声明位）⑤ 模块双导出确定性 8/8 + 脚本门 14/14 | 执行 t139 门的人 |
+| `out-subs/t139gate*` / `t139work` / `t139dev` / `t139stdlib` / `t139det-*` | 落实证据（68 门重跑、7 依赖重跑、stdlib 侧基线重跑、双导出产物） | 执行 t139 门的人 |
+
+**B2 数据源替换台账**（EXT_METHODS 唯一条目 @mut List[a].add → stdlib list 源声明，OQ-4 = b 签名面延续）:
+
+| 量 | 结果 | 性质 |
+|---|---|---|
+| 68 门（vs t131mod） | **SAME 68 + 剥差同 0 + 失败 0** | B2 后全样本逐字节同（t138 台账 16 剥差同条目在 B2 树态收敛为 SAME——重跑 t138-parity 同得 68/68，两证一致） |
+| 7 依赖样本（vs t122n） | **SAME 6 + 剥差同 1**（std 库集合：联合展开 pos 位） | 延续 B1 口径的行为零变 |
+| stdlib 侧基线（vs t137stdlib） | **逐字节同 3 件 + 预期差 list 件** | 差 = add 新声明位（HirFunDecl 条目 + 源位）; optional/result/set/map 件不在 t137 基线覆盖面（模块样本挂载集差异），以双导出确定性 8/8 兜底 |
+| 脚本门（out-subs/t01） | **14/14 逐字节同** | 脚本模式 B2 零侵入 |
+| 模块双导出确定性 | **8/8 逐字节同** | 挂载件集合 1+7 不变 |
+| 套件 | **1128/1128 全绿**（t138 1120 → +8 T139StdlibExtTest） | 套件只增不减 |
+| 模块件全家绿 | list/optional/result/set/map/math **8/8 ok=true** | DAG 分层不变；add 体仍空 |
+
+**B2 机制登记**（R-23 纪律增量）:
+- 查询链不变：本模块 > 挂载子 > prelude 虚拟层。retired 键 (List,add) 经 RETIRED_EXT_METHODS 允许表由 Elaborator init 注入 `SymbolTable.virtualExtMethods`（可变注入表，EXT_METHODS 撤后唯一数据源），`preludeVirtualExt` 的 builtins 懒登记与 id 序零改 ⇒ 方法糖/直接调用面 HIR 形态零差分（测套门 3：无 D-MODULE-REF 旁注）。stdlib 快照 ext 凡遇 retire 键在 `sugarExt` 跳过（否则模块面命中会落模块符号 id 而漂移）；用户件（snap.stdlib=false）维持 t134 挂载面口径。
+- **ext 限定调位**（B2 新绿面）：`moduleQualifiedCall` 自由函数面未命中时查快照 ext 面（实参 1 = 接收者位，头推导复用 `extHeadOf`），命中落 `HirField(模块别名, 名, field=ext 符号)` + D-MODULE-REF 旁注（zero schema 变动）；签名核对复用 `extCallType`（接收者首参），借用实参位同方法糖口径（borrowArgNotes）。限定调位诊断文案升格为「自由函数面与扩展函数面均无该名」。
+- **add 体仍空**（OQ-4 队长裁 b，别写结构性体——a 方案在 codegen 数组特判下语义假）：`@mut fun (@mut List[a]).add[a](v: a): List[a]` 无体 + 注释登记；R-15 兑现债随「运行时桥规格」（R4）后续件落（提案 §4 结论）。
+- **FUNS 不动**（MutableListOf/ListOf 分 B2.1 后置——本批只 retire EXT_METHODS 一条）。
