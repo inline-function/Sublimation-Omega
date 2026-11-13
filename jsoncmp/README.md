@@ -272,3 +272,57 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 - **archive/ documents/ 历史件不改**（日志/计划属历史记录，t143 范围=活码面）。
 
 机械证据脚本: `jsoncmp/scripts/t143-parity.ps1` 五段（落位核对+双探针（mutableListOf/listOf 绿地）/ 68 门 t122n 冻锚零波动台账 / 精确差分 vs t142 冻结全同 / 侧基线 / 确定性 + 脚本门），rc=0 全绿。
+
+## t144 分账（R-26.1 括号语义统一：[] 类型实参 + <> 命题参数，2026-11-13）
+
+**变更画像**（调用位类型实参 `<>` → `[]`；<> 划归命题通道；声明位 `[T]` / 类型位 `[]` / 命题面零动）:
+
+| 门 | 结果 | 证据 |
+|---|---|---|
+| 精确差分（vs t143 冻结产物 `out-subs/t143gate`） | **75 件逐字节同** + 1 件差（上下文弥散：`witness<tagged<7>>()` 调用位因 E-CALL-ANGLE 误红——t148 已修复逐字节回锚 | t144-parity ③ |
+| 68 门（vs **t122n 死冻锚**） | SAME **49** + 剥差同 16 + 预期转绿 1（手动证明 t142 口径）+ 模块样本 1（计数闭合 68）；**4 处括号糖迁移样本维持 SAME**（Channel×2、Cons×3 簇）——纯语法糖零 HIR 影响已证。**⚠ 后记（t148 撤账）**：本表"预期转红 1（上下文弥散）"登记经队长验收查 t122n 冻锚证为事实错误（witness<谓词>() t122n 时已绿——callee theory 含 PropParam，按 R-26 是正确形态）——该登记**除名**，复绿修见 t148 分账（SAME 口径回 t143 基线） | out-subs/t144gate-ledger.txt |
+| 套件 | **1177/1177**（1166 + 11 T144：门1 方括号×3 / 门2 负例×3 / 门3 迁移样本×3 / 门4 零回归×2） | :frontend:test |
+| stdlib 侧（vs t143stdlib） | 逐字节同 9 件 | t144-parity ④ |
+| 模块确定性 | 9/9 | t144-parity ⑤ |
+| 脚本门 | 14/14 | t144-parity ⑤ |
+
+**实现位点**（三主码件）:
+
+1. **ast/Expr.kt**：`InstExpr` 增 `bracket: Boolean = false` 标记（括号来源——true = 调用位方括号 `f[T](args)`；false = 尖括号命题通道 `p<v>`、`f<p>()`；数据类默认参数，既有构造位命名化 `pos=` 兼容）;
+2. **parser/Parser.kt**：新增 `parseBracketTypeArgList()`（`[` 起的实参表，RBRACKET 终止，空表拒收落 E-SYNTAX 精确报）+ parsePostfix 后缀链新增 **LBRACKET 分支**（同 D-1 角表通道的失败回滚口径——游标/诊断/留痕一并还原）；既有 LT 分支注释改为命题通道口径；
+3. **semantic/Elaborator.kt** 调用位 B8 分型：`bracket=true` → 既有 explicitTps 类型域读取通路（**零改**）；`bracket=false` → **E-CALL-ANGLE 精确 E 级**（消息含命题通道口径 + `callee[…]` 方括号迁移指引 + `callee() by [命题]` 断言指引）+ 降级为普通调用（不复读类型实参——单点精确报）。
+
+**迁移面**（调用位 `<>` → `[]` 机械迁移）:
+
+- **e2e 样本 3 件 4 位点**（任务书登记）：日常-异步任务:8（`Channel<Nat>(4)`→`Channel[Nat](4)`）、日常-订单状态机:87/92（`Cons<OrderEvent>(`×6 簇）、异步与并发:15（`Channel<Nat>(1)` + 注释口径 `Channel[T](cap)`）；
+- **Kotlin 测试件**：ExplicitTypeArgsTest（`id<Nat>(`×5、`Channel<Nat>(`×4 + 注释）、LambdaInferenceTest（`mapResult<Nat, Str, Bool/Str>(`×2）、PreludeDeEnumTest（`Channel<Nat>(`×4）、R38ToleranceSurveyTest:70（`Channel<Nat>(0)`——迁移后 M2b 容忍面断言口径不变）；
+- **嵌套角表漏项发现**（任务书 4 位点实测漏项——正则 `[^>]*>` 不跨嵌套尖括号）：**上下文弥散.subl:37 `witness<tagged<7>>()`**（t22 B6 命题供给位形态——callee theory 含 PropParam）——队长验收查 t122n 冻锚证其 t122n 时已绿（任务书"调用侧命题供给未通"为事实错误 F3，记队长账）：**该形态按 R-26 是正确形态**，复绿修见 t148 分账（R-26.1 收口——本分账"预期转红"登记撤账，SAME 口径回到 t143 基线）；
+- **零改位**：声明位 `[T]`、类型位 `[Nat]`、命题面（preps/posts 槽、`<p>` 命题括号、`p<v>` 谓词应用、`¬<p>`、by 断言、axiom/∴ 命题列表）逐字零变。
+
+机械证据脚本: `jsoncmp/scripts/t144-parity.ps1` 五段（行为探针正/负 / 68 门 t122n 冻锚台账含双登记 / 精确差分 vs t143 冻结 / 侧基线 / 确定性 + 脚本门），rc=0 全绿。
+
+## t148 分账（R-26.1 收口：调用位 <> 路由回既有命题参数供给通路，t144 验收退件修，2026-11-13）
+
+**变更画像**（t144 验收退件：队长查 t122n 冻锚发现 witness<谓词>() 在 t122n 时已绿——callee 声明 theory 含命题参数 PropParam，调用位 <> 是命题供给的正确形态；任务书"调用侧命题供给未通"为队长事实错误，记队长账 F3）:
+
+| 门 | 结果 | 证据 |
+|---|---|---|
+| 68 门（vs **t122n 死冻锚**） | **SAME 50**（含**上下文弥散复绿逐字节回锚**）+ 剥差同 16 + 预期转绿 1（手动证明）+ 模块样本 1（闭合 68）——**t144 预期转红撤账** | out-subs/t148gate-ledger.txt |
+| 精确差分（vs t144 冻结产物 `out-subs/t144gate`） | **75 件逐字节同** + 唯一登记差（上下文弥散复绿——t144 误红件的回滚） | t148-parity ③ |
+| 套件 | **1184/1184**（1177 + 7 T148：复绿×3 / 保留拒×2 / [] 零回归×2；T144 11 测试全绿——无过截，负例 callee 均无命题理论参数） | :frontend:test |
+| stdlib 侧（vs t143stdlib） | 逐字节同 9 件 | t148-parity ④ |
+| 模块确定性 | 9/9 | t148-parity ⑤ |
+| 脚本门 | 14/14 | t148-parity ⑤ |
+
+**实现位点**（一处，零改通路）:
+
+- **semantic/Elaborator.kt** 调用位 B8 分型收口：`bracket=false` 时先查 callee 命题理论参数 `funDecls[nm]?.theory?.any { it is PropParam }`（AST PropParam = HIR HirPropParam 同源判据，t22 B6 既有通路 L2071 同法）；**有**则按 t122n 既有通路供给（按名解析 + HirNameRef + explicitTps 类型域读取——与 bracket=true 同一通路，RANGE 只改 <> 侧路由）；**无**才保留 E-CALL-ANGLE 精确 E 级（指向方括号迁移 + by 断言）。**[] 通路与样本零改**（样本本身按 R-26 是正确形态——witness<谓词>() 不迁移）。
+
+**判别性**（router 边界）:
+
+- 复绿面：callee theory 含 PropParam（`fun witness[@q]<q>` 形态——上下文弥散样本）；
+- 保留拒面：纯类型参数 callee（`fun id[T]`）、prelude 虚拟构造（Channel）、preps 契约形态（`fun witness<p>`——契约供给走 by 断言，t142 口径）——三者 theory 无 PropParam ⇒ E-CALL-ANGLE 精确报。
+
+机械证据脚本: `jsoncmp/scripts/t148-parity.ps1` 五段（行为探针正/保留/[] / 68 门 t122n 冻锚台账含上下文弥散复绿回锚 / 精确差分 vs t144 冻结（75 同+登记差） / 侧基线 / 确定性 + 脚本门），rc=0 全绿。
+
+**队长令裁定挂账**：声明侧 `[@q]`（命题参数在方括号内）与 R-26 的 `<>` 口径相悖——队长裁为**语义层裁决项**（不代决），本件不碰声明侧（上下文弥散:24 `fun witness[@q]<q>` 维持原样复绿）。

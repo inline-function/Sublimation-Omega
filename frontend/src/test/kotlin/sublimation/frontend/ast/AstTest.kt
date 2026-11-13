@@ -161,7 +161,7 @@ class AstTest {
         TaskExpr(block(13), pos(13)),
         FlowExpr(block(14), pos(14)),
         CallExpr(name(15), listOf(lit(15)), mapOf("k" to lit(15)), pos(15)),
-        InstExpr(name(16), listOf(lit(16)), pos(16)),
+        InstExpr(name(16), listOf(lit(16)), pos = pos(16)),
         FieldExpr(name(17), "f", pos(17)),
         FunRefExpr(name(18), "f", pos(18)),
         SymbolCallExpr("<", listOf(lit(19)), pos(19)),

@@ -718,6 +718,21 @@ class Parser(
         return out
     }
 
+    /** S-41b（t144/R-26.1）：调用位方括号类型实参 [T₁, T₂]——与类型位 parseTypeArgs 同括号形态；
+     *  表达式位按表达式读取（语义层按类型域读取，B8 既有通路），尖括号归命题通道；
+     *  空表拒收（[] 落 E-SYNTAX 精确报，异于 by/axiom 命题列表的 parseBracketList 复用形态）。 */
+    private fun parseBracketTypeArgList(): List<Expr> {
+        next()   // [（分派保证）
+        val out = ArrayList<Expr>()
+        while (true) {
+            out += parseExpr(angle = true)
+            if (peek(Kind.COMMA)) { pos++; if (peek(Kind.RBRACKET)) break; continue }
+            break
+        }
+        expect(Kind.RBRACKET, "]")
+        return out
+    }
+
     /** S-16【块】：{ 语句* }——循环带进展保证（容错）。 */
     private fun parseBlock(): BlockExpr {
         val lb = next()
@@ -1430,7 +1445,7 @@ class Parser(
             pos++
             val terms = parseAngleList()
             return if (terms.size == 1) UniExpr("¬", terms[0], t.range())
-                else InstExpr(NameRef("¬", t.range()), terms, t.range())
+                else InstExpr(NameRef("¬", t.range()), terms, pos = t.range())
         }
         if (t.kind == Kind.LT) {
             val lt = t
@@ -1444,7 +1459,8 @@ class Parser(
     /**
      * S-33【后缀表达式】：初等项 + 后缀链。
      * ::（D-16 折叠/方法引用）、.（D-3 字段访问）、(（调用/命名字段构造 D-14）、
-     * 紧贴 <（D-1 实例化，失败回滚）、尾随 lambda（D-9）、Task/Flow 块（体是代码块非 lambda）。
+     * 紧贴 <（D-1 命题通道，失败回滚）、紧贴 [（t144/R-26.1 调用位类型实参，失败回滚）、
+     * 尾随 lambda（D-9）、Task/Flow 块（体是代码块非 lambda）。
      */
     private fun parsePostfix(stopArrow: Boolean = false, angle: Boolean = false): Expr {
         var e = parsePrimary(angle)
@@ -1477,14 +1493,28 @@ class Parser(
                         e = CallExpr(e, pa, na, e.pos)
                     }
                 }
-                t.kind == Kind.LT && !t.precededBySpace -> {                                     // D-1 实例化/显式供给
+                t.kind == Kind.LT && !t.precededBySpace -> {                                     // D-1 命题通道（<>：p<v>、f<p>()）——t144/R-26.1 起非类型实参
                     val save = pos
                     val dBase = _diag.size
                     val noted = _notes.keys.toMutableSet()
                     val terms = parseAngleList()
-                    if (_diag.size == dBase) e = InstExpr(e, terms, e.pos)
+                    if (_diag.size == dBase) e = InstExpr(e, terms, pos = e.pos)
                     else {
                         // 解析失败回滚（旧实现以 try/catch 达成）：游标、诊断、留痕一并还原
+                        pos = save
+                        _diag.subList(dBase, _diag.size).clear()
+                        _notes.keys.retainAll(noted)
+                        break
+                    }
+                }
+                t.kind == Kind.LBRACKET && !t.precededBySpace -> {                                 // t144（R-26.1）：调用位类型实参通道（[] 方括号）
+                    val save = pos
+                    val dBase = _diag.size
+                    val noted = _notes.keys.toMutableSet()
+                    val terms = parseBracketTypeArgList()
+                    if (_diag.size == dBase) e = InstExpr(e, terms, bracket = true, pos = e.pos)
+                    else {
+                        // 解析失败回滚（同 D-1 角表通道口径）：游标、诊断、留痕一并还原
                         pos = save
                         _diag.subList(dBase, _diag.size).clear()
                         _notes.keys.retainAll(noted)

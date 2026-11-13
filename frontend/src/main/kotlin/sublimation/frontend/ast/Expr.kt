@@ -120,10 +120,11 @@ data class CallExpr(
     override val pos: SourceRange,
 ) : Expr
 
-/** S-33【后缀-实例化/显式供给】：紧贴的 <...>（p<v>、witness<torch>()）；角色由语义层判定。 */
+/** S-33【后缀-实例化/显式供给】：紧贴的 <...>（p<v>、witness<torch>()）/ [...]（t144/R-26.1 调用位类型实参 f[T]）；角色由语义层判定。 */
 data class InstExpr(
     val target: Expr,
     val terms: List<Expr>,
+    val bracket: Boolean = false,   // t144（R-26.1）：true = 调用位方括号类型实参通道（f[T](args)）；false = 尖括号命题通道（p<v>、f<p>()）
     override val pos: SourceRange,
 ) : Expr
 

@@ -80,7 +80,7 @@ class LambdaInferenceTest {
         val src = "struct Ok[T](v: T)\nstruct Err[E](e: E)\ntype Res[T, E] = Ok[T] | Err[E]\n" +
             "fun mapResult[T, E, U](r: Res[T, E], f: (T) => U): Res[U, E] = when(r) { is Ok(v) -> Ok(f(v)) ; is Err(e) -> Err(e) }\n" +
             "var r: Res[Nat, Str] = Ok(42)\n" +
-            "var q = mapResult<Nat, Str, Bool>(r, { x => True })"
+            "var q = mapResult[Nat, Str, Bool](r, { x => True })"
         val (hir, bag) = script(src)
         assertFalse(bag.hasError, "codes=" + bag.diags.joinToString(",") { it.code + it.message })
         val q = stmts(hir).filterIsInstance<HirVarStmt>().last()
@@ -97,7 +97,7 @@ class LambdaInferenceTest {
         val src = "struct Ok[T](v: T)\nstruct Err[E](e: E)\ntype Res[T, E] = Ok[T] | Err[E]\n" +
             "fun mapResult[T, E, U](r: Res[T, E], f: (T) => U): Res[U, E] = when(r) { is Ok(v) -> Ok(f(v)) ; is Err(e) -> Err(e) }\n" +
             "var r: Res[Nat, Str] = Ok(42)\n" +
-            "var q = mapResult<Nat, Str, Str>(r, { x => x + 1 })"
+            "var q = mapResult[Nat, Str, Str](r, { x => x + 1 })"
         val (hir, bag) = script(src)
         assertTrue(errCodes(bag).contains("E-TYPE-MISMATCH"), "codes=" + bag.diags.joinToString(",") { it.code + ":" + it.message })
     }

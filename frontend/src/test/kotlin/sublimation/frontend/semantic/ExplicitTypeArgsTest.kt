@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
  * - 调用位紧贴角表（D-1 后缀实例化）的显式类型实参按**类型域**读取（旧 CallCheck:158-168
  *   的 instTermsOf + typeOfTerm 口径），target 按名消解，不再把 target/terms 当值消解；
  * - 显式实参**先绑定、推导不覆盖**（形式语义01 §2.4/§4「显式优先，一次绑定不覆盖」），
- *   冲突在形参位核对处落 E-TYPE-MISMATCH（id<Nat>("a") → 实参 Str 与形参 Nat 不符）；
+ *   冲突在形参位核对处落 E-TYPE-MISMATCH（id[Nat]("a") → 实参 Str 与形参 Nat 不符）；
  * - t44（ADR-29）后 prelude 泛型 ctor（Channel）经**虚拟 struct**走 ctorCall 核对：容量 Nat 可省
  *   且不超过一个（旧 CallCheck:201-215 特判口径；cap 默认 0=无缓冲，P-7 点查）；旧的 PRELUDE_CTORS
  *   枚举字段表已删除（prelude 去枚举化，见 PreludeDecls）。
@@ -50,7 +50,7 @@ class ExplicitTypeArgsTest {
 
     @Test
     fun `B8 Channel 显式类型实参构造返回 Channel 加 Nat 实参`() {
-        val (hir, bag) = script("var ch: Channel[Nat] = Channel<Nat>(1)")
+        val (hir, bag) = script("var ch: Channel[Nat] = Channel[Nat](1)")
         assertFalse(bag.hasError, "显式类型实参构造解析+类型核对通过（B8）: " +
             bag.diags.joinToString { it.message })
         assertEquals("Channel", (firstCall(hir).type as HirNamedType).name)
@@ -60,13 +60,13 @@ class ExplicitTypeArgsTest {
 
     @Test
     fun `B8 Channel 容量实参可省`() {
-        val (_, bag) = script("var ch = Channel<Nat>()")
+        val (_, bag) = script("var ch = Channel[Nat]()")
         assertFalse(bag.hasError, "容量实参有默认（旧 CallCheck 特判口径），零实参合法")
     }
 
     @Test
     fun `B8 Channel 容量实参须为 Nat`() {
-        val (_, bag) = script("var ch = Channel<Nat>(\"s\")")
+        val (_, bag) = script("var ch = Channel[Nat](\"s\")")
         assertEquals(listOf("E-TYPE-MISMATCH"), errCodes(bag),
             "容量实参 Str 与字段 Nat 不符: ${bag.diags.joinToString { it.message }}")
         assertTrue(bag.diags.any { it.message.contains("与字段") })
@@ -74,24 +74,24 @@ class ExplicitTypeArgsTest {
 
     @Test
     fun `B8 Channel 最多一个容量实参`() {
-        val (_, bag) = script("var ch = Channel<Nat>(1, 2)")
+        val (_, bag) = script("var ch = Channel[Nat](1, 2)")
         assertEquals(listOf("E-TYPE-MISMATCH"), errCodes(bag))
         assertTrue(bag.diags.any { it.message.contains("期望 1 实参，实际 2") })
     }
 
     @Test
     fun `B8 泛型函数显式实参参与实例化`() {
-        val (hir, bag) = script("fun id[T](x: T): T = x\nvar a = id<Nat>(1)")
+        val (hir, bag) = script("fun id[T](x: T): T = x\nvar a = id[Nat](1)")
         assertEquals("Nat", (firstCall(hir).type as HirNamedType).name)
-        assertFalse(bag.hasError, "id<Nat>(1) 实例化为 Nat: " + bag.diags.joinToString { it.message })
+        assertFalse(bag.hasError, "id[Nat](1) 实例化为 Nat: " + bag.diags.joinToString { it.message })
     }
 
     @Test
     fun `B8 显式实参与实参推导冲突时报类型不符`() {
-        val (hir, _) = script("fun id[T](x: T): T = x\nvar a = id<Nat>(\"s\")")
+        val (hir, _) = script("fun id[T](x: T): T = x\nvar a = id[Nat](\"s\")")
         val call = firstCall(hir)
         assertEquals("Nat", (call.type as HirNamedType).name, "显式绑定不被实参反推覆盖")
-        val (_, bag2) = script("fun id[T](x: T): T = x\nvar a = id<Nat>(\"s\")")
+        val (_, bag2) = script("fun id[T](x: T): T = x\nvar a = id[Nat](\"s\")")
         assertEquals(listOf("E-TYPE-MISMATCH"), errCodes(bag2))
         assertTrue(bag2.diags.any { it.message.contains("实参 1") && it.message.contains("形参") },
             "冲突落在形参位核对: ${bag2.diags.joinToString { it.message }}")

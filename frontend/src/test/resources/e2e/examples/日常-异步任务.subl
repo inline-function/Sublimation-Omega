@@ -5,7 +5,7 @@
 
 @impure
 fun main() {
-    var ch: Channel[Nat] = Channel<Nat>(4)
+    var ch: Channel[Nat] = Channel[Nat](4)
     ch.send(40)
     ch.send(2)
     var a: Nat = ch.receive()

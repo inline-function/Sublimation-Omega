@@ -45,7 +45,7 @@ class P5Batch1NativePropDispatchTest {
 
     private fun ref(n: String) = NameRef(n, SYNTHETIC_POS)
     private fun call(name: String, args: List<Expr>) = CallExpr(ref(name), args, pos = SYNTHETIC_POS)
-    private fun inst(name: String, args: List<Expr>) = InstExpr(ref(name), args, SYNTHETIC_POS)
+    private fun inst(name: String, args: List<Expr>) = InstExpr(ref(name), args, pos = SYNTHETIC_POS)
 
     private fun two() = listOf(ref("p"), ref("q"))
 

@@ -2958,15 +2958,37 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     }
                     is InstExpr -> {
                         // B8：调用位 callee 的紧贴角表——按名解析，terms 按类型域读取（旧 CallCheck:158-168 口径），
-                        // 不再把 target/terms 当值消解（`Channel<Nat>(1)` 的两个 E-UNBOUND-NAME 根因）
+                        // 不再把 target/terms 当值消解（`Channel[Nat](1)` 的两个 E-UNBOUND-NAME 根因）。
+                        // t144（R-26.1）：[] = 类型参数（声明+应用统一），<> = 命题参数。
+                        // t148（R-26.1 收口/验收退件修）：bracket=false 时 callee 若有命题理论参数
+                        // （theory 含 PropParam → HIR HirPropParam，t22 B6 既有命题供给通路）——按 t122n
+                        // 既有通路供给（上下文弥散 witness<谓词>() 复绿硬指标）；仅 callee 无命题参数才落
+                        // E-CALL-ANGLE 精确 E 级（指向方括号/by 断言），不准静默。[] 通路不动（已验收）。
                         val nm = (c.target as? NameRef)?.name
-                        if (nm != null && symbols.lookupValue(nm) != null) {
-                            symbol = resolver.resolveValue(nm, c.target.pos)
-                            callee = HirNameRef(nm, symbol, null, freshNid(), c.target.pos, notesOf(c.target))
-                            explicitTps = c.terms.map { termType(it) }
+                        val hasPropTheory = nm != null &&
+                            funDecls[nm]?.theory?.any { it is sublimation.frontend.ast.PropParam } == true
+                        if (c.bracket || hasPropTheory) {
+                            if (nm != null && symbols.lookupValue(nm) != null) {
+                                symbol = resolver.resolveValue(nm, c.target.pos)
+                                callee = HirNameRef(nm, symbol, null, freshNid(), c.target.pos, notesOf(c.target))
+                                explicitTps = c.terms.map { termType(it) }
+                            } else {
+                                callee = expr(e.callee)
+                                symbol = (callee as? HirInst)?.let { it.target as? HirNameRef }?.symbol
+                                explicitTps = emptyList()
+                            }
                         } else {
-                            callee = expr(e.callee)
-                            symbol = (callee as? HirInst)?.let { it.target as? HirNameRef }?.symbol
+                            val hint = nm ?: "callee"
+                            diag.error("E-CALL-ANGLE", e.pos,
+                                "调用位尖括号 `<…>` 是命题参数通道（R-26.1）：类型实参请迁移到方括号 " + ident(hint) +
+                                "[…]；命题供给请改用 by 断言（" + ident(hint) + "() by [命题]）")
+                            if (nm != null && symbols.lookupValue(nm) != null) {
+                                symbol = resolver.resolveValue(nm, c.target.pos)
+                                callee = HirNameRef(nm, symbol, null, freshNid(), c.target.pos, notesOf(c.target))
+                            } else {
+                                callee = expr(e.callee)
+                                symbol = (callee as? HirInst)?.let { it.target as? HirNameRef }?.symbol
+                            }
                             explicitTps = emptyList()
                         }
                     }

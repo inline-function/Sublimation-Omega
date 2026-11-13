@@ -84,12 +84,12 @@ fun driveCount(start: OrderState, events: List[OrderEvent]): Drive =
 
 @impure
 fun main() {
-    var events: List[OrderEvent] = Cons<OrderEvent>(RequestPay, Cons<OrderEvent>(RequestShip, Cons<OrderEvent>(RequestDeliver, Cons<OrderEvent>(RequestShip, Nil))))
+    var events: List[OrderEvent] = Cons[OrderEvent](RequestPay, Cons[OrderEvent](RequestShip, Cons[OrderEvent](RequestDeliver, Cons[OrderEvent](RequestShip, Nil))))
     var result = driveCount(Created, events)
     unchecked print(stateName(result.state))   // Delivered
     unchecked print(result.rejected)           // 1（已签收再发货：非法）
 
-    var events2: List[OrderEvent] = Cons<OrderEvent>(RequestPay, Cons<OrderEvent>(RequestCancel, Nil))
+    var events2: List[OrderEvent] = Cons[OrderEvent](RequestPay, Cons[OrderEvent](RequestCancel, Nil))
     var r2 = driveCount(Created, events2)
     unchecked print(stateName(r2.state))       // Cancelled
     unchecked print(r2.rejected)               // 0

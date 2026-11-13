@@ -12,7 +12,7 @@ fun main() {
     t.join()                                        // 挂起直到完成
     unchecked print("task joined")
 
-    var ch: Channel[Nat] = Channel<Nat>(1)         // 通道需显式类型参数（Channel<T>(cap)）
+    var ch: Channel[Nat] = Channel[Nat](1)         // 通道需显式类型参数（Channel[T](cap)）
     if (!ch.isClosed()) {
         ch.send(7)
         var v: Nat = ch.receive()                   // 智能转换：无需 Optional 解包

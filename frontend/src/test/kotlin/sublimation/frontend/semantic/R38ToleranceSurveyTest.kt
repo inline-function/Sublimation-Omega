@@ -67,7 +67,7 @@ class R38ToleranceSurveyTest {
     @Test
     fun m2b_methodWithoutSignatureTolerated() {
         val e = script("""
-            var ch: Channel[Nat] = Channel<Nat>(0)
+            var ch: Channel[Nat] = Channel[Nat](0)   // t144（R-26.1）：调用位类型实参迁 []
             var b: Nat = ch.isClosed()
         """).second
         assertTrue(errs(e).isEmpty(), "M2b 当前：无任何诊断（真错 Bool 被静默）；R-38 待封堵")

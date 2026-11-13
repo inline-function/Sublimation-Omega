@@ -103,15 +103,15 @@ class PreludeDeEnumTest {
 
     @Test
     fun channelCapDefaultZeroOmittable() {
-        val (hir, bag) = script("var ch = Channel<Nat>()")
-        assertFalse(bag.hasError, "Channel<Nat>() 容量可省（默认 0=无缓冲，旧实现 new Channel(0)）。实际: " + errMsgs(bag))
+        val (hir, bag) = script("var ch = Channel[Nat]()")
+        assertFalse(bag.hasError, "Channel[Nat]() 容量可省（默认 0=无缓冲，旧实现 new Channel(0)）。实际: " + errMsgs(bag))
         assertEquals("Channel", varType(hir, "ch"))
     }
 
     @Test
     fun channelCapProvidedStillFine() {
-        val (hir, bag) = script("var ch = Channel<Nat>(4)")
-        assertFalse(bag.hasError, "Channel<Nat>(4) 带容量构造。实际: " + errMsgs(bag))
+        val (hir, bag) = script("var ch = Channel[Nat](4)")
+        assertFalse(bag.hasError, "Channel[Nat](4) 带容量构造。实际: " + errMsgs(bag))
         assertEquals("Channel", varType(hir, "ch"))
     }
 
