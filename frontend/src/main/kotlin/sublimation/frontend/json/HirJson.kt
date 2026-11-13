@@ -692,6 +692,7 @@ private fun JsonWriter.diag(d: Diag) = obj {
     field("pos") { range(d.pos) }
     fieldStr("message", d.message)
     fieldStr("module", d.modulePath)
+    if (d.file != null) fieldStr("file", d.file)   // t155：多文件模块源件归属（null 不发射——单文件/挂载期 SAME 面零动）
     field("nid") { if (d.nid == null) nil() else num(d.nid) }
 }
 

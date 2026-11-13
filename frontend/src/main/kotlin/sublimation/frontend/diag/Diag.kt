@@ -22,6 +22,9 @@ data class Diag(
     val pos: SourceRange,
     val message: String,
     val modulePath: String = "",
+    /** t155（S7 限面收边·多文件诊断行号）：源件归属——模块体多文件拼接（行号连续累加）时指回
+     *  诊断所在源件（相对编译根的模块内路径/件名）;单文件编译与挂载期诊断留 null。 */
+    val file: String? = null,
     val nid: NodeId? = null,
 ) {
     /**
@@ -35,7 +38,10 @@ data class Diag(
             Severity.HINT -> "[提示]"
             Severity.SUPPLEMENT -> "[补充]"
         }
-        val base = "$tag[${pos.start.line}:${pos.start.col}] $code: $message"
+        // t155：文件归属前置（多文件模块：报错指回源件——行号仍按模块拼接连续累加口径）
+        val loc = if (file != null) "${file}:${pos.start.line}:${pos.start.col}"
+            else "${pos.start.line}:${pos.start.col}"
+        val base = "${tag}[${loc}] ${code}: ${message}"
         if (source == null) return base
         val srcLines = source.split("\n")
         val line = pos.start.line
@@ -65,19 +71,19 @@ class DiagBag {
     var modulePath: String = ""
 
     fun error(code: String, pos: SourceRange, message: String, nid: NodeId? = null) {
-        bag += Diag(Severity.ERROR, code, pos, message, modulePath, nid)
+        bag += Diag(Severity.ERROR, code, pos, message, modulePath, nid = nid)
     }
 
     fun warn(code: String, pos: SourceRange, message: String, nid: NodeId? = null) {
-        bag += Diag(Severity.WARN, code, pos, message, modulePath, nid)
+        bag += Diag(Severity.WARN, code, pos, message, modulePath, nid = nid)
     }
 
     fun hint(code: String, pos: SourceRange, message: String, nid: NodeId? = null) {
-        bag += Diag(Severity.HINT, code, pos, message, modulePath, nid)
+        bag += Diag(Severity.HINT, code, pos, message, modulePath, nid = nid)
     }
 
     fun supplement(code: String, pos: SourceRange, message: String, nid: NodeId? = null) {
-        bag += Diag(Severity.SUPPLEMENT, code, pos, message, modulePath, nid)
+        bag += Diag(Severity.SUPPLEMENT, code, pos, message, modulePath, nid = nid)
     }
 
     /** 全量诊断（保序）。 */
@@ -89,6 +95,19 @@ class DiagBag {
     /** 合并他袋（保序追加）。 */
     fun absorb(other: DiagBag) {
         bag += other.bag
+    }
+
+    /**
+     * t155（S7 限面收边·多文件诊断行号）：文件归属标注——按累计行号映射给每条诊断补 [Diag.file]
+     * （行号连续累加口径不变——pos 仍是模块拼接行;file 指回源件）。映射函数返回 null 即不标注
+     * （单文件/挂载期诊断）。 */
+    fun attributeFiles(map: (Int) -> String?) {
+        val src = ArrayList(bag)
+        bag.clear()
+        for (x in src) {
+            val f = map(x.pos.start.line)
+            if (f != null && x.file == null) bag += x.copy(file = f) else bag += x
+        }
     }
 
     /** 丢弃 modulePath 不在 rootPath 内的补充族诊断（旧 dropSupplementsOutside）。 */

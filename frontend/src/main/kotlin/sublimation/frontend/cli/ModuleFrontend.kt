@@ -82,7 +82,9 @@ internal fun compileModuleFrontend(
     // t137：stdlib 件目录集——compileNode 建快照时标 stdlib 旗（用户根重编译 stdlib 件时不丢旗）
     val stdlibDirs = stdlibUnits.map { it.node.dir.absoluteFile.normalize().path }.toSet()
     // DAG 后序编译 + 规范路径备忘（钻石形挂载共享）
-    data class Ctx(val unit: ModuleUnit, val pr: ParseResult)
+    data class Ctx(val unit: ModuleUnit, val pr: ParseResult,
+        /** t155：本节点自身挂载面（子快照携带予父限定位的三段链模块段面）。 */
+        val mountedOf: Map<String, ModuleSnapshot> = emptyMap())
     val compiled = LinkedHashMap<String, Ctx>()
     fun compileNode(node: ModuleNode, rel: String): Ctx {
         val key = node.dir.absoluteFile.normalize().path
@@ -91,12 +93,15 @@ internal fun compileModuleFrontend(
         for (m in node.mounts) {
             val childRel = if (node.isRoot) m.node.name else "$rel/${m.node.name}"
             val child = compileNode(m.node, childRel)
+            // t155（S7 限面收边）：子快照携带终态纯度表（跨模块不纯记账）+ 自身子挂载面（三段调用链）
             mounted[m.alias] = ModuleSnapshots.fromAst(m.node.name, m.alias, child.pr.file,
-                stdlib = m.node.dir.absoluteFile.normalize().path in stdlibDirs)
+                stdlib = m.node.dir.absoluteFile.normalize().path in stdlibDirs,
+                funPurity = funPurityOf(child.unit.output.hir),
+                subModules = child.mountedOf)
         }
         val unitPath = if (node.isRoot) node.name else rel
         val raw = compileOne(node, unitPath, mounted, scriptMode, noDegrade, noLift)
-        val ctx = Ctx(ModuleUnit(unitPath, raw.output, node.moduleSource()), raw.pr)
+        val ctx = Ctx(ModuleUnit(unitPath, raw.output, node.moduleSource()), raw.pr, mounted)
         compiled[key] = ctx
         return ctx
     }
@@ -150,7 +155,9 @@ internal fun compileStdlibUnits(
         val unit = StdlibUnit(
             node.alias, node, SourceRange(SourcePos(1, 1), null),
             ModuleUnit(unitPath, raw.output, node.moduleSource()),
-            ModuleSnapshots.fromAst(node.name, node.alias, raw.pr.file, stdlib = true),
+            // t155：stdlib 件快照同携终态纯度 + 子挂载面（单文件注入态与目录态同口径）
+            ModuleSnapshots.fromAst(node.name, node.alias, raw.pr.file, stdlib = true,
+                funPurity = funPurityOf(raw.output.hir), subModules = mounted),
             raw.pr,
         )
         compiled[key] = unit
@@ -160,6 +167,19 @@ internal fun compileStdlibUnits(
     return units to diag
 }
 
+/**
+ * t155（S7 限面收边·跨模块不纯记账）：模块函数终态纯度表回收——自产物 HIR 逐 HirFunDecl 取
+ * purity==IMPURE 的名（声明注解 ∪ A2 纯度闭包推断终态;扩展函数同收——同名表键）。父域限定位
+ * calleeImpure 真化的唯一数据源（t141 真化面的模块态延续）。 */
+private fun funPurityOf(hir: sublimation.frontend.hir.HirFile): Map<String, Boolean> {
+    val out = LinkedHashMap<String, Boolean>()
+    for (entry in hir.entries) {
+        val d = (entry as? sublimation.frontend.hir.HirDeclEntry)?.decl ?: continue
+        if (d !is sublimation.frontend.hir.HirFunDecl) continue
+        if (d.purity == sublimation.frontend.hir.HirPurity.IMPURE) out[d.name] = true
+    }
+    return out
+}
 /**
  * t137（R-23）：stdlib 根定位——系统属性 sublimation.stdlib > SUBLIMATION_STDLIB 环境变量 >
  * 工作区 stdlib/ > 向上四级搜索
@@ -215,8 +235,26 @@ private fun compileOne(
     diag.absorbAll(pr.diag)
     val (hir, semDiag) = compile(pr.file, pr.notes, scriptMode, noDegrade, noLift, mounted)
     diag.absorb(semDiag)
+    // t155（S7 限面收边·多文件诊断行号）：源件归属标注——按拼接累计行号回指源件（行号本身连续
+    // 累加口径不变——pos 仍是模块拼接行;单件模块同标注，挂载期诊断经 compileUnit 后并入故不受影响）
+    if (node.sourceFiles.size > 1) diag.attributeFiles(lineToFileOf(node))
     val json = HirJson.emit(hir, diag, unitPath, scriptMode)
     return SingleModule(pr, FrontendOutput(hir, diag, json))
+}
+
+/**
+ * t155（S7 限面收边·多文件诊断行号）：累计行号 → 源件名映射——模块体 = 目录内 .subl 按名字序
+ * 串行拼接（joinToString("\n")——行号连续累加，提案 §1.2）：首件起 1，每件占其行数（末行换行
+ * 计入），件间一个空行分隔。给行号返回所属源件名；越界/空体回 null。 */
+private fun lineToFileOf(node: ModuleNode): (Int) -> String? {
+    var line = 1
+    val ranges = ArrayList<Pair<IntRange, String>>(node.sourceFiles.size)
+    for (f in node.sourceFiles) {
+        val n = f.readText(Charsets.UTF_8).split("\n").size   // 末行（含空尾行）计数
+        ranges += (line..line + n - 1) to f.name
+        line += n + 1   // 件间拼接换行（空分隔行）
+    }
+    return { ln -> ranges.firstOrNull { ln in it.first }?.second }
 }
 
 /**

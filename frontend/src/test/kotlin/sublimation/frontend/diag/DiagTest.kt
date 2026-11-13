@@ -28,7 +28,7 @@ class DiagTest {
 
     @Test
     fun 诊断结构化字段齐备() {
-        val d = Diag(Severity.ERROR, "E-NAME", pos(1, 2), "未解析", "mod.subl", 7)
+        val d = Diag(Severity.ERROR, "E-NAME", pos(1, 2), "未解析", "mod.subl", nid = 7)
         assertEquals(Severity.ERROR, d.severity)
         assertEquals("E-NAME", d.code)
         assertEquals(1, d.pos.start.line)

@@ -38,7 +38,14 @@ internal class ModuleSnapshot(
     val exts: Map<String, Map<String, ModuleExt>>,
     /** t140（B2.2）：顶层特质（名 → 符号引用 + AST 声明；限定类型面 traits.Functor + 父域 traitDecls 注入）。 */
     val traits: Map<String, ModuleTrait>,
-    /** t137（R-23）：stdlib 默认挂载件旗标——非限定链符号面（preludeFun 数据源）只吃 stdlib 件；
+    /** t155（S7 限面收边·跨模块不纯记账）：模块函数终态纯度表（名 → 是否 impure——声明注解 ∪ A2 纯度
+     *  闭包推断终态;由编排层自模块编译产物 HirFunDecl.purity 回收）。父域限定位 calleeImpure 真化依此
+     *  （t141 真化面的模块态延续——注解不在快照可推理位时取终态表）。 */
+    val funPurity: Map<String, Boolean> = emptyMap(),
+    /** t155（S7 限面收边·三段调用链）：挂载子模块快照（别名 → 子快照）——限定链 a.b.c 的模块段
+     *  递归面（前段逐段子挂载消解，末段为符号位）。 */
+    val subModules: Map<String, ModuleSnapshot> = emptyMap(),
+    /** t137（R-23）：stdlib 默认挂载件旗标——非限定链符号面（preludeFun 数据源）只吃 stdlib 件;
      *  用户件走 R-22 限定唯一通道，裸名不泄漏。默认 false（零侵入非 stdlib 快照）。 */
     val stdlib: Boolean = false,
 ) {
@@ -72,7 +79,12 @@ internal object ModuleSnapshots {
      * 由模块体的 FileAst 建快照：顶层声明按声明序进五表（自由函数/别名/结构体/扩展函数/特质 t140），
      * 符号 id 按序（零 nid 消费——SymbolRef 是跨模块引用标识，与 NodeIdSource 无关；R-22 nid 纪律）。
      * 同名取后者（模块内重复落 E-DUP-DECL 于模块自身编译——快照为符号视图，红模块的父域门由编排层把关）。 */
-    fun fromAst(name: String, alias: String, file: FileAst, stdlib: Boolean = false): ModuleSnapshot {
+    /** [funPurity] = t155 终态纯度表（名 → impure）;[subModules] = t155 挂载子快照（三段链模块段面）。 */
+    fun fromAst(
+        name: String, alias: String, file: FileAst, stdlib: Boolean = false,
+        funPurity: Map<String, Boolean> = emptyMap(),
+        subModules: Map<String, ModuleSnapshot> = emptyMap(),
+    ): ModuleSnapshot {
         val funs = LinkedHashMap<String, ModuleFun>()
         val aliases = LinkedHashMap<String, ModuleAlias>()
         val structs = LinkedHashMap<String, ModuleStruct>()
@@ -100,7 +112,7 @@ internal object ModuleSnapshots {
                 else -> { }
             }
         }
-        return ModuleSnapshot(name, alias, funs, aliases, structs, exts, traits, stdlib)
+        return ModuleSnapshot(name, alias, funs, aliases, structs, exts, traits, funPurity, subModules, stdlib)
     }
 
     /** 扩展函数接收者头（ExtFunHeads.ofAst 的模块内最小镜像：具名/限定段链 + 视图族解包）。 */

@@ -2069,6 +2069,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     val nm = (n.callee as? sublimation.frontend.hir.HirNameRef)?.name
                     if (nm != null && (nm in impure || nm == "panic")) found = true
                     if (n.methodSugar) found = true
+                    // t155（跨模块不纯记账）：限定模块调用（HirField callee）的 calleeImpure 真化位计证据
+                    if (n.callee is sublimation.frontend.hir.HirField && n.calleeImpure) found = true
                 }
                 is sublimation.frontend.hir.HirAssign ->
                     if (n.target is sublimation.frontend.hir.HirField) found = true
@@ -2548,13 +2550,16 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         }
         is FieldExpr -> {
             // t131（S7 / R-22）：值位限定引用消歧——消解序 1（模块限定 > 字段 > 内建属性行）
-            val qref = e.target as? NameRef
-            val mod = qref?.let { mounted[it.name] }
+            // t155（三段调用链）：前段逐段子挂载递归;中段未命中落位报错（诊断指回中段位）
+            val (modHit, modMiss) = moduleChainResolve(e.target)
+            val qref: NameRef? = modHit?.root ?: (e.target as? NameRef)
+            val mod = modHit?.mod ?: qref?.let { mounted[it.name] }
             val shadowed = mod != null && qref != null && symbols.lookupValue(qref.name) != null
             if (shadowed) diag.hint("H-MODULE-SHADOW", qref.pos, "这里的 " + ident(qref.name) +
                 " 遮蔽了同名挂载模块：" + ident(qref.name) + " 的符号仅经限定引用可见，" +
                 " 此处按本模块符号解析（提示不拦——换挂载别名可显式消歧）。")
-            if (mod != null && !shadowed) moduleQualifiedValue(e, qref!!, mod) else {
+            if (modMiss != null && !shadowed) moduleMissValue(e, modMiss) else
+            if (modHit != null && !shadowed) moduleQualifiedValue(e, qref!!, modHit.mod, modHit.segments) else {
             val target = expr(e.target)
             val tt = etype(target)
             val structName = (tt as? sublimation.frontend.hir.HirNamedType)?.name
@@ -3234,6 +3239,42 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         return null
     }
 
+    /**
+     * t155（S7 限面收边·三段调用链）：限定链模块段解析——a.b.c 的前段逐段模块别名回溯
+     * （根段查挂载别名 → 中段查前段模块的子挂载面 subModules → 末段为符号位）。
+     * - [ModuleChainR.Hit]：全段命中（终模块 + 根段 + 中间段 AST 清单——HIR 链构造取位用）;
+     * - [ModuleChainR.MidMiss]：中段非子挂载模块（诊断指回中段位，免双错同源）;
+     * - null：根段非模块别名（字段/方法糖兜底通道逐字不变——R-22 消歧序 2/3 保形）。
+     * 递归深度 = 段数（AST 链深度，词法界定量——无环风险）。 */
+    private sealed class ModuleChainR {
+        data class Hit(val mod: ModuleSnapshot, val root: NameRef, val segments: List<FieldExpr>) : ModuleChainR()
+        data class MidMiss(val root: NameRef, val missed: FieldExpr, val modPath: String) : ModuleChainR()
+    }
+
+    private fun moduleChainOf(target: Expr): ModuleChainR? = when (target) {
+        is NameRef -> mounted[target.name]?.let { ModuleChainR.Hit(it, target, emptyList()) }
+        is FieldExpr -> {
+            val base = moduleChainOf(target.target) ?: return null
+            when (base) {
+                is ModuleChainR.Hit -> {
+                    val sub = base.mod.subModules[target.name]
+                    if (sub != null) ModuleChainR.Hit(sub, base.root, base.segments + target)
+                    else ModuleChainR.MidMiss(base.root, target, ident(base.mod.alias))
+                }
+                is ModuleChainR.MidMiss -> base
+            }
+        }
+        else -> null
+    }
+
+    /** t155：限定链模块段消解入口（调用位/值位共用）——命中即终模块+段清单;中段未命中返报错料。 */
+    private fun moduleChainResolve(target: Expr): Pair<ModuleChainR.Hit?, ModuleChainR.MidMiss?> =
+        moduleChainOf(target).let { (it as? ModuleChainR.Hit) to (it as? ModuleChainR.MidMiss) }
+
+    /** t155：限定链路径串（错误消息/旁注用：root.seg1.seg2…）。 */
+    private fun modulePathStr(root: String, segments: List<FieldExpr>, tail: String): String =
+        (listOf(root) + segments.map { it.name } + listOf(tail)).joinToString(".")
+
     /** t134：限定类型解析留痕（D-MODULE-REF 旁注附于展开结果——同 OQ-3 口径）。 */
     private fun withModuleNote(t: sublimation.frontend.hir.HirType, pos: SourceRange): sublimation.frontend.hir.HirType =
         when (t) {
@@ -3247,7 +3288,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
      * name=函数名, field=模块函数符号), symbol=模块函数符号) + D-MODULE-REF 旁注（提案 §2.4 B-i：零 schema 变动）。
      * 消歧序 1（模块限定 > 字段/方法糖 > 双错保形）——命中模块别名后**不走**方法糖接收者入首参通道。
      * 签名核对复用 sigCheckedCall——实参类型在**父域**解析/展开（跨模块类型别名 V1 不通，提案 §4.4/OQ-9）。 */
-    private fun moduleQualifiedCall(e: CallExpr, c: FieldExpr, qref: NameRef, mod: ModuleSnapshot): HirCall {
+    private fun moduleQualifiedCall(
+        e: CallExpr, c: FieldExpr, qref: NameRef, mod: ModuleSnapshot,
+        /** t155（三段调用链）：中段模块段 AST 清单（外→内序）——HIR 限定链逐段构造取位。 */
+        segments: List<FieldExpr> = emptyList(),
+    ): HirCall {
         val nid = freshNid()
         gateBatchOpen()   // t122 实参批次（调用位归并回放序；onCall 内 gateBatchCloseWithCall 配对收尾）
         val mf = mod.lookupFun(c.name)
@@ -3269,13 +3314,13 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             extCallType(mext.decl, argTypes, e.pos, borrowedFlags)
         else if (mod.structs[c.name] != null) {
             diag.error("E-UNBOUND-NAME", c.pos,
-                "模块 " + ident(mod.alias) + " 的结构体 " + ident(c.name) +
+                "模块 " + modulePathStr(qref.name, segments, c.name).substringBeforeLast(".") + " 的结构体 " + ident(c.name) +
                     " 的限定构造形态 V1 未通——结构体经非限定构造名解析（" + ident(c.name) +
                     "(...)) 解析：挂载类型面已注入父域，P-7 用户同名优先）。")
             infer.syntheticT("调用" + c.name)
         } else {
             diag.error("E-UNBOUND-NAME", c.pos,
-                "方法 ." + ident(c.name) + " 不可解析：模块 " + ident(mod.alias) +
+                "方法 ." + ident(c.name) + " 不可解析：模块 " + modulePathStr(qref.name, segments, c.name).substringBeforeLast(".") +
                     " 的自由函数面与扩展函数面均无该名（限定引用未命中——接收者位是挂载模块别名，" +
                     "非字段/方法糖姿势；扩展函数须经「模块名.扩展名(接收者, 实参)」形态调用）")
             infer.syntheticT("调用" + c.name)
@@ -3301,40 +3346,90 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             } finally { exitTypeParams() }
         } else args
         val extField = mext?.symbol
+        // t155（三段调用链）：限定链逐段构造——HirField(HirField(...(NameRef(根别名), 中段…), 末段函数名)
+        var chainTarget: sublimation.frontend.hir.HirExpr =
+            sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref))
+        for (seg in segments)
+            chainTarget = sublimation.frontend.hir.HirField(chainTarget, seg.name, null, null, freshNid(), seg.pos, emptyList())
         val callee = sublimation.frontend.hir.HirField(
-            sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref)),
-            c.name, mf?.symbol ?: extField, null, freshNid(), c.pos, emptyList())
+            chainTarget, c.name, mf?.symbol ?: extField, null, freshNid(), c.pos, emptyList())
         val node = sublimation.frontend.hir.HirCall(
             callee = callee, args = args2, symbol = mf?.symbol ?: extField, type = t, dictionary = null,
             slot = null, dictArgs = emptyList(), methodSugar = false, awaitPoint = false,
-            calleeImpure = mf?.let { it.decl.annotations.contains("impure") } ?: false,
+            // t155（跨模块不纯记账）：calleeImpure 真化——声明注解 ∪ 子模块 A2 闭包终态纯度
+            // （快照 funPurity——t141 真化面的模块态延续;扩展函数限定形态同通道）
+            calleeImpure = mf?.let { it.decl.annotations.contains("impure") || mod.funPurity[it.decl.name] == true }
+                ?: mext?.let { it.decl.annotations.contains("impure") || mod.funPurity[it.decl.name] == true } ?: false,
             nid = nid, origin = e.pos, notes = notesOf(e, listOf(moduleRefNote(e.pos))),
         )
         onCall(node, mf?.decl?.name ?: mext?.decl?.name)   // 订阅（停机判定读本地声明表——跨模块递归分析 V1 不通，提案 §9 限制面）
         return node
     }
 
-    /** 限定引用**值位**：tool.triple 作为函数值——HirField(模块别名, 名, field=模块函数符号, type=函数类型) + D-MODULE-REF。 */
-    private fun moduleQualifiedValue(e: FieldExpr, qref: NameRef, mod: ModuleSnapshot): sublimation.frontend.hir.HirExpr {
+    /** 限定引用**值位**：tool.triple 作为函数值——HirField(模块别名, 名, field=模块函数符号, type=函数类型) + D-MODULE-REF。
+     *  t155（三段调用链）：中段模块段逐段 HirField 构造（取位同调用位）;纯度取声明注解 ∪ 子模块终态。 */
+    private fun moduleQualifiedValue(
+        e: FieldExpr, qref: NameRef, mod: ModuleSnapshot,
+        segments: List<FieldExpr> = emptyList(),
+    ): sublimation.frontend.hir.HirExpr {
         val mf = mod.lookupFun(e.name)
         if (mf == null) {
             diag.error("E-UNBOUND-NAME", e.pos,
-                "模块 " + ident(mod.alias) + " 无函数 " + ident(e.name) + "（限定引用未命中：模块自由函数面无该名）")
+                "模块 " + modulePathStr(qref.name, segments, e.name).substringBeforeLast(".") +
+                    " 无函数 " + ident(e.name) + "（限定引用未命中：模块自由函数面无该名）")
             return sublimation.frontend.hir.HirField(
-                sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref)),
-                e.name, null, infer.syntheticT("字段" + e.name), freshNid(), e.pos,
+                chainTargetOf(qref, segments), e.name, null, infer.syntheticT("字段" + e.name), freshNid(), e.pos,
                 notesOf(e, listOf(moduleRefNote(e.pos))))
         }
         val (ps, rt) = sigOf(mf.decl)
         val funT = sublimation.frontend.hir.HirFunType(
             params = ps.map { expand(it) },
             ret = rt?.let { expand(it) } ?: infer.syntheticT(mf.decl.name),
-            purity = if (mf.decl.annotations.contains("impure")) sublimation.frontend.hir.HirPurity.IMPURE
-                else sublimation.frontend.hir.HirPurity.PURE,
+            // t155（跨模块不纯记账）：函数值纯度——声明注解 ∪ 子模块 A2 闭包终态（函数值闸同源真化）
+            purity = if (mf.decl.annotations.contains("impure") || mod.funPurity[mf.decl.name] == true)
+                sublimation.frontend.hir.HirPurity.IMPURE else sublimation.frontend.hir.HirPurity.PURE,
             theory = emptyList(), context = null, nid = freshNid(), origin = e.pos, notes = emptyList())
         return sublimation.frontend.hir.HirField(
-            sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref)),
-            e.name, mf.symbol, funT, freshNid(), e.pos, notesOf(e, listOf(moduleRefNote(e.pos))))
+            chainTargetOf(qref, segments), e.name, mf.symbol, funT, freshNid(), e.pos,
+            notesOf(e, listOf(moduleRefNote(e.pos))))
+    }
+
+    /** t155（三段调用链）：值位限定链中段未命中——错误落位于中段（免双错同源）+ 合成字段节点。 */
+    private fun moduleMissValue(
+        e: FieldExpr, miss: ModuleChainR.MidMiss,
+    ): sublimation.frontend.hir.HirExpr {
+        diag.error("E-UNBOUND-NAME", miss.missed.pos,
+            "模块 " + miss.modPath + " 无子模块 " + ident(miss.missed.name) +
+                "（限定链中段未命中挂载子模块——" +
+                modulePathStr(miss.root.name, listOf(miss.missed), e.name) + " 的中段解不出）")
+        return sublimation.frontend.hir.HirField(
+            sublimation.frontend.hir.HirNameRef(miss.root.name, null, null, freshNid(), miss.root.pos, emptyList()),
+            e.name, null, infer.syntheticT("字段" + e.name), freshNid(), e.pos, notesOf(e))
+    }
+
+    /** t155（三段调用链）：限定链 HIR 目标段——NameRef(根别名) 逐段套 HirField（中段模块段）。 */
+    private fun chainTargetOf(qref: NameRef, segments: List<FieldExpr>): sublimation.frontend.hir.HirExpr {
+        var t: sublimation.frontend.hir.HirExpr =
+            sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, notesOf(qref))
+        for (seg in segments)
+            t = sublimation.frontend.hir.HirField(t, seg.name, null, null, freshNid(), seg.pos, emptyList())
+        return t
+    }
+
+    /** t155（三段调用链）：限定链中段未命中的合成调用——诊断已落位（E-UNBOUND-NAME 中段位），
+     *  实参照常核对（不吞下游错误）;不入停机订阅/纯度闸（死调用面——形态同限定调，field 留 null）。 */
+    private fun moduleDeadCall(e: CallExpr, c: FieldExpr, qref: NameRef): sublimation.frontend.hir.HirCall {
+        gateBatchOpen()
+        val args = e.args.map { expr(it) }
+        val callee = sublimation.frontend.hir.HirField(
+            sublimation.frontend.hir.HirNameRef(qref.name, null, null, freshNid(), qref.pos, emptyList()),
+            c.name, null, null, freshNid(), c.pos, emptyList())
+        val node = sublimation.frontend.hir.HirCall(
+            callee = callee, args = args, symbol = null, type = infer.syntheticT("调用" + c.name),
+            dictionary = null, slot = null, dictArgs = emptyList(), methodSugar = false, awaitPoint = false,
+            calleeImpure = false, nid = freshNid(), origin = e.pos, notes = emptyList())
+        onCall(node, c.name)   // 批次配对收尾（同限定调位——停机/效应订阅照常，死调用面纯零增量）
+        return node
     }
 
     private fun callExpr(e: CallExpr): HirCall {
@@ -3342,15 +3437,27 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         when (val c = e.callee) {
             is FieldExpr -> {
                 // t131（S7 / R-22）：限定引用消歧·消解序 1——模块段链先查（挂载别名命中→限定调用通道）。
+                // t155（S7 限面收边·三段调用链）：前段逐段子挂载递归（a.b.c：根段别名 → 中段子模块 →
+                //  末段符号位）;中段未命中即落位报错（免双错同源——诊断指回正确段位）。
                 // 挂载期表为空（非模块编译）时 contains/lookup 皆零成本直落既有方法糖路径。
-                val qref = c.target as? NameRef
-                val mod = qref?.let { mounted[it.name] }
-                // R-22 查询链（本模块 > 挂载子）：本作用域同名声明的值符号遮蔽模块别名——提示不拦，取本模块符号
+                val (modHit, modMiss) = moduleChainResolve(c.target)
+                val qref: NameRef? = modHit?.root ?: (c.target as? NameRef)
+                val mod = modHit?.mod ?: qref?.let { mounted[it.name] }
+                // R-22 查询链（本模块 > 挂载子）：本作用域同声明的值符号遮蔽模块别名——提示不拦，取本模块符号
                 val shadowed = mod != null && qref != null && symbols.lookupValue(qref.name) != null
                 if (shadowed) diag.hint("H-MODULE-SHADOW", qref.pos, "这里的 " + ident(qref.name) +
                     " 遮蔽了同名挂载模块：" + ident(qref.name) + " 的符号仅经限定引用可见，" +
                     " 此处按本模块符号解析（提示不拦——换挂载别名可显式消歧）。")
-                if (mod != null && !shadowed) return moduleQualifiedCall(e, c, qref!!, mod)
+                if (modMiss != null && !shadowed) {
+                    // t155：限定链中段非子挂载模块——错误落位于中段（不落方法糖通道，免「方法 .f 不可解析」双报）
+                    diag.error("E-UNBOUND-NAME", modMiss.missed.pos,
+                        "模块 " + modMiss.modPath + " 无子模块 " + ident(modMiss.missed.name) +
+                            "（限定链中段未命中挂载子模块——子目录须经其 .settings 挂载;" +
+                            modulePathStr(modMiss.root.name, listOf(modMiss.missed), c.name) + " 的中段解不出）")
+                    return moduleDeadCall(e, c, modMiss.root)
+                }
+                if (mod != null && !shadowed && modHit != null)
+                    return moduleQualifiedCall(e, c, qref!!, mod, modHit.segments)
                 // 消解闭名单 1：方法糖（S-5 无特质 impl 方法 → self 首参自由函数）
                 if (e.namedArgs.isNotEmpty()) {
                     diag.error("E-NAMED-ARG", e.pos,
@@ -4623,7 +4730,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 }
                 is GateCall -> {
                     val node = item.node
-                    val kind = gateClassify(node.callee, node.symbol, item.frame, ctx)
+                    // t155：模块限定调用（HirField callee）取调用点真化纯度入闸（纯域调模块 impure ⇒ E-IMPURE-CALL）
+                    val kind = gateClassify(node.callee, node.symbol, item.frame, ctx,
+                        moduleImpure = node.callee is HirField && node.calleeImpure)
                     if (kind.impure) node.calleeImpure = true   // OQ-7（队长裁 T）：calleeImpure 真化——被调侧结论入产物
                     if (!item.frame.chainImpure()) {   // 三路放行之「调用方非纯」
                         val nm = calleeNameOf(node.callee)
@@ -4651,7 +4760,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
     }
 
     /** 被调者分类（impure 判定 + 诊断 label 单源派生，t96 阶段 B;R-16 A2 富化被调侧 + 局部登记位消费）。 */
-    private fun gateClassify(callee: HirExpr, symbol: SymbolRef?, frame: GateFrame, ctx: GateReplayCtx): CalleeKind {
+    /** [moduleImpure] = t155：模块限定调用（HirField callee）的终态纯度——自调用点 calleeImpure 真化位取。 */
+    private fun gateClassify(callee: HirExpr, symbol: SymbolRef?, frame: GateFrame, ctx: GateReplayCtx,
+                             moduleImpure: Boolean = false): CalleeKind {
         if (callee is HirNameRef && callee.symbol?.kind != SymbolKind.BUILTIN) {
             val slot = frame.lookupLocal(callee.name)
             if (slot != null) return CalleeKind(slot.impure, (if (slot.impure) "@impure 函数 " else "函数 ") + ident(callee.name))
@@ -4672,6 +4783,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 }
                 CalleeKind(impure, label)
             }
+            is sublimation.frontend.hir.HirField -> CalleeKind(moduleImpure,
+                "模块 @impure 函数 " + ident(callee.name) + "（t155 跨模块不纯记账——calleeImpure 真化）")
             is HirLambda -> CalleeKind(callee.purity == HirPurity.IMPURE, "impure 闭包/匿名函数（t94 推导，直接调用）")
             is sublimation.frontend.hir.HirAnonFun -> CalleeKind(callee.purity == HirPurity.IMPURE, "impure 闭包/匿名函数（t94 推导，直接调用）")
             else -> CalleeKind(false, "")
