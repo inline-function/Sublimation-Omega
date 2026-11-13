@@ -1,0 +1,2 @@
+﻿fun double(x : Nat) : Nat = x * 2
+@impure fun main(): Null { double(3); print(1) }

@@ -1,0 +1,4 @@
+[警告][2:28] W-RESULT-IGNORED: 纯函数 `double` 的调用结果被丢弃——纯调用无副作用，结果不用即空操作（疑似 bug）。出路：使用结果（赋值 / 返回 / 入实参），或用 unchecked 包覆该语句显式声明丢弃意图
+  2 | @impure fun main(): Null { double(3); print(1) }
+    |                            ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\t152-i1.json（7454 字节）

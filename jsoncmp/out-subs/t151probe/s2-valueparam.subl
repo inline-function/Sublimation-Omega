@@ -1,0 +1,5 @@
+fun h(ys : @mut List[Nat]): Nat {
+    ys.add(1)
+    return 0
+}
+@impure fun main(): Null { print(1) }

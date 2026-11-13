@@ -1,0 +1,5 @@
+﻿@ghost fun f(): Null {}
+@impure fun main(): Null {
+    @ghost var x = 1
+    unchecked print(x)
+}

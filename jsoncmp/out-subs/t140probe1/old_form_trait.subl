@@ -1,0 +1,5 @@
+trait Functor[F[_]] {
+    fun map[A, B](fa: F[A], f: (A) => B): F[B]
+}
+fun List[a].map[a, b](f: (a) => b): List[b] = Nil
+fun use(xs: List[Nat]): Nat { unchecked return 1 }

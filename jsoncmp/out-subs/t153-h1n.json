@@ -1,0 +1,228 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "t153-h1n.subs",
+    "mode": "script"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "1:2-1:4",
+      "message": "var `xs` 推导为 Cons[Nat]",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-SCRIPT-IMPLICIT-IMPURE",
+      "pos": "1:2-1:4",
+      "message": "脚本顶层语句即隐式不纯入口（P-11 §4;R-16 OQ-2「挂 unit 级 + 诊断可见」）：本文件含 2 条顶层语句，整编译单元按 impure 记隐式入口（不造合成 main——D-12 真值单源）。顶层调用不纯函数免闸（既有口径）;函数体内仍按声明口径受闸",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:2-2:5",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirVarStmt",
+        "nid": 2,
+        "pos": "1:2-1:4",
+        "notes": [],
+        "name": "xs",
+        "symbol": {
+          "id": 5,
+          "kind": "local",
+          "name": "xs"
+        },
+        "annotations": [],
+        "type": {
+          "kind": "HirNamedType",
+          "nid": 26,
+          "pos": "0:0",
+          "notes": [],
+          "name": "Cons",
+          "args": [
+            {
+              "kind": "HirNamedType",
+              "nid": 8,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": null
+            }
+          ],
+          "symbol": null
+        },
+        "value": {
+          "kind": "HirCall",
+          "nid": 3,
+          "pos": "1:11-1:14",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 4,
+            "pos": "1:11-1:14",
+            "notes": [],
+            "name": "Cons",
+            "symbol": {
+              "id": 0,
+              "kind": "ctor",
+              "name": "Cons"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirIntLit",
+              "nid": 5,
+              "pos": "1:16-1:16",
+              "notes": [],
+              "value": "1"
+            },
+            {
+              "kind": "HirNameRef",
+              "nid": 7,
+              "pos": "1:19-1:21",
+              "notes": [],
+              "name": "Nil",
+              "symbol": {
+                "id": 1,
+                "kind": "ctor",
+                "name": "Nil"
+              },
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 6,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Nil",
+                "args": [],
+                "symbol": null
+              }
+            }
+          ],
+          "symbol": {
+            "id": 0,
+            "kind": "ctor",
+            "name": "Cons"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 26,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Cons",
+            "args": [
+              {
+                "kind": "HirNamedType",
+                "nid": 8,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": null
+              }
+            ],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": false
+        },
+        "destruct": null,
+        "deepCopy": false
+      },
+      {
+        "kind": "HirExprStmt",
+        "nid": 27,
+        "pos": "2:1-2:5",
+        "notes": [],
+        "expr": {
+          "kind": "HirCall",
+          "nid": 28,
+          "pos": "2:1-2:5",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 29,
+            "pos": "2:1-2:5",
+            "notes": [],
+            "name": "print",
+            "symbol": {
+              "id": 6,
+              "kind": "builtin",
+              "name": "print"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirNameRef",
+              "nid": 30,
+              "pos": "2:7-2:8",
+              "notes": [],
+              "name": "xs",
+              "symbol": {
+                "id": 5,
+                "kind": "local",
+                "name": "xs"
+              },
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 26,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Cons",
+                "args": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 8,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": null
+                  }
+                ],
+                "symbol": null
+              }
+            }
+          ],
+          "symbol": {
+            "id": 6,
+            "kind": "builtin",
+            "name": "print"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 47,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Null",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": true
+        }
+      }
+    ]
+  }
+}

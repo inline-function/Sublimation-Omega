@@ -1,0 +1,8 @@
+﻿@mut struct Box(@mut fld : @ref List[Nat])
+@impure fun main(): Null {
+  var xs : @mut List[Nat] = mutableListOf(1)
+  var rs : @ref List[Nat] = xs
+  @mut var bb = Box(xs)
+  bb.fld = rs
+  print(1)
+}

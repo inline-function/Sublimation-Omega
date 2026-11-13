@@ -1,0 +1,5 @@
+﻿@list fun f(): Null {}
+@impure fun main(): Null {
+    @impure var y = 1
+    unchecked print(y)
+}

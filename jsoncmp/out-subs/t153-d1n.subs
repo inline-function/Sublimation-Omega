@@ -1,0 +1,6 @@
+﻿fun f(x : Nat) : Nat {
+  var y = x + 1
+  return y
+}
+print(f(1))
+

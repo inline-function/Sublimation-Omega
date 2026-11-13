@@ -1,0 +1,4 @@
+trait Traversable[F[_]] {
+    fun F[A].traverse[M[_]: Applicative, B](f: (A) => M[B]): M[F[B]]
+}
+fun use(): Nat { unchecked return 1 }

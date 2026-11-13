@@ -224,11 +224,17 @@ internal fun compileWithRounds(
 }
 
 /** t117（附录 B H8）：sink 下挂——文案逐字不变（collect 期=编译级袋；轮内=轮袋，逐轮重复落袋消除）。 */
+/** t153（D-SHADOW, supplement 族——编译器自动活告示，一律不拦）：外层局部/形参被遮蔽时下挂。 */
 internal fun wireShadowHint(symbols: SymbolTable, diag: DiagBag) {
     symbols.shadowHintSink = { name, what, where, at ->
         diag.hint("H-SHADOW", at,
             "这里的 " + ident(name) + " 遮蔽了" + where + "的同名" + what +
                 "：本作用域内只会解析到这里的声明，外层同名者不可见（不回退）。")
+    }
+    symbols.shadowSuppSink = { name, at ->
+        diag.supplement("D-SHADOW", at,
+            "这里的 " + ident(name) + " 遮蔽了外层同名局部/形参——遮蔽语义将生效：本作用域内解析到此声明，" +
+                "外层同名者不可见（不回退）。遮蔽合法（自动解析），此为解析路径留痕")
     }
 }
 

@@ -1,0 +1,38 @@
+Starting a Gradle Daemon, 1 incompatible and 8 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T141MutableSugarTest > 纯函数真捕获仍红() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:131
+
+T141MutableSugarTest > 提升形态接收者核对() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:81
+
+T141MutableSugarTest > 两形态HIR逐字节同() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:70
+
+14 tests completed, 3 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 38s
+5 actionable tasks: 2 executed, 3 up-to-date

@@ -1,0 +1,5 @@
+﻿fun go(): Null {}
+@impure fun main(): Null {
+    go() by [q]
+    unchecked print(1)
+}

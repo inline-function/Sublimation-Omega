@@ -1,0 +1,51 @@
+Starting a Gradle Daemon, 1 incompatible and 11 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileKotlin
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:1475:49 Condition is always 'true'.
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:2088:43 Condition is always 'true'.
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:2874:47 Condition is always 'true'.
+
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T146CtorFormTest > mutableListOf多变参绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:54
+
+T146CtorFormTest > 元素类型实参推导绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:76
+
+T146CtorFormTest > mutableListOf单参绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:45
+
+T146CtorFormTest > mutableListOf零参绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:36
+
+T146CtorFormTest > listOf三形态绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:67
+
+T146CtorFormTest > 构造族与Cons混用绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:123
+
+9 tests completed, 6 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 1m 25s
+5 actionable tasks: 4 executed, 1 up-to-date

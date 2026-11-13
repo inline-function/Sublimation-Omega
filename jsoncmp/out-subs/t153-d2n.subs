@@ -1,0 +1,5 @@
+﻿trait Box[T] {
+  fun Box[T].get() : T
+}
+print(1)
+

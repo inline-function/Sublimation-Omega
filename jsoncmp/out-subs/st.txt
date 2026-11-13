@@ -1,0 +1,38 @@
+ M frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt
+ M frontend/src/main/kotlin/sublimation/frontend/semantic/PreludeDecls.kt
+ M frontend/src/main/kotlin/sublimation/frontend/semantic/SymbolTable.kt
+ M frontend/src/test/kotlin/sublimation/frontend/semantic/T129BorrowArgFilterTest.kt
+ M stdlib/collection/list/list.subl
+?? frontend/src/test/kotlin/sublimation/frontend/cli/T139StdlibExtTest.kt
+?? jsoncmp/out-subs/dbg.ps1
+?? jsoncmp/out-subs/dbgout.txt
+?? jsoncmp/out-subs/jarlist.txt
+?? jsoncmp/out-subs/jarprobe2.txt
+?? jsoncmp/out-subs/jarprobe3.txt
+?? jsoncmp/out-subs/javaprobe.txt
+?? jsoncmp/out-subs/st.txt
+?? jsoncmp/out-subs/t138orig-ledger.txt
+?? jsoncmp/out-subs/t138orig/
+?? jsoncmp/out-subs/t138repr.log
+?? jsoncmp/out-subs/t138tracked.txt
+?? jsoncmp/out-subs/t139b.txt
+?? jsoncmp/out-subs/t139build.log
+?? jsoncmp/out-subs/t139ct.log
+?? jsoncmp/out-subs/t139det-a/
+?? jsoncmp/out-subs/t139det-b/
+?? jsoncmp/out-subs/t139gate-ledger.txt
+?? jsoncmp/out-subs/t139gate/
+?? jsoncmp/out-subs/t139parity.log
+?? jsoncmp/out-subs/t139probe1/
+?? jsoncmp/out-subs/t139probe2/
+?? jsoncmp/out-subs/t139probe3/
+?? jsoncmp/out-subs/t139stdlib/
+?? jsoncmp/out-subs/t139suite.log
+?? jsoncmp/out-subs/t139suite2.log
+?? jsoncmp/out-subs/t139t2.log
+?? jsoncmp/out-subs/t139test-one/
+?? jsoncmp/out-subs/t139test.log
+?? jsoncmp/out-subs/t139work/
+?? jsoncmp/out-subs/tracked.txt
+?? jsoncmp/scripts/t139-parity.ps1
+?? jsoncmp/subs.txt

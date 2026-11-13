@@ -1,0 +1,296 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "模块系统",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-PURITY-INFERRED",
+      "pos": "8:5-8:8",
+      "message": "函数 `main` 推导为 impure（R-16 A2 自动 @impure;注解优先——可显式标 @impure 定型）。种子源：内建不纯 `print`；传播路径：main ← `print`@SourceRange(start=SourcePos(line=10, col=15), end=SourcePos(line=10, col=19))（闭包单调不动点：f 调 g 且 g 不纯 ⇒ f 不纯）",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "8:5-8:8",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "8:5-8:8",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 3,
+          "pos": "8:12-8:12",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirUnchecked",
+              "nid": 4,
+              "pos": "9:5-9:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 5,
+                "pos": "9:15-9:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 6,
+                  "pos": "9:15-9:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 7,
+                    "pos": "9:15-9:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 1,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirCall",
+                      "nid": 9,
+                      "pos": "9:26-9:31",
+                      "notes": [
+                        {
+                          "kind": "supplement",
+                          "code": "D-MODULE-REF",
+                          "message": "限定引用消歧为挂载模块符号（模块面命中）",
+                          "pos": "9:26-9:31",
+                          "from": "模块名.函数",
+                          "to": "模块名.函数"
+                        }
+                      ],
+                      "callee": {
+                        "kind": "HirField",
+                        "nid": 16,
+                        "pos": "9:26-9:31",
+                        "notes": [],
+                        "target": {
+                          "kind": "HirNameRef",
+                          "nid": 15,
+                          "pos": "9:21-9:24",
+                          "notes": [],
+                          "name": "tool",
+                          "symbol": null,
+                          "type": null
+                        },
+                        "name": "triple",
+                        "field": {
+                          "id": 0,
+                          "kind": "fun",
+                          "name": "triple"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirIntLit",
+                          "nid": 10,
+                          "pos": "9:33-9:33",
+                          "notes": [],
+                          "value": "4"
+                        }
+                      ],
+                      "symbol": {
+                        "id": 0,
+                        "kind": "fun",
+                        "name": "triple"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 14,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Nat",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    }
+                  ],
+                  "symbol": {
+                    "id": 1,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 33,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 34,
+              "pos": "10:5-10:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 35,
+                "pos": "10:15-10:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 36,
+                  "pos": "10:15-10:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 37,
+                    "pos": "10:15-10:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 1,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirCall",
+                      "nid": 39,
+                      "pos": "10:26-10:31",
+                      "notes": [
+                        {
+                          "kind": "supplement",
+                          "code": "D-MODULE-REF",
+                          "message": "限定引用消歧为挂载模块符号（模块面命中）",
+                          "pos": "10:26-10:31",
+                          "from": "模块名.函数",
+                          "to": "模块名.函数"
+                        }
+                      ],
+                      "callee": {
+                        "kind": "HirField",
+                        "nid": 46,
+                        "pos": "10:26-10:31",
+                        "notes": [],
+                        "target": {
+                          "kind": "HirNameRef",
+                          "nid": 45,
+                          "pos": "10:21-10:24",
+                          "notes": [],
+                          "name": "tool",
+                          "symbol": null,
+                          "type": null
+                        },
+                        "name": "square",
+                        "field": {
+                          "id": 1,
+                          "kind": "fun",
+                          "name": "square"
+                        },
+                        "type": null
+                      },
+                      "args": [
+                        {
+                          "kind": "HirIntLit",
+                          "nid": 40,
+                          "pos": "10:33-10:33",
+                          "notes": [],
+                          "value": "3"
+                        }
+                      ],
+                      "symbol": {
+                        "id": 1,
+                        "kind": "fun",
+                        "name": "square"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 44,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Nat",
+                        "args": [],
+                        "symbol": null
+                      },
+                      "dictionary": null,
+                      "slot": null,
+                      "dictArgs": [],
+                      "methodSugar": false,
+                      "awaitPoint": false,
+                      "calleeImpure": false
+                    }
+                  ],
+                  "symbol": {
+                    "id": 1,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 63,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

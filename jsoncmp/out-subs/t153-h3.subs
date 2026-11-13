@@ -1,0 +1,4 @@
+﻿struct Box[T](v : T)
+var b = Box[Nat](3)
+print(b)
+

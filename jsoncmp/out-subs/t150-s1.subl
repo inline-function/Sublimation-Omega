@@ -1,0 +1,4 @@
+﻿@impure fun main(): Null {
+    var v : @mut List[Nat] = mutableListOf(1)
+    var g : @ref List[Nat] = v
+}

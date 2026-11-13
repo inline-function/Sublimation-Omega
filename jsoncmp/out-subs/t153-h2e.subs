@@ -1,0 +1,3 @@
+﻿fun g(x : Nat) : Nat = 0
+print(g(1))
+

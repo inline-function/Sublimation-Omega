@@ -1,0 +1,359 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "d2e.subl",
+    "mode": "project"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "E-VAL-REMOVED",
+      "pos": "3:5-3:7",
+      "message": "val 已废除（P-9，2026-11-06）。可变引用一律用 `var` 声明：var 只允许在脚本模式顶层与函数体内（工程模式顶层执行代码请放进 `fun main()`，特质体禁止字段声明，数据请放在 struct 的字段里）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-MISSING-RETURN",
+      "pos": "2:40-2:40",
+      "message": "函数 `peek` 声明返回 Nat，块体未在所有路径 return（Kotlin 语义：请写 return，或改用 = 表达式 表达式体）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "7:10-7:12",
+      "message": "var `ct` 推导为 Counter",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:13-6:16",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirStructDecl",
+        "nid": 2,
+        "pos": "1:13-1:19",
+        "notes": [],
+        "name": "Counter",
+        "symbol": {
+          "id": 0,
+          "kind": "struct",
+          "name": "Counter"
+        },
+        "theory": [],
+        "fields": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "1:26-1:26",
+            "notes": [],
+            "name": "v",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "1:29-1:31",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 4,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 5,
+              "kind": "field",
+              "name": "v"
+            },
+            "annotations": [
+              "mut"
+            ],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "annotations": [
+          "mut"
+        ],
+        "props": [],
+        "nullary": false
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 5,
+        "pos": "2:13-2:16",
+        "notes": [],
+        "name": "peek",
+        "symbol": {
+          "id": 2,
+          "kind": "fun",
+          "name": "peek"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 6,
+            "pos": "2:18-2:18",
+            "notes": [],
+            "name": "c",
+            "type": {
+              "kind": "HirRefType",
+              "nid": 8,
+              "pos": "2:21-2:21",
+              "notes": [],
+              "inner": {
+                "kind": "HirNamedType",
+                "nid": 7,
+                "pos": "2:26-2:32",
+                "notes": [],
+                "name": "Counter",
+                "args": [],
+                "symbol": {
+                  "id": 0,
+                  "kind": "struct",
+                  "name": "Counter"
+                }
+              }
+            },
+            "symbol": {
+              "id": 6,
+              "kind": "param",
+              "name": "c"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 14,
+          "pos": "2:36-2:38",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 4,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 15,
+          "pos": "2:40-2:40",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirErrorStmt",
+              "nid": 16,
+              "pos": "3:5-3:7",
+              "notes": [],
+              "message": "val 已废除（P-9，2026-11-06）。可变引用一律用 `var` 声明：var 只允许在脚本模式顶层与函数体内（工程模式顶层执行代码请放进 `fun main()`，特质体禁止字段声明，数据请放在 struct 的字段里）"
+            }
+          ]
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 18,
+        "pos": "6:13-6:16",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 3,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 19,
+          "pos": "6:20-6:20",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirVarStmt",
+              "nid": 20,
+              "pos": "7:10-7:12",
+              "notes": [],
+              "name": "ct",
+              "symbol": {
+                "id": 7,
+                "kind": "local",
+                "name": "ct"
+              },
+              "annotations": [
+                "mut"
+              ],
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 26,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Counter",
+                "args": [],
+                "symbol": null
+              },
+              "value": {
+                "kind": "HirCall",
+                "nid": 21,
+                "pos": "7:19-7:25",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 22,
+                  "pos": "7:19-7:25",
+                  "notes": [],
+                  "name": "Counter",
+                  "symbol": {
+                    "id": 1,
+                    "kind": "ctor",
+                    "name": "Counter"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 23,
+                    "pos": "7:27-7:27",
+                    "notes": [],
+                    "value": "0"
+                  }
+                ],
+                "symbol": {
+                  "id": 1,
+                  "kind": "ctor",
+                  "name": "Counter"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 26,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Counter",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 32,
+              "pos": "8:5-8:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 33,
+                "pos": "8:15-8:18",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 34,
+                  "pos": "8:15-8:18",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 35,
+                    "pos": "8:15-8:18",
+                    "notes": [],
+                    "name": "peek",
+                    "symbol": {
+                      "id": 2,
+                      "kind": "fun",
+                      "name": "peek"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirNameRef",
+                      "nid": 36,
+                      "pos": "8:20-8:21",
+                      "notes": [],
+                      "name": "ct",
+                      "symbol": {
+                        "id": 7,
+                        "kind": "local",
+                        "name": "ct"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 26,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Counter",
+                        "args": [],
+                        "symbol": null
+                      }
+                    }
+                  ],
+                  "symbol": {
+                    "id": 2,
+                    "kind": "fun",
+                    "name": "peek"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 40,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

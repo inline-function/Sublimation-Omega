@@ -1,0 +1,5 @@
+@impure fun main(): Null {
+  var xs : List[Nat] = Nil
+  unchecked xs.add(2)
+  print(xs)
+}

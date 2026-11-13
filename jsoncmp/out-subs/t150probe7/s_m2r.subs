@@ -1,0 +1,2 @@
+var xs : @mut List[Nat] = mutableListOf(1)
+    var d : @ref List[Nat] = xs

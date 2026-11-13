@@ -1,0 +1,50 @@
+Starting a Gradle Daemon, 1 incompatible and 6 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T141MutableSugarTest > 提升形态接收者核对() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:84
+
+T141MutableSugarTest > 纯扩展真捕获仍红() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:129
+
+T141MutableSugarTest > mutable纯域调用红() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:94
+
+T141MutableSugarTest > stdlibAdd纯域闸口径() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:184
+
+T141MutableSugarTest > mut函数级语义不变() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:195
+
+T141MutableSugarTest > 两形态HIR逐字节同() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:69
+
+T141MutableSugarTest > mutable调用放行两路绿() FAILED
+    org.opentest4j.AssertionFailedError at T141MutableSugarTest.kt:102
+
+14 tests completed, 7 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 51s
+5 actionable tasks: 2 executed, 3 up-to-date

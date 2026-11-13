@@ -1,0 +1,4 @@
+[警告][1:51] W-REC-NON-TAIL: 递归调用不在尾位——每层递归占用一个栈帧（停机闸已过即保证终止，深递归仍有栈深风险）。出路：改写为尾递归（累加器形参传中间结果），让栈帧可复用
+  1 | ﻿fun fact(n : Nat) : Nat = if (n == 0) 1 else n * fact(n - 1)
+    |                                                   ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\t152-t1.json（13661 字节）

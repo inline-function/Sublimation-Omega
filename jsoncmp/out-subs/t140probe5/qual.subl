@@ -1,0 +1,7 @@
+trait M[F[_]] : traits.Functor[F] {
+    fun F[A].mmap[A, B](f: (A) => B): F[B]
+}
+fun List[a].map[a, b](f: (a) => b): List[b] = Nil
+fun List[a].mmap[a, b](f: (a) => b): List[b] = Nil
+fun use[T: M](xs: T): Nat { unchecked return 1 }
+fun go(): Nat { var xs : List[Nat] = Nil; unchecked return use(xs) }

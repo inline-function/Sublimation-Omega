@@ -1,0 +1,17 @@
+[parity] OK: EXT_METHODS 虚拟表撤 + RETIRED_EXT_METHODS ((List,add)) 允许表在位
+[parity] OK: add 落体 stdlib list 源（体仍空——R-15 兑现债登记）
+[parity] SAME: examples__日常-数列与区间.subl.json
+[parity] DIFF→剥差同（联合展开 pos 位）: examples__标准库集合.subl.json
+[parity] SAME: examples__特性巡礼.subl.json
+[parity] SAME: examples__命题基础.subl.json
+[parity] SAME: examples__模式匹配.subl.json
+[parity] SAME: examples__字符串与插值.subl.json
+[parity] SAME: examples__手动证明.subl.json
+[parity] OK: 7 依赖样本零差分/剥差同（行为零变，OQ-10 口径延续 B1）
+[parity] 68 门: SAME=68 剥差同=0 失败=0（台账: out-subs/t139gate-ledger.txt）
+[parity] OK: 侧基线逐字节同 3 件 + 预期差 examples__模块系统__list.json（add 声明位——台账登记）
+[parity] OK: 模块双导出确定性 8/8
+[gate] runs: 14 products into F:\Sublimation\jsoncmp\out-subs\run2
+[gate] SAME=14/14 (双编译逐字节)
+[gate] PASSED: 双编译逐字同 + 退出码符合 + 语义抽查全过
+[parity] PASSED: B2 retire 机械证据五段全绿

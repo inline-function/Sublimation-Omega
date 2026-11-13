@@ -1,0 +1,4 @@
+@impure fun bump(c : @ref @mut T): Null { c.n = 2 }
+@mut var ct = T(0)
+    unchecked bump(&ct)
+    ct.n

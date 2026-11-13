@@ -1,0 +1,1071 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "json.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "7:11-28:20",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "7:11-7:19",
+        "notes": [],
+        "name": "jsonParse",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "jsonParse"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "7:21-7:21",
+            "notes": [],
+            "name": "s",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "7:24-7:26",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 11,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 12,
+              "kind": "param",
+              "name": "s"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 12,
+          "pos": "10:20-10:23",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 7,
+              "pos": "10:20-10:23",
+              "notes": [],
+              "name": "None",
+              "args": [],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "None"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 11,
+              "pos": "10:27-10:30",
+              "notes": [],
+              "name": "Some",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 6,
+                  "pos": "7:39-7:42",
+                  "notes": [],
+                  "name": "Json",
+                  "args": [],
+                  "symbol": {
+                    "id": 13,
+                    "kind": "builtin",
+                    "name": "Json"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Some"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 13,
+        "pos": "11:11-11:17",
+        "notes": [],
+        "name": "jsonGet",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "jsonGet"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 14,
+            "pos": "11:19-11:19",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 15,
+              "pos": "11:22-11:25",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 17,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 16,
+            "pos": "11:28-11:28",
+            "notes": [],
+            "name": "k",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 17,
+              "pos": "11:31-11:33",
+              "notes": [],
+              "name": "Str",
+              "args": [],
+              "symbol": {
+                "id": 11,
+                "kind": "builtin",
+                "name": "Str"
+              }
+            },
+            "symbol": {
+              "id": 18,
+              "kind": "param",
+              "name": "k"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 25,
+          "pos": "10:20-10:23",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 20,
+              "pos": "10:20-10:23",
+              "notes": [],
+              "name": "None",
+              "args": [],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "None"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 24,
+              "pos": "10:27-10:30",
+              "notes": [],
+              "name": "Some",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 19,
+                  "pos": "11:46-11:49",
+                  "notes": [],
+                  "name": "Json",
+                  "args": [],
+                  "symbol": {
+                    "id": 13,
+                    "kind": "builtin",
+                    "name": "Json"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Some"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 26,
+        "pos": "13:11-13:16",
+        "notes": [],
+        "name": "jsonAt",
+        "symbol": {
+          "id": 2,
+          "kind": "fun",
+          "name": "jsonAt"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 27,
+            "pos": "13:18-13:18",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 28,
+              "pos": "13:21-13:24",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 19,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 29,
+            "pos": "13:27-13:27",
+            "notes": [],
+            "name": "i",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 30,
+              "pos": "13:30-13:32",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 20,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 21,
+              "kind": "param",
+              "name": "i"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 41,
+          "pos": "10:20-10:23",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 36,
+              "pos": "10:20-10:23",
+              "notes": [],
+              "name": "None",
+              "args": [],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "None"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 40,
+              "pos": "10:27-10:30",
+              "notes": [],
+              "name": "Some",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 35,
+                  "pos": "13:45-13:48",
+                  "notes": [],
+                  "name": "Json",
+                  "args": [],
+                  "symbol": {
+                    "id": 13,
+                    "kind": "builtin",
+                    "name": "Json"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Some"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 42,
+        "pos": "15:11-15:17",
+        "notes": [],
+        "name": "jsonLen",
+        "symbol": {
+          "id": 3,
+          "kind": "fun",
+          "name": "jsonLen"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 43,
+            "pos": "15:19-15:19",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 44,
+              "pos": "15:22-15:25",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 22,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 52,
+          "pos": "10:20-10:23",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 47,
+              "pos": "10:20-10:23",
+              "notes": [],
+              "name": "None",
+              "args": [],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "None"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 51,
+              "pos": "10:27-10:30",
+              "notes": [],
+              "name": "Some",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 46,
+                  "pos": "15:38-15:40",
+                  "notes": [],
+                  "name": "Nat",
+                  "args": [],
+                  "symbol": {
+                    "id": 20,
+                    "kind": "builtin",
+                    "name": "Nat"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Some"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 53,
+        "pos": "18:11-18:17",
+        "notes": [],
+        "name": "jsonStr",
+        "symbol": {
+          "id": 4,
+          "kind": "fun",
+          "name": "jsonStr"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 54,
+            "pos": "18:19-18:19",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 55,
+              "pos": "18:22-18:25",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 23,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 63,
+          "pos": "10:20-10:23",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 58,
+              "pos": "10:20-10:23",
+              "notes": [],
+              "name": "None",
+              "args": [],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "None"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 62,
+              "pos": "10:27-10:30",
+              "notes": [],
+              "name": "Some",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 57,
+                  "pos": "18:38-18:40",
+                  "notes": [],
+                  "name": "Str",
+                  "args": [],
+                  "symbol": {
+                    "id": 11,
+                    "kind": "builtin",
+                    "name": "Str"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Some"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 64,
+        "pos": "19:11-19:17",
+        "notes": [],
+        "name": "jsonNum",
+        "symbol": {
+          "id": 5,
+          "kind": "fun",
+          "name": "jsonNum"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 65,
+            "pos": "19:19-19:19",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 66,
+              "pos": "19:22-19:25",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 24,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 74,
+          "pos": "10:20-10:23",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 69,
+              "pos": "10:20-10:23",
+              "notes": [],
+              "name": "None",
+              "args": [],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "None"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 73,
+              "pos": "10:27-10:30",
+              "notes": [],
+              "name": "Some",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 68,
+                  "pos": "19:38-19:40",
+                  "notes": [],
+                  "name": "Rat",
+                  "args": [],
+                  "symbol": {
+                    "id": 25,
+                    "kind": "builtin",
+                    "name": "Rat"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Some"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 75,
+        "pos": "20:11-20:18",
+        "notes": [],
+        "name": "jsonBool",
+        "symbol": {
+          "id": 6,
+          "kind": "fun",
+          "name": "jsonBool"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 76,
+            "pos": "20:20-20:20",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 77,
+              "pos": "20:23-20:26",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 26,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 85,
+          "pos": "10:20-10:23",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 80,
+              "pos": "10:20-10:23",
+              "notes": [],
+              "name": "None",
+              "args": [],
+              "symbol": {
+                "id": 15,
+                "kind": "builtin",
+                "name": "None"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 84,
+              "pos": "10:27-10:30",
+              "notes": [],
+              "name": "Some",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 79,
+                  "pos": "20:39-20:42",
+                  "notes": [],
+                  "name": "Bool",
+                  "args": [],
+                  "symbol": {
+                    "id": 27,
+                    "kind": "builtin",
+                    "name": "Bool"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 16,
+                "kind": "builtin",
+                "name": "Some"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 86,
+        "pos": "22:11-22:20",
+        "notes": [],
+        "name": "jsonIsNull",
+        "symbol": {
+          "id": 7,
+          "kind": "fun",
+          "name": "jsonIsNull"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 87,
+            "pos": "22:22-22:22",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 88,
+              "pos": "22:25-22:28",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 28,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 89,
+          "pos": "22:32-22:35",
+          "notes": [],
+          "name": "Bool",
+          "args": [],
+          "symbol": {
+            "id": 27,
+            "kind": "builtin",
+            "name": "Bool"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 90,
+        "pos": "23:11-23:19",
+        "notes": [],
+        "name": "jsonIsArr",
+        "symbol": {
+          "id": 8,
+          "kind": "fun",
+          "name": "jsonIsArr"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 91,
+            "pos": "23:21-23:21",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 92,
+              "pos": "23:24-23:27",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 29,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 93,
+          "pos": "23:31-23:34",
+          "notes": [],
+          "name": "Bool",
+          "args": [],
+          "symbol": {
+            "id": 27,
+            "kind": "builtin",
+            "name": "Bool"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 94,
+        "pos": "26:11-26:19",
+        "notes": [],
+        "name": "jsonToStr",
+        "symbol": {
+          "id": 9,
+          "kind": "fun",
+          "name": "jsonToStr"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 95,
+            "pos": "26:21-26:21",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 96,
+              "pos": "26:24-26:27",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 30,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 97,
+          "pos": "26:31-26:33",
+          "notes": [],
+          "name": "Str",
+          "args": [],
+          "symbol": {
+            "id": 11,
+            "kind": "builtin",
+            "name": "Str"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 98,
+        "pos": "28:11-28:20",
+        "notes": [],
+        "name": "jsonToList",
+        "symbol": {
+          "id": 10,
+          "kind": "fun",
+          "name": "jsonToList"
+        },
+        "annotations": [
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 99,
+            "pos": "28:22-28:22",
+            "notes": [],
+            "name": "j",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 100,
+              "pos": "28:25-28:28",
+              "notes": [],
+              "name": "Json",
+              "args": [],
+              "symbol": {
+                "id": 13,
+                "kind": "builtin",
+                "name": "Json"
+              }
+            },
+            "symbol": {
+              "id": 31,
+              "kind": "param",
+              "name": "j"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirUnionType",
+          "nid": 108,
+          "pos": "11:16-11:18",
+          "notes": [],
+          "variants": [
+            {
+              "kind": "HirNamedType",
+              "nid": 103,
+              "pos": "11:16-11:18",
+              "notes": [],
+              "name": "Nil",
+              "args": [],
+              "symbol": {
+                "id": 33,
+                "kind": "builtin",
+                "name": "Nil"
+              }
+            },
+            {
+              "kind": "HirNamedType",
+              "nid": 107,
+              "pos": "11:22-11:25",
+              "notes": [],
+              "name": "Cons",
+              "args": [
+                {
+                  "kind": "HirNamedType",
+                  "nid": 102,
+                  "pos": "28:37-28:40",
+                  "notes": [],
+                  "name": "Json",
+                  "args": [],
+                  "symbol": {
+                    "id": 13,
+                    "kind": "builtin",
+                    "name": "Json"
+                  }
+                }
+              ],
+              "symbol": {
+                "id": 34,
+                "kind": "builtin",
+                "name": "Cons"
+              }
+            }
+          ]
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": null
+      }
+    ]
+  }
+}

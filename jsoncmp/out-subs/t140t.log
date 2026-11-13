@@ -1,0 +1,897 @@
+Starting a Gradle Daemon, 1 incompatible and 13 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:110:35 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:110:35 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:110:35 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:5 Function 'F' without a body must be abstract.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:5 Function 'F' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:5 Unresolved reference 'invoke'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:5 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:5 Not enough information to infer type argument for 'T'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:10 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:11 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:14 Unresolved reference 'map'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:18 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:21 Unresolved reference 'B'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:24 Unresolved reference 'f'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:25 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:28 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:31 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:34 Unresolved reference 'B'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:35 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:111:35 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:113:1 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:113:2 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:113:4 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:114:17 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:114:18 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:114:53 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:115:1 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:115:2 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:115:3 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:9 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:21 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:22 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:31 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:32 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:38 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:39 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:40 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:41 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:43 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:47 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:48 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:49 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:50 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:52 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:53 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:65 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:67 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:69 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:73 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:74 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:75 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:116:76 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:9 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:20 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:21 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:22 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:23 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:27 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:28 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:33 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:34 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:38 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:38 Function declaration must have a name.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:40 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:40 Operator '==' cannot be applied to 'Int' and 'String'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:117:69 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:118:13 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:118:14 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:118:48 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:118:49 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:9 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:19 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:20 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:25 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:26 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:29 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:30 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:34 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:35 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:38 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:39 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:51 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:52 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:55 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:56 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:57 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:72 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:73 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:74 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:75 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:79 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:80 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:82 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:83 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:90 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:91 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:9 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:19 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:20 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:25 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:26 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:29 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:30 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:34 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:35 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:38 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:39 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:42 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:43 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:48 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:49 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:57 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:58 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:67 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:68 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:72 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:73 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:76 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:77 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:89 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:90 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:121:93 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:13 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:14 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:29 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:30 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:31 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:32 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:36 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:38 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:41 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:46 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:47 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:50 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:51 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:59 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:60 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:69 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:70 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:74 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:75 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:78 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:79 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:80 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:81 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:84 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:85 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:86 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:101 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:102 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:103 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:104 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:108 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:122:109 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:123:13 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:123:14 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:123:46 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:123:47 Syntax error: Expecting member declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:128:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:128:51 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:128:51 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:128:51 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:129:5 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:129:10 Unresolved reference 'Nat'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:129:16 Unresolved reference 'unchecked'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:129:25 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:129:36 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:130:3 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:130:3 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:131:9 Unresolved reference 'assertTrue'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:131:20 Unresolved reference 'o'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:131:39 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:131:39 Operator '==' cannot be applied to 'Int' and 'String'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:131:68 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:138:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:139:35 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:139:35 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:139:35 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:5 Function 'F' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:5 Unresolved reference 'invoke'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:5 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:10 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:11 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:14 Unresolved reference 'map'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:18 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:21 Unresolved reference 'B'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:24 Unresolved reference 'f'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:25 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:28 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:31 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:35 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:35 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:142:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:142:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:142:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:143:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:143:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:143:67 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:144:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:144:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:144:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:145:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:145:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:145:72 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:146:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:146:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:146:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:147:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:147:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:147:86 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:148:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:148:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:148:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:21 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:22 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:31 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:38 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:39 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:40 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:41 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:43 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:47 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:48 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:49 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:50 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:52 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:83 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:85 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:87 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:91 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:92 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:93 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:94 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:150:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:154:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:155:39 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:155:39 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:155:39 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:5 Function 'pure' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:5 Unresolved reference 'invoke'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:13 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:14 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:17 Unresolved reference 'x'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:18 Syntax error: Unexpected type specification.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:22 Syntax error: Unexpected type specification.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:25 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:25 Unsupported [Collection literals outside of annotations].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:26 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:156:28 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:158:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:158:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:158:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:159:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:159:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:159:58 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:160:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:160:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:160:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:161:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:161:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:161:76 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:162:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:162:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:162:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:163:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:163:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:163:89 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:164:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:164:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:164:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:21 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:22 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:31 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:38 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:39 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:40 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:41 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:43 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:47 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:48 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:49 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:50 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:52 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:83 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:85 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:87 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:91 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:92 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:93 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:165:94 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:166:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:170:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:171:39 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:171:39 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:171:39 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:5 Function 'pure' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:5 Unresolved reference 'invoke'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:13 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:14 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:17 Unresolved reference 'x'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:18 Syntax error: Unexpected type specification.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:22 Syntax error: Unexpected type specification.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:25 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:25 Unsupported [Collection literals outside of annotations].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:26 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:172:28 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:173:4 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:173:4 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:173:4 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:174:62 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:174:62 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:174:62 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:176:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:176:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:176:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:177:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:177:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:177:58 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:178:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:178:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:178:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:179:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:179:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:179:86 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:180:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:180:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:180:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:181:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:181:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:181:76 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:182:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:182:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:182:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:183:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:183:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:183:89 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:184:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:184:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:184:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:21 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:22 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:31 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:38 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:39 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:40 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:41 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:43 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:47 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:48 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:49 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:50 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:52 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:83 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:85 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:87 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:91 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:92 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:93 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:94 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:186:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:190:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:191:65 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:191:65 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:191:65 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:192:4 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:192:4 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:192:4 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:193:72 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:193:72 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:193:72 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:194:4 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:194:4 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:194:4 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:195:86 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:195:86 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:195:86 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:196:3 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:196:3 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:198:9 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:198:18 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:198:21 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:198:26 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:198:32 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:198:42 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:198:42 Operator '==' cannot be applied to 'Int' and 'String'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:200:31 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:200:104 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:202:18 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:203:63 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:203:63 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:203:63 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:204:4 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:204:4 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:204:4 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:205:72 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:205:72 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:205:72 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:206:4 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:206:4 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:206:4 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:207:86 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:207:86 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:207:86 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:208:3 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:208:3 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:209:9 Unresolved reference 'assertEquals'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:209:41 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:209:43 Unresolved reference 'errs'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:209:95 Unresolved reference 'errs'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:216:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:217:35 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:217:35 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:217:35 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:5 Function 'F' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:5 Unresolved reference 'invoke'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:5 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:10 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:11 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:14 Unresolved reference 'map'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:18 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:21 Unresolved reference 'B'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:24 Unresolved reference 'f'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:25 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:28 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:31 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:35 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:218:35 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:220:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:220:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:220:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:221:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:221:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:221:72 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:222:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:222:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:222:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:223:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:223:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:223:86 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:224:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:224:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:224:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:225:20 Unresolved reference 'o'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:225:42 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:225:42 Operator '==' cannot be applied to 'Int' and 'String'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:19 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:20 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:24 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:25 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:35 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:36 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:37 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:39 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:40 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:45 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:46 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:19 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:20 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:24 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:25 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:29 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:29 Function declaration must have a name.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:31 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:66 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:94 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:13 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:14 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:24 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:26 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:28 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:33 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:37 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:37 Function declaration must have a name.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:39 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:228:51 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:229:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:233:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:234:35 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:234:35 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:234:35 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:5 Function 'F' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:5 Unresolved reference 'invoke'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:5 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:10 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:11 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:14 Unresolved reference 'map'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:18 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:21 Unresolved reference 'B'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:24 Unresolved reference 'f'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:25 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:28 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:31 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:35 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:235:35 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:237:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:237:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:237:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:238:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:238:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:238:80 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:239:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:239:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:239:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:240:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:240:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:240:72 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:241:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:241:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:241:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:242:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:242:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:242:86 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:243:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:243:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:243:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:19 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:20 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:24 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:25 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:26 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:27 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:28 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:32 Function declaration must have a name.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:34 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:62 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:64 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:65 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:80 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:81 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:245:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:249:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:250:39 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:250:39 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:250:39 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:5 Function 'pure' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:5 Unresolved reference 'invoke'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:13 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:14 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:17 Unresolved reference 'x'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:18 Syntax error: Unexpected type specification.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:22 Syntax error: Unexpected type specification.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:25 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:25 Unsupported [Collection literals outside of annotations].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:26 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:251:28 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:253:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:253:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:253:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:254:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:254:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:254:58 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:255:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:255:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:255:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:256:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:256:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:256:76 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:257:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:257:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:257:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:258:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:258:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:258:86 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:259:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:259:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:259:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:19 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:20 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:24 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:25 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:26 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:27 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:28 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:32 Function declaration must have a name.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:34 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:62 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:261:13 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:261:14 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:261:47 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:261:48 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:262:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:266:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:267:39 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:267:39 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:267:39 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:5 Function 'F' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:10 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:11 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:14 Unresolved reference 'traverse'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:23 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:26 Unresolved reference 'M'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:28 Unresolved reference '_'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:30 Syntax error: Expecting ']'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:30 Syntax error: Unexpected type specification.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:45 Unresolved reference 'B'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:46 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:46 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:270:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:270:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:270:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:271:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:271:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:271:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:272:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:272:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:272:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:19 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:20 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:24 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:25 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:26 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:27 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:28 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:32 Function declaration must have a name.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:34 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:273:57 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:274:13 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:274:14 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:274:77 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:274:78 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:275:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:281:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:282:29 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:282:29 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:282:29 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:283:5 Function 'show' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:283:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:283:17 Unresolved reference 'T'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:283:21 Unresolved reference 'Str'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:283:24 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:285:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:285:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:285:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:286:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:286:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:286:50 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:286:52 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:286:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:286:55 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:287:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:287:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:287:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:288:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:288:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:288:68 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:289:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:289:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:289:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:290:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:290:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:290:59 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:291:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:291:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:291:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:21 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:22 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:31 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:38 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:39 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:40 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:41 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:43 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:47 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:48 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:49 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:50 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:52 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:71 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:73 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:75 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:79 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:80 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:81 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:292:82 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:293:18 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:294:29 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:294:29 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:294:29 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:295:5 Function 'show' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:295:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:295:20 Unresolved reference 'T'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:295:24 Unresolved reference 'Str'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:295:27 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:296:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:297:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:297:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:297:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:298:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:298:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:298:48 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:298:50 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:298:51 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:298:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:299:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:299:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:299:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:300:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:300:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:300:68 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:301:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:301:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:301:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:302:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:302:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:302:59 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:303:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:303:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:303:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:21 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:22 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:31 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:38 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:39 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:40 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:41 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:43 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:47 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:48 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:50 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:51 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:54 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:77 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:79 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:81 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:85 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:86 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:88 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:304:89 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:305:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:309:17 Unresolved reference 'scriptStd'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:310:49 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:310:49 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:310:49 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:5 Function 'F' must have a body.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:5 Unresolved reference 'invoke'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:5 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:9 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:10 Syntax error: Expecting '('.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:11 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:14 Unresolved reference 'mmap'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:19 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:22 Unresolved reference 'B'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:25 Unresolved reference 'f'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:26 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:29 Unresolved reference 'A'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:32 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:36 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:311:36 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:313:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:313:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:313:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:314:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:314:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:314:67 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:315:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:315:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:315:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:316:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:316:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:316:68 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:317:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:317:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:317:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:318:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:318:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:318:66 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:319:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:319:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:319:4 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:320:17 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:320:18 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:320:86 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:321:1 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:321:2 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:321:3 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:21 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:22 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:31 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:32 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:38 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:39 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:40 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:41 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:43 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:47 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:48 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:49 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:50 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:52 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:53 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:100 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:102 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:104 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:108 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:109 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:110 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:322:111 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:9 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:19 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:20 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:25 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:26 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:29 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:41 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:44 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:45 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:46 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:61 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:62 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:63 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:64 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:68 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:69 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:71 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:72 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:93 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:323:94 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:324:5 Syntax error: Expecting a top level declaration.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:329:51 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:329:51 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:329:51 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:330:5 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:330:10 Unresolved reference 'Nat'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:330:16 Unresolved reference 'unchecked'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:330:25 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:330:36 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:331:1 Argument type mismatch: actual type is 'String', but 'Boolean' was expected.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:331:3 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:331:3 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:331:3 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:332:13 Argument type mismatch: actual type is 'String', but 'Boolean' was expected.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:332:34 Argument type mismatch: actual type is 'Boolean', but 'Map<String, ModuleSnapshot>' was expected.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:332:41 Argument type mismatch: actual type is 'Boolean', but 'DiagBag' was expected.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:332:48 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:332:48 Too many arguments for 'fun compileFrontendImpl(source: String, unitPath: String, scriptMode: Boolean, noDegrade: Boolean, noLift: Boolean, mounted: Map<String, ModuleSnapshot> = ..., extraDiag: DiagBag = ...): FrontendOutput'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:332:60 Too many arguments for 'fun compileFrontendImpl(source: String, unitPath: String, scriptMode: Boolean, noDegrade: Boolean, noLift: Boolean, mounted: Map<String, ModuleSnapshot> = ..., extraDiag: DiagBag = ...): FrontendOutput'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:336:1 Syntax error: Expecting a top level declaration.
+
+> Task :frontend:compileTestKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:compileTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 50s
+4 actionable tasks: 1 executed, 3 up-to-date

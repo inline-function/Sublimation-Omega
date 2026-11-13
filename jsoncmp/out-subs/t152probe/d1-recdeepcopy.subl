@@ -1,0 +1,5 @@
+fun countdown(a : @mut List[Nat], n : Nat) : Nat {
+  var b : List[Nat] = a
+  return if (n == 0) 0 else countdown(a, n - 1)
+}
+@impure fun main(): Null { var xs : @mut List[Nat] = mutableListOf(1); print(countdown(xs, 3)) }

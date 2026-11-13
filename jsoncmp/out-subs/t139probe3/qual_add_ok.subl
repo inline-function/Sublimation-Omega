@@ -1,0 +1,4 @@
+fun main(): Nat {
+  var xs : List[Nat] = Cons(1, Nil)
+  unchecked return list.fold(list.add(xs, 9), 0) { acc, x => acc + x }
+}

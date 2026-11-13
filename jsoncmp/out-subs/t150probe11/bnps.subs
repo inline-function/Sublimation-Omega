@@ -1,0 +1,6 @@
+@impure fun bump(xs : @mut List[Nat]) { xs.add(1) }
+@impure fun main(): Null {
+  var ys : List[Nat] = listOf(2)
+  unchecked bump(&ys)
+  print(ys)
+}

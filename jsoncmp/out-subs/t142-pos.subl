@@ -1,0 +1,5 @@
+﻿fun consumeP()<p>: Null {}
+@impure fun main(): Null {
+    consumeP() by [p]
+    unchecked print(1)
+}

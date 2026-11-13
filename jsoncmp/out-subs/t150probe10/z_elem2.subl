@@ -1,0 +1,5 @@
+@impure fun main() {
+ var inner : @mut List[Nat] = mutableListOf(1)
+ var a : @mut List[@mut List[Nat]] = mutableListOf(inner)
+ var u : List[List[Nat]] = a
+}

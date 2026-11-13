@@ -1,0 +1,5 @@
+﻿trait Sink[T] {
+  fun Sink[T].take(v : T) : Null
+}
+print(1)
+

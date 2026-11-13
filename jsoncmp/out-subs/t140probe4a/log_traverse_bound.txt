@@ -1,0 +1,16 @@
+[错误][2:11] E-UNBOUND-NAME: 未知类型 `A`
+  2 |     fun F[A].traverse[M[_]: Applicative, B](f: (A) => M[B]): M[F[B]]
+    |           ^
+[错误][2:23] E-UNBOUND-NAME: 未知类型 `Applicative`
+  2 |     fun F[A].traverse[M[_]: Applicative, B](f: (A) => M[B]): M[F[B]]
+    |                       ^
+[错误][2:23] E-TC-BOUNDARY: 理论参数 `M` 的高阶类型约束（arity > 0）不可为界（V1 不支持，见 TS-24）
+  2 |     fun F[A].traverse[M[_]: Applicative, B](f: (A) => M[B]): M[F[B]]
+    |                       ^
+[错误][2:23] E-BOUND-INVARIANT: 类型参数 `M` 在使用处既作协变又作逆变（不变），: 界无法确定是上界还是下界；请改为 [T] 不加界，或调整使用处使 `M` 的变构性单一
+  2 |     fun F[A].traverse[M[_]: Applicative, B](f: (A) => M[B]): M[F[B]]
+    |                       ^
+[错误][2:49] E-UNBOUND-NAME: 未知类型 `A`
+  2 |     fun F[A].traverse[M[_]: Applicative, B](f: (A) => M[B]): M[F[B]]
+    |                                                 ^
+[错误] 前端检查未通过

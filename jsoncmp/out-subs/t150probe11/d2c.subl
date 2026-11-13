@@ -1,0 +1,8 @@
+@mut struct Counter(@mut v: Nat)
+@impure fun peek(c: @ref Counter): Nat {
+    c.v
+}
+@impure fun main() {
+    @mut var ct = Counter(0)
+    unchecked peek(ct)
+}

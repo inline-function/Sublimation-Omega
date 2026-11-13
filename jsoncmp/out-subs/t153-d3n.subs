@@ -1,0 +1,5 @@
+﻿trait T { fun test() }
+fun Nat.test() = print(self)
+fun takesT(x : T) : Nat = 1
+print(takesT(1))
+

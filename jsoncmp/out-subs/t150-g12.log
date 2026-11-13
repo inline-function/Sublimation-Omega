@@ -1,0 +1,38 @@
+Starting a Gradle Daemon, 1 incompatible and 14 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T99CopyMatrixTest > R14共享路径不下钻() FAILED
+    org.opentest4j.AssertionFailedError at T99CopyMatrixTest.kt:148
+
+T99CopyMatrixTest > R14元素层深拷下钻() FAILED
+    org.opentest4j.AssertionFailedError at T99CopyMatrixTest.kt:136
+
+T99CopyMatrixTest > R14不可变元素零结论() FAILED
+    org.opentest4j.AssertionFailedError at T99CopyMatrixTest.kt:159
+
+21 tests completed, 3 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 37s
+5 actionable tasks: 2 executed, 3 up-to-date

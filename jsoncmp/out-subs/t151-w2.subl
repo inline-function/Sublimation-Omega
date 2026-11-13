@@ -1,0 +1,2 @@
+﻿fun g(): Nat { var xs : @mut List[Nat] = mutableListOf(1); unchecked xs.add(2); return 0 }
+@impure fun main(): Null { g(); print(1) }

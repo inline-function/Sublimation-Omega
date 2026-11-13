@@ -1,0 +1,7 @@
+stdlib B2：EXT_METHODS retire（add 落 stdlib 源，体仍空）+ ext 限定调位通道
+
+- add 落体（OQ-4 = b 签名面延续）：@mut fun (@mut List[a]).add[a](v: a): List[a] 入 stdlib collection list，体仍空（R-15 兑现债随运行时桥规格落）。
+- EXT_METHODS retire：允许表 RETIRED_EXT_METHODS((List,add)) + virtualExtMethods 可变注入表（declareModuleExt）；查询链不变、builtins 懒登记 id 序零改；sugarExt 对 stdlib 快照 retire 键跳过模块面（注入虚拟层承接，HIR 形态零差分）。
+- ext 限定调位（B2 新绿面）：moduleQualifiedCall 自由函数面未命中查快照 ext 面（实参 1=接收者位），HirField+ext 符号+D-MODULE-REF；签名核对复用 extCallType，借用 @mut 同方法糖口径。
+- 门：套件 1128/1128（+8 T139StdlibExtTest）；68 门 SAME 68/68（vs t131mod，t139gate-ledger 台账）；脚本门 14/14；模块双导出确定性 8/8；stdlib 侧基线逐字节同 3 件 + 预期差 list 件（add 声明位）。
+- 差分台账 + B2 毕翻新提案（未执行，队长裁）见 documents/stdlib-设计-提案.md §12/§13 与 jsoncmp/README.md t139 分账。

@@ -1,0 +1,4 @@
+@impure fun main(): Null {
+  var xs = Cons(1, Cons(2, Nil))
+  print(xs)
+}

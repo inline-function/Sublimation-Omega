@@ -1,0 +1,9 @@
+Starting a Gradle Daemon, 1 incompatible and 8 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:1473:49 Condition is always 'true'.
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:2086:43 Condition is always 'true'.
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:2866:47 Condition is always 'true'.
+
+BUILD SUCCESSFUL in 3m 37s
+1 actionable task: 1 executed

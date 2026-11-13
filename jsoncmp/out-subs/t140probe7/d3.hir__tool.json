@@ -1,0 +1,134 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "tool",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:5-1:10",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:5-1:10",
+        "notes": [],
+        "name": "helper",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "helper"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "1:12-1:12",
+            "notes": [],
+            "name": "n",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "1:16-1:18",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 1,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 2,
+              "kind": "param",
+              "name": "n"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 8,
+          "pos": "1:23-1:25",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 1,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirBinExpr",
+          "nid": 14,
+          "pos": "1:31-1:31",
+          "notes": [],
+          "op": "+",
+          "left": {
+            "kind": "HirNameRef",
+            "nid": 9,
+            "pos": "1:29-1:29",
+            "notes": [],
+            "name": "n",
+            "symbol": {
+              "id": 2,
+              "kind": "param",
+              "name": "n"
+            },
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "1:16-1:18",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 1,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            }
+          },
+          "right": {
+            "kind": "HirIntLit",
+            "nid": 10,
+            "pos": "1:33-1:34",
+            "notes": [],
+            "value": "10"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 4,
+            "pos": "1:16-1:18",
+            "notes": [],
+            "name": "Nat",
+            "args": [],
+            "symbol": {
+              "id": 1,
+              "kind": "builtin",
+              "name": "Nat"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

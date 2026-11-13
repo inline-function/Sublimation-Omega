@@ -1,0 +1,4 @@
+@mut struct T(@mut n: Nat)
+@impure fun main() { @mut var a = T(0)
+    @impure fun bump(dd : @ref @mut T): Null { dd.n = 1 }
+    unchecked bump(&a) }

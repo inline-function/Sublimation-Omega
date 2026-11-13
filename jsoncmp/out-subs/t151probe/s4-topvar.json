@@ -1,0 +1,254 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "s4-topvar.subl",
+    "mode": "project"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "E-SYNTAX",
+      "pos": "1:1-1:3",
+      "message": "顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-SYNTAX",
+      "pos": "1:15-1:18",
+      "message": "顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "2:28-2:29",
+      "message": "未定义的名称 `xs`（作用域中无此变量/函数/构造子）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "2:31-2:33",
+      "message": "方法 .`add` 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "2:45-2:46",
+      "message": "未定义的名称 `xs`（作用域中无此变量/函数/构造子）",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:1-2:16",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirErrorStmt",
+        "nid": 2,
+        "pos": "1:1-1:3",
+        "notes": [],
+        "message": "顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）"
+      },
+      {
+        "kind": "HirErrorStmt",
+        "nid": 3,
+        "pos": "1:15-1:18",
+        "notes": [],
+        "message": "顶层只能写声明，执行代码请放进 `fun main()`（脚本模式后续支持）"
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 4,
+        "pos": "2:13-2:16",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 5,
+          "pos": "2:21-2:24",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 1,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 6,
+          "pos": "2:26-2:26",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirExprStmt",
+              "nid": 7,
+              "pos": "2:31-2:33",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 8,
+                "pos": "2:31-2:33",
+                "notes": [
+                  {
+                    "kind": "desugar",
+                    "code": "D-METHOD-SUGAR",
+                    "message": "方法糖改道扩展函数桶（receiver 首参 + 体内 self 绑定为 Receiver）",
+                    "pos": "2:31-2:33",
+                    "from": "target.add(args)",
+                    "to": "add(target, args)"
+                  }
+                ],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 13,
+                  "pos": "2:31-2:33",
+                  "notes": [],
+                  "name": "add",
+                  "symbol": null,
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 10,
+                    "pos": "2:28-2:29",
+                    "notes": [],
+                    "name": "xs",
+                    "symbol": null,
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 9,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(推导:未定义xs)",
+                      "args": [],
+                      "symbol": null
+                    }
+                  },
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 11,
+                    "pos": "2:35-2:35",
+                    "notes": [],
+                    "value": "2"
+                  }
+                ],
+                "symbol": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 30,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:方法add)",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": true,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 31,
+              "pos": "2:39-2:43",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 32,
+                "pos": "2:39-2:43",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 33,
+                  "pos": "2:39-2:43",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 2,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 35,
+                    "pos": "2:45-2:46",
+                    "notes": [],
+                    "name": "xs",
+                    "symbol": null,
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 34,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(推导:未定义xs)",
+                      "args": [],
+                      "symbol": null
+                    }
+                  }
+                ],
+                "symbol": {
+                  "id": 2,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 52,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

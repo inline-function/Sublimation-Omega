@@ -1,0 +1,65 @@
+Starting a Gradle Daemon, 1 incompatible and 6 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T150R28MatrixTest > R29深拷补注_元素层下钻() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:126
+
+T150R28MatrixTest > R29深拷补注_mut到plain() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:98
+
+T150R28MatrixTest > R28拒格传参位() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:83
+
+T150R28MatrixTest > R28拒格赋值位() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:89
+
+T150R28MatrixTest > R29深拷补注_mut到mut() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:104
+
+T150R28MatrixTest > R28拒格1_plain到mut() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:53
+
+T150R28MatrixTest > R28拒格3_refmut到plain() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:65
+
+T150R28MatrixTest > R28拒格5_refmut到mut() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:75
+
+T150R28MatrixTest > R29深拷补注_传参位() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:112
+
+T150R28MatrixTest > R29深拷补注_赋值位() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:117
+
+T150R28MatrixTest > R28拒格2_ref到plain() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:60
+
+T150R28MatrixTest > R28拒格4_ref到mut() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:70
+
+14 tests completed, 12 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 58s
+5 actionable tasks: 2 executed, 3 up-to-date

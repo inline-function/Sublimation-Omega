@@ -1,0 +1,49 @@
+Starting a Gradle Daemon, 1 incompatible and 7 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+
+> Task :frontend:compileTestKotlin
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:129:16 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:129:16 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:130:9 Unresolved reference 'assertEquals'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:130:28 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:130:30 Too many arguments for 'fun judge(src: String): Triple<String, List<String>, String>'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:130:30 Unresolved reference 'got1'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:130:36 Too many arguments for 'fun judge(src: String): Triple<String, List<String>, String>'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:141:16 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:141:16 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:142:9 Unresolved reference 'assertEquals'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:142:29 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:142:31 Too many arguments for 'fun judge(src: String): Triple<String, List<String>, String>'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:142:31 Unresolved reference 'got2'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:142:37 Too many arguments for 'fun judge(src: String): Triple<String, List<String>, String>'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:152:16 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:152:16 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:153:9 Unresolved reference 'assertEquals'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:153:28 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:153:30 Too many arguments for 'fun judge(src: String): Triple<String, List<String>, String>'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:153:30 Unresolved reference 'got3'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:153:36 Too many arguments for 'fun judge(src: String): Triple<String, List<String>, String>'.
+
+> Task :frontend:compileTestKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:compileTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 32s
+4 actionable tasks: 1 executed, 3 up-to-date

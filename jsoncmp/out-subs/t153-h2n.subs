@@ -1,0 +1,6 @@
+﻿fun f(_x : Nat) : Nat {
+  var _dead = 3
+  return 1
+}
+print(f(1))
+

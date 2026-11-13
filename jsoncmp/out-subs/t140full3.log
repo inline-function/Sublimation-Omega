@@ -1,0 +1,63 @@
+Starting a Gradle Daemon, 1 incompatible and 13 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+
+> Task :frontend:compileTestKotlin
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:90:30 Unresolved reference 'optExts'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:92:9 Unresolved reference 'assertTrue'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:92:85 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:93:58 Unresolved reference 'setExts'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:9 Unresolved reference 'assertTrue'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:80 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:99:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:109:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:112:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:115:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:120:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:127:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:130:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:137:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:149:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:153:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:159:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:163:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:181:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:186:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:195:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:198:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:205:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:208:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:216:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:219:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:226:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:231:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:247:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:257:6 Syntax error: Expecting ','.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:260:15 Anonymous functions with names are prohibited.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:267:6 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:268:2 Syntax error: Missing '}.
+
+> Task :frontend:compileTestKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:compileTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 37s
+4 actionable tasks: 1 executed, 3 up-to-date

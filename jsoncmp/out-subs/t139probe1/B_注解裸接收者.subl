@@ -1,0 +1,6 @@
+@mut fun List[a].add[a](v: a): List[a]
+@impure fun main(): Null {
+  var xs : @mut List[Nat] = MutableListOf(1)
+  unchecked xs.add(2)
+  print(xs)
+}

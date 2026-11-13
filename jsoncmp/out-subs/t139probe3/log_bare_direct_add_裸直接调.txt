@@ -1,0 +1,10 @@
+[错误][3:30] E-UNBOUND-NAME: 未定义的名称 `add`（作用域中无此变量/函数/构造子）
+  3 |   unchecked return list.fold(add(xs, 9), 0) { acc, x => acc + x }
+    |                              ^
+[错误][3:25] E-UNBOUND-NAME: 方法 .`fold` 不可解析：模块 `list` 的自由函数面与扩展函数面均无该名（限定引用未命中——接收者位是挂载模块别名，非字段/方法糖姿势；扩展函数须经「模块名.扩展名(接收者, 实参)」形态调用）
+  3 |   unchecked return list.fold(add(xs, 9), 0) { acc, x => acc + x }
+    |                         ^
+[错误][3:13] E-RETURN-TYPE: return 值类型 (推导:调用fold) 与声明 Nat 不符
+  3 |   unchecked return list.fold(add(xs, 9), 0) { acc, x => acc + x }
+    |             ^
+[错误] 前端检查未通过

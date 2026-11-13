@@ -1,0 +1,21 @@
+Starting a Gradle Daemon, 1 incompatible and 11 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileKotlin
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:1475:49 Condition is always 'true'.
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:2088:43 Condition is always 'true'.
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:2877:47 Condition is always 'true'.
+
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar
+> Task :frontend:startScripts
+> Task :frontend:installDist
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+> Task :frontend:test
+
+BUILD SUCCESSFUL in 1m 33s
+7 actionable tasks: 6 executed, 1 up-to-date

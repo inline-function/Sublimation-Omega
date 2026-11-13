@@ -1,0 +1,380 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "t153-d3n.subs",
+    "mode": "script"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-PURITY-INFERRED",
+      "pos": "2:9-2:12",
+      "message": "函数 `test` 推导为 impure（R-16 A2 自动 @impure;注解优先——可显式标 @impure 定型）。种子源：内建不纯 `print`；传播路径：test ← `print`@SourceRange(start=SourcePos(line=2, col=18), end=SourcePos(line=2, col=22))（闭包单调不动点：f 调 g 且 g 不纯 ⇒ f 不纯）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-SCRIPT-IMPLICIT-IMPURE",
+      "pos": "4:1-4:5",
+      "message": "脚本顶层语句即隐式不纯入口（P-11 §4;R-16 OQ-2「挂 unit 级 + 诊断可见」）：本文件含 1 条顶层语句，整编译单元按 impure 记隐式入口（不造合成 main——D-12 真值单源）。顶层调用不纯函数免闸（既有口径）;函数体内仍按声明口径受闸",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-LIFTED-CONTEXT",
+      "pos": "2:9-2:12",
+      "message": "函数 `test` 的签名合成 <pure<print>> 契约（R-16 上文上提）：体内调用了 impure 被调但帧内三路供给（借用形参 / axiom pure<f> / 签名角组）皆无——契约上提为签名欠条（脚本模式记账;--no-lift 门可拒）。证据尝试：`print`@SourceRange(start=SourcePos(line=2, col=18), end=SourcePos(line=2, col=22))；失败原因分类：无帧内供给（分型表:纯度族可上提,停机/类型确立族不可——R-02 红线）",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 68,
+    "pos": "1:8-4:5",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirTraitDecl",
+        "nid": 69,
+        "pos": "1:8-1:8",
+        "notes": [],
+        "name": "T",
+        "symbol": {
+          "id": 0,
+          "kind": "trait",
+          "name": "T"
+        },
+        "theory": [],
+        "annotations": [],
+        "members": [
+          {
+            "kind": "HirFunDecl",
+            "nid": 70,
+            "pos": "1:16-1:19",
+            "notes": [],
+            "name": "test",
+            "symbol": null,
+            "annotations": [],
+            "theory": [],
+            "params": [],
+            "preps": [],
+            "retType": null,
+            "posts": [],
+            "constraints": [],
+            "purity": "pure",
+            "async": false,
+            "body": null
+          }
+        ],
+        "parents": [],
+        "constants": []
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 71,
+        "pos": "2:9-2:12",
+        "notes": [],
+        "name": "test",
+        "receiver": {
+          "kind": "HirNamedType",
+          "nid": 72,
+          "pos": "2:5-2:7",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 3,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "symbol": null,
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [
+          {
+            "kind": "HirPAtom",
+            "nid": 134,
+            "pos": "2:9-2:12",
+            "notes": [
+              {
+                "kind": "supplement",
+                "code": "D-LIFTED-CONTEXT",
+                "message": "R-16 上文上提合成欠条（证据尝试见 D-LIFTED-CONTEXT 诊断）",
+                "pos": "2:9-2:12",
+                "from": null,
+                "to": null
+              }
+            ],
+            "head": "pure",
+            "terms": [
+              {
+                "kind": "HirTName",
+                "nid": 133,
+                "pos": "2:9-2:12",
+                "notes": [],
+                "name": "print",
+                "symbol": null
+              }
+            ]
+          }
+        ],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 95,
+          "pos": "0:0",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": null
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "inferred": true,
+        "evidence": [
+          "use:2:18"
+        ],
+        "body": {
+          "kind": "HirCall",
+          "nid": 76,
+          "pos": "2:18-2:22",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 77,
+            "pos": "2:18-2:22",
+            "notes": [],
+            "name": "print",
+            "symbol": {
+              "id": 5,
+              "kind": "builtin",
+              "name": "print"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirNameRef",
+              "nid": 78,
+              "pos": "2:24-2:27",
+              "notes": [],
+              "name": "self",
+              "symbol": {
+                "id": 7,
+                "kind": "param",
+                "name": "self"
+              },
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 72,
+                "pos": "2:5-2:7",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": {
+                  "id": 3,
+                  "kind": "builtin",
+                  "name": "Nat"
+                }
+              }
+            }
+          ],
+          "symbol": {
+            "id": 5,
+            "kind": "builtin",
+            "name": "print"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 95,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Null",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": true
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 96,
+        "pos": "3:5-3:10",
+        "notes": [],
+        "name": "takesT",
+        "symbol": {
+          "id": 2,
+          "kind": "fun",
+          "name": "takesT"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 97,
+            "pos": "3:12-3:12",
+            "notes": [],
+            "name": "x",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 98,
+              "pos": "3:16-3:16",
+              "notes": [],
+              "name": "T",
+              "args": [],
+              "symbol": {
+                "id": 0,
+                "kind": "trait",
+                "name": "T"
+              }
+            },
+            "symbol": {
+              "id": 8,
+              "kind": "param",
+              "name": "x"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 99,
+          "pos": "3:21-3:23",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 3,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirIntLit",
+          "nid": 100,
+          "pos": "3:27-3:27",
+          "notes": [],
+          "value": "1"
+        }
+      },
+      {
+        "kind": "HirExprStmt",
+        "nid": 102,
+        "pos": "4:1-4:5",
+        "notes": [],
+        "expr": {
+          "kind": "HirCall",
+          "nid": 103,
+          "pos": "4:1-4:5",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 104,
+            "pos": "4:1-4:5",
+            "notes": [],
+            "name": "print",
+            "symbol": {
+              "id": 5,
+              "kind": "builtin",
+              "name": "print"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirCall",
+              "nid": 105,
+              "pos": "4:7-4:12",
+              "notes": [],
+              "callee": {
+                "kind": "HirNameRef",
+                "nid": 106,
+                "pos": "4:7-4:12",
+                "notes": [],
+                "name": "takesT",
+                "symbol": {
+                  "id": 2,
+                  "kind": "fun",
+                  "name": "takesT"
+                },
+                "type": null
+              },
+              "args": [
+                {
+                  "kind": "HirIntLit",
+                  "nid": 107,
+                  "pos": "4:14-4:14",
+                  "notes": [],
+                  "value": "1"
+                }
+              ],
+              "symbol": {
+                "id": 2,
+                "kind": "fun",
+                "name": "takesT"
+              },
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 115,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": null
+              },
+              "dictionary": null,
+              "slot": null,
+              "dictArgs": [],
+              "methodSugar": false,
+              "awaitPoint": false,
+              "calleeImpure": false
+            }
+          ],
+          "symbol": {
+            "id": 5,
+            "kind": "builtin",
+            "name": "print"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 132,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Null",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": true
+        }
+      }
+    ]
+  }
+}

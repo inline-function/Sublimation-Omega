@@ -1,0 +1,3 @@
+2b71a5c stdlib B2：EXT_METHODS retire（add 落 stdlib 源，体仍空）+ ext 限定调位通道
+5f71d65 stdlib B1：struct/alias 11+5 retire（虚拟声明 → stdlib 源，差分台账纪律）
+01ed008 stdlib B0-0+B0-1：PRELUDE_FUNS retire + collection 五件迁源（形态 C）

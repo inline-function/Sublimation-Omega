@@ -1,0 +1,5 @@
+﻿@impure fun main(): Null {
+    var v : @mut List[Nat] = mutableListOf(1)
+    var w : @ref @mut List[Nat] = v
+    var g : @ref @mut List[Nat] = w
+}

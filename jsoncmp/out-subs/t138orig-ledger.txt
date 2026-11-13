@@ -1,0 +1,68 @@
+SAME	core__async__async.subl.json
+DIFF→剥差同	core__async__channel.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__async__flow.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+SAME	core__async__mutex.subl.json
+SAME	core__async__task.subl.json
+SAME	core__classic__classic.subl.json
+DIFF→剥差同	core__collection__list.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__collection__map.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__collection__optional.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__collection__result.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__collection__set.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+SAME	core__collection__traits.subl.json
+SAME	core__collection__tuple.subl.json
+SAME	core__encoding__encoding.subl.json
+DIFF→剥差同	core__io__io.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__json__json.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+SAME	core__logic__logic.subl.json
+SAME	core__math__inequality.subl.json
+SAME	core__math__math.subl.json
+SAME	core__math__number.subl.json
+SAME	core__math__order.subl.json
+SAME	core__math__peano.subl.json
+SAME	core__math__series.subl.json
+DIFF→剥差同	core__net__net.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+SAME	core__number__num.subl.json
+SAME	core__random__random.subl.json
+DIFF→剥差同	core__real__real.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__regex__regex.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__script__script.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	core__string__string.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+SAME	core__time__time.subl.json
+SAME	core__zfc__derived.subl.json
+SAME	core__zfc__zfc.subl.json
+SAME	examples__JSON内建.subl.json
+SAME	examples___probe_div.subl.json
+SAME	examples___scratch_bill.subl.json
+SAME	examples__lambda与闭包.subl.json
+SAME	examples__上下文弥散.subl.json
+SAME	examples__值与字面量.subl.json
+SAME	examples__公理化.subl.json
+SAME	examples__函数与调用形式.subl.json
+SAME	examples__副作用与unchecked.subl.json
+SAME	examples__变量与绑定.subl.json
+SAME	examples__可变性控制.subl.json
+SAME	examples__命题基础.subl.json
+SAME	examples__字符串与插值.subl.json
+SAME	examples__异步与并发.subl.json
+SAME	examples__手动证明.subl.json
+SAME	examples__日常-容器范型.subl.json
+SAME	examples__日常-异步任务.subl.json
+SAME	examples__日常-数列与区间.subl.json
+SAME	examples__日常-文本处理.subl.json
+SAME	examples__日常-温度与BMI.subl.json
+SAME	examples__日常-账单统计.subl.json
+DIFF→剥差同	examples__日常-通讯录.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+DIFF→剥差同	examples__标准库集合.subl.json（差异位=retType 联合展开 pos/旁注 message；行为零变）
+SAME	examples__模式匹配.subl.json
+SAME	examples__特性巡礼.subl.json
+SAME	examples__特质.subl.json
+SAME	examples__空安全.subl.json
+SAME	examples__类型系统.subl.json
+SAME	examples__结构体与枚举.subl.json
+SAME	examples__脚本求值桥.subl.json
+SAME	examples__自动证明.subl.json
+SAME	examples__错误处理.subl.json
+SAME	examples__高阶函数与lambda.subl.json
+SAME	examples__高阶类型.subl.json
+SAME	examples__模块系统.json

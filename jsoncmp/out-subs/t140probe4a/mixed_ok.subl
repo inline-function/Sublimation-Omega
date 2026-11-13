@@ -1,0 +1,8 @@
+trait Applicative[F[_]] {
+    fun pure[A](x: A): F[A]
+    fun F[A].ap[A, B](ff: F[(A) => B]): F[B]
+}
+fun pure[A](x: A): Optional[A] = Some(x)
+fun Optional[a].ap[a, b](ff: Optional[(a) => b]): Optional[b] = None
+fun use[T: Applicative](xs: T): Nat { unchecked return 1 }
+fun go(): Nat { var o : Optional[Nat] = None; unchecked return use(o) }

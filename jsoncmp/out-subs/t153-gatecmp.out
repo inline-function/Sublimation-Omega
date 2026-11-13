@@ -1,0 +1,21 @@
+[2] 68门 vs t122n: SAME=38 剥差同=11 纯W批一=5 纯批二=3 混合=6 预期差=4 转绿=1 总=68
+[2] 纯批二件: core__collection__traits.subl.json, examples__上下文弥散.subl.json, examples__高阶类型.subl.json
+[2] 混合件（批一W+批二H/D）: core__collection__list.subl.json, examples__日常-容器范型.subl.json, examples__日常-账单统计.subl.json, examples__日常-通讯录.subl.json, examples__标准库集合.subl.json, examples__高阶函数与lambda.subl.json
+[2] 纯W件（批一延续）: core__collection__map.subl.json, core__collection__set.subl.json, core__math__math.subl.json, examples___scratch_bill.subl.json, examples__日常-数列与区间.subl.json
+[3] vs t152gate: 逐字同=58 滤12码同=10 总=68 零未登记差
+[4] stdlib vs t143stdlib: 逐字同=4 纯W批一=3 纯批二=1 混合=0 list件登记差=1 总=9
+[4] 纯批二件: examples__模块系统__traits.json | 混合件: （无） | 纯W件: examples__模块系统__map.json, examples__模块系统__optional.json, examples__模块系统__set.json
+[ledger] 新码总量: {"H-CONS-BUILD":13,"H-UNUSED":2,"H-EXPLICIT-TYPE-ARG":0,"H-IMPURE-REDUNDANT":2,"D-SHADOW":0,"D-VARIANCE":6,"D-TRAIT-LOCAL":0}
+[ledger] STD/examples__模块系统__list.json :: H-CONS-BUILDx1
+[ledger] STD/examples__模块系统__traits.json :: D-VARIANCEx2
+[ledger] core__collection__list.subl.json :: H-CONS-BUILDx1
+[ledger] core__collection__traits.subl.json :: D-VARIANCEx3
+[ledger] examples__上下文弥散.subl.json :: H-UNUSEDx2
+[ledger] examples__日常-容器范型.subl.json :: H-CONS-BUILDx2
+[ledger] examples__日常-账单统计.subl.json :: H-CONS-BUILDx3
+[ledger] examples__日常-通讯录.subl.json :: H-CONS-BUILDx1
+[ledger] examples__标准库集合.subl.json :: H-CONS-BUILDx1
+[ledger] examples__特性巡礼.subl.json :: H-IMPURE-REDUNDANTx2
+[ledger] examples__高阶函数与lambda.subl.json :: H-CONS-BUILDx2
+[ledger] examples__高阶类型.subl.json :: H-CONS-BUILDx2 D-VARIANCEx1
+T153GATECMP DONE

@@ -1,0 +1,65 @@
+Starting a Gradle Daemon, 19 busy Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:compileTestKotlin UP-TO-DATE
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T137StdlibB0Test > 目录形态stdlib并入挂载表() FAILED
+    org.opentest4j.AssertionFailedError at T137StdlibB0Test.kt:133
+
+T137StdlibCollectionTest > list件内跨件限定引用() FAILED
+    org.opentest4j.AssertionFailedError at T137StdlibCollectionTest.kt:82
+
+T131ModuleCompileTest > 冻红样本转绿限定调用() FAILED
+    org.opentest4j.AssertionFailedError at T131ModuleCompileTest.kt:97
+
+T131ModuleCompileTest > E_DUP_DECL模块作用域化() FAILED
+    org.opentest4j.AssertionFailedError at T131ModuleCompileTest.kt:195
+
+NarrowSubtractionTest > r3_branchFactNarrowsToOne() FAILED
+    org.opentest4j.AssertionFailedError at NarrowSubtractionTest.kt:84
+
+NarrowSubtractionTest > s2_callArgNarrows() FAILED
+    org.opentest4j.AssertionFailedError at NarrowSubtractionTest.kt:154
+
+ProveFactInjectionTest > a10_mutViewNatParamAlsoInjects() FAILED
+    org.opentest4j.AssertionFailedError at ProveFactInjectionTest.kt:81
+
+ProveFactInjectionTest > a11_typeFactCapTruncatesDeterministically() FAILED
+    org.opentest4j.AssertionFailedError at ProveFactInjectionTest.kt:92
+
+ProveFactInjectionTest > a1_natTypeFactWithAxiomNeqProvesGe1() FAILED
+    org.opentest4j.AssertionFailedError at ProveFactInjectionTest.kt:28
+
+ProveFactInjectionTest > a12_capLeavesHint() FAILED
+    org.opentest4j.AssertionFailedError at ProveFactInjectionTest.kt:101
+
+ProveFactInjectionTest > a9_structParamFieldFact() FAILED
+    org.opentest4j.AssertionFailedError at ProveFactInjectionTest.kt:77
+
+ProveFactInjectionTest > a6_natTypeFactProvesGe0() FAILED
+    org.opentest4j.AssertionFailedError at ProveFactInjectionTest.kt:53
+
+1227 tests completed, 12 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 2m 3s
+5 actionable tasks: 1 executed, 4 up-to-date

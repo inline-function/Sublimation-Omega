@@ -1,0 +1,2 @@
+@mutable fun List[a].addx[a](e: a): List[a]
+fun go(): Nat { var xs : List[Nat] = Nil; unchecked xs.addx(1); unchecked return 1 }

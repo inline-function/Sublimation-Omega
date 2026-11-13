@@ -1,0 +1,4 @@
+[错误][7:64] E-TC-NOT-SATISFIED: 类型 None | Some[Nat] 不满足特质 `Applicative`——缺失规范：Applicative.F[A].ap(F[(A) => B]): F[B]（TS-20 部分满足即不满足）
+  7 | fun go(): Nat { var o : Optional[Nat] = None; unchecked return use(o) }
+    |                                                                ^
+[错误] 前端检查未通过

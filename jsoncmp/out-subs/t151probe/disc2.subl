@@ -1,0 +1,5 @@
+fun g(): Nat {
+    @mut var xs = mutableListOf(1)
+    xs.add(2)
+    return 0
+}

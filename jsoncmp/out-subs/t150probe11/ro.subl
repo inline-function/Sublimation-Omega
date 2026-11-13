@@ -1,0 +1,2 @@
+@mut struct Box(@mut n: Nat)
+@impure fun main(): Null { fun f(b: @ref Box): Null { b.n = 3 } @mut var x = Box(0); f(x) }

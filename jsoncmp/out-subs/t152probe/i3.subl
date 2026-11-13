@@ -1,0 +1,2 @@
+fun blk(x : Nat) : Nat { print(x); return x }
+@impure fun main(): Null { blk(3); print(1) }

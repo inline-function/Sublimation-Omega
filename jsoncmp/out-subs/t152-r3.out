@@ -1,0 +1,4 @@
+[警告][2:3] W-REF-ESCAPE: return 值持有 @ref 引用视图——引用直通调用方：调用方对返回值的写会穿透回被引用对象（调用方快照预期被打破的风险）。出路：返回不可变副本（copy(…)），或显式文档化引用直通语义
+   2 |   return v
+     |   ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\t152-r3.json（19617 字节）

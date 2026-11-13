@@ -1,0 +1,3 @@
+@mut struct T(@mut n: Nat)
+@impure fun main() { var u : @mut List[Nat] = mutableListOf(1)
+    u = mutableListOf(2) }

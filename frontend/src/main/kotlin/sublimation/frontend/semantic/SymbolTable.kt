@@ -78,6 +78,10 @@ private val classConsts = LinkedHashMap<String, SymbolEntry>()
      *  驱动（Semantic.kt compile）注入，参数 = (名字, 新声明的种类中文名, 被遮蔽者位置描述, 新声明位置)。 */
     internal var shadowHintSink: ((name: String, what: String, where: String, at: SourceRange) -> Unit)? = null
 
+    /** t153（D-SHADOW，supplement 族——编译器自动活告示）：遮蔽目标为外层**局部/形参**时下挂告示
+     *  （与 H-SHADOW 互补：H=提示可写得更好（含全局/同域/字段面），D=告示遮蔽解析语义将生效）。 */
+    internal var shadowSuppSink: ((name: String, at: SourceRange) -> Unit)? = null
+
     /** t86（F6 收口）：原生命题名保护从 fun/var 声明位**下沉到所有引入名字的位**——声明通道统一拦
      *  （此前形参 / 字段 / 局部 / lambda / 模式 / when / 解构 / 扩展函数名都能遮蔽编译器内建符号，
      *  诊断只在遮蔽级别）。语义与既有 E-NATIVE-REDECL 一致("试图占用原生命题名")，不新增诊断码；
@@ -186,6 +190,11 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         return null
     }
 
+    /** t153（D-TRAIT-LOCAL）：扩展函数是否来自帧链（局部扩展）——满足判定路由命中局部扩展的判据。
+     *  lookupExtDeclVisible 帧链优先（内层命中即返回），故帧链任一帧持键即可见集必然解析到局部。 */
+    fun extIsFrameLocal(receiverHead: String, name: String): Boolean =
+        frames.any { it.extFuns.containsKey(receiverHead to name) }
+
     /** t39：扩展函数符号可见集查询——帧链内→外按 (头,名字) 键遮蔽（内层命中即返回，不回退）+ 全局兜底。 */
     fun lookupExtFunVisible(receiverHead: String, name: String): List<SymbolEntry> {
         val key = receiverHead to name
@@ -268,6 +277,8 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
             shadowHintSink?.invoke(name, kindLabel(kind), "同域（" + b.origin.posStr() + "）", origin)
         } ?: lookupValueOuter(name)?.let { b ->
             shadowHintSink?.invoke(name, kindLabel(kind), whereLabel(b) + "（" + b.origin.posStr() + "）", origin)
+            // t153（D-SHADOW）：遮蔽目标为外层局部/形参（全局分表位由 H-SHADOW 覆盖）——告示遮蔽语义将生效
+            if (b.kind == SymbolKind.LOCAL || b.kind == SymbolKind.PARAM) shadowSuppSink?.invoke(name, origin)
         }
         val entry = SymbolEntry(nextId++, kind, name, origin, type = type,
             mutable = if (mutable) true else false, scriptPromotable = scriptPromotable)

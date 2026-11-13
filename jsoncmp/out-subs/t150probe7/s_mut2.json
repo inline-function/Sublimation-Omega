@@ -1,0 +1,405 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "s_mut2.subs",
+    "mode": "script"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "1:32-1:32",
+      "message": "未知类型 `T`",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "error",
+      "code": "E-UNBOUND-NAME",
+      "pos": "2:15-2:15",
+      "message": "未定义的名称 `T`（作用域中无此变量/函数/构造子）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "2:6-2:8",
+      "message": "var `ct` 推导为 (推导:调用T)",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-SCRIPT-IMPLICIT-IMPURE",
+      "pos": "2:6-2:8",
+      "message": "脚本顶层语句即隐式不纯入口（P-11 §4;R-16 OQ-2「挂 unit 级 + 诊断可见」）：本文件含 3 条顶层语句，整编译单元按 impure 记隐式入口（不造合成 main——D-12 真值单源）。顶层调用不纯函数免闸（既有口径）;函数体内仍按声明口径受闸",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:13-4:8",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:13-1:16",
+        "notes": [],
+        "name": "bump",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "bump"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "1:18-1:18",
+            "notes": [],
+            "name": "c",
+            "type": {
+              "kind": "HirRefType",
+              "nid": 6,
+              "pos": "1:22-1:22",
+              "notes": [],
+              "inner": {
+                "kind": "HirMutType",
+                "nid": 5,
+                "pos": "1:27-1:27",
+                "notes": [],
+                "inner": {
+                  "kind": "HirNamedType",
+                  "nid": 4,
+                  "pos": "1:32-1:32",
+                  "notes": [],
+                  "name": "T",
+                  "args": [],
+                  "symbol": null
+                }
+              }
+            },
+            "symbol": {
+              "id": 1,
+              "kind": "param",
+              "name": "c"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 7,
+          "pos": "1:36-1:39",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 2,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 8,
+          "pos": "1:41-1:41",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirAssign",
+              "nid": 9,
+              "pos": "1:45-1:45",
+              "notes": [],
+              "target": {
+                "kind": "HirField",
+                "nid": 20,
+                "pos": "1:45-1:45",
+                "notes": [],
+                "target": {
+                  "kind": "HirNameRef",
+                  "nid": 10,
+                  "pos": "1:43-1:43",
+                  "notes": [],
+                  "name": "c",
+                  "symbol": {
+                    "id": 1,
+                    "kind": "param",
+                    "name": "c"
+                  },
+                  "type": {
+                    "kind": "HirRefType",
+                    "nid": 6,
+                    "pos": "1:22-1:22",
+                    "notes": [],
+                    "inner": {
+                      "kind": "HirMutType",
+                      "nid": 5,
+                      "pos": "1:27-1:27",
+                      "notes": [],
+                      "inner": {
+                        "kind": "HirNamedType",
+                        "nid": 4,
+                        "pos": "1:32-1:32",
+                        "notes": [],
+                        "name": "T",
+                        "args": [],
+                        "symbol": null
+                      }
+                    }
+                  }
+                },
+                "name": "n",
+                "field": null,
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 19,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:字段n)",
+                  "args": [],
+                  "symbol": null
+                }
+              },
+              "value": {
+                "kind": "HirIntLit",
+                "nid": 21,
+                "pos": "1:49-1:49",
+                "notes": [],
+                "value": "2"
+              },
+              "mutableTarget": true
+            }
+          ]
+        }
+      },
+      {
+        "kind": "HirVarStmt",
+        "nid": 24,
+        "pos": "2:6-2:8",
+        "notes": [],
+        "name": "ct",
+        "symbol": {
+          "id": 3,
+          "kind": "local",
+          "name": "ct"
+        },
+        "annotations": [
+          "mut"
+        ],
+        "type": {
+          "kind": "HirNamedType",
+          "nid": 29,
+          "pos": "0:0",
+          "notes": [],
+          "name": "(推导:调用T)",
+          "args": [],
+          "symbol": null
+        },
+        "value": {
+          "kind": "HirCall",
+          "nid": 25,
+          "pos": "2:15-2:15",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 26,
+            "pos": "2:15-2:15",
+            "notes": [],
+            "name": "T",
+            "symbol": null,
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirIntLit",
+              "nid": 27,
+              "pos": "2:17-2:17",
+              "notes": [],
+              "value": "0"
+            }
+          ],
+          "symbol": null,
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 29,
+            "pos": "0:0",
+            "notes": [],
+            "name": "(推导:调用T)",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": false
+        },
+        "destruct": null,
+        "deepCopy": false
+      },
+      {
+        "kind": "HirUnchecked",
+        "nid": 30,
+        "pos": "3:5-3:13",
+        "notes": [],
+        "inner": {
+          "kind": "HirExprStmt",
+          "nid": 31,
+          "pos": "3:15-3:18",
+          "notes": [],
+          "expr": {
+            "kind": "HirCall",
+            "nid": 32,
+            "pos": "3:15-3:18",
+            "notes": [],
+            "callee": {
+              "kind": "HirNameRef",
+              "nid": 33,
+              "pos": "3:15-3:18",
+              "notes": [],
+              "name": "bump",
+              "symbol": {
+                "id": 0,
+                "kind": "fun",
+                "name": "bump"
+              },
+              "type": null
+            },
+            "args": [
+              {
+                "kind": "HirBorrow",
+                "nid": 35,
+                "pos": "3:20-3:20",
+                "notes": [
+                  {
+                    "kind": "supplement",
+                    "code": "D-REF-DISPATCH",
+                    "message": "借用实参 1 视图分派：(推导:调用T) → @ref @mut T（共享同一对象——目标持引用视图）（前端类型层判定，实际深拷随后端运行时，R2 §三）",
+                    "pos": "3:20-3:20",
+                    "from": "(推导:调用T)",
+                    "to": "@ref @mut T"
+                  }
+                ],
+                "operand": {
+                  "kind": "HirNameRef",
+                  "nid": 34,
+                  "pos": "3:21-3:22",
+                  "notes": [],
+                  "name": "ct",
+                  "symbol": {
+                    "id": 3,
+                    "kind": "local",
+                    "name": "ct"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 29,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "(推导:调用T)",
+                    "args": [],
+                    "symbol": null
+                  }
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 29,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "(推导:调用T)",
+                  "args": [],
+                  "symbol": null
+                }
+              }
+            ],
+            "symbol": {
+              "id": 0,
+              "kind": "fun",
+              "name": "bump"
+            },
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 40,
+              "pos": "0:0",
+              "notes": [],
+              "name": "Null",
+              "args": [],
+              "symbol": null
+            },
+            "dictionary": null,
+            "slot": null,
+            "dictArgs": [],
+            "methodSugar": false,
+            "awaitPoint": false,
+            "calleeImpure": true
+          }
+        }
+      },
+      {
+        "kind": "HirExprStmt",
+        "nid": 45,
+        "pos": "4:8-4:8",
+        "notes": [],
+        "expr": {
+          "kind": "HirField",
+          "nid": 56,
+          "pos": "4:8-4:8",
+          "notes": [],
+          "target": {
+            "kind": "HirNameRef",
+            "nid": 46,
+            "pos": "4:5-4:6",
+            "notes": [],
+            "name": "ct",
+            "symbol": {
+              "id": 3,
+              "kind": "local",
+              "name": "ct"
+            },
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 29,
+              "pos": "0:0",
+              "notes": [],
+              "name": "(推导:调用T)",
+              "args": [],
+              "symbol": null
+            }
+          },
+          "name": "n",
+          "field": null,
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 55,
+            "pos": "0:0",
+            "notes": [],
+            "name": "(推导:字段n)",
+            "args": [],
+            "symbol": null
+          }
+        }
+      }
+    ]
+  }
+}

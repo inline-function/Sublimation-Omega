@@ -1,0 +1,2 @@
+fun (@mut @ref List[a]).addx[a](e: a): List[a]
+fun m(): Nat { unchecked return 1 }

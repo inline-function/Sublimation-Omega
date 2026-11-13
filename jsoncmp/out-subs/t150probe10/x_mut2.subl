@@ -1,0 +1,5 @@
+@mut struct T(@mut n: Nat)
+@impure fun bump(c : @mut T): Null { c.n = 2 }
+@impure fun main() { @mut var ct = T(0)
+    ct.n
+    bump(ct) }

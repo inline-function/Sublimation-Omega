@@ -1,0 +1,7 @@
+[错误][4:25] E-UNBOUND-NAME: 方法 .`sum` 不可解析：模块 `math` 的自由函数面与扩展函数面均无该名（限定引用未命中——接收者位是挂载模块别名，非字段/方法糖姿势；扩展函数须经「模块名.扩展名(接收者, 实参)」形态调用）
+  4 |   unchecked return math.sum(xs)
+    |                         ^
+[错误][4:13] E-RETURN-TYPE: return 值类型 (推导:调用sum) 与声明 Nat 不符
+  4 |   unchecked return math.sum(xs)
+    |             ^
+[错误] 前端检查未通过

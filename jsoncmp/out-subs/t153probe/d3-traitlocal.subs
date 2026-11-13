@@ -1,0 +1,8 @@
+trait T { fun test() }
+fun takesT(x : T) : Nat = 1
+@impure fun f() : Null {
+  fun Nat.test() = print(self)
+  1.test()
+  print(takesT(1))
+}
+@impure fun main(): Null { f() }

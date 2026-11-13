@@ -1,0 +1,5 @@
+struct Box[T](v : T)
+@impure fun main(): Null {
+  var b = Box[Nat](3)
+  print(b)
+}

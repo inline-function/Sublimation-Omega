@@ -1,0 +1,5 @@
+﻿fun f(ys : @mut List[Nat]): Null {
+    var w : @ref @mut List[Nat] = ys
+    w.add(2)
+}
+@impure fun main(): Null { var v : @mut List[Nat] = mutableListOf(1); f(v); print(1) }

@@ -1,0 +1,6 @@
+fun g(z : @ref @ref Nat) { h(z) }
+fun h(w : @ref Nat) { w }
+@impure fun main(): Null {
+  var x : Nat = 3
+  g(&x)
+}

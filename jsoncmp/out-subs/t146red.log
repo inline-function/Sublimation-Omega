@@ -1,0 +1,47 @@
+Starting a Gradle Daemon, 1 incompatible and 10 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T146CtorFormTest > 混型实参精确报() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:89
+
+T146CtorFormTest > mutableListOf多变参绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:54
+
+T146CtorFormTest > 变长多实参混型报() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:99
+
+T146CtorFormTest > mutableListOf零参绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:36
+
+T146CtorFormTest > listOf三形态绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:67
+
+T146CtorFormTest > 构造族与Cons混用绿() FAILED
+    org.opentest4j.AssertionFailedError at T146CtorFormTest.kt:123
+
+9 tests completed, 6 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 37s
+5 actionable tasks: 2 executed, 3 up-to-date

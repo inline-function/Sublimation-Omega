@@ -1,0 +1,2 @@
+﻿fun f(xs : List[Nat]) : Nat = when (xs) { is Cons(_, _) -> 1; is Cons(a, b) -> 2; else -> 0 }
+@impure fun main(): Null { print(f(listOf(1))) }

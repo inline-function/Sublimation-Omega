@@ -1,0 +1,9 @@
+﻿fun g(v : @ref List[Nat]) : @ref List[Nat] {
+  return v
+}
+@impure fun main(): Null {
+  var xs : @mut List[Nat] = mutableListOf(1)
+  var rs : @ref List[Nat] = xs
+  var out : @ref List[Nat] = g(rs)
+  print(1)
+}

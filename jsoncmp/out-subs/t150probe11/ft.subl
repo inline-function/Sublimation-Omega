@@ -1,0 +1,148 @@
+// ============================================================
+// 特性巡礼（重写版）：一文件覆盖修正案后语言状态——
+//   程序位 => / 命题位 →、独立 axiom 语句（无线性作用域）、
+//   可变拷贝 4 条规则、@ref @mut 别名、闭包捕获创建时深拷
+// 契约（测试锁定）：输出恰 15 行，首行 alice，末行 done；check 无 ERROR
+// ============================================================
+
+// ---------- 结构体：字段默认值 + 两种构造 ----------
+struct User(name: Str = "unknown", age: Nat = 0)
+
+// ---------- 类型别名 ----------
+type Id = Nat
+
+// ---------- 枚举 + ADT 解构（穷尽无需 else） ----------
+struct Admin
+struct Editor(id: Id)
+struct Guest
+type Role = Admin | Editor | Guest
+
+fun roleText(r: Role): Str {
+    return when(r) {
+        Admin -> "admin"
+        is Editor(_) -> "editor"
+        Guest -> "guest"
+    }
+}
+
+// ---------- Optional 嵌套解构 ----------
+fun flatten(oo: Optional[Optional[Nat]]): Nat {
+    return when(oo) {
+        is Some(is Some(y)) -> y
+        is Some(None) -> 0
+        None -> 0
+    }
+}
+
+// ---------- @mut 结构体：拷贝规则的载体 ----------
+@mut struct Cell(@mut n: Nat)
+
+// ---------- 元组：字面量 + 解构 ----------
+fun label(t: (Nat, Str)): Str {
+    return when(t) {
+        (n, s) -> "pair"
+        else -> "no"
+    }
+}
+
+// ---------- 函数类型 + lambda ----------
+fun applyTwice(f: (Nat) => Nat, x: Nat): Nat = f(f(x))
+
+// ---------- when 守卫：引用绑定变量 m ----------
+fun classify(n: Nat): Str {
+    return when(n) {
+        0 -> "zero"
+        m if !=(m, 0) & !=(m, 1) -> "many"
+        else -> "small"
+    }
+}
+
+// ---------- 提前 return ----------
+// 返回 Int 而非 Nat：`0 - n` 与 n 在此处都是 Int，而 Int → Nat 属向下、须显式收窄
+// （数值塔只做小到大提升）。非负性由两个分支保证，但类型层不表达它，故诚实声明 Int。
+fun abs(n: Int): Int {
+    if (n < 0) { return 0 - n }
+    return n
+}
+
+// ---------- when 绑定主题 ----------
+fun signOf(n: Int): Str = when(var m = n * 2) {
+    0 -> "origin"
+    else -> "moved"
+}
+
+// ---------- 特质 + 扩展函数 + 显式 self（P-8 迁移，卷 §7）----------
+trait Named {
+    fun describe(): Str
+}
+
+fun User.describe(): Str {
+    return self.name
+}
+
+// ---------- @mut 累加 + 提前 return ----------
+@impure fun counterDemo(): Nat {
+    @mut var sum = 0
+    sum = sum + 1
+    sum = sum + 41
+    return sum
+}
+
+// ---------- 上下文弥散：下文 <answered> 兑现后弥散进作用域 ----------
+fun fact(): Null <answered> {
+    axiom answered
+}
+fun usesFact()<answered>: Null {}
+
+// ---------- $ 指代返回值（唯一带值 return 参与后件核对） ----------
+fun get7(): Id <$ = 7> {
+    return 7
+}
+fun needTagged()<tagged<7>>: Null {}
+
+// ---------- pure 命题改变代码行为 ----------
+@impure fun side(): Null {}
+fun pureCaller()<pure<side>>: Null {
+    side()
+}
+
+@impure
+fun main() {
+    var u1 = User("alice", 30)
+    var u2 = User(name = "bob")
+    axiom forall n. tagged<n>
+    axiom pure<side>
+
+    // —— 拷贝规则演示 1：MUT 目标 ← MUT 源 = 深拷贝（R-28：纯源不可升 @mut，深拷唯经构造族）——
+    var a : @mut Cell = Cell(0)
+    var b : @mut Cell = a
+    b.n = 1
+    // —— 拷贝规则演示 2：@ref @mut 目标 ← MUT 源 = 别名共享 ——
+    var c : @mut Cell = Cell(0)
+    @ref var d : @mut Cell = c
+    c.n = 1
+    // —— 闭包捕获：创建时深拷快照 ——
+    @mut var ctr : Cell = Cell(7)
+    var snapshot = { => ctr.n }
+    ctr.n = 8
+
+    unchecked print(u1.name)                    // alice
+    unchecked print(u2.age)                     // 0
+    unchecked print(roleText(Admin))          // admin
+    unchecked print(flatten(Some(Some(9))))     // 9
+    unchecked print(label((1, "a")))            // pair
+    unchecked print(applyTwice({ x => x + 1 }, 10))  // 12
+    unchecked print(classify(7))                // many
+    unchecked print(abs(0 - 5))                 // 5（提前 return）
+    unchecked print(a.n)                        // 0（深拷后 a 不受 b 影响）
+    unchecked print(d.n)                        // 1（别名：c.n 改了 d.n 跟着变）
+    unchecked print(snapshot())                 // 7（闭包持有创建时快照）
+    unchecked print(counterDemo())              // 42
+    unchecked print(get7())                     // 7
+    unchecked print(signOf(3))                  // moved
+    fact()
+    usesFact()
+    pureCaller()
+    needTagged()
+    unchecked print("done")                     // done
+}

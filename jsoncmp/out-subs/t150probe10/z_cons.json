@@ -1,0 +1,310 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "z_cons.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:13-1:16",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:13-1:16",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 3,
+          "pos": "1:20-1:20",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirVarStmt",
+              "nid": 4,
+              "pos": "2:2-2:4",
+              "notes": [],
+              "name": "t",
+              "symbol": {
+                "id": 7,
+                "kind": "local",
+                "name": "t"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirUnionType",
+                "nid": 12,
+                "pos": "11:16-11:18",
+                "notes": [],
+                "variants": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 7,
+                    "pos": "11:16-11:18",
+                    "notes": [],
+                    "name": "Nil",
+                    "args": [],
+                    "symbol": {
+                      "id": 3,
+                      "kind": "builtin",
+                      "name": "Nil"
+                    }
+                  },
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 11,
+                    "pos": "11:22-11:25",
+                    "notes": [],
+                    "name": "Cons",
+                    "args": [
+                      {
+                        "kind": "HirNamedType",
+                        "nid": 6,
+                        "pos": "2:15-2:17",
+                        "notes": [],
+                        "name": "Nat",
+                        "args": [],
+                        "symbol": {
+                          "id": 1,
+                          "kind": "builtin",
+                          "name": "Nat"
+                        }
+                      }
+                    ],
+                    "symbol": {
+                      "id": 4,
+                      "kind": "builtin",
+                      "name": "Cons"
+                    }
+                  }
+                ]
+              },
+              "value": {
+                "kind": "HirCall",
+                "nid": 13,
+                "pos": "2:22-2:25",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 14,
+                  "pos": "2:22-2:25",
+                  "notes": [],
+                  "name": "Cons",
+                  "symbol": {
+                    "id": 5,
+                    "kind": "ctor",
+                    "name": "Cons"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 15,
+                    "pos": "2:27-2:27",
+                    "notes": [],
+                    "value": "1"
+                  },
+                  {
+                    "kind": "HirNameRef",
+                    "nid": 17,
+                    "pos": "2:30-2:32",
+                    "notes": [],
+                    "name": "Nil",
+                    "symbol": {
+                      "id": 6,
+                      "kind": "ctor",
+                      "name": "Nil"
+                    },
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 16,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Nil",
+                      "args": [],
+                      "symbol": null
+                    }
+                  }
+                ],
+                "symbol": {
+                  "id": 5,
+                  "kind": "ctor",
+                  "name": "Cons"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 36,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Cons",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 18,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "Nat",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirVarStmt",
+              "nid": 37,
+              "pos": "3:2-3:4",
+              "notes": [
+                {
+                  "kind": "supplement",
+                  "code": "D-REF-DISPATCH",
+                  "message": "u 视图分派：Nil | Cons[Nat] → @ref List[Nat]（共享同一对象——目标持引用视图）（前端类型层判定，实际深拷随后端运行时，R2 §三）",
+                  "pos": "3:2-3:4",
+                  "from": "Nil | Cons[Nat]",
+                  "to": "@ref List[Nat]"
+                }
+              ],
+              "name": "u",
+              "symbol": {
+                "id": 8,
+                "kind": "local",
+                "name": "u"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirRefType",
+                "nid": 40,
+                "pos": "3:10-3:10",
+                "notes": [],
+                "inner": {
+                  "kind": "HirNamedType",
+                  "nid": 38,
+                  "pos": "3:15-3:18",
+                  "notes": [],
+                  "name": "List",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 39,
+                      "pos": "3:20-3:22",
+                      "notes": [],
+                      "name": "Nat",
+                      "args": [],
+                      "symbol": {
+                        "id": 1,
+                        "kind": "builtin",
+                        "name": "Nat"
+                      }
+                    }
+                  ],
+                  "symbol": {
+                    "id": 2,
+                    "kind": "builtin",
+                    "name": "List"
+                  }
+                }
+              },
+              "value": {
+                "kind": "HirNameRef",
+                "nid": 41,
+                "pos": "3:27-3:27",
+                "notes": [],
+                "name": "t",
+                "symbol": {
+                  "id": 7,
+                  "kind": "local",
+                  "name": "t"
+                },
+                "type": {
+                  "kind": "HirUnionType",
+                  "nid": 12,
+                  "pos": "11:16-11:18",
+                  "notes": [],
+                  "variants": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 7,
+                      "pos": "11:16-11:18",
+                      "notes": [],
+                      "name": "Nil",
+                      "args": [],
+                      "symbol": {
+                        "id": 3,
+                        "kind": "builtin",
+                        "name": "Nil"
+                      }
+                    },
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 11,
+                      "pos": "11:22-11:25",
+                      "notes": [],
+                      "name": "Cons",
+                      "args": [
+                        {
+                          "kind": "HirNamedType",
+                          "nid": 6,
+                          "pos": "2:15-2:17",
+                          "notes": [],
+                          "name": "Nat",
+                          "args": [],
+                          "symbol": {
+                            "id": 1,
+                            "kind": "builtin",
+                            "name": "Nat"
+                          }
+                        }
+                      ],
+                      "symbol": {
+                        "id": 4,
+                        "kind": "builtin",
+                        "name": "Cons"
+                      }
+                    }
+                  ]
+                }
+              },
+              "destruct": null,
+              "deepCopy": false
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

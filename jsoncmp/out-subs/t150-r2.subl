@@ -1,0 +1,5 @@
+﻿@impure fun main(): Null {
+    var v : @ref List[Nat] = listOf(1)
+    var g : List[Nat] = v
+    print(g)
+}

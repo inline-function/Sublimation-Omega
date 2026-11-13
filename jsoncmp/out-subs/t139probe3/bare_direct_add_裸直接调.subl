@@ -1,0 +1,4 @@
+fun main(): Nat {
+  var xs : @mut List[Nat] = MutableListOf(1)
+  unchecked return list.fold(add(xs, 9), 0) { acc, x => acc + x }
+}

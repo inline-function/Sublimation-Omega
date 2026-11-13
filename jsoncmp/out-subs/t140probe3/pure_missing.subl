@@ -1,0 +1,5 @@
+trait Applicative[F[_]] {
+    fun pure[A](x: A): F[A]
+}
+fun use[T: Applicative](xs: T): Nat { unchecked return 1 }
+fun go(): Nat { var xs : List[Nat] = Nil; unchecked return use(xs) }

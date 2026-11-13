@@ -1,0 +1,1 @@
+@impure fun main() { var xs : @mut List[Nat] = mutableListOf(1); var ys : @mut List[Nat] = xs; print(ys) }

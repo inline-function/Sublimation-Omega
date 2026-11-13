@@ -1,0 +1,1 @@
+@mut struct C(n: Nat) @impure fun bump(c : @mut C) { } @impure fun main() { var c = C(0); bump(c) }

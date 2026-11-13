@@ -1,0 +1,59 @@
+Starting a Gradle Daemon, 1 incompatible and 15 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses
+
+> Task :frontend:test
+
+RefTypeInertTest > t98_hir_2_refMut叠加形态() FAILED
+    org.opentest4j.AssertionFailedError at RefTypeInertTest.kt:71
+
+T107R07CaptureTest > 自身局部非捕获() FAILED
+    org.opentest4j.AssertionFailedError at T107R07CaptureTest.kt:113
+
+T107R07CaptureTest > 不纯上下文内不分析() FAILED
+    org.opentest4j.AssertionFailedError at T107R07CaptureTest.kt:103
+
+T125MutPromotionTest > T1局部二次赋值提升() FAILED
+    org.opentest4j.AssertionFailedError at T125MutPromotionTest.kt:56
+
+T125MutPromotionTest > 差分对拍标注等价_视图同() FAILED
+    org.opentest4j.AssertionFailedError at T125MutPromotionTest.kt:132
+
+T125MutPromotionTest > T2形参被赋值提升() FAILED
+    org.opentest4j.AssertionFailedError at T125MutPromotionTest.kt:79
+
+T125MutPromotionTest > 差分对拍同源双门_脚本提升工程拒绝() FAILED
+    org.opentest4j.AssertionFailedError at T125MutPromotionTest.kt:116
+
+T126ContainerFaceTest > T3形参加入mut接收者位() FAILED
+    org.opentest4j.AssertionFailedError at T126ContainerFaceTest.kt:144
+
+T128BorrowSemanticsTest > 差分对拍borrow双形态批() FAILED
+    org.opentest4j.AssertionFailedError at T128BorrowSemanticsTest.kt:230
+
+ViewDemotionTest > d2_plainArgToMutParamBorrowOk() FAILED
+    org.opentest4j.AssertionFailedError at ViewDemotionTest.kt:217
+
+70 tests completed, 10 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 47s
+5 actionable tasks: 3 executed, 2 up-to-date

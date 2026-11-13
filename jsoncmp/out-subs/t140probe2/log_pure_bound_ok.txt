@@ -1,0 +1,34 @@
+[错误][6:37] E-SYNTAX: 期望表达式
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                     ^
+[错误][6:37] E-SYNTAX: 无法继续解析，跳过符号 '['
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                     ^
+[错误][6:46] E-SYNTAX: 期望表达式
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                              ^
+[错误][6:46] E-SYNTAX: 无法继续解析，跳过符号 '['
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                              ^
+[错误][6:50] E-SYNTAX: 期望表达式
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                                  ^
+[错误][6:50] E-SYNTAX: 无法继续解析，跳过符号 ']'
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                                  ^
+[错误][6:51] E-SYNTAX: 期望表达式
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                                   ^
+[错误][6:51] E-SYNTAX: 无法继续解析，跳过符号 ']'
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                                   ^
+[错误][6:27] E-RETURN-TYPE: return 值类型 () => Nat 与声明 Nat 不符
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                           ^
+[错误][6:38] E-UNBOUND-NAME: 未定义的名称 `Optional`（作用域中无此变量/函数/构造子）
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                      ^
+[错误][6:47] E-UNBOUND-NAME: 未定义的名称 `Nat`（作用域中无此变量/函数/构造子）
+  6 | fun go(): Nat { unchecked return use[Optional[Nat]] }
+    |                                               ^
+[错误] 前端检查未通过

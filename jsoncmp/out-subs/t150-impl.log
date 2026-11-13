@@ -1,0 +1,51 @@
+Starting a Gradle Daemon, 1 incompatible and 6 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileKotlin
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:1484:49 Condition is always 'true'.
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:2097:43 Condition is always 'true'.
+w: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:2877:47 Condition is always 'true'.
+
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T150R28MatrixTest > R29深拷补注_元素层下钻() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:124
+
+T150R28MatrixTest > R29深拷补注_mut到plain() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:96
+
+T150R28MatrixTest > R29深拷补注_mut到mut() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:103
+
+T150R28MatrixTest > R29深拷补注_传参位() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:111
+
+T150R28MatrixTest > R29深拷补注_赋值位() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:117
+
+T150R28MatrixTest > 共享格零回归() FAILED
+    org.opentest4j.AssertionFailedError at T150R28MatrixTest.kt:136
+
+14 tests completed, 6 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 5m
+5 actionable tasks: 4 executed, 1 up-to-date

@@ -1,0 +1,2 @@
+@mutable fun gox(): Nat { unchecked return 1 }
+fun m(): Nat { unchecked return 1 }

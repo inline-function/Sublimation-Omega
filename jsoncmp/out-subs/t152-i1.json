@@ -1,0 +1,294 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "t152-i1.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "warn",
+      "code": "W-RESULT-IGNORED",
+      "pos": "2:28-2:33",
+      "message": "纯函数 `double` 的调用结果被丢弃——纯调用无副作用，结果不用即空操作（疑似 bug）。出路：使用结果（赋值 / 返回 / 入实参），或用 unchecked 包覆该语句显式声明丢弃意图",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:6-2:16",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:6-1:11",
+        "notes": [],
+        "name": "double",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "double"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "1:13-1:13",
+            "notes": [],
+            "name": "x",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "1:17-1:19",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 2,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 3,
+              "kind": "param",
+              "name": "x"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 8,
+          "pos": "1:24-1:26",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 2,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirBinExpr",
+          "nid": 14,
+          "pos": "1:32-1:32",
+          "notes": [],
+          "op": "*",
+          "left": {
+            "kind": "HirNameRef",
+            "nid": 9,
+            "pos": "1:30-1:30",
+            "notes": [],
+            "name": "x",
+            "symbol": {
+              "id": 3,
+              "kind": "param",
+              "name": "x"
+            },
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "1:17-1:19",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 2,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            }
+          },
+          "right": {
+            "kind": "HirIntLit",
+            "nid": 10,
+            "pos": "1:34-1:34",
+            "notes": [],
+            "value": "2"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 4,
+            "pos": "1:17-1:19",
+            "notes": [],
+            "name": "Nat",
+            "args": [],
+            "symbol": {
+              "id": 2,
+              "kind": "builtin",
+              "name": "Nat"
+            }
+          }
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 15,
+        "pos": "2:13-2:16",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 16,
+          "pos": "2:21-2:24",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 4,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 17,
+          "pos": "2:26-2:26",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirExprStmt",
+              "nid": 18,
+              "pos": "2:28-2:33",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 19,
+                "pos": "2:28-2:33",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 20,
+                  "pos": "2:28-2:33",
+                  "notes": [],
+                  "name": "double",
+                  "symbol": {
+                    "id": 0,
+                    "kind": "fun",
+                    "name": "double"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 22,
+                    "pos": "2:35-2:35",
+                    "notes": [],
+                    "value": "3"
+                  }
+                ],
+                "symbol": {
+                  "id": 0,
+                  "kind": "fun",
+                  "name": "double"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 26,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Nat",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              }
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 27,
+              "pos": "2:39-2:43",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 28,
+                "pos": "2:39-2:43",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 29,
+                  "pos": "2:39-2:43",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 5,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 30,
+                    "pos": "2:45-2:45",
+                    "notes": [],
+                    "value": "1"
+                  }
+                ],
+                "symbol": {
+                  "id": 5,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 48,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

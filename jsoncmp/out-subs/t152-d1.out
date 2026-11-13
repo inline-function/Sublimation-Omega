@@ -1,0 +1,7 @@
+[警告][2:3] W-DEEP-COPY-LOOP: var `b` 隐式深拷出现在递归帧内——每层递归重复深拷（成本随递归深度线性叠加）。出路：把深拷提到递归外只做一次，或改用 @ref 共享视图
+  2 |   var b : List[Nat] = a
+    |   ^
+[警告][3:29] W-DEEP-COPY-LOOP: 实参 1 隐式深拷出现在递归帧内——每层递归重复深拷（成本随递归深度线性叠加）。出路：把深拷提到递归外只做一次，或改用 @ref 共享视图
+  3 |   return if (n == 0) 0 else countdown(a, n - 1)
+    |                             ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\t152-d1.json（26727 字节）

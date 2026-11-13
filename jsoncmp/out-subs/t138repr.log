@@ -1,0 +1,13 @@
+[parity] OK: PRELUDE struct/ALIASES 虚拟层撤（Channel 留虚拟）；RETIRED 允许表十 struct 入项
+[parity] OK: stdlib 五件 10 struct + 5 联合别名源声明在位（形状同构）
+[parity] SAME: examples__日常-数列与区间.subl.json
+[parity] DIFF→剥差同（联合展开 pos 位）: examples__标准库集合.subl.json
+[parity] SAME: examples__特性巡礼.subl.json
+[parity] SAME: examples__命题基础.subl.json
+[parity] SAME: examples__模式匹配.subl.json
+[parity] SAME: examples__字符串与插值.subl.json
+[parity] SAME: examples__手动证明.subl.json
+[parity] OK: 7 依赖样本零差分/剥差同（行为零变，OQ-10 B1 口径）
+[parity] 68 门: SAME=68 剥差同=0 失败=0（台账: out-subs/t138gate-ledger.txt）
+[parity] OK: 模块双导出确定性 8/8（B1 分层后 1+7 件集合）
+[parity] PASSED: B1 retire 机械证据四段全绿

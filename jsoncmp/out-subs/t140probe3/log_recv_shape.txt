@@ -1,0 +1,4 @@
+[错误][6:60] E-TC-NOT-SATISFIED: 类型 Nil | Cons[Nat] 不满足特质 `Functor`——缺失规范：Functor.F[<错误类型:A>].map((<错误类型:A>) => <错误类型:B>): F[<错误类型:B>]（TS-20 部分满足即不满足）
+  6 | fun go(): Nat { var xs : List[Nat] = Nil; unchecked return use(xs) }
+    |                                                            ^
+[错误] 前端检查未通过

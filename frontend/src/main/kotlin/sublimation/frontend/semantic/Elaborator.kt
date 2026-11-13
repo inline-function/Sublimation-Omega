@@ -1590,6 +1590,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 diag.warn("W-REF-ESCAPE", body.origin,
                     "返回值持有 @ref 引用视图——引用直通调用方：调用方对返回值的写会穿透回被引用对象" +
                     "（调用方快照预期被打破的风险）。出路：返回不可变副本（copy(…)），或显式文档化引用直通语义")
+            // t153（H-UNUSED，V1 仅函数局部域+块体）：体 HIR 名引用 vs 形参/局部 var——posts 非空跳过
+            // （契约 by 断言可引形参名，保守免假阳性）；destruct 形参/默认值位亦免;**表达式体一律免**
+            // （单行体无局部声明，未用形参面多为签名/占位惯用法——run-gate OQ-10 样本与 net/regex/encoding
+            //  占位内建均此形;块体才是死代码真面——噪声控制，表达式体未用形参留 V2）
+            if (body != null && d.posts.isEmpty() && body is sublimation.frontend.hir.HirBlock) unusedHints(params, body)
             // t115 求解收口（P-11 §3.3）；t117：返回位**每轮复解**——体类型/return 证据每轮重收，
             // 种子作下界单调并入（先轮的占位态近似解不会硬化为「声明返回」——假门根因：收敛轮 2 误报）
             val mRet = if (retMeta != null) {
@@ -1897,6 +1902,183 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 "when 分支被前序分支完全包含——永不匹配（死分支）。出路：删除该分支，或调整分支顺序 / 收窄前序模式")
         }
     }
+    // ============================ t153（诊断批二：H 静态 + D 自动活） ============================
+
+    /** t153（H-CONS-BUILD）：Cons 链手拼层数（**纯 AST 判**，零分配——不查签名不解类型）。
+     *  Cons(1, Nil) = 1 层；Cons(1, Cons(2, Nil)) = 2 层——≥2 层建议 listOf。 */
+    private fun consChainDepth(e: sublimation.frontend.ast.Expr): Int =
+        if (e is sublimation.frontend.ast.CallExpr &&
+            (e.callee as? sublimation.frontend.ast.NameRef)?.name == "Cons" && e.args.size == 2)
+            1 + consChainDepth(e.args[1]) else 0
+
+    /** t153（H-UNUSED / H-IMPURE-REDUNDANT 共用 HIR 体 walker）：**零分配**——只按既有节点
+     *  字段遍历（不建物化类型、不消费 nid、不查签名；批一纪律：诊断检查一律禁 etype/sigOf）。 */
+    private fun walkHirExpr(e: sublimation.frontend.hir.HirExpr?, cb: (sublimation.frontend.hir.HirNode) -> Unit) {
+        if (e == null) return
+        cb(e)
+        when (e) {
+            is sublimation.frontend.hir.HirBlock -> e.stmts.forEach { walkHirStmt(it, cb) }
+            is sublimation.frontend.hir.HirIf -> {
+                walkHirExpr(e.cond, cb); walkHirExpr(e.thenBlock, cb); walkHirExpr(e.elseBlock, cb)
+            }
+            is sublimation.frontend.hir.HirWhen -> {
+                walkHirExpr(e.subject, cb)
+                e.arms.forEach { a -> walkHirExpr(a.guard, cb); walkHirExpr(a.cond, cb); walkHirExpr(a.body, cb) }
+            }
+            is sublimation.frontend.hir.HirBinExpr -> { walkHirExpr(e.left, cb); walkHirExpr(e.right, cb) }
+            is sublimation.frontend.hir.HirUniExpr -> walkHirExpr(e.operand, cb)
+            is sublimation.frontend.hir.HirCall -> { walkHirExpr(e.callee, cb); e.args.forEach { walkHirExpr(it, cb) } }
+            is sublimation.frontend.hir.HirField -> walkHirExpr(e.target, cb)
+            is sublimation.frontend.hir.HirFunRef -> walkHirExpr(e.target, cb)
+            is sublimation.frontend.hir.HirTypeTest -> walkHirExpr(e.target, cb)
+            is sublimation.frontend.hir.HirTask -> walkHirExpr(e.body, cb)
+            is sublimation.frontend.hir.HirFlow -> walkHirExpr(e.body, cb)
+            is sublimation.frontend.hir.HirInst -> { walkHirExpr(e.target, cb); e.terms.forEach { walkHirExpr(it, cb) } }
+            is sublimation.frontend.hir.HirLambda -> walkHirExpr(e.body, cb)
+            is sublimation.frontend.hir.HirAnonFun -> walkHirExpr(e.body, cb)
+            is sublimation.frontend.hir.HirTuple -> e.items.forEach { walkHirExpr(it, cb) }
+            is sublimation.frontend.hir.HirStructCtor -> e.assigns.forEach { walkHirExpr(it.second, cb) }
+            is sublimation.frontend.hir.HirByExpr -> walkHirExpr(e.target, cb)
+            is sublimation.frontend.hir.HirVarExpr -> walkHirExpr(e.value, cb)
+            is sublimation.frontend.hir.HirBorrow -> walkHirExpr(e.operand, cb)
+            else -> { }
+        }
+    }
+
+    private fun walkHirStmt(s: sublimation.frontend.hir.HirStmt, cb: (sublimation.frontend.hir.HirNode) -> Unit) {
+        cb(s)
+        when (s) {
+            is sublimation.frontend.hir.HirExprStmt -> walkHirExpr(s.expr, cb)
+            is sublimation.frontend.hir.HirVarStmt -> walkHirExpr(s.value, cb)
+            is sublimation.frontend.hir.HirAssign -> { walkHirExpr(s.target, cb); walkHirExpr(s.value, cb) }
+            is sublimation.frontend.hir.HirReturn -> walkHirExpr(s.expr, cb)
+            is sublimation.frontend.hir.HirLocalFun -> walkHirExpr(s.fn.body, cb)
+            is sublimation.frontend.hir.HirUnchecked -> walkHirStmt(s.inner, cb)
+            else -> { }
+        }
+    }
+
+    /** t153（H-UNUSED，V1 仅函数局部域——噪声控制：顶层声明/全局函数不在判定面）：
+     *  体 HIR 名引用集合（HirNameRef / HirVarExpr 的名）vs 形参 + 局部 var 声明——零引用即未用。 */
+    private fun unusedHints(params: List<sublimation.frontend.hir.HirParam>, body: sublimation.frontend.hir.HirExpr) {
+        val refs = mutableSetOf<String>()
+        val vars = mutableListOf<Pair<String, SourceRange>>()
+        walkHirExpr(body) { n ->
+            when (n) {
+                is sublimation.frontend.hir.HirNameRef -> refs.add(n.name)
+                is sublimation.frontend.hir.HirVarExpr -> refs.add(n.name)
+                is sublimation.frontend.hir.HirVarStmt -> if (n.destruct == null) vars.add(n.name to n.origin)
+                else -> { }
+            }
+        }
+        params.forEach { p ->
+            if (p.default == null && p.destruct == null && p.name !in refs && !isDiscardName(p.name))
+                diag.hint("H-UNUSED", p.origin,
+                    "形参 " + ident(p.name) + " 未被函数体引用——可删除（未用形参即接口噪音；V1 仅函数局部域判定）")
+        }
+        vars.forEach { (n, pos) ->
+            if (n !in refs && !isDiscardName(n))
+                diag.hint("H-UNUSED", pos,
+                    "局部 " + ident(n) + " 声明后未经引用——可删除（未用局部即死代码；V1 仅函数局部域判定）")
+        }
+    }
+
+    private fun isDiscardName(n: String): Boolean = n == "_" || n.startsWith("_")
+
+    /** t153（D-VARIANCE，supplement 族）：声明位类型参数变构性告示——σ_imm / σ_mut 双视图格结论。
+     *  V1 两点保守口径（噪声控制）：
+     *  ① 仅**本文件声明**（HirFile 条目）——prelude 虚拟 / 挂载 stdlib 声明不告示（非用户声明面）；
+     *  ② 仅非平凡参数发——σ_imm=σ_mut=协变（默认即协）不报，逆变 / 不变 / 双视分歧才报（报则刷屏）。
+     *  函数级类型参数不在此面：VarianceInfer 建表面限特质/结构体（sitesVariance 声明期判无全局表）。
+     *  **零分配**：VarianceInfer 全程 AST 域推算（不消费 nid）；异常一律吞（D 级告示不构成失败面）。 */
+    private fun varianceNotes(hir: sublimation.frontend.hir.HirFile) {
+        val v = try { variance() } catch (e: Throwable) { return }
+        fun lab(x: Variance): String = when (x) {
+            Variance.CO -> "协变"; Variance.CONTRA -> "逆变"; Variance.INV -> "不变"
+        }
+        hir.entries.forEach { ent ->
+            val d = (ent as? sublimation.frontend.hir.HirDeclEntry)?.decl ?: return@forEach
+            val name: String = when (d) {
+                is HirTraitDecl -> d.name
+                is HirStructDecl -> d.name
+                else -> return@forEach
+            }
+            val theory = (d as? HirTraitDecl)?.theory ?: (d as HirStructDecl).theory
+            val origin = d.origin
+            theory.filterIsInstance<sublimation.frontend.hir.HirTypeParam>().forEachIndexed { i, tp ->
+                val vp = v.varianceOf(name, i) ?: return@forEachIndexed
+                if (vp.imm == Variance.CO && vp.mut == Variance.CO) return@forEachIndexed
+                diag.supplement("D-VARIANCE", origin,
+                    if (vp.imm == vp.mut)
+                        "类型参数 " + ident(tp.name) + " 将按" + lab(vp.imm) + "处理（双视图格一致：σ_imm=σ_mut=" +
+                        lab(vp.imm) + "——编译器按使用处极性自动判定，子类型分派按当前视图取值）"
+                    else
+                        "类型参数 " + ident(tp.name) + " 将按双视图分派处理（σ_imm=" + lab(vp.imm) + "，σ_mut=" +
+                        lab(vp.mut) + "——普通视图按" + lab(vp.imm) + "、@mut 视图按" + lab(vp.mut) +
+                        "分派；编译器自动判定，子类型分派按当前视图取值）")
+            }
+        }
+    }
+
+    /** t153（H-IMPURE-REDUNDANT）：体内不纯证据（impure 名集 ∪ 内建 / panic / 方法糖调用 / 字段写）。
+     *  保守口径：局部 var 写不算证据（纯赋值）；方法糖（std 扩展调用）口径未知一律计证据。 */
+    private fun bodyImpureEvidence(body: sublimation.frontend.hir.HirExpr, impure: Set<String>): Boolean {
+        var found = false
+        walkHirExpr(body) { n ->
+            if (!found) when (n) {
+                is sublimation.frontend.hir.HirCall -> {
+                    val nm = (n.callee as? sublimation.frontend.hir.HirNameRef)?.name
+                    if (nm != null && (nm in impure || nm == "panic")) found = true
+                    if (n.methodSugar) found = true
+                }
+                is sublimation.frontend.hir.HirAssign ->
+                    if (n.target is sublimation.frontend.hir.HirField) found = true
+                else -> { }
+            }
+        }
+        return found
+    }
+
+    /** t153（H-EXPLICIT-TYPE-ARG，自由函数位）：单理论参数且其出现于全部形参位的实参类型与显式角表
+     *  渲染一致 → 可省略提示。**零分配**：形参位用 AST 类型（occursInTypeAst），实参位用既有 argTypes
+     *  （调用签名核对已算）渲染比对——不重解理论、不建物化类型。 */
+    private fun explicitTypeArgHintFun(
+        d: FunDecl, tpsD: List<String>, argTypes: List<sublimation.frontend.hir.HirType>,
+        explicitTps: List<sublimation.frontend.hir.HirType>, pos: SourceRange,
+    ) {
+        if (explicitTps.size != 1 || tpsD.size != 1) return
+        val idxs = d.params.mapIndexed { i, q -> i to q.type }
+            .filter { it.second != null && occursInTypeAst(tpsD[0], it.second!!) }.map { it.first }
+        explicitTypeArgHint(idxs, argTypes, explicitTps, pos)
+    }
+
+    /** t153（H-EXPLICIT-TYPE-ARG，构造子位）：同上，形参位取结构体字段清单（ctor 实参序=字段声明序）。 */
+    private fun explicitTypeArgHintCtor(
+        ci: CtorInfo, argTypes: List<sublimation.frontend.hir.HirType>,
+        explicitTps: List<sublimation.frontend.hir.HirType>, pos: SourceRange,
+    ) {
+        if (explicitTps.size != 1) return
+        val st = structDecls[ci.enumName] ?: return
+        val tps = st.theory.filterIsInstance<TypeParam>().map { it.name }
+        if (tps.size != 1) return
+        val idxs = st.fields.mapIndexed { i, f -> i to f.type }
+            .filter { it.second != null && occursInTypeAst(tps[0], it.second!!) }.map { it.first }
+        explicitTypeArgHint(idxs, argTypes, explicitTps, pos)
+    }
+
+    private fun explicitTypeArgHint(
+        idxs: List<Int>, argTypes: List<sublimation.frontend.hir.HirType>,
+        explicitTps: List<sublimation.frontend.hir.HirType>, pos: SourceRange,
+    ) {
+        if (idxs.isEmpty() || explicitTps.isEmpty()) return
+        val want = infer.render(explicitTps[0])
+        // 出现位任一越界/未决（渲染为占位与显式角表不同）即不发——保守免假阳性
+        if (idxs.all { i -> i < argTypes.size && infer.render(argTypes[i]) == want })
+            diag.hint("H-EXPLICIT-TYPE-ARG", pos,
+                "显式类型实参 [" + want + "] 可省略：形参位实参已推导出同一类型（去掉 […] 等价——" +
+                "类型实参与推导结果一致，显式供给冗余）")
+    }
+
     // ============================ 语句 ============================
 
     private fun stmt(s: Stmt): sublimation.frontend.hir.HirStmt = when (s) {
@@ -3354,6 +3536,13 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                         sigCheckedCall(d, calleeName, argTypes, e.pos, explicitTps, borrowedFlags)
                     } ?: funValueCall(calleeName, argTypes, e.pos, explicitTps, borrowedFlags)
                     SymbolKind.CTOR -> symbols.lookupCtor(calleeName)?.let { ci ->
+                        // t153（H-CONS-BUILD）：Cons 链手拼 ≥2 层——listOf 是列表构造正道（R-26.3）
+                        if (calleeName == "Cons" && e.args.size == 2 && consChainDepth(e.args.last()) >= 1)
+                            diag.hint("H-CONS-BUILD", e.pos,
+                                "Cons 链手拼 " + (1 + consChainDepth(e.args.last())) + " 层——可写 listOf(…)：" +
+                                "R-26.3 定 listOf 为列表构造正道，手拼 Cons 合法但可读性差")
+                        // t153（H-EXPLICIT-TYPE-ARG，构造子位）：结构体字段位实参已推导出同一类型 → 显式角表可省
+                        explicitTypeArgHintCtor(ci, argTypes, explicitTps, e.pos)
                         ctorCall(calleeName, ci, argTypes, e.pos, explicitTps, borrowedFlags)
                     } ?: infer.syntheticT("构造子" + calleeName)
                     SymbolKind.BUILTIN -> infer.builtinSig(calleeName)?.let { (ps, rt) ->
@@ -3375,6 +3564,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                             val (psD, _) = sigOf(d)
                             checkConstraints(d, infer.instCall(psD.map { expand(it) }, tpsD, argTypes, explicitTps).first, e.pos)
                         }
+                        // t153（H-EXPLICIT-TYPE-ARG，自由函数位）：形参位实参已推导出同一类型 → 显式角表可省
+                        explicitTypeArgHintFun(d, tpsD, argTypes, explicitTps, e.pos)
                     }
                 // t128（S6）：借用实参收尾——自由函数位按 calleeDecl 形参、构造子位按结构体字段；
                 //  内建与函数值位无具名声明（want 合成已在 callFun 生效，留痕免）。零借用快路径：
@@ -4182,6 +4373,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
     private fun gatePurityOf(d: HirFunDecl): Boolean = gatePurityOf(d.name, d.annotations)
 
     internal fun runPurityGate(hir: sublimation.frontend.hir.HirFile) {
+        // t153（D-VARIANCE，supplement 族）：声明位变构性告示——先于 gateTop 早退（纯告示面不依赖闸状态）
+        varianceNotes(hir)
         val root = gateTop ?: return
         // 1) Γ 注册（全局具名函数——注解口径，同旧）+ 声明节点表（回写/审计用）
         val enriched = mutableMapOf<String, Boolean>()
@@ -4209,6 +4402,18 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                         (if (n.path != null) name + " ← " + n.path else name) +
                         "（闭包单调不动点：f 调 g 且 g 不纯 ⇒ f 不纯）")
             }
+        }
+        // 4.5) t153（H-IMPURE-REDUNDANT）：@impure 标注在但体无任何不纯证据——标注冗余可去
+        //  （impure 名集 = 闭包终态 ∪ 内建；体证据=调 impure 名 / 方法糖 / 字段写——保守口径免假阳性）
+        val impureFinal = mutableSetOf<String>()
+        nodes.forEach { (key, n) -> if (key.startsWith("g:") && n.impure) impureFinal.add(key.removePrefix("g:")) }
+        impureFinal.addAll(infer.builtinImpureNames)
+        globalDecls.forEach { (name, d) ->
+            if ("impure" in d.annotations && d.receiver !is sublimation.frontend.hir.HirMutType &&
+                d.body?.let { bodyImpureEvidence(it, impureFinal) } == false)
+                diag.hint("H-IMPURE-REDUNDANT", d.origin,
+                    "函数 " + ident(name) + " 标注了 @impure，但体内未出现任何不纯证据（impure 调用 / 内建副作用 / " +
+                    "方法糖调用 / 字段写）——标注冗余：注解优先口径下推导纯的体被注解强制不纯，可去掉 @impure")
         }
         // 5) 事件回放（帧序=旧 walker 树序）：E-MUT-CAPTURE / E-IMPURE-CALL（判据逐字同旧）+ calleeImpure 真化
         val ctx = GateReplayCtx(enriched, axiomPure)
@@ -4969,7 +5174,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         val missing = mutableListOf<String>()
         var residue = false
         for ((src, traitTheory, sigma) in specs) {
-            when (specSatisfy(sigma, traitTheory, concrete)) {
+            when (specSatisfy(sigma, traitTheory, traitName, concrete)) {
                 SpecMatch.UNMATCHED -> missing.add(src + "." + renderSpecAfterSelf(sigma, traitTheory, concrete))
                 SpecMatch.SELF_RESIDUE -> residue = true
                 SpecMatch.MATCHED -> { }
@@ -4987,9 +5192,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
     /** t140（B2.2 满足面双通道，用户裁决）：规范形态路由。
      *  ① 接收者形态（`fun F[A].map…`）→ 接收者形状恒等匹同形扩展函数（P-8 迁移层收口）；
      *  ② 无接收者：先按既有 ADR-24 首位 Self 吸收走扩展通道，miss 再落自由函数通道（pure 缺口补）。 */
-    private fun specSatisfy(sigma: FunDecl, traitTheory: List<TheoryParam>, concrete: sublimation.frontend.hir.HirType): SpecMatch {
+    private fun specSatisfy(sigma: FunDecl, traitTheory: List<TheoryParam>, traitName: String, concrete: sublimation.frontend.hir.HirType): SpecMatch {
         if (sigma.receiver != null) return receiverSpecMatch(sigma, traitTheory, concrete)
-        val viaExt = extSpecMatch(sigma, traitTheory, concrete)
+        val viaExt = extSpecMatch(sigma, traitTheory, traitName, concrete)
         if (viaExt != SpecMatch.UNMATCHED) return viaExt
         return freeSpecMatch(sigma, traitTheory, concrete)
     }
@@ -5106,7 +5311,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
 
     /** 单条规范与扩展函数集匹配（TS-17）：接收者头下的同名扩展任一签名一致即满足。
      *  t140（B2.2）：头走 extHeadOf（联合→别名身份复原），特质理论参数入域（F 可解）+ vars/arity 透传。 */
-    private fun extSpecMatch(sigma: FunDecl, traitTheory: List<TheoryParam>, concrete: sublimation.frontend.hir.HirType): SpecMatch {
+    private fun extSpecMatch(sigma: FunDecl, traitTheory: List<TheoryParam>, traitName: String, concrete: sublimation.frontend.hir.HirType): SpecMatch {
         val head = extHeadOf(concrete, sigma.name) ?: ExtFunHeads.ofHir(concrete) ?: return SpecMatch.UNMATCHED
         // t39（TS-19 可见集）：调用点可见的扩展函数（V1 禁止重载——唯一声明）——帧链内→外按键遮蔽 + 全局其余键
         val ext = symbols.lookupExtDeclVisible(head, sigma.name) ?: return SpecMatch.UNMATCHED
@@ -5123,7 +5328,16 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             // t39：可见集内唯一声明（V1 禁止重载）——同一域声明顺序无关性质保持
             extSigMatch(sigma, ext, sPs, sR, absorb, traitTheory)
         } finally { exitTypeParams(); exitTypeParams(); inTraitBody-- }
-        return if (ok) SpecMatch.MATCHED else SpecMatch.UNMATCHED
+        return if (ok) {
+            // t153（D-TRAIT-LOCAL，supplement 族——编译器自动活告示，一律不拦）：
+            // 路由命中**帧链来源**（局部扩展）使具体类型在本作用域满足特质——告示；
+            // 全局扩展满足是正常通道，不报（用户亲定口径）
+            if (symbols.extIsFrameLocal(head, sigma.name))
+                diag.supplement("D-TRAIT-LOCAL", ext.pos,
+                    "类型 " + infer.render(concrete) + " 在局部经 \"fun " + head + "." + sigma.name + "\"（此处声明）" +
+                    "满足特质 " + ident(traitName) + "——局部扩展使满足在本作用域内成立（全局满足通道另行不报）")
+            SpecMatch.MATCHED
+        } else SpecMatch.UNMATCHED
     }
 
     /**

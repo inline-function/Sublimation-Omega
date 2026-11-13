@@ -1,0 +1,35 @@
+Starting a Gradle Daemon, 1 incompatible and 12 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T140StdlibTraitsTest > 旧形态通道冻结() FAILED
+    org.opentest4j.AssertionFailedError at T140StdlibTraitsTest.kt:247
+
+T140StdlibTraitsTest > stdlib特质经父链注入满足() FAILED
+    org.opentest4j.AssertionFailedError at T140StdlibTraitsTest.kt:175
+
+16 tests completed, 2 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 43s
+5 actionable tasks: 2 executed, 3 up-to-date

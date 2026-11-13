@@ -1,0 +1,4 @@
+﻿@impure fun main(): Null {
+    var a : @mut List[Nat] = listOf(1)
+    print(a)
+}

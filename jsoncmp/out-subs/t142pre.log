@@ -1,0 +1,30 @@
+Starting a Gradle Daemon, 1 incompatible and 6 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+
+> Task :frontend:compileTestKotlin
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T142ManualProofTest.kt:36:31 Unresolved reference 'by'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T142ManualProofTest.kt:36:31 Unsupported [literal prefixes and suffixes].
+
+> Task :frontend:compileTestKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:compileTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 46s
+4 actionable tasks: 1 executed, 3 up-to-date

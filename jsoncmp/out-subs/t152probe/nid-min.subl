@@ -1,0 +1,7 @@
+trait Tuple {
+    fun size(): Nat
+    fun isEmpty(): Bool
+}
+
+fun EmptyTuple.size(): Nat = 0
+fun EmptyTuple.isEmpty(): Bool = True

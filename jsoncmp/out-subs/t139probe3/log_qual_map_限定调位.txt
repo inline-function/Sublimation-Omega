@@ -1,0 +1,7 @@
+[错误][4:38] E-UNBOUND-NAME: 方法 .`head` 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）
+  4 |   unchecked return list.map(xs, dbl).head()
+    |                                      ^
+[错误][4:13] E-RETURN-TYPE: return 值类型 (推导:方法head) 与声明 Nat 不符
+  4 |   unchecked return list.map(xs, dbl).head()
+    |             ^
+[错误] 前端检查未通过

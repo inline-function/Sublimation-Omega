@@ -1,0 +1,193 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "t153-h2e.subs",
+    "mode": "script"
+  },
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "supplement",
+      "code": "D-SCRIPT-IMPLICIT-IMPURE",
+      "pos": "2:1-2:5",
+      "message": "脚本顶层语句即隐式不纯入口（P-11 §4;R-16 OQ-2「挂 unit 级 + 诊断可见」）：本文件含 1 条顶层语句，整编译单元按 impure 记隐式入口（不造合成 main——D-12 真值单源）。顶层调用不纯函数免闸（既有口径）;函数体内仍按声明口径受闸",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:6-2:5",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:6-1:6",
+        "notes": [],
+        "name": "g",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "g"
+        },
+        "annotations": [],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "1:8-1:8",
+            "notes": [],
+            "name": "x",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "1:12-1:14",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 1,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 2,
+              "kind": "param",
+              "name": "x"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 8,
+          "pos": "1:19-1:21",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 1,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirIntLit",
+          "nid": 9,
+          "pos": "1:25-1:25",
+          "notes": [],
+          "value": "0"
+        }
+      },
+      {
+        "kind": "HirExprStmt",
+        "nid": 11,
+        "pos": "2:1-2:5",
+        "notes": [],
+        "expr": {
+          "kind": "HirCall",
+          "nid": 12,
+          "pos": "2:1-2:5",
+          "notes": [],
+          "callee": {
+            "kind": "HirNameRef",
+            "nid": 13,
+            "pos": "2:1-2:5",
+            "notes": [],
+            "name": "print",
+            "symbol": {
+              "id": 3,
+              "kind": "builtin",
+              "name": "print"
+            },
+            "type": null
+          },
+          "args": [
+            {
+              "kind": "HirCall",
+              "nid": 14,
+              "pos": "2:7-2:7",
+              "notes": [],
+              "callee": {
+                "kind": "HirNameRef",
+                "nid": 15,
+                "pos": "2:7-2:7",
+                "notes": [],
+                "name": "g",
+                "symbol": {
+                  "id": 0,
+                  "kind": "fun",
+                  "name": "g"
+                },
+                "type": null
+              },
+              "args": [
+                {
+                  "kind": "HirIntLit",
+                  "nid": 17,
+                  "pos": "2:9-2:9",
+                  "notes": [],
+                  "value": "1"
+                }
+              ],
+              "symbol": {
+                "id": 0,
+                "kind": "fun",
+                "name": "g"
+              },
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 21,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Nat",
+                "args": [],
+                "symbol": null
+              },
+              "dictionary": null,
+              "slot": null,
+              "dictArgs": [],
+              "methodSugar": false,
+              "awaitPoint": false,
+              "calleeImpure": false
+            }
+          ],
+          "symbol": {
+            "id": 3,
+            "kind": "builtin",
+            "name": "print"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 38,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Null",
+            "args": [],
+            "symbol": null
+          },
+          "dictionary": null,
+          "slot": null,
+          "dictArgs": [],
+          "methodSugar": false,
+          "awaitPoint": false,
+          "calleeImpure": true
+        }
+      }
+    ]
+  }
+}

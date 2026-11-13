@@ -1,0 +1,10 @@
+﻿@impure fun main(): Null {
+    var a : @mut List[Nat] = mutableListOf()
+    var b : @mut List[Nat] = mutableListOf(1)
+    var c : @mut List[Nat] = mutableListOf(1, 2, 3)
+    var d : List[Nat] = listOf()
+    var e : List[Nat] = listOf(2)
+    var f : List[Nat] = Cons(4, Nil)
+    unchecked print(a); unchecked print(b); unchecked print(c)
+    unchecked print(d); unchecked print(e); unchecked print(f)
+}

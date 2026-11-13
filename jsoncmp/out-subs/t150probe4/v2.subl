@@ -1,0 +1,4 @@
+@mut struct Box(@mut n: Nat)
+@impure fun main(): Null { @mut var o = Box(0)
+ o.n = 1
+ print(o.n) }

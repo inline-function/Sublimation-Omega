@@ -1,0 +1,4 @@
+fun main(): Null {
+    var xs : @mut List[Nat] = mutableListOf(1)
+    unchecked print(xs)
+}

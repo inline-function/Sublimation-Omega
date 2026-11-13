@@ -1,0 +1,8 @@
+@mut struct Counter(@mut v: Nat)
+@impure fun bump(c: @ref @mut Counter): Null {
+    c.v = c.v + 1
+}
+@impure fun main() {
+    @mut var ct = Counter(0)
+    unchecked bump(ct)
+}

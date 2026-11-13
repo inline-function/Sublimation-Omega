@@ -1,0 +1,285 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "p2.subl",
+    "mode": "project"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "E-TYPE-MISMATCH",
+      "pos": "1:44-1:46",
+      "message": "var c 标注了 @mut C，但初值是 C，两边类型不一致（R-28：隐式深拷格已废止——此转换不可隐式完成；请显式迁移：copy(…) 取不可变副本，或 toMutableList(…) 构造可变副本）",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:13-1:38",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirStructDecl",
+        "nid": 2,
+        "pos": "1:13-1:13",
+        "notes": [],
+        "name": "C",
+        "symbol": {
+          "id": 0,
+          "kind": "struct",
+          "name": "C"
+        },
+        "theory": [],
+        "fields": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "1:15-1:15",
+            "notes": [],
+            "name": "n",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "1:18-1:20",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "symbol": {
+              "id": 4,
+              "kind": "field",
+              "name": "n"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "annotations": [
+          "mut"
+        ],
+        "props": [],
+        "nullary": false
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 5,
+        "pos": "1:35-1:38",
+        "notes": [],
+        "name": "main",
+        "symbol": {
+          "id": 2,
+          "kind": "fun",
+          "name": "main"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": null,
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 6,
+          "pos": "1:42-1:42",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirVarStmt",
+              "nid": 7,
+              "pos": "1:44-1:46",
+              "notes": [],
+              "name": "c",
+              "symbol": {
+                "id": 5,
+                "kind": "local",
+                "name": "c"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirMutType",
+                "nid": 9,
+                "pos": "1:52-1:52",
+                "notes": [],
+                "inner": {
+                  "kind": "HirNamedType",
+                  "nid": 8,
+                  "pos": "1:57-1:57",
+                  "notes": [],
+                  "name": "C",
+                  "args": [],
+                  "symbol": {
+                    "id": 0,
+                    "kind": "struct",
+                    "name": "C"
+                  }
+                }
+              },
+              "value": {
+                "kind": "HirCall",
+                "nid": 10,
+                "pos": "1:61-1:61",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 11,
+                  "pos": "1:61-1:61",
+                  "notes": [],
+                  "name": "C",
+                  "symbol": {
+                    "id": 1,
+                    "kind": "ctor",
+                    "name": "C"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 12,
+                    "pos": "1:63-1:63",
+                    "notes": [],
+                    "value": "0"
+                  }
+                ],
+                "symbol": {
+                  "id": 1,
+                  "kind": "ctor",
+                  "name": "C"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 15,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "C",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirExprStmt",
+              "nid": 21,
+              "pos": "1:67-1:71",
+              "notes": [],
+              "expr": {
+                "kind": "HirCall",
+                "nid": 22,
+                "pos": "1:67-1:71",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 23,
+                  "pos": "1:67-1:71",
+                  "notes": [],
+                  "name": "print",
+                  "symbol": {
+                    "id": 6,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirField",
+                    "nid": 34,
+                    "pos": "1:75-1:75",
+                    "notes": [],
+                    "target": {
+                      "kind": "HirNameRef",
+                      "nid": 24,
+                      "pos": "1:73-1:73",
+                      "notes": [],
+                      "name": "c",
+                      "symbol": {
+                        "id": 5,
+                        "kind": "local",
+                        "name": "c"
+                      },
+                      "type": {
+                        "kind": "HirMutType",
+                        "nid": 9,
+                        "pos": "1:52-1:52",
+                        "notes": [],
+                        "inner": {
+                          "kind": "HirNamedType",
+                          "nid": 8,
+                          "pos": "1:57-1:57",
+                          "notes": [],
+                          "name": "C",
+                          "args": [],
+                          "symbol": {
+                            "id": 0,
+                            "kind": "struct",
+                            "name": "C"
+                          }
+                        }
+                      }
+                    },
+                    "name": "n",
+                    "field": null,
+                    "type": {
+                      "kind": "HirNamedType",
+                      "nid": 33,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(推导:字段n)",
+                      "args": [],
+                      "symbol": null
+                    }
+                  }
+                ],
+                "symbol": {
+                  "id": 6,
+                  "kind": "builtin",
+                  "name": "print"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 51,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Null",
+                  "args": [],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

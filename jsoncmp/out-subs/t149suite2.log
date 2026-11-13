@@ -1,0 +1,17 @@
+Starting a Gradle Daemon, 1 incompatible and 8 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileKotlin
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar
+> Task :frontend:startScripts
+> Task :frontend:installDist
+> Task :frontend:compileTestKotlin
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+> Task :frontend:test
+
+BUILD SUCCESSFUL in 1m 44s
+7 actionable tasks: 6 executed, 1 up-to-date

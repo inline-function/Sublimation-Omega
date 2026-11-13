@@ -1,0 +1,6 @@
+fun f(): Null {
+    @mut var xs = mutableListOf(1)
+    xs.add(2)
+    print(xs)
+}
+@impure fun main(): Null { f() }

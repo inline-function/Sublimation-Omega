@@ -1,0 +1,4 @@
+﻿fun wrap[T]() : Optional[T] = None
+var v = wrap[Nat]()
+print(v)
+

@@ -1,0 +1,50 @@
+Starting a Gradle Daemon, 1 incompatible and 12 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+w: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:67:17 'fun createTempDir(prefix: String = ..., suffix: String? = ..., directory: File? = ...): File' is deprecated. Avoid creating temporary directories in the default temp location with this function due to too wide permissions on the newly created directory. Use kotlin.io.path.createTempDirectory instead.
+w: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:79:24 'fun createTempDir(prefix: String = ..., suffix: String? = ..., directory: File? = ...): File' is deprecated. Avoid creating temporary directories in the default temp location with this function due to too wide permissions on the newly created directory. Use kotlin.io.path.createTempDirectory instead.
+w: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T137StdlibB0Test.kt:129:17 'fun createTempDir(prefix: String = ..., suffix: String? = ..., directory: File? = ...): File' is deprecated. Avoid creating temporary directories in the default temp location with this function due to too wide permissions on the newly created directory. Use kotlin.io.path.createTempDirectory instead.
+w: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T122A2ClosureTest.kt:88:17 'when' is exhaustive so 'else' is redundant here.
+w: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:76:13 'when' is exhaustive so 'else' is redundant here.
+
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T140StdlibTraitsTest > 旧形态通道冻结() FAILED
+    org.opentest4j.AssertionFailedError at T140StdlibTraitsTest.kt:228
+
+T140StdlibTraitsTest > 限定引用缺件先红() FAILED
+    org.opentest4j.AssertionFailedError at T140StdlibTraitsTest.kt:255
+
+T140StdlibTraitsTest > stdlib特质注入可用() FAILED
+    org.opentest4j.AssertionFailedError at T140StdlibTraitsTest.kt:164
+
+T140StdlibTraitsTest > stdlib特质族落位() FAILED
+    org.opentest4j.AssertionFailedError at T140StdlibTraitsTest.kt:46
+
+T140StdlibTraitsTest > 限定特质引用绿() FAILED
+    org.opentest4j.AssertionFailedError at T140StdlibTraitsTest.kt:247
+
+15 tests completed, 5 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 1m 46s
+5 actionable tasks: 2 executed, 3 up-to-date

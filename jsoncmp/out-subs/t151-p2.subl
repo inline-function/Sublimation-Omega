@@ -1,0 +1,7 @@
+﻿fun f(): Nat {
+    var a : @mut List[Nat] = mutableListOf(1)
+    var u : @mut List[Nat] = a
+    u.add(3)
+    return 0
+}
+@impure fun main(): Null { f(); print(1) }

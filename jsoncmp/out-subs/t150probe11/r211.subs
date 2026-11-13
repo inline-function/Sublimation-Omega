@@ -1,0 +1,5 @@
+fun g(z : @ref @ref Nat) { print(z) }
+@impure fun main(): Null {
+  var x : Nat = 3
+  g(&x)
+}

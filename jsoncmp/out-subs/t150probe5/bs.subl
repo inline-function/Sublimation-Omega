@@ -1,0 +1,4 @@
+@impure fun bump(z : @mut List[Nat]): Null { unchecked z.add(1) }
+@impure fun main() { var xs : @mut List[Nat] = mutableListOf(1)
+ unchecked bump(xs)
+ print(xs) }

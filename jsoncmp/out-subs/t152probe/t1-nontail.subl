@@ -1,0 +1,2 @@
+fun fact(n : Nat) : Nat = if (n == 0) 1 else n * fact(n - 1)
+@impure fun main(): Null { print(fact(3)) }

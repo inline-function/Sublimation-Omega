@@ -1,0 +1,5 @@
+﻿fun witness[@q]<q>: Null {}
+@impure fun main(): Null {
+    witness<tagged<7>>()
+    unchecked print(1)
+}

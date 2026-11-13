@@ -1,0 +1,5 @@
+fun dbl(n: Nat): Nat = n * 2
+fun main(): Nat {
+  var xs : List[Nat] = Cons(1, Nil)
+  unchecked return list.add(xs, 9)
+}

@@ -1,0 +1,2 @@
+@mutable fun List[a].addx[a](e: a): List[a] = Cons(e, self)
+fun go(): Nat { var xs : List[Nat] = Nil; unchecked return size(xs) }

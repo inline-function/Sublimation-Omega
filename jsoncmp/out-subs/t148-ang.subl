@@ -1,0 +1,4 @@
+﻿@impure fun m(): Null {
+    var ch = Channel<Nat>(2)
+    unchecked print(ch)
+}

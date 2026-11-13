@@ -1,0 +1,2 @@
+var xs : @mut List[Nat] = mutableListOf(1)
+@impure fun main(): Null { xs.add(2); print(xs) }

@@ -1,0 +1,20 @@
+semantic.NarrowSubtractionTest	s4_assignNarrows()	org.opentest4j.AssertionFailedError: S4 x = a - b（x: Nat）应收窄通过
+semantic.RefTypeInertTest	t98_hir_2_refMut叠加形态()	org.opentest4j.AssertionFailedError: @mut Box → @ref @mut Box 共享放行：[var o 标注了 @mut Box，但初值是 Box，两边类型不一致（R-28：隐式深拷格已废止——此转换不可隐式完成；请显式迁移：copy(…) 取不可变副本，或 toMutableList(…) 构造可变副本）]
+semantic.RefTypeInertTest	t95_hir_1_ref类型节点产出()	org.opentest4j.AssertionFailedError: @mut Box → @ref Box 不可变视图共享放行：[var o 标注了 @mut Box，但初值是 Box，两边类型不一致（R-28：隐式深拷格已废止——此转换不可隐式完成；请显式迁移：copy(…) 取不可变副本，或 toMutableList(…) 构造可变副本）]
+semantic.SubtypeOrderTest	st11_1_mutView()	org.opentest4j.AssertionFailedError: 正例「MUT-READ-VIEW」须无诊断；actual=[Diag(severity=ERROR, code=E-TYPE-MISMATCH, pos=SourceRange(start=SourcePos(line=2, col=13), end=SourcePos(line=2, col=15)), message=var a 标注了 @mut Nat，但初值是 Nat，两边类型不一致（R-28：隐式深拷格已废止——此转换不可隐式完成；请显式迁移：copy(…) 取不可变副本，或 toMutableList(…) 构造可变副本）, modulePath=, nid=null)]
+semantic.T107R07CaptureTest	自身局部非捕获()	org.opentest4j.AssertionFailedError: 函数访问自己的局部 @mut:不是捕获,R-07 不适用 ==> expected: <[]> but was: <[E-TYPE-MISMATCH, E-TYPE-MISMATCH]>
+semantic.T107R07CaptureTest	不纯上下文内不分析()	org.opentest4j.AssertionFailedError: @impure 体内捕获不闸（e2e 样本唯一形态,零暴露基线） ==> expected: <[]> but was: <[E-TYPE-MISMATCH]>
+semantic.T125MutPromotionTest	T1局部二次赋值提升()	org.opentest4j.AssertionFailedError: 零错误——R-06 自动提升后可写 ==> expected: <[]> but was: <[E-TYPE-MISMATCH]>
+semantic.T125MutPromotionTest	差分对拍标注等价_视图同()	org.opentest4j.AssertionFailedError: subs 侧零错误 ==> expected: <[]> but was: <[E-TYPE-MISMATCH, E-TYPE-MISMATCH]>
+semantic.T125MutPromotionTest	T2形参被赋值提升()	org.opentest4j.AssertionFailedError: 形参被赋值零错误 ==> expected: <[]> but was: <[E-TYPE-MISMATCH, E-TYPE-MISMATCH]>
+semantic.T125MutPromotionTest	差分对拍同源双门_脚本提升工程拒绝()	org.opentest4j.AssertionFailedError: 脚本侧零错误（R-06 提升后可写） ==> expected: <[]> but was: <[E-TYPE-MISMATCH, E-TYPE-MISMATCH, E-TYPE-MISMATCH]>
+semantic.T125WriteGateTest	refMut写穿透视图可写()	org.opentest4j.AssertionFailedError: @ref @mut 写穿透视图的字段写放行 ==> expected: <[]> but was: <[E-TYPE-MISMATCH]>
+semantic.T125WriteGateTest	形参类型位mut可写()	org.opentest4j.AssertionFailedError: 类型位 @mut 形参可写——不再落 E-IMMUT-ASSIGN ==> expected: <[]> but was: <[E-TYPE-MISMATCH, E-TYPE-MISMATCH]>
+semantic.T125WriteGateTest	局部变量类型位mut可写()	org.opentest4j.AssertionFailedError: var x: @mut T 类型位可写（既有形态回归保护） ==> expected: <[]> but was: <[E-TYPE-MISMATCH, E-TYPE-MISMATCH]>
+semantic.T126ContainerFaceTest	T3形参加入mut接收者位()	org.opentest4j.AssertionFailedError: 提升后零错误 ==> expected: <[]> but was: <[E-TYPE-MISMATCH]>
+semantic.T128BorrowSemanticsTest	差分对拍borrow双形态批()	org.opentest4j.AssertionFailedError: borrow-neg-plain.subl 对形态绿（造格放行） ==> expected: <[]> but was: <[E-TYPE-MISMATCH]>
+semantic.T128BorrowSemanticsTest	R211嵌套ref折叠()	org.opentest4j.AssertionFailedError: 折叠后类型核对通过 ==> expected: <[]> but was: <[E-TYPE-MISMATCH]>
+semantic.TypeInferTest	immutableAssignReportsAndMutAllows()	org.opentest4j.AssertionFailedError: @mut 绑定可写
+semantic.ViewDemotionTest	d2_plainArgToMutParamBorrowOk()	org.opentest4j.AssertionFailedError: 不回退：plain 值经 @mut 形参借用（impureBump 语义）须照常通过
+semantic.ViewDemotionTest	d1_mutInitAndAssignStillOk()	org.opentest4j.AssertionFailedError: 不回退：@mut 初始化与字段写/算术自更新须照常通过
+semantic.ViewDemotionTest	v1_mutArithmeticOk()	org.opentest4j.AssertionFailedError: @mut Nat 上的算术（x = x + 1）须按 Nat 分类通过（t61 主修复）

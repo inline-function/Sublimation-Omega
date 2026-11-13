@@ -1,0 +1,4 @@
+@mut struct T(@mut n: Nat)
+@impure fun main() { @mut var a = T(0)
+    var d : @ref T = a
+    var e : @ref T = d }

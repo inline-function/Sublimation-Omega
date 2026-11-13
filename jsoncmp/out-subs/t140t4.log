@@ -1,0 +1,100 @@
+Starting a Gradle Daemon, 1 incompatible and 12 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+> Task :frontend:compileTestKotlin
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:106:82 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:106:83 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:106:83 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:106:87 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:106:87 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:107:56 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:109:40 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:109:40 Operator '==' cannot be applied to 'Int' and 'String'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:127:82 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:127:83 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:127:83 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:127:87 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:127:87 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:130:89 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:137:72 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:137:73 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:137:73 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:137:77 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:137:77 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:140:92 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:148:66 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:148:67 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:148:67 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:148:71 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:148:71 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:152:92 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:179:82 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:179:83 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:179:83 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:179:87 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:179:87 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:181:89 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:182:42 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:182:42 Operator '==' cannot be applied to 'Int' and 'String'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:184:31 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:184:66 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:185:39 Unresolved reference 'it'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:191:82 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:191:83 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:191:83 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:191:87 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:191:87 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:194:89 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:201:72 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:201:73 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:201:73 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:201:77 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:201:77 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:204:89 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:213:93 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:213:94 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:213:94 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:213:98 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:213:98 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:214:56 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:224:58 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:224:59 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:224:59 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:224:63 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:224:63 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:227:62 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:230:61 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:230:62 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:230:62 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:230:66 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:230:66 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:233:62 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:240:97 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:240:98 Unresolved reference 'n'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:240:98 Unsupported [literal prefixes and suffixes].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:240:102 Syntax error: Expecting '"'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:240:102 Syntax error: Incorrect template entry: .
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:244:89 Syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+
+> Task :frontend:compileTestKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:compileTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 6s
+4 actionable tasks: 1 executed, 3 up-to-date

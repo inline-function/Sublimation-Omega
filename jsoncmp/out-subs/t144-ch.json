@@ -1,0 +1,259 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "t144-ch.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:14-1:14",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:14-1:14",
+        "notes": [],
+        "name": "m",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "m"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 3,
+          "pos": "1:19-1:22",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 1,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 4,
+          "pos": "1:24-1:24",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirVarStmt",
+              "nid": 5,
+              "pos": "2:5-2:7",
+              "notes": [],
+              "name": "ch",
+              "symbol": {
+                "id": 5,
+                "kind": "local",
+                "name": "ch"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 6,
+                "pos": "2:13-2:19",
+                "notes": [],
+                "name": "Channel",
+                "args": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 7,
+                    "pos": "2:21-2:23",
+                    "notes": [],
+                    "name": "Nat",
+                    "args": [],
+                    "symbol": {
+                      "id": 2,
+                      "kind": "builtin",
+                      "name": "Nat"
+                    }
+                  }
+                ],
+                "symbol": {
+                  "id": 3,
+                  "kind": "builtin",
+                  "name": "Channel"
+                }
+              },
+              "value": {
+                "kind": "HirCall",
+                "nid": 8,
+                "pos": "2:28-2:34",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 9,
+                  "pos": "2:28-2:34",
+                  "notes": [],
+                  "name": "Channel",
+                  "symbol": {
+                    "id": 4,
+                    "kind": "ctor",
+                    "name": "Channel"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 11,
+                    "pos": "2:41-2:41",
+                    "notes": [],
+                    "value": "2"
+                  }
+                ],
+                "symbol": {
+                  "id": 4,
+                  "kind": "ctor",
+                  "name": "Channel"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 16,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Channel",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 10,
+                      "pos": "2:36-2:38",
+                      "notes": [],
+                      "name": "Nat",
+                      "args": [],
+                      "symbol": {
+                        "id": 2,
+                        "kind": "builtin",
+                        "name": "Nat"
+                      }
+                    }
+                  ],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 17,
+              "pos": "3:5-3:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 18,
+                "pos": "3:15-3:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 19,
+                  "pos": "3:15-3:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 20,
+                    "pos": "3:15-3:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 6,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirNameRef",
+                      "nid": 21,
+                      "pos": "3:21-3:22",
+                      "notes": [],
+                      "name": "ch",
+                      "symbol": {
+                        "id": 5,
+                        "kind": "local",
+                        "name": "ch"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 6,
+                        "pos": "2:13-2:19",
+                        "notes": [],
+                        "name": "Channel",
+                        "args": [
+                          {
+                            "kind": "HirNamedType",
+                            "nid": 7,
+                            "pos": "2:21-2:23",
+                            "notes": [],
+                            "name": "Nat",
+                            "args": [],
+                            "symbol": {
+                              "id": 2,
+                              "kind": "builtin",
+                              "name": "Nat"
+                            }
+                          }
+                        ],
+                        "symbol": {
+                          "id": 3,
+                          "kind": "builtin",
+                          "name": "Channel"
+                        }
+                      }
+                    }
+                  ],
+                  "symbol": {
+                    "id": 6,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 38,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

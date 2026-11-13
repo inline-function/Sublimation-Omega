@@ -1,0 +1,59 @@
+Starting a Gradle Daemon, 1 incompatible and 9 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+
+> Task :frontend:compileTestKotlin
+w: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/semantic/T99CopyMatrixTest.kt:76:13 'when' is exhaustive so 'else' is redundant here.
+
+> Task :frontend:compileTestJava NO-SOURCE
+> Task :frontend:testClasses UP-TO-DATE
+
+> Task :frontend:test
+
+T98RefRulesTest > 子类型refmut到ref() FAILED
+    org.opentest4j.AssertionFailedError at T98RefRulesTest.kt:92
+
+T98RefRulesTest > 赋值位分派留痕() FAILED
+    org.opentest4j.AssertionFailedError at T98RefRulesTest.kt:167
+
+T98RefRulesTest > mut双视图回归() FAILED
+    org.opentest4j.AssertionFailedError at T98RefRulesTest.kt:116
+
+T98RefRulesTest > refmut写透放行() FAILED
+    org.opentest4j.AssertionFailedError at T98RefRulesTest.kt:62
+
+T98RefRulesTest > 子类型mut到ref() FAILED
+    org.opentest4j.AssertionFailedError at T98RefRulesTest.kt:68
+
+T99CopyMatrixTest > 矩阵16格逐格对账() FAILED
+    org.opentest4j.AssertionFailedError at T99CopyMatrixTest.kt:104
+
+T99CopyMatrixTest > R14共享路径不下钻() FAILED
+    org.opentest4j.AssertionFailedError at T99CopyMatrixTest.kt:143
+
+T99CopyMatrixTest > R14元素层深拷下钻() FAILED
+    org.opentest4j.AssertionFailedError at T99CopyMatrixTest.kt:130
+
+T99CopyMatrixTest > R14不可变元素零结论() FAILED
+    org.opentest4j.AssertionFailedError at T99CopyMatrixTest.kt:153
+
+41 tests completed, 9 failed
+
+> Task :frontend:test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:test'.
+> There were failing tests. See the report at: file:///F:/Sublimation/frontend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 44s
+5 actionable tasks: 2 executed, 3 up-to-date

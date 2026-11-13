@@ -1,0 +1,1 @@
+@mut struct C(@mut n: Nat) @impure fun main() { var c = C(0); print(c.n) }

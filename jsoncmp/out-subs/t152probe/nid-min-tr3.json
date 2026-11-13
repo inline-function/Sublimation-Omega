@@ -1,0 +1,210 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "nid-min.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:7-7:22",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirTraitDecl",
+        "nid": 2,
+        "pos": "1:7-1:11",
+        "notes": [],
+        "name": "Tuple",
+        "symbol": {
+          "id": 0,
+          "kind": "trait",
+          "name": "Tuple"
+        },
+        "theory": [],
+        "annotations": [],
+        "members": [
+          {
+            "kind": "HirFunDecl",
+            "nid": 3,
+            "pos": "2:9-2:12",
+            "notes": [],
+            "name": "size",
+            "symbol": null,
+            "annotations": [],
+            "theory": [],
+            "params": [],
+            "preps": [],
+            "retType": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "2:17-2:19",
+              "notes": [],
+              "name": "Nat",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Nat"
+              }
+            },
+            "posts": [],
+            "constraints": [],
+            "purity": "pure",
+            "async": false,
+            "body": null
+          },
+          {
+            "kind": "HirFunDecl",
+            "nid": 5,
+            "pos": "3:9-3:15",
+            "notes": [],
+            "name": "isEmpty",
+            "symbol": null,
+            "annotations": [],
+            "theory": [],
+            "params": [],
+            "preps": [],
+            "retType": {
+              "kind": "HirNamedType",
+              "nid": 6,
+              "pos": "3:20-3:23",
+              "notes": [],
+              "name": "Bool",
+              "args": [],
+              "symbol": {
+                "id": 4,
+                "kind": "builtin",
+                "name": "Bool"
+              }
+            },
+            "posts": [],
+            "constraints": [],
+            "purity": "pure",
+            "async": false,
+            "body": null
+          }
+        ],
+        "parents": [],
+        "constants": []
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 7,
+        "pos": "6:16-6:19",
+        "notes": [],
+        "name": "size",
+        "receiver": {
+          "kind": "HirNamedType",
+          "nid": 8,
+          "pos": "6:5-6:14",
+          "notes": [],
+          "name": "EmptyTuple",
+          "args": [],
+          "symbol": {
+            "id": 5,
+            "kind": "builtin",
+            "name": "EmptyTuple"
+          }
+        },
+        "symbol": null,
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 9,
+          "pos": "6:24-6:26",
+          "notes": [],
+          "name": "Nat",
+          "args": [],
+          "symbol": {
+            "id": 3,
+            "kind": "builtin",
+            "name": "Nat"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirIntLit",
+          "nid": 10,
+          "pos": "6:30-6:30",
+          "notes": [],
+          "value": "0"
+        }
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 13,
+        "pos": "7:16-7:22",
+        "notes": [],
+        "name": "isEmpty",
+        "receiver": {
+          "kind": "HirNamedType",
+          "nid": 14,
+          "pos": "7:5-7:14",
+          "notes": [],
+          "name": "EmptyTuple",
+          "args": [],
+          "symbol": {
+            "id": 5,
+            "kind": "builtin",
+            "name": "EmptyTuple"
+          }
+        },
+        "symbol": null,
+        "annotations": [],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 15,
+          "pos": "7:27-7:30",
+          "notes": [],
+          "name": "Bool",
+          "args": [],
+          "symbol": {
+            "id": 4,
+            "kind": "builtin",
+            "name": "Bool"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "pure",
+        "async": false,
+        "body": {
+          "kind": "HirNameRef",
+          "nid": 17,
+          "pos": "7:34-7:37",
+          "notes": [],
+          "name": "True",
+          "symbol": {
+            "id": 8,
+            "kind": "builtin",
+            "name": "True"
+          },
+          "type": {
+            "kind": "HirNamedType",
+            "nid": 16,
+            "pos": "0:0",
+            "notes": [],
+            "name": "Bool",
+            "args": [],
+            "symbol": null
+          }
+        }
+      }
+    ]
+  }
+}

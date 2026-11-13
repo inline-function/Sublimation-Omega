@@ -1,0 +1,2 @@
+@impure fun pureAdd(a : Nat, b : Nat) : Nat = a + b
+@impure fun main(): Null { print(pureAdd(1, 2)) }

@@ -1,0 +1,4 @@
+[错误][4:13] E-RETURN-TYPE: return 值类型 Nil | Cons[Nat] 与声明 Nat 不符
+  4 |   unchecked return list.add(xs, 9)
+    |             ^
+[错误] 前端检查未通过

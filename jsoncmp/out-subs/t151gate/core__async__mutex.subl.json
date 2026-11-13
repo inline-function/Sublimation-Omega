@@ -1,0 +1,379 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "mutex.subl",
+    "mode": "project"
+  },
+  "ok": true,
+  "diagnostics": [],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "10:11-16:18",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "10:11-10:19",
+        "notes": [],
+        "name": "withMutex",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "withMutex"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 3,
+            "pos": "10:21-10:21",
+            "notes": [],
+            "name": "m",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 4,
+              "pos": "10:24-10:28",
+              "notes": [],
+              "name": "Mutex",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Mutex"
+              }
+            },
+            "symbol": {
+              "id": 4,
+              "kind": "param",
+              "name": "m"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 5,
+            "pos": "10:31-10:31",
+            "notes": [],
+            "name": "f",
+            "type": {
+              "kind": "HirFunType",
+              "nid": 6,
+              "pos": "10:34-10:34",
+              "notes": [],
+              "params": [],
+              "ret": {
+                "kind": "HirNamedType",
+                "nid": 7,
+                "pos": "10:40-10:43",
+                "notes": [],
+                "name": "Null",
+                "args": [],
+                "symbol": {
+                  "id": 5,
+                  "kind": "builtin",
+                  "name": "Null"
+                }
+              },
+              "purity": "pure",
+              "theory": [],
+              "context": null
+            },
+            "symbol": {
+              "id": 6,
+              "kind": "param",
+              "name": "f"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 8,
+          "pos": "10:47-10:50",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 5,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 9,
+        "pos": "13:11-13:21",
+        "notes": [],
+        "name": "bumpCounter",
+        "symbol": {
+          "id": 1,
+          "kind": "fun",
+          "name": "bumpCounter"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 10,
+            "pos": "13:23-13:23",
+            "notes": [],
+            "name": "T",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 11,
+            "pos": "13:26-13:26",
+            "notes": [],
+            "name": "m",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 12,
+              "pos": "13:29-13:33",
+              "notes": [],
+              "name": "Mutex",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Mutex"
+              }
+            },
+            "symbol": {
+              "id": 7,
+              "kind": "param",
+              "name": "m"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 13,
+            "pos": "13:36-13:36",
+            "notes": [],
+            "name": "c",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 14,
+              "pos": "13:39-13:39",
+              "notes": [],
+              "name": "T",
+              "args": [],
+              "symbol": null
+            },
+            "symbol": {
+              "id": 8,
+              "kind": "param",
+              "name": "c"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 15,
+          "pos": "13:43-13:46",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 5,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      },
+      {
+        "kind": "HirFunDecl",
+        "nid": 16,
+        "pos": "16:11-16:18",
+        "notes": [],
+        "name": "bumpPair",
+        "symbol": {
+          "id": 2,
+          "kind": "fun",
+          "name": "bumpPair"
+        },
+        "annotations": [
+          "impure",
+          "async",
+          "root"
+        ],
+        "theory": [
+          {
+            "kind": "HirTypeParam",
+            "nid": 17,
+            "pos": "16:20-16:20",
+            "notes": [],
+            "name": "T",
+            "constraint": null,
+            "arity": 0
+          }
+        ],
+        "params": [
+          {
+            "kind": "HirParam",
+            "nid": 18,
+            "pos": "16:23-16:24",
+            "notes": [],
+            "name": "m1",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 19,
+              "pos": "16:27-16:31",
+              "notes": [],
+              "name": "Mutex",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Mutex"
+              }
+            },
+            "symbol": {
+              "id": 9,
+              "kind": "param",
+              "name": "m1"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 20,
+            "pos": "16:34-16:35",
+            "notes": [],
+            "name": "m2",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 21,
+              "pos": "16:38-16:42",
+              "notes": [],
+              "name": "Mutex",
+              "args": [],
+              "symbol": {
+                "id": 3,
+                "kind": "builtin",
+                "name": "Mutex"
+              }
+            },
+            "symbol": {
+              "id": 10,
+              "kind": "param",
+              "name": "m2"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 22,
+            "pos": "16:45-16:46",
+            "notes": [],
+            "name": "c1",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 23,
+              "pos": "16:49-16:49",
+              "notes": [],
+              "name": "T",
+              "args": [],
+              "symbol": null
+            },
+            "symbol": {
+              "id": 11,
+              "kind": "param",
+              "name": "c1"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          },
+          {
+            "kind": "HirParam",
+            "nid": 24,
+            "pos": "16:52-16:53",
+            "notes": [],
+            "name": "c2",
+            "type": {
+              "kind": "HirNamedType",
+              "nid": 25,
+              "pos": "16:56-16:56",
+              "notes": [],
+              "name": "T",
+              "args": [],
+              "symbol": null
+            },
+            "symbol": {
+              "id": 12,
+              "kind": "param",
+              "name": "c2"
+            },
+            "annotations": [],
+            "default": null,
+            "destruct": null
+          }
+        ],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 26,
+          "pos": "16:60-16:63",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 5,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": true,
+        "body": null
+      }
+    ]
+  }
+}

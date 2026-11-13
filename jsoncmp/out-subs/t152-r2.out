@@ -1,0 +1,4 @@
+[警告][6:6] W-REF-ESCAPE: @ref 引用视图存入字段——字段属主对象逃逸作用域时引用随之逃逸（快照预期被打破的风险）。出路：存入不可变副本（copy(…)），或改用值语义字段
+  6 |   bb.fld = rs
+    |      ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\t152-r2.json（19504 字节）

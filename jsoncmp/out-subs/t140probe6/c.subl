@@ -1,0 +1,5 @@
+trait Show[T] {
+    fun show(x: T): Str
+}
+@impure fun show(x: Nat): Str = "n"
+fun use[T: Show](x: T): Nat { unchecked return 1 }

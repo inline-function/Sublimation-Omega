@@ -476,3 +476,38 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 **套件吸收**: 新增 `T152DiagBatchOneTest` 14 测（五码判别面 + 保守豁免面 + t129 借用口径回归面）;零旧测翻转（t128/t129 既有 W-BORROW-REDUNDANT 样本保护——块体函数豁免覆盖既有形态）。
 
 机械证据脚本: `jsoncmp/scripts/t152-parity.ps1` 五段（行为探针 / 68 门 t122n 冻锚台账（W 批一 authorized 台账 11 件登记）/ 精确差分 vs t151gate（61 逐字同 + 15 仅 W 增量——nid 零漂移）/ stdlib 侧基线 / 确定性 9/9 + 脚本门）;配套比价器 `jsoncmp/scripts/t152-stripcmp.js`（wstrip / strippos / wstrippos / plain 四档，保序最弱归一化）;门编译脚本 `jsoncmp/scripts/t152-gate-run.js`。
+
+
+---
+
+## t153 分账（诊断扩批二：H 静态 ×4 + D 自动活 ×3——2026-11-13）
+
+**任务**：批二七新码——H 族「这段代码可以写得更好」（hint，合法但可改进）;D 族「编译器自动做的活」（supplement，**一律不拦**）。纪律：负例先红（实现前七码实测零落）;**零分配 nid**（批一教训：诊断检查一律禁 etype/sigOf——HIR 体 walker 只读既有节点字段 + AST 静态判（occursInTypeAst / consChainDepth）+ 既有 argTypes 渲染比对）;噪声控制（V1 口径保守化，见下）。验收：套件只增不减（基线 1241 + 21 = **1262/1262 绿**）+ vs t122n/t152gate/t143stdlib 波动归因集逐件台账 + 脚本门 + 确定性 + parity 五段。
+
+| 证据面 | 结果 | 脚本 |
+|---|---|---|
+| 行为探针（七码七面绿） | H-CONS-BUILD / H-UNUSED / H-EXPLICIT-TYPE-ARG / H-IMPURE-REDUNDANT / D-SHADOW / D-VARIANCE / D-TRAIT-LOCAL——全部编译过且落新码（负例先红：实现前七码实测零落） | t153-parity ① |
+| 行为探针（保守豁免九面） | 单层 Cons / 已用绑定 / 弃用名 / 表达式体签名面 / 返回位理论参数 / 体不纯 / **panic 占位内建面** / 无遮蔽 / 纯协变参数 / 全局扩展满足——误报零容忍 | t153-parity ① |
+| 68 门（vs **t122n 死冻锚**） | SAME **38** + 剥差同 11 + 纯 W 批一 5 + **批二增量 3 件纯新码 + 6 件混合（批一 W+批二 H/D）** + 预期差 4（t150/t146 延续）+ 转绿 1 = 68 闭合零未登记差 | t153-parity ②（台账 out-subs/t153gate-ledger.txt） |
+| 精确差分（vs t152gate 冻结产物） | **58 件逐字节全同 + 10 件仅 12 码（5 W + 7 H·D）增量**——滤 12 码后逐字同（**nid 位零漂移**：零分配 nid 纪律成立） | t153-parity ③ |
+| stdlib 侧（vs t143stdlib） | 4 件同 + 3 件纯 W 批一 + 1 件纯批二（traits D-VARIANCE×2）+ list 件构造族迁源面（t146 口径延续 + 混合新码） | t153-parity ④ |
+| 模块确定性 | 9/9 | t153-parity ⑤ |
+| 脚本门 | 14/14（run-gate **PASSED**——双编译逐字同 + 退出码 + 语义抽查） | t153-parity ⑤ |
+
+**实现口径（七新码——任务书定义、本批落地）**:
+
+- **H-CONS-BUILD**（R-26.3 定 listOf 为列表构造正道）：CallExpr callee Cons + args.size==2 + **第二位嵌套计数**（consChainDepth 纯 AST 递归 args[1]）≥1 层 ⇒ ≥2 层手拼告示（单层免——listOf(1) 无实质改进）。
+- **H-UNUSED**（V1 **函数局部域 + 块体**双保守口径）：形参 + 局部 var 声明后体 HIR 零名引用 ⇒ 未用。豁免：_ 前缀弃用名 / 默认值 / destruct 形参 / posts（by 契约断言）非空整函数跳过 / **表达式体一律免**（单行体无局部声明，未用形参面多为签名/占位惯用法——net/regex/encoding 占位内建均此形;块体才是死代码真面。噪声控制，表达式体未用形参留 V2）。HIR 名引用收集：walkHirExpr 只读 HirNameRef/HirVarExpr 名（零分配）。
+- **H-EXPLICIT-TYPE-ARG**：单理论参数（explicitTps.size==1 && theory 恰 1 TypeParam）的**全部形参位**（occursInTypeAst 定位）实参类型（既有 argTypes）渲染 == 显式角表渲染 ⇒ 冗余可省。函数位 + 构造子位两分支;**返回位理论参数豁免**（角表不可省——可推导性判越界）。
+- **H-IMPURE-REDUNDANT**：@impure 标注 + 体无任何不纯证据（impure 名集 ∪ **panic**（占位内建惯用法——中止/抛异常的宿主效应，免占位声明误报）∪ 方法糖调用 ∪ 字段写）;局部 var 写不算证据（同域改=纯，R-26.4）。注解优先口径下推导纯的体被注解强制不纯——告知可去 @impure。
+- **D-SHADOW**（与 H-SHADOW 互补）：局部声明遮蔽外层同名**局部/形参**（declareLocal 的 lookupValueOuter 分支钩 shadowSuppSink）⇒ 告示遮蔽语义生效（本作用域解析到此声明，外层同名不可见不回退）。H-SHADOW 含同域/字段面，D 级专外层局部/形参 + 自动活告示口径——**零命中于现有样本**。
+- **D-VARIANCE**（V1 保守口径）：**仅本文件 HirFile 声明的 trait/struct**（函数级类型参数不在 VarianceInfer 建表面）且 σ_imm/σ_mut **非（协，协）**（纯协变=默认即协，免刷屏）⇒ 双视图格自动极性判定告示（VarianceInfer.variance()）。消息含 σ_imm/σ_mut 双视图格标签。
+- **D-TRAIT-LOCAL**：满足判定（specSatisfy → 接收者形态 receiverSpecMatch;无接收者先 extSpecMatch（3 元 t140 版））路由命中**帧链来源扩展**（symbols.extIsFrameLocal）⇒ 局部扩展使具体类型在本作用域满足特质。**全局扩展满足是正常通道不报**（用户亲定口径）。**V1 偏差**：发射位在**局部扩展声明位**（ext.pos，满足缓存每 (concrete, trait) 一发），非原例调用位;原例 `trait T { fun T.test() }`（无理论参数的接收者形态）在 d3a 实测不可编译（满足通道要求 F[A] kind 形参），改 `trait T { fun test() }` 无接收者成员形态落码——零命中于现有样本。
+
+**噪声权衡（批二 authorized 台账，逐件×码×处数）**: 68 门 + stdlib 共 **H-CONS-BUILD 13 处 / 11 件**（真阳性——样本确手拼 Cons 链，R-26.3 正道告知）;**D-VARIANCE 6 处 / 4 件**（collection__traits×3、模块系统__traits×2、高阶类型×1——协变/逆变/不变自动判定真面）;**H-IMPURE-REDUNDANT 2 处 / 1 件**（特性巡礼：counterDemo 局部 @mut 累加 + side 空体——按语义体推导纯，标注冗余属实）;**H-UNUSED 2 处 / 1 件**（上下文弥散块体真面）;**H-EXPLICIT-TYPE-ARG / D-SHADOW / D-TRAIT-LOCAL 现有样本零命中**（触发面仅存于判别性探针）。**噪声控制两次收紧**：① panic 计入不纯证据（net/regex 占位内建 @impure 声明免误报——3 处假阳性消除）② H-UNUSED 限块体（net/regex/encoding 占位签名未用形参 + run-gate OQ-10 样本免误报——24 处 → 2 处，仅保留真死代码面）。
+
+**套件吸收**: 新增 `T153DiagBatchTwoTest` **21 测**（七码判别面 + 保守豁免面 + panic 占位面 + 表达式体签名面）;零旧测翻转（1241 基线 + 21 = 1262/1262）。
+
+**零分配 nid 验证**: ③ 段 58 件逐字节全同（HIR/产物全同）+ 10 件仅诊断条目差异（滤 12 码后逐字同——nid 位零漂移）;此前 net/regex 假阳性两轮收紧均未触及 HIR——nid 纪律全程成立。
+
+机械证据脚本: `jsoncmp/scripts/t153-parity.ps1` 五段;台账比价器 `jsoncmp/scripts/t153-gatecmp.js`（②③④ 段闭合分类 + 零未登记差 + 新码归因台账）;滤码器 `jsoncmp/scripts/t153-stripcmp.js`（w*/d*/b* 三族 12 码 + strippos，保序最弱归一化）;门编译脚本 `jsoncmp/scripts/t153-gate-run.js`（76 门 + stdlib）。产物：`out-subs/t153gate`（76）/ `t153stdlib`（9）/ `t153det-a·b`（摘要确定性）/ `t153gate-ledger.txt`（台账）/ `t153probe`（七码负例先红探针）/ t153-h1…d3n 探针（15 面）。

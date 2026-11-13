@@ -1,0 +1,256 @@
+{
+  "schema": "sublimation/hir@v3",
+  "compiler": {
+    "version": "0.1-SNAPSHOT"
+  },
+  "unit": {
+    "path": "t148-ang.subl",
+    "mode": "project"
+  },
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "E-CALL-ANGLE",
+      "pos": "2:14-2:20",
+      "message": "调用位尖括号 `<…>` 是命题参数通道（R-26.1）：类型实参请迁移到方括号 `Channel`[…]；命题供给请改用 by 断言（`Channel`() by [命题]）",
+      "module": "",
+      "nid": null
+    },
+    {
+      "severity": "supplement",
+      "code": "D-TYPE-INFERRED",
+      "pos": "2:5-2:7",
+      "message": "var `ch` 推导为 Channel[(推导:类型参数T)]",
+      "module": "",
+      "nid": null
+    }
+  ],
+  "hir": {
+    "kind": "HirFile",
+    "nid": 1,
+    "pos": "1:14-1:14",
+    "notes": [],
+    "entries": [
+      {
+        "kind": "HirFunDecl",
+        "nid": 2,
+        "pos": "1:14-1:14",
+        "notes": [],
+        "name": "m",
+        "symbol": {
+          "id": 0,
+          "kind": "fun",
+          "name": "m"
+        },
+        "annotations": [
+          "impure"
+        ],
+        "theory": [],
+        "params": [],
+        "preps": [],
+        "retType": {
+          "kind": "HirNamedType",
+          "nid": 3,
+          "pos": "1:19-1:22",
+          "notes": [],
+          "name": "Null",
+          "args": [],
+          "symbol": {
+            "id": 1,
+            "kind": "builtin",
+            "name": "Null"
+          }
+        },
+        "posts": [],
+        "constraints": [],
+        "purity": "impure",
+        "async": false,
+        "body": {
+          "kind": "HirBlock",
+          "nid": 4,
+          "pos": "1:24-1:24",
+          "notes": [],
+          "stmts": [
+            {
+              "kind": "HirVarStmt",
+              "nid": 5,
+              "pos": "2:5-2:7",
+              "notes": [],
+              "name": "ch",
+              "symbol": {
+                "id": 4,
+                "kind": "local",
+                "name": "ch"
+              },
+              "annotations": [],
+              "type": {
+                "kind": "HirNamedType",
+                "nid": 14,
+                "pos": "0:0",
+                "notes": [],
+                "name": "Channel",
+                "args": [
+                  {
+                    "kind": "HirNamedType",
+                    "nid": 13,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "(推导:类型参数T)",
+                    "args": [],
+                    "symbol": null
+                  }
+                ],
+                "symbol": null
+              },
+              "value": {
+                "kind": "HirCall",
+                "nid": 6,
+                "pos": "2:14-2:20",
+                "notes": [],
+                "callee": {
+                  "kind": "HirNameRef",
+                  "nid": 7,
+                  "pos": "2:14-2:20",
+                  "notes": [],
+                  "name": "Channel",
+                  "symbol": {
+                    "id": 2,
+                    "kind": "ctor",
+                    "name": "Channel"
+                  },
+                  "type": null
+                },
+                "args": [
+                  {
+                    "kind": "HirIntLit",
+                    "nid": 8,
+                    "pos": "2:27-2:27",
+                    "notes": [],
+                    "value": "2"
+                  }
+                ],
+                "symbol": {
+                  "id": 2,
+                  "kind": "ctor",
+                  "name": "Channel"
+                },
+                "type": {
+                  "kind": "HirNamedType",
+                  "nid": 14,
+                  "pos": "0:0",
+                  "notes": [],
+                  "name": "Channel",
+                  "args": [
+                    {
+                      "kind": "HirNamedType",
+                      "nid": 13,
+                      "pos": "0:0",
+                      "notes": [],
+                      "name": "(推导:类型参数T)",
+                      "args": [],
+                      "symbol": null
+                    }
+                  ],
+                  "symbol": null
+                },
+                "dictionary": null,
+                "slot": null,
+                "dictArgs": [],
+                "methodSugar": false,
+                "awaitPoint": false,
+                "calleeImpure": false
+              },
+              "destruct": null,
+              "deepCopy": false
+            },
+            {
+              "kind": "HirUnchecked",
+              "nid": 15,
+              "pos": "3:5-3:13",
+              "notes": [],
+              "inner": {
+                "kind": "HirExprStmt",
+                "nid": 16,
+                "pos": "3:15-3:19",
+                "notes": [],
+                "expr": {
+                  "kind": "HirCall",
+                  "nid": 17,
+                  "pos": "3:15-3:19",
+                  "notes": [],
+                  "callee": {
+                    "kind": "HirNameRef",
+                    "nid": 18,
+                    "pos": "3:15-3:19",
+                    "notes": [],
+                    "name": "print",
+                    "symbol": {
+                      "id": 5,
+                      "kind": "builtin",
+                      "name": "print"
+                    },
+                    "type": null
+                  },
+                  "args": [
+                    {
+                      "kind": "HirNameRef",
+                      "nid": 19,
+                      "pos": "3:21-3:22",
+                      "notes": [],
+                      "name": "ch",
+                      "symbol": {
+                        "id": 4,
+                        "kind": "local",
+                        "name": "ch"
+                      },
+                      "type": {
+                        "kind": "HirNamedType",
+                        "nid": 14,
+                        "pos": "0:0",
+                        "notes": [],
+                        "name": "Channel",
+                        "args": [
+                          {
+                            "kind": "HirNamedType",
+                            "nid": 13,
+                            "pos": "0:0",
+                            "notes": [],
+                            "name": "(推导:类型参数T)",
+                            "args": [],
+                            "symbol": null
+                          }
+                        ],
+                        "symbol": null
+                      }
+                    }
+                  ],
+                  "symbol": {
+                    "id": 5,
+                    "kind": "builtin",
+                    "name": "print"
+                  },
+                  "type": {
+                    "kind": "HirNamedType",
+                    "nid": 36,
+                    "pos": "0:0",
+                    "notes": [],
+                    "name": "Null",
+                    "args": [],
+                    "symbol": null
+                  },
+                  "dictionary": null,
+                  "slot": null,
+                  "dictArgs": [],
+                  "methodSugar": false,
+                  "awaitPoint": false,
+                  "calleeImpure": true
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

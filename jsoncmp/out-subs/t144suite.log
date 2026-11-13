@@ -1,0 +1,50 @@
+Starting a Gradle Daemon, 1 incompatible and 4 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:processTestResources
+> Task :frontend:compileKotlin
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:723:13 Conflicting overloads:
+fun parseBracketList(): List<Expr>
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:727:29 No value passed for parameter 'angle'.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:727:29 No value passed for parameter 'stopArrow'.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:727:29 No value passed for parameter 'minPrec'.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:906:51 Overload resolution ambiguity between candidates:
+fun parseBracketList(): List<Expr>
+fun parseBracketList(): List<Expr>
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:1247:37 Overload resolution ambiguity between candidates:
+fun parseBracketList(): List<Expr>
+fun parseBracketList(): List<Expr>
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:1447:63 Argument type mismatch: actual type is 'SourceRange', but 'Boolean' was expected.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:1447:63 No value passed for parameter 'pos'.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:1500:69 Argument type mismatch: actual type is 'SourceRange', but 'Boolean' was expected.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:1500:69 No value passed for parameter 'pos'.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:1513:33 Overload resolution ambiguity between candidates:
+fun parseBracketList(): List<Expr>
+fun parseBracketList(): List<Expr>
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/parser/Parser.kt:2024:13 Conflicting overloads:
+fun parseBracketList(): List<Expr>
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:3004:59 Variable 'symbol' must be initialized.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:3034:21 Variable 'symbol' must be initialized.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:3082:28 Variable 'symbol' must be initialized.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:3101:21 Variable 'symbol' must be initialized.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:3101:55 Variable 'symbol' must be initialized.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:3102:21 Variable 'symbol' must be initialized.
+e: file:///F:/Sublimation/frontend/src/main/kotlin/sublimation/frontend/semantic/Elaborator.kt:3127:61 Variable 'symbol' must be initialized.
+
+> Task :frontend:compileKotlin FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:compileKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 54s
+2 actionable tasks: 2 executed

@@ -1,0 +1,6 @@
+fun outer(): Nat {
+    @mut var xs = mutableListOf(1)
+    fun inner(): Nat { xs.add(2); return 0 }
+    return inner()
+}
+@impure fun main(): Null { print(1) }

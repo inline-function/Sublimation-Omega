@@ -1,0 +1,10 @@
+﻿@theorem
+fun th[p]: Null <p>
+@impure @async
+@root fun runBoth(f: () => Null, g: () => Null): Null
+@mut struct Cell(@mut v: Nat)
+fun apply[T](x: T, f: @impure (T) => Null): Null = f(x)
+@impure fun main(): Null {
+    @mut var c = Cell(0)
+    unchecked print(c)
+}

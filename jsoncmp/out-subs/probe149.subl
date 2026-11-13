@@ -1,0 +1,11 @@
+@theorem fun th[p]: Null <p>
+@root fun runBoth(): Null {}
+@async fun go(): Null {}
+@mut struct Cell(@mut v: Nat)
+@mutable fun List[Nat].bump(): List[Nat] = this
+fun sumOf[T](@list xs: T): T = xs
+fun each[T](xs: List[T], f: @impure (T) => Null): Null = f(xs)
+@impure fun main(): Null {
+    @mut var c = Cell(0)
+    unchecked print(c)
+}

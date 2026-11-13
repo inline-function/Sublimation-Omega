@@ -1,0 +1,45 @@
+Starting a Gradle Daemon, 1 incompatible and 12 stopped Daemons could not be reused, use --status for details
+> Task :frontend:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :frontend:compileKotlin UP-TO-DATE
+> Task :frontend:compileJava NO-SOURCE
+> Task :frontend:processResources NO-SOURCE
+> Task :frontend:classes UP-TO-DATE
+> Task :frontend:jar UP-TO-DATE
+> Task :frontend:processTestResources UP-TO-DATE
+
+> Task :frontend:compileTestKotlin FAILED
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:89:9 Syntax error: Expecting an expression.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:89:9 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:89:13 Unresolved reference 'optExts'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:89:21 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:89:28 Unsupported [Collection literals outside of annotations].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:89:42 Unresolved reference 'snapshot'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:89:75 Unresolved reference 'keys'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:89:83 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:91:30 Unresolved reference 'optExts'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:9 Syntax error: Expecting an expression.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:9 Syntax error: Expecting ')'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:13 Unresolved reference 'setExts'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:21 Syntax error: Expecting an element.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:28 Unsupported [Collection literals outside of annotations].
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:37 Unresolved reference 'snapshot'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:65 Unresolved reference 'keys'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:94:73 Cannot infer type for this parameter. Specify it explicitly.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:95:58 Unresolved reference 'setExts'.
+e: file:///F:/Sublimation/frontend/src/test/kotlin/sublimation/frontend/cli/T140StdlibTraitsTest.kt:97:5 Syntax error: Expecting an expression.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':frontend:compileTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 32s
+4 actionable tasks: 1 executed, 3 up-to-date

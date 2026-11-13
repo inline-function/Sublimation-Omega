@@ -1,0 +1,6 @@
+﻿fun f() : Nat {
+  var dead = 3
+  return 1
+}
+print(f())
+

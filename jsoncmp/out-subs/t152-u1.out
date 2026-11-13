@@ -1,0 +1,4 @@
+[警告][1:64] W-BRANCH-UNREACHABLE: when 分支被前序分支完全包含——永不匹配（死分支）。出路：删除该分支，或调整分支顺序 / 收窄前序模式
+  1 | ﻿fun f(xs : List[Nat]) : Nat = when (xs) { is Cons(_, _) -> 1; is Cons(a, b) -> 2; else -> 0 }
+    |                                                                ^
+[完成] 已生成 F:\Sublimation\jsoncmp\out-subs\t152-u1.json（14019 字节）
