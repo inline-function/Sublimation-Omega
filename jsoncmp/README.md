@@ -196,3 +196,28 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 - **stdlib 特质裸名界不解析**（R-22）: 界名裸写落 E-UNBOUND-NAME，唯一通道 = 限定父链（`traits.Functor`）——门内证。
 
 机械证据脚本: `jsoncmp/scripts/t140-parity.ps1` 五段（traits 落位核对 / 68 门 t122n 冻锚台账 / 精确差分 vs t139 冻结 / 侧基线 / 确定性 + 脚本门），rc=0 全绿。
+
+## t141 分账（R-24 v2：@mutable 注解 ≡ @mut @ref 接收者糖，2026-11-13）
+
+**变更画像**（窄差分：唯一产品差 = stdlib list 件的 add 声明形态；零新增件；e2e 调用面零差分）:
+
+| 门 | 结果 | 证据 |
+|---|---|---|
+| 精确差分（vs t140 冻结产物 `out-subs/t140gate`） | **67 e2e 件逐字节同** + 模块样本主件同 + 子件 7 同 / **list 件差 = add 声明形态** | t141-parity ③ |
+| list 件差内容（窄差分） | t140 `anns=["mut"] purity=pure recv=HirMutType(HirNamedType(List))` → t141 `anns=[] purity=impure recv=HirMutType(HirRefType(List))`（形参 v→e）；ok 位同、件长 Δ+173 | t141-parity ③ + 台账 |
+| e2e 调用面零差分 | `xs.add(…)` 调用位 calleeImpure 继承既有惯性（虚拟层路径）⇒ 67 件 + 主件逐字节同 | t141-parity ③ |
+| 68 门（vs **t122n 死冻锚**） | SAME 51 + 剥差同 16（历史盲差）+ 结构差 1（模块样本——与 t140 同口径） | out-subs/t141gate-ledger.txt |
+| stdlib 侧（vs t140stdlib） | 逐字节同 8 件 + 预期差 1 = list（声明形态变化） | t141-parity ④ |
+| 套件 | **1158/1158**（1144 基线 + 14 T141MutableSugarTest；T139 门 2 断言随 stdlib 形态更新 1 处、类 doc 补 1 行——测试不减） | :frontend:test |
+| 模块确定性 | 9/9 | t141-parity ⑤ |
+| 脚本门 | 14/14 | t141-parity ⑤ |
+
+**等价性机器证明**（T141 门 1）: `@mutable fun List[a].addx[a](e: a)` 与 `fun (@mut @ref List[a]).addx[a](e: a)` 同名同体双编译——HIR 子树 **pos/nid 剥后逐字节同**（机械口径同 jsoncmp 剥差同；注解表剥 "mutable"、接收者映 @mut @ref、purity=impure）。
+
+**台账登记（新面/预期差/边界）**:
+
+- **语言面新通道**: 接收者 @mut ⇒ impure（purity + 闸帧 enriched + FunFrame 同源）——self 访问免 E-MUT-CAPTURE 误伤（self=函数自带可变形参），纯函数真捕获判据零变（E-MUT-CAPTURE 保留）; @mutable 函数级注解提升（recvAst 包 @mut @ref + hirAnns 剥 mutable）; H-MUT-RECEIVER 提示（H 家族不拦）仅接收者 @mut @ref 写出形态发、函数级零提示;
+- **调用方闸**: 方法糖/限定 ext 登记位（mutMethodCalls）+ @mutable 同位 ⇒ E-IMPURE-REQUIRED（虚拟层路径，enriched 表无 stdlib add ⇒ 单报无叠）——与 @mut 形态口径同源; 被调侧已 impure-by-decl 时 E-IMPURE-REQUIRED 让位纯度闸（免双报）; T3 接收者提升（R-06）@mutable 同位触发（T128 提升轮/形参视图回写面零回归）; calleeImpure 位虚拟层惯性保留（= t139/t140 口径，零调用面差分）;
+- **@mut 函数级语义零变**（R-24 v2 纪律）: 纯度旗语义保持（purity=pure——T141 门 6 机器证）; @impure 注解/退化函数口径零变。
+
+机械证据脚本: `jsoncmp/scripts/t141-parity.ps1` 五段（stdlib 形态核对 / 68 门 t122n 冻锚台账 / 精确差分 vs t140 冻结 / 侧基线 / 确定性 + 脚本门），rc=0 全绿。

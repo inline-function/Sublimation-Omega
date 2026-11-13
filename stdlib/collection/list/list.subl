@@ -10,12 +10,12 @@ struct Cons[T](head: T, tail: List[T])
 
 type List[T] = Nil | Cons[T]
 
-// t139（R-23 B2 / OQ-4 = b 签名面延续）：@mut 扩展方法 add 虚拟表 retire 迁源——体**仍空**
+// t139→t141（R-24 v2 / OQ-4 = b 签名面延续）：add 落体改函数级 @mutable 形态——体**仍空**
 // （体随「运行时桥规格」（R4）后续件落；R-15 兑现债登记——提案 §4 裁 b：别写结构性体，
-// a 方案在 codegen 数组特判下语义假）。去糖签名面与旧虚拟 EXT_METHODS 逐字同构
-// （@mut 注解 + (@mut List[a]) 接收者首参 + 形参 v : a + 返回 List[a]），经
-// declareModuleExt 注入父域虚拟层：sugarExt/direct 调用面零差分。
-@mut fun (@mut List[a]).add[a](v: a): List[a]
+// a 方案在 codegen 数组特判下语义假）。@mutable = @mut @ref 接收者组合的纯糖（R-24 v2）：
+// 调用方纯域闸口径同 @mut 方法糖（E-IMPURE-REQUIRED）；提升位注解不入 HIR——两形态 HIR 同源。
+// 经 declareModuleExt 注入父域虚拟层：糖渠道接收者头 List 不变（sugarExt/direct 调用面零差分）。
+@mutable fun List[a].add[a](e: a): List[a]
 
 // 扩展函数（特质成员 map/fold/pure/flatMap；方法糖 xs.map(f) 与自由式同桶路由，TS-12）。
 fun List[a].map[a, b](f: (a) => b): List[b] = when(self) {

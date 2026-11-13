@@ -266,3 +266,30 @@ builtinSig（TypeInfer:790）60+ 内建函数按域分类登记——**语言定
 - 预告 t141（R-24 v2）: `@mutable` 新注解纯糖（映 `@mut @ref` 接收者组合）、⇒ impure、吸收接收者形态 E-MUT-CAPTURE 误伤、stdlib add 改函数级形态、两形态 HIR 逐字节同——批内别按旧 v1 spec 做。
 
 **本批未越界声明**: 不动 B2.1（FUNS 构造件）、不动 add 体（R-15 随运行时桥）、不翻基线（t122n 死冻锚口径沿用，§13 翻新提案仍仅提案）、不硬砸 Traversable 单子约束。
+
+## 15 批史 t141（R-24 v2：@mutable 注解 ≡ @mut @ref 接收者糖，2026-11-13）
+
+**完成面**（用户修订 v2：v1 漏 @ref——`@mutable fun List[T].add[T](e: T)` ≡ `fun (@mut @ref List[T]).add[T](e: T)`）:
+
+1. **@mutable 纯糖**（函数级注解语义层化）: 扩展函数声明位 `@mutable` → 接收者映 @mut @ref 组合（AST 包裹在 Elaborator.funDecl 内完成——解析器零变、S6 借用通道既有）; 提升位注解剥（hirAnns 剥 "mutable"）⇒ 两形态 **HIR 逐字节同**（T141 门 1 机器证明：pos/nid 剥后 hir 子树全等——注解表/接收者/purity/params 同源）; @mut 函数级语义零变（纯度旗保持 pure——T141 门 6）。
+2. **@mutable ⇒ impure**（按引用改调用方状态）: purity 位 + 闸帧 impureByDecl + Γ enriched 表 + FunFrame 同源（接收者 @mut ⇒ impure 一体规则）; 纯域调用落闸（本地扩展经纯度闸 E-IMPURE-CALL; 虚拟层扩展经 E-IMPURE-REQUIRED——@mut 方法糖同位登记位）。
+3. **等价化（E-MUT-CAPTURE 误伤消）**: self 是函数自带的可变形参，非外层捕获——接收者 @mut/@mutable 形态声明口径 impure ⇒ 捕获报告 `!impureByDecl && !ancestorsImpure` 同源吸收（a2/a3/a4 实测误伤全消）; **闸范围未放宽**——纯函数真捕获判据逐字零变（T107 形态 T141 门 3 复核红）。
+4. **H-MUT-RECEIVER 提示**（H 家族·不拦）: 仅接收者显式 @mut @ref 且未用 @mutable 时发（建议提升）; 函数级零提示; @mut 无 @ref / 纯接收者零提示（T141 门 4 四边界）。@mutable 静默忽略=零语义状态结案（无接收者位无映射——边界同未知注解，体验缺口挂账用户后裁）。
+5. **stdlib add 落体改函数级**: `@mutable fun List[a].add[a](e: a): List[a]`（旧 `@mut fun (@mut List[a]).add[a](v: a)`）——体仍空（OQ-4 b 签名面延续; **R-15 债登记不变**）; 快照面零形态差（anns=["mutable"] + 接收者 List 头——提升在 HIR 化层，糖渠道解析面 id 序零漂）。
+
+**B2 期后差分台账**（jsoncmp/README.md t141 分账 + t141-parity 五段机械证据）:
+
+- 精确差分（vs t140 冻结产物）: **67 e2e 件逐字节同** + 模块样本主件同 + 子件 7 同 / **唯一产品差 = list 件 add 声明形态**（anns ["mut"]→[] / purity pure→impure / 接收者 HirMutType(HirNamedType(List))→HirMutType(HirRefType(List)) / 形参 v→e; ok 位同、Δ+173 字节）——窄差分台账登记;
+- **e2e 调用面零差分**: `xs.add(…)` calleeImpure 位虚拟层惯性保留（t139/t140 口径同源——本批特意不翻）; 虚拟层 stdlib add 不入 enriched ⇒ 单报无叠;
+- 68 门 vs **t122n 死冻锚**: SAME 51 + 剥差同 16（历史盲差，与 t140 同口径）+ 结构差 1（模块样本）; stdlib 侧 8 同 + list 预期差;
+- 套件 **1158/1158**（1144 + 14 T141MutableSugarTest: 等价机器证明/纯度闸三路/捕获三门/提示四边界/无接收者静默/stdlib 形态三面/@mut 语义零变）; 存量 1 处断言随 stdlib 形态更新（T139 门 2: @mut 注解→@mutable + 接收者 List 头断言，类 doc 补行——测试零删减）; T128 提升轮/形参视图回写零回归（T3 登记位 +mutable 同位触发）。
+- 模块双导出确定性 **9/9**; 脚本门 14/14; 机械证据脚本 `jsoncmp/scripts/t141-parity.ps1`（rc=0）。
+
+**诚实边界与债**:
+
+- **calleeImpure 虚拟层惯性**: @mutable 调用位 calleeImpure=false（虚拟层注解路径未带 purity——@mut 形态同源口径，非新增不一致; E-IMPURE-REQUIRED 闸承载拦截）——留待后续被调侧面件统一;
+- **@ref 与借用通道**: 提升的 @ref 在 HIR 接收者位（类型层）; 快照/虚拟层接收者保持裸 List（调用面借用矩阵零变——差分保护）; 注解 @mutable 的接收者借用实参（& 形态）矩阵同 @mut 形态;
+- **@mut 函数级仍非 impure**（纯度旗语义——R-24 v2 钦定 @mut 语义不变）; 若后续要 @mut ⇒ impure 另批裁决;
+- **@mutable 无接收者静默**（体验缺口——挂账用户后裁，范围外）。
+
+**本批未越界声明**: 不动 B2.1 构造件（FUNS/MutableListOf/ListOf）、不动 add 体（R-15 随运行时桥 R4）、不动 B3 axioms、不翻基线（t122n 死冻锚口径沿用）、不自提交（树留）。

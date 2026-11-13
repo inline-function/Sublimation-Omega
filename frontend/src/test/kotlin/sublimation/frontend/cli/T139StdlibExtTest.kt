@@ -13,6 +13,7 @@ import kotlin.test.assertTrue
  *
  * - EXT_METHODS 虚拟表 retire（唯一条目 @mut List[a].add）→ stdlib list 件源声明，**体仍空**
  * （OQ-4 队长裁 b 签名面延续：体随「运行时桥规格」后续件落，R-15 兑现债登记）；
+ * - t141（R-24 v2）：add 落体改函数级 @mutable 形态（≡ @mut @ref 接收者糖，两形态 HIR 同源）；
  * - 查询链不变（本模块 > 挂载子 > prelude 虚拟层）：retired 键经 RETIRED_EXT_METHODS 允许表注入
  * 父域虚拟层（SymbolTable.virtualExtMethods——builtins 懒登记 id 序零漂移），stdlib 快照面
  * 对 retire 键跳过（方法糖解析源 = 注入虚拟层，HIR 形态零差分）；
@@ -46,7 +47,9 @@ class T139StdlibExtTest {
         val d = su.filter { it.snapshot.stdlib }.first { it.alias == "list" }.snapshot.exts["List"]?.get("add")?.decl
         assertNotNull(d, "list 快照含 add 扩展声明")
         assertEquals(true, d?.body == null, "add 体仍空（体随运行时桥规格后续件落）")
-        assertEquals(true, d.annotations.contains("mut"), "add 持 @mut 注解（去糖签名面同构）")
+        assertEquals(true, d.annotations.contains("mutable"), "add 持 @mutable 函数级注解（R-24 v2 纯糖形态）")
+        assertEquals(true, (d.receiver as? sublimation.frontend.ast.NamedType)?.name == "List",
+            "snapshot 声明接收者保持 List 头（@mut @ref 提升在 HIR 化层——快照面零形态差）")
     }
 
     /** 门 3：方法糖解析源零差分——xs.add(v) 走注入虚拟层（builtins 懒登记符号），HIR 形态等同

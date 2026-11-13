@@ -56,7 +56,8 @@ class T137StdlibCollectionTest {
     @Test fun 五件快照条目在位() {
         val (su, _) = compileStdlibUnits(noStdlib = false, scriptMode = false, noDegrade = false, noLift = false)
         val by = su.associateBy { it.alias }
-        assertEquals(setOf("list", "optional", "result", "set", "map", "math"), by.keys, "五件 + math")
+        // t140（B2.2）：加 traits 件（HKT 特质族——限定形态引用 traits.Functor 等）
+        assertEquals(setOf("list", "optional", "result", "set", "map", "traits", "math"), by.keys, "五件 + traits + math")
         val opt = by["optional"]!!
         assertTrue("getOrElse" in opt.snapshot.funs && "isSome" in opt.snapshot.funs &&
             setOf("head", "firstOr", "get", "toResult").all { it in opt.snapshot.funs.keys },

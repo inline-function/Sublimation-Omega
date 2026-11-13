@@ -1464,6 +1464,15 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         // t86（F6 收口）：原生命题名保护已下沉到 SymbolTable.declareFun（Collector 声明通道统一，
         // 文案「不可重定义」）——此前的声明位守卫移除，否则同名字会重复报错。
         val nid = freshNid()
+        // t141（R-24 v2）：@mutable 函数级注解 = 接收者 @mut @ref 组合的纯糖（仅扩展函数形态有映射）。
+        // 等价目标：@mutable fun List[a].f[a](e: a) ≡ fun (@mut @ref List[a]).f[a](e: a)——提升位注解不入
+        // HIR（下 HirFunDecl 注解表剥 "mutable"，两形态 HIR 逐字节同）；纯度闸/捕获判据统一走接收者
+        // @mut ⇒ impure 口径（self 是函数自带的可变形参，非外层捕获——E-MUT-CAPTURE 误伤消除）。
+        // 写出形态（接收者显式 @mut @ref 且无 @mutable）另发 H-MUT-RECEIVER 提示建议提升（函数级零提示）。
+        val mutableLift = "mutable" in d.annotations && d.receiver != null
+        val recvAst: Type? = if (mutableLift && d.receiver != null)
+            sublimation.frontend.ast.MutType(sublimation.frontend.ast.RefType(d.receiver, d.receiver.pos), d.receiver.pos)
+        else d.receiver
         // P-8/D（卷 TS-9/TS-10/TS-15）：扩展函数接收者——类型按 d.theory 作用域解释，
         // self 绑定于函数帧（静态类型 = Receiver，TS-10）；形参同名 self → E-DUP-NAME。
         // P-8/D（卷 TS-9/TS-10/TS-15）：接收者解释——头未知 → W-EXT-OBSOLETE（不阻断，替代头名报错，
@@ -1472,7 +1481,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         // t140（B2.2）：接收者头为当前作用域理论参数（特质体内的 F 等）时视为已知头——
         // 消 W-EXT-OBSOLETE 假阳（F 从未作为类型声明；它是所属特质的 kind 形参，TS-15 头名口径）。
         val recvHeadOk = (d.receiver as? NamedType)?.name?.let { symbols.lookupType(it) != null || isTypeParam(it) } ?: true
-        val recvT: sublimation.frontend.hir.HirType? = d.receiver?.let {
+        val recvT: sublimation.frontend.hir.HirType? = recvAst?.let {
             if (recvHeadOk) type(it) else quietReceiverHead(it)
         }
         if (recvT != null && !recvHeadOk) {
@@ -1483,10 +1492,16 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         if (recvT != null && d.params.any { it.name == "self" })
             diag.error("E-DUP-NAME", d.pos,
                 "扩展函数 " + ident(d.name) + " 的形参 self 与保留接收者名同名（接收者以 self 绑定，TS-10）")
+        // t141（R-24 v2）：H-MUT-RECEIVER（H 家族提示——不拦）——仅接收者显式 @mut @ref 且未用 @mutable 时发。
+        if (!mutableLift && d.receiver is sublimation.frontend.ast.MutType
+            && d.receiver.inner is sublimation.frontend.ast.RefType)
+            diag.hint("H-MUT-RECEIVER", d.receiver.pos,
+                "接收者 @mut @ref 形态可提升为函数级 @mutable 注解（R-24 v2 纯糖等价：" +
+                    "@mutable fun T.f ≡ fun (@mut @ref T).f，两形态 HIR 逐字节同；@mut 函数级语义不变）")
         val result = factFrame {
             symbols.frame(ScopeKind.FUNCTION) {
             val theory = d.theory.map { theoryParam(it, d.theory, listOf(d.retType),
-                d.params.map { q -> q.type } + listOfNotNull(d.receiver)) }
+                d.params.map { q -> q.type } + listOfNotNull(recvAst)) }   // t141：理论参数吃提升后接收者（等价形态同源）
             if (recvT != null) { symbols.declareLocal(SymbolKind.PARAM, "self", d.receiver!!.pos, recvT); injectTypeFacts("self", recvT, d.receiver!!.pos) }   // TS-10 / t65
             // t48（ADR-32 R-30）：@list 变长形参的声明位口径——须在末位、不得带默认值
             d.params.forEachIndexed { i, q ->
@@ -1527,11 +1542,14 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             // t8 return 上下文帧：体核对在体内遍历完成后于帧尾收口（E-RETURN-* / E-MISSING-RETURN / 体类型核对）
             // t97（N1 停机闸）：帧带名 + @impure 逃逸位 + 参数集（含 self 接收者入首参位口径）
             // t117（分型表 §3.1/R-02）：不收敛拥有者函数退化轮内置 impure（停机闸跳过既有逃逸位）
-            funFrames.addLast(FunFrame(retType, d.name, "impure" in d.annotations || d.name in degradedFuns,
+            funFrames.addLast(FunFrame(retType, d.name,
+                "impure" in d.annotations || mutableLift || recvAst is sublimation.frontend.ast.MutType || d.name in degradedFuns,
                 d.params.map { q -> q.name }.toSet() + if (recvT != null) setOf("self") else emptySet(),
                 metaRet = retMeta != null))
             // t66：体命的直接期望 = 声明返回类型（收窄触发条件③）
-            val gateFrame = gateFunEnter(d.name, d.annotations, params, preps, global, slotKey)   // t122：闸帧+闭包键
+            // t141（R-24）：闸帧纯度带接收者 @mut/@mutable 位（impureByDecl ⇒ self 访问免 E-MUT-CAPTURE 误伤）
+            val gateFrame = gateFunEnter(d.name, d.annotations, params, preps, global, slotKey,
+                recvImpure = mutableLift || recvAst is sublimation.frontend.ast.MutType)   // t122：闸帧+闭包键
             enterEffectScope()   // t121：体效应累加（具名函数 purity 走注解/退化位，结论 A2 闭包消费）
             val body = d.body?.let { b -> expectAt(retType) { expr(b) } }
             val frame = funFrames.removeLast()
@@ -1576,10 +1594,14 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 }
             }
             // t117（R-02 触发点）：不收敛拥有者函数（退化轮注入）按 impure 记账——纯度闸/停机闸既有消费
-            val purity = if ("impure" in d.annotations || d.name in degradedFuns) HirPurity.IMPURE else HirPurity.PURE
+            // t141（R-24 v2）：@mutable / 接收者 @mut ⇒ impure（按引用改调用方状态，纯度闸口径）。
+            val purity = if ("impure" in d.annotations || mutableLift ||
+                recvAst is sublimation.frontend.ast.MutType || d.name in degradedFuns) HirPurity.IMPURE else HirPurity.PURE
             val async = "async" in d.annotations
+            // t141（R-24 v2）：提升位注解剥 "mutable"——@mutable 形态与 @mut @ref 接收者形态 HIR 逐字节同源。
+            val hirAnns = if (mutableLift) d.annotations.filter { it != "mutable" } else d.annotations
             HirFunDecl(
-                d.name, symbol, d.annotations, theory, params, preps, mRet, posts, constraints,
+                d.name, symbol, hirAnns, theory, params, preps, mRet, posts, constraints,
                 purity, async, body, nid, d.pos, notesOf(d), recvT,
                 inferred = retInferred, evidence = retEvidence,
             )
@@ -2754,7 +2776,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             infer.syntheticT("调用" + c.name)
         }
         // t139（B2 ext 限定调位）：@mut 扩展的调用登记（纯度闸同方法糖口径）
-        if (mf == null && mext != null && "mut" in mext.decl.annotations) mutMethodCalls.add(nid)
+        // t141（R-24 v2）：@mutable 同位登记（纯度闸口径同 @mut 方法糖——调用方纯域内拦 E-IMPURE-REQUIRED）
+        if (mf == null && mext != null && ("mut" in mext.decl.annotations || "mutable" in mext.decl.annotations)) mutMethodCalls.add(nid)
         // t128（S6）：借用实参留痕 + 冗余登记（限定 ext 调用位；零借用免求值）
         val args2 = if (mf == null && mext != null && borrowedFlags.any { it }) {
             enterTypeParams(mext.decl.theory)
@@ -2852,10 +2875,13 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                         " 不可解析：作用域内与全局均无同名扩展函数，也不是内建方法（局部扩展随作用域退出而不可见）")
                 // t126（S5c / R-17/R-18.3）：@mut 标方法（注解位）调用登记——纯度闸（E-IMPURE-REQUIRED）
                 //  判据不看实参视图（队长裁 V1 一刀：深拷实参照门，逃逸分析留后版）。
-                if (ext != null && "mut" in ext.annotations) mutMethodCalls.add(nid)
+                // t141（R-24 v2）：@mutable 同位登记（等价 @mut @ref 接收者形态——调用方纯域内拦）
+                if (ext != null && ("mut" in ext.annotations || "mutable" in ext.annotations)) mutMethodCalls.add(nid)
                 // t125（S5c / R-06 T3）：@mut 方法的接收者位——可提升名登记单调需求（提升通道复用 S5b：
                 //  形参/局部被传入 @mut 接收者位 ⇒ 提升为 @mut 视图，免深拷绕路）。
-                if (scriptMode && ext != null && "mut" in ext.annotations && c.target is NameRef) {
+                // t141（R-24 v2）：@mutable 同位触发（等价 @mut @ref 接收者——接收者位 @mut 视图需求同源）
+                if (scriptMode && ext != null && ("mut" in ext.annotations || "mutable" in ext.annotations)
+                    && c.target is NameRef) {
                     val t3Name = (c.target as NameRef).name
                     val t3Sym = symbols.lookupValue(t3Name)
                     if (t3Sym?.scriptPromotable == true)
@@ -3776,14 +3802,17 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
 
     /** FUN 帧进栈（funDecl 体构造前——参数/preps 已就绪）。global=文件级声明（闭包节点 g:名，同 Γ 注册口径）。 */
     private fun gateFunEnter(name: String, annotations: List<String>, params: List<sublimation.frontend.hir.HirParam>,
-                             preps: List<sublimation.frontend.hir.HirProp>, global: Boolean, slotKey: String?): GateFrame {
+                             preps: List<sublimation.frontend.hir.HirProp>, global: Boolean, slotKey: String?,
+                             recvImpure: Boolean = false): GateFrame {
         val parent = gateTop!!
+        // t141（R-24 v2）：@mutable / 接收者 @mut ⇒ impure（声明口径——E-MUT-CAPTURE 报告判据同源吸收）
+        val pure = gatePurityOf(name, annotations) || recvImpure
         val borrowed = params.mapNotNull { p ->
             if ((p.type as? HirFunType)?.purity == HirPurity.IMPURE) p.name else null
         }.toSet()
         val key = if (global) "g:" + name else slotKey
-        val slot = if (global) null else slotKey?.let { GateSlot(gatePurityOf(name, annotations), it) }
-        val frame = GateFrame(parent, GateFrameKind.FUN, name, gatePurityOf(name, annotations), borrowed,
+        val slot = if (global) null else slotKey?.let { GateSlot(pure, it) }
+        val frame = GateFrame(parent, GateFrameKind.FUN, name, pure, borrowed,
             preps.mapNotNull { pureAtomName(it) }.toSet(), key, slot)
         frame.bound.addAll(params.mapNotNull { it.symbol?.id })
         gateEmit(frame)
@@ -3847,7 +3876,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         val globalDecls = mutableMapOf<String, HirFunDecl>()
         hir.entries.forEach { ent ->
             val d = (ent as? sublimation.frontend.hir.HirDeclEntry)?.decl as? HirFunDecl ?: return@forEach
-            enriched[d.name] = gatePurityOf(d)
+            enriched[d.name] = gatePurityOf(d) || d.receiver is sublimation.frontend.hir.HirMutType   // t141：接收者 @mut 同源
             globalDecls[d.name] = d
         }
         // 2) axiom pure<f> 全局事实池（axiomFacts 收集全部 axiom 命题——逐名提取 pure 原子）
@@ -4043,7 +4072,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     }
                     // t126（S5c / R-18.3）：@mut 方法调用闸——调用方声明口径非纯（@impure / R-07 捕获 /
                     //  unchecked 降闸帧）⇒ E-IMPURE-REQUIRED。V1 一刀：判据不看实参视图（深拷照门）。
-                    if (node.nid in mutMethodCalls && !item.frame.chainImpure())
+                    // t141（R-24 v2）：被调侧已按声明口径 impure（接收者 @mut/@mutable）时让位纯度闸——免双报
+                    if (node.nid in mutMethodCalls && !item.frame.chainImpure()
+                        && ctx.enriched[calleeNameOf(node.callee)] != true)
                         diag.error("E-IMPURE-REQUIRED", node.origin,
                             "纯函数不能调用 @mut 方法 " + ident(calleeNameOf(node.callee) ?: node.callee.toString()) +
                             "——方法对接收者有写效应（R-17/R-18）。两路放行任选其一：" +
