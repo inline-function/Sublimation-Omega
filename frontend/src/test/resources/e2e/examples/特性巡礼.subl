@@ -113,14 +113,14 @@ fun main() {
     axiom forall n. tagged<n>
     axiom pure<side>
 
-    // —— 拷贝规则演示 1：@mut 目标 ← 纯源 = 深拷贝 ——
-    var a : Cell = Cell(0)
-    var b : @mut Cell = a
-    b.n = 1
-    // —— 拷贝规则演示 2：@ref @mut 目标 ← @mut 源 = 别名共享 ——
-    @mut var c : Cell = Cell(0)
-    @ref var d : @mut Cell = c
-    c.n = 1
+    // —— 拷贝规则演示 1：MUT 目标 ← MUT 源 = 深拷贝（R-28：深拷仅经构造族 @mut 源）——
+    var a : @mut List[Nat] = mutableListOf(0)
+    var b : @mut List[Nat] = a
+    unchecked b.add(1)
+    // —— 拷贝规则演示 2：@ref @mut 目标 ← MUT 源 = 别名共享 ——
+    var c : @mut List[Nat] = mutableListOf(0)
+    @ref var d : @mut List[Nat] = c
+    unchecked c.add(1)
     // —— 闭包捕获：创建时深拷快照 ——
     @mut var ctr : Cell = Cell(7)
     var snapshot = { => ctr.n }

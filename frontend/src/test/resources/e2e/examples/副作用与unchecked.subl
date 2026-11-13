@@ -3,10 +3,8 @@
 // 预期输出见行尾注释
 // ============================================================
 
-@mut struct Counter(@mut v: Nat)
-
-@impure fun impureBump(c: @mut Counter): Null {
-    c.v = c.v + 1
+@impure fun impureAppend(xs : @mut List[Nat]): Null {
+    unchecked xs.add(1)
 }
 
 @root fun rootZero(): Null {
@@ -22,10 +20,10 @@ fun pureWrap(): Null {
 }
 
 @impure fun main() {
-    @mut var ct = Counter(0)
-    impureBump(ct)              // impure 直接调（参数位深拷隔离 R-17 ⇒ ct 不被改穿）
-    impureBump(ct)
-    print(ct.v)                 // 0（两次 bump 各深拷，原值不动）
+    var xs : @mut List[Nat] = mutableListOf(0)
+    impureAppend(xs)           // R-28：MUT→MUT 参数位深拷隔离（R-17——构造族源合法格）
+    impureAppend(xs)
+    print(xs)                  // [0]（两次 append 各深拷，原值不动）
     rootZero()                  // @root 闸口
     pureWrap()                  // unchecked 豁免
     print("done")

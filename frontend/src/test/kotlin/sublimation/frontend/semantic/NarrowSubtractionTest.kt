@@ -167,7 +167,7 @@ class NarrowSubtractionTest {
     /** 补 S4：赋值右值位收窄。 */
     @Test fun s4_assignNarrows() {
         assertFalse(errCodes(
-            "fun f(a: Nat, b: Nat): Null { axiom a >= b; var x: @mut Nat = 0; x = a - b; return null }")
+            "fun f(a: Nat, b: Nat): Null { axiom a >= b; @mut var x = 0; x = a - b; return null }")
             .any { it.startsWith("E-") }, "S4 x = a - b（x: Nat）应收窄通过")
     }
 

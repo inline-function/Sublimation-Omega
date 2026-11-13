@@ -139,13 +139,14 @@ class SubtypeOrderTest {
     // -------------------- ST-11.1：@mut 视图（@mut T <: T 单向；T <: @mut T 不成立；@mut T <: @mut U 仅当 T=U） --------------------
     @Test
     fun st11_1_mutView() {
+        // R-28：@mut Nat 不可由 plain 字面构造——正例迁移到构造族合法 MUT 源
         pass("MUT-READ-VIEW", """
-            var a: @mut Nat = 1
-            var b: Nat = a
+            var a: @mut List[Nat] = mutableListOf(1)
+            var b: List[Nat] = a
             
         """)
         pass("MUT-BOX-INIT", """
-            var a: @mut Nat = 1
+            var a: @mut List[Nat] = mutableListOf(1)
             
         """)
         reject("MUT-PLAIN-TO-MUT-FUNRET", """

@@ -404,20 +404,56 @@ internal class TypeInfer(
      *  deep=顶层深拷（false 含共享与平凡同值——不可变位无运行时拷贝需求）;elements=深拷下钻的
      *  容器泛型实参位判定（共享路径元素随整体共享——want 持 @ref 无需下钻，R2 §三）;
      *  头名不齐（联合别名展开等）→ 零元素结论（保守）。 */
-    data class CopyDecision(val deep: Boolean, val elements: List<CopyDecision>) {
+    data class CopyDecision(val deep: Boolean, val elements: List<CopyDecision>, val reject: Boolean = false) {
         /** 元素层深拷位数（递归累计——嵌套容器同型计数）。 */
         val deepElements: Int get() = if (deep) elements.fold(0) { acc, d -> acc + (if (d.deep) 1 else 0) + d.deepElements } else 0
     }
 
-    /** t98 四格顶层判定 + t125（R-14）元素层递归（先判顶后下钻）。 */
+    /** t98 四格顶层判定 + t125（R-14）元素层递归（先判顶后下钻）+ t150（R-28 拒格）。
+     *  R-28（用户新裁 2026-11-13，推翻旧隐式深拷口径）：**5 格隐式深拷废止改拒**——
+     *  want PLAIN × 源 REF/REFMUT；want MUT × 源 ≠ MUT。矩阵现三态：共享 7 格 / 深拷 2 格
+     *  （MUT→PLAIN、MUT→MUT）/ 拒格 7 格（R-28 新 5 + 既有 2：want REFMUT × 源 PLAIN/REF）。
+     *  深拷=类型层判定+HIR 留痕（R-29 补注）；实际深拷随后端运行时（R2 §三）。 */
     fun copyDispatch(got: HirType, want: HirType): CopyDecision {
-        val top = when (viewKindOf(want)) {
-            ViewKind.REF -> false
-            ViewKind.REFMUT -> viewKindOf(got) != ViewKind.MUT && viewKindOf(got) != ViewKind.REFMUT
-            ViewKind.PLAIN -> viewKindOf(got) != ViewKind.PLAIN
-            ViewKind.MUT -> true
+        val g = viewKindOf(got); val w = viewKindOf(want)
+        return when {
+            w == ViewKind.REF -> CopyDecision(false, emptyList())
+            w == ViewKind.REFMUT -> if (g == ViewKind.MUT || g == ViewKind.REFMUT)
+                CopyDecision(false, emptyList()) else CopyDecision(false, emptyList(), true)
+            w == ViewKind.PLAIN -> when (g) {
+                ViewKind.MUT -> CopyDecision(true, elementDecisions(got, want))
+                ViewKind.PLAIN -> CopyDecision(false, emptyList())
+                else -> CopyDecision(false, emptyList(), true)   // R-28：REF/REFMUT → PLAIN 拒
+            }
+            else -> if (g == ViewKind.MUT) CopyDecision(true, elementDecisions(got, want))
+                else CopyDecision(false, emptyList(), true)      // R-28：源 ≠ MUT → want @mut 拒
         }
-        return CopyDecision(top, if (top) elementDecisions(got, want) else emptyList())
+    }
+
+    /** R-28：拒格判定（矩阵唯一真源 [copyDispatch]）。 */
+    fun r28Rejected(got: HirType, want: HirType): Boolean = copyDispatch(got, want).reject
+
+    /** R-28 拒格发报（E-TYPE-MISMATCH 既有码族 + 显式迁移指引 copy/toMutableList）。
+     *  返回 true = 已发报或容忍静默（合成/燃料纪律同 [reportMismatch]）——站点跳过常规失配路径。 */
+    private fun r28Report(got: HirType, want: HirType, pos: SourceRange, what: String): Boolean {
+        if (!r28Rejected(got, want)) return false
+        if (fuelExhaustedNow() || containsSynthetic(got) || containsSynthetic(want)) return true
+        diag.error("E-TYPE-MISMATCH", pos, what + "（R-28：隐式深拷格已废止——此转换不可隐式完成；" +
+            "请显式迁移：copy(…) 取不可变副本，或 toMutableList(…) 构造可变副本）")
+        return true
+    }
+
+    /** R-29（队长令 2026-11-13）：深拷转换点补注（D-DEEP-COPY，非 E 级、不拦）——覆盖赋值/传参/
+     *  初始化等值通道；仅 R-28 后仅存复制格（MUT→PLAIN / MUT→MUT）+ 元素层深拷（R-14）同发；
+     *  共享/平凡格零补注（同 reportMismatch 的合成/燃料容忍纪律）。 */
+    private fun deepCopyNote(got: HirType, want: HirType, pos: SourceRange, what: String) {
+        val dec = copyDispatch(got, want)
+        if (!dec.deep || dec.reject) return
+        if (fuelExhaustedNow() || containsSynthetic(got) || containsSynthetic(want)) return
+        val elem = if (dec.deepElements > 0)
+            "（元素层：" + dec.deepElements + " 位深拷——容器实参位随顶层下钻）" else ""
+        diag.supplement("D-DEEP-COPY", pos, what + " 隐式深拷：" + render(got) + " → " + render(want) +
+            "（深拷隔离——源端可写/目标无引用视图；实际深拷随后端运行时，R2 §三 / R-29）" + elem)
     }
 
     /** R-14：容器实参位——剥除外层视图层后，按**元数对齐**成对递归。
@@ -883,9 +919,13 @@ internal class TypeInfer(
         // t62（ST-11.1）：初始化是造格（新建可变单元）→ t64（ADR-41）：got 已是 @mut 视图时按视图对视图
         // （@mut 视图不变性在子类型分派里生效）；否则核 typeof(v) <: demoteView(declared)
         val target = borrowView(initType, declared)
+        // R-28：拒格先判（消息带迁移指引）——命中即发报返回，不走常规失配路径
+        if (r28Report(initType, declared, pos,
+                "var " + name + " 标注了 " + render(declared) + "，但初值是 " + render(initType) + "，两边类型不一致")) return declared
         if (demoted || (!adaptOk(initType, target) && unify(initType, target) == null))
             reportMismatch(initType, declared, pos,
                 "var " + name + " 标注了 " + render(declared) + "，但初值是 " + render(initType) + "，两边类型不一致")
+        else deepCopyNote(initType, declared, pos, "var " + ident(name))   // R-29 深拷补注
         return declared
     }
 
@@ -897,9 +937,12 @@ internal class TypeInfer(
             (rank(valueT.name) ?: 0) > (rank(targetT.name) ?: 0)
         // t62（ST-11.1）+ t64（ADR-41）：got 为 @mut 视图时视图对视图；否则核 typeof(v) <: demoteView(targetT)
         val target = borrowView(valueT, targetT)
+        if (r28Report(valueT, targetT, pos,
+                "赋值右值 " + render(valueT) + " 与目标 " + render(targetT) + " 不符，两边类型不一致")) return
         if (demoted || (!adaptOk(valueT, target) && unify(valueT, target) == null))
             reportMismatch(valueT, targetT, pos,
                 "赋值右值 " + render(valueT) + " 与目标 " + render(targetT) + " 不符，两边类型不一致")
+        else deepCopyNote(valueT, targetT, pos, "赋值")
     }
 
     /** t60-3：形参/字段默认值类型核对（声明位，同一判据；E-DEFAULT-TYPE 为 t60 新码，同 E-DEFAULT-ORDER 族）。 */
@@ -909,10 +952,13 @@ internal class TypeInfer(
             (rank(got.name) ?: 0) > (rank(want.name) ?: 0)
         // t62（ST-11.1）+ t64（ADR-41）：got 为 @mut 视图时视图对视图；否则核 typeof(default) <: demoteView(paramT)
         val target = borrowView(got, want)
+        if (r28Report(got, want, pos,
+                "默认值 " + render(got) + " 与形参 " + ident(paramName) + " 的类型 " + render(want) + " 不符，两边类型不一致")) return
         if (demoted || (!adaptOk(got, target) && unify(got, target) == null))
             reportMismatch(got, want, pos,
                 "默认值 " + render(got) + " 与形参 " + ident(paramName) + " 的类型 " + render(want) + " 不符，两边类型不一致",
                 "E-DEFAULT-TYPE")
+        else deepCopyNote(got, want, pos, "默认值 " + ident(paramName))
     }
     /** var 元组解构（决策 91 声明版）：初值须为元组、分量数齐——旧 E-TUPLE-DESTRUCT/E-TUPLE-ARITY。 */
     fun varDestruct(initType: HirType, names: List<String>, pos: SourceRange): List<HirType> {
@@ -1058,8 +1104,11 @@ internal class TypeInfer(
             if (argT is HirFunType && formalT is HirFunType && argT.params.size != formalT.params.size)
                 diag.error("E-ARITY", pos, "函数实参元数不符:实参 " + render(argT) + " 有 " +
                     argT.params.size + " 个参数,形参 " + render(formalT) + " 期望 " + formalT.params.size + " 个（D-11）")
+            if (r28Report(p.first, formal, pos, "实参 " + (i + 1) + " " + render(p.first) + " 与形参 " + render(formal) + " 不符"))
+                return@forEachIndexed
             if (!adaptOk(p.first, formal0))
                 reportMismatch(p.first, formal, pos, "实参 " + (i + 1) + " " + render(p.first) + " 与形参 " + render(formal) + " 不符")
+            else deepCopyNote(p.first, formal, pos, "实参 " + (i + 1))
         }
         // t48（R-30）：变长空实参（listOf()）——未解理论参数外泄会以自由类型名污染调用类型，回退 synthetic
         val solvedRet = if (varIdx < 0) solved else {
@@ -1221,9 +1270,12 @@ internal class TypeInfer(
         argTypes.zip(fields).forEachIndexed { i, p ->
             val f = p.second
             val unsolvedTp = f is HirNamedType && f.args.isEmpty() && f.name in theoryNames
+            if (!unsolvedTp && r28Report(p.first, f, pos, "构造子 " + ident(ctorName) + " 实参 " + render(p.first) + " 与字段 " + render(p.second) + " 不符"))
+                return@forEachIndexed
             if (!unsolvedTp && !adaptOk(p.first, if (borrowed.getOrElse(i) { false })
                 borrowView(p.first, refWrap(f)) else borrowView(p.first, f)))
                 reportMismatch(p.first, f, pos, "构造子 " + ident(ctorName) + " 实参 " + render(p.first) + " 与字段 " + render(p.second) + " 不符")
+            else if (!unsolvedTp) deepCopyNote(p.first, f, pos, "构造子 " + ident(ctorName) + " 字段 " + (i + 1))
         }
         return namedT(enumName, theoryNames.map { solved[it] ?: syntheticT("类型参数" + it) })
     }
@@ -1240,9 +1292,15 @@ internal class TypeInfer(
             val want = fieldTypes.firstOrNull { it.first == fn }
             if (want == null)
                 diag.error("E-UNBOUND-NAME", pos, "结构体 " + ident(structName) + " 无字段 " + ident(fn))
-            else if (!adaptOk(assignTypes[i], borrowView(assignTypes[i], want.second)))
-                reportMismatch(assignTypes[i], want.second, pos,
-                    "构造 " + ident(structName) + " 字段 " + ident(fn) + " 的实参 " + render(assignTypes[i]) + " 与 " + render(want.second) + " 不符")
+            else {
+                if (r28Report(assignTypes[i], want.second, pos,
+                        "构造 " + ident(structName) + " 字段 " + ident(fn) + " 的实参 " + render(assignTypes[i]) + " 与 " + render(want.second) + " 不符"))
+                    return@forEachIndexed
+                if (!adaptOk(assignTypes[i], borrowView(assignTypes[i], want.second)))
+                    reportMismatch(assignTypes[i], want.second, pos,
+                        "构造 " + ident(structName) + " 字段 " + ident(fn) + " 的实参 " + render(assignTypes[i]) + " 与 " + render(want.second) + " 不符")
+                else deepCopyNote(assignTypes[i], want.second, pos, "构造 " + ident(structName) + " 字段 " + ident(fn))
+            }
         }
         fieldTypes.forEachIndexed { i, (fn, _) ->
             if (fn !in seen && !fieldDefaults[i]) diag.error("E-FIELD-MISSING", pos, "构造 " + ident(structName) + " 缺字段 " + ident(fn) + " 且无默认值")
@@ -1279,8 +1337,12 @@ internal class TypeInfer(
         if (valueType == null) {
             if (retType !is HirNamedType || retType.name != "Null")
                 diag.error("E-RETURN-TYPE", pos, "裸 return 要求函数返回 Null，实际声明 " + render(retType))
-        } else if (!adaptOk(valueType, retType))
-            diag.error("E-RETURN-TYPE", pos, "return 值类型 " + render(valueType) + " 与声明 " + render(retType) + " 不符")
+        } else {
+            if (r28Report(valueType, retType, pos, "return 值类型 " + render(valueType) + " 与声明 " + render(retType) + " 不符")) return
+            if (!adaptOk(valueType, retType))
+                diag.error("E-RETURN-TYPE", pos, "return 值类型 " + render(valueType) + " 与声明 " + render(retType) + " 不符")
+            else deepCopyNote(valueType, retType, pos, "return 值")
+        }
     }
 
     /**
@@ -1310,8 +1372,10 @@ internal class TypeInfer(
             return
         }
         // t61（ADR-38 ST-11.1）：返回位不造格——subtype 内 T <: @mut T 不成立（plain 值不升格为视图）
+        if (r28Report(bodyType, eff, pos, "函数 " + ident(name) + " 声明返回 " + render(eff) + "，但函数体是 " + render(bodyType) + "，两边类型不一致")) return
         if (!adaptOk(bodyType, eff) && !(isNullRet && isBlockBody))
             reportMismatch(bodyType, eff, pos, "函数 " + ident(name) + " 声明返回 " + render(eff) + "，但函数体是 " + render(bodyType) + "，两边类型不一致")
+        else if (!(isNullRet && isBlockBody)) deepCopyNote(bodyType, eff, pos, "函数 " + ident(name) + " 表达式体")
     }
 
     /** when 表达式穷尽性提示（旧 WhenCheck W-NON-EXHAUSTIVE：值类型退化 Null）。 */

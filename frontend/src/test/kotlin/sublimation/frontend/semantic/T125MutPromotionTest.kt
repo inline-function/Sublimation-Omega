@@ -51,10 +51,13 @@ class T125MutPromotionTest {
     private fun varStmtOf(hir: HirFile, name: String): HirVarStmt? =
         hir.entries.mapNotNull { (it as? HirStmtEntry)?.stmt as? HirVarStmt }.firstOrNull { it.name == name }
 
+    /** R-28 击穿 R-06 提升写回（队长冲突点 1，待裁）：提升后 x 视图 @mut Nat，
+     *  RHS plain Nat → PLAIN→MUT 拒格——提升机制结构证据保留，写回落点翻转。 */
     @Test fun T1局部二次赋值提升() {
         val rs = scriptRounds("var x = 1\nx = x + 1\nprint(x)\n")
-        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "零错误——R-06 自动提升后可写")
-        assertTrue(rs.mutPromoted, "mut-promoted 重跑发生")
+        val es = errCodes(rs).filter { it.startsWith("E-") }
+        assertEquals(listOf("E-TYPE-MISMATCH"), es, "R-28: 提升后写回 PLAIN→MUT 拒格（旧隐式深拷废止）")
+        assertTrue(rs.mutPromoted, "mut-promoted 重跑发生（R-06 提升机制本身保持）")
         val v = varStmtOf(rs.hir, "x")
         assertNotNull(v)
         assertTrue(v.type is HirMutType, "var 视图提升为 @mut Nat")
@@ -74,9 +77,11 @@ class T125MutPromotionTest {
         assertTrue(msg.contains("use:"), "四元组④证据尝试清单")
     }
 
+    /** R-28 fallout（队长冲突点 1）：提升后形参视图 @mut Nat，body 写回 + 调用位 plain 实参双双落拒格。 */
     @Test fun T2形参被赋值提升() {
         val rs = scriptRounds("fun f(a) {\n  a = a + 1\n  return a\n}\nprint(f(1))\n")
-        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "形参被赋值零错误")
+        val es = errCodes(rs).filter { it.startsWith("E-") }
+        assertTrue(es.isNotEmpty() && es.all { it == "E-TYPE-MISMATCH" }, "R-28: 提升形参写回 + plain 实参落 E-TYPE-MISMATCH（旧深拷废止）: $es")
         val f = rs.hir.entries.mapNotNull { (it as? sublimation.frontend.hir.HirDeclEntry)?.decl as? sublimation.frontend.hir.HirFunDecl }.first { it.name == "f" }
         val pt = f.params.first().type
         assertTrue(pt is HirMutType, "形参视图提升 @mut（R-06：提升出的 @mut 即形参推导类型）")
@@ -113,7 +118,8 @@ class T125MutPromotionTest {
         val src = pairDir.resolve("mut-promote.subs").readText()
         val rs = parseScriptSourceWithNotes(src, "mut-promote.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true) }
         val rp = parseSourceWithNotes(pairDir.resolve("mut-promote.subl").readText(), "mut-promote.subl").let { compileWithRounds(it.file, it.notes, scriptMode = false) }
-        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "脚本侧零错误（R-06 提升后可写）")
+        // R-28 fallout（队长冲突点 1）：脚本提升后写回落拒格（旧零错误基线废止）
+        assertTrue(errCodes(rs).filter { it.startsWith("E-") }.isNotEmpty(), "脚本侧 R-28 拒格落点（提升写回 PLAIN→MUT）")
         assertTrue(errCodes(rp).contains("E-IMMUT-ASSIGN"), "工程侧同源拒绝位（声明制）：未标 @mut 的形参/局部写落 E-IMMUT-ASSIGN")
         assertTrue(rs.mutPromoted, "脚本侧 mut-promoted 重跑")
         assertFalse(rp.mutPromoted, "工程侧零提升通道")
@@ -129,8 +135,9 @@ class T125MutPromotionTest {
             .let { compileWithRounds(it.file, it.notes, scriptMode = true) }
         val rp = parseSourceWithNotes(pairDir.resolve("mut-promote-eq.subl").readText(), "mut-promote-eq.subl")
             .let { compileWithRounds(it.file, it.notes, scriptMode = false) }
-        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "subs 侧零错误")
-        assertEquals(emptyList(), errCodes(rp).filter { it.startsWith("E-") }, "subl 侧零错误")
+        // R-28 fallout：subs 侧提升写回落拒格（冲突点 1）;subl 工程标注位（@mut Nat 形参）无 plain 调用源亦拒
+        assertTrue(errCodes(rs).filter { it.startsWith("E-") }.isNotEmpty(), "subs 侧 R-28 拒格落点")
+        assertTrue(errCodes(rp).filter { it.startsWith("E-") }.isNotEmpty(), "subl 侧 R-28 拒格落点")
         val fs = rs.hir.entries.mapNotNull { (it as? HirDeclEntry)?.decl as? sublimation.frontend.hir.HirFunDecl }.first()
         val fp = rp.hir.entries.mapNotNull { (it as? HirDeclEntry)?.decl as? sublimation.frontend.hir.HirFunDecl }.first()
         assertEquals(inferRender(fp.params.first().type!!), inferRender(fs.params.first().type!!),

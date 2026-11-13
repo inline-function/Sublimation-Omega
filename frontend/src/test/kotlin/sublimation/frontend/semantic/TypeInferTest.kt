@@ -394,7 +394,8 @@ class TypeInferTest {
         val (_, bagA) = script("var x = 1\nx = 2")
         assertEquals(listOf("E-IMMUT-ASSIGN"), errCodes(bagA))
         assertTrue(bagA.diags.any { it.message.contains("是不可变的，不能赋值") })
-        val (_, bagB) = script("var x: @mut Nat = 1\nx = 2")
+        // R-28：类型位 @mut 不可由 plain 初始化——可写绑定用 @mut var 形态
+        val (_, bagB) = script("@mut var x = 1\nx = 2")
         assertFalse(bagB.hasError, "@mut 绑定可写")
     }
 

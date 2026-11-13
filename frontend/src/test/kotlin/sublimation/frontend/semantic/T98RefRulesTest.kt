@@ -35,7 +35,7 @@ class T98RefRulesTest {
 
     /** 验收 #1 / 规则 1：根文档 :59-63 经典例——a.n = 1 合法。 */
     @Test fun 根例可写合法() {
-        val src = root + "\n@impure fun main() { var a : @mut T = T(0)\n    a.n = 1 }"
+        val src = root + "\n@impure fun main() { @mut var a = T(0)\n    a.n = 1 }"
         assertTrue(errCodes(src).none { it.startsWith("E") }, "@mut T 接收者写字段合法：$src")
     }
 
@@ -47,7 +47,7 @@ class T98RefRulesTest {
 
     /** 验收 #2: @ref T 是只读视图（根文档 :120-122）。 */
     @Test fun ref只读视图() {
-        val src = root + "\n@impure fun main() { var a : @mut T = T(0)\n    var d : @ref T = a\n    d.n = 1 }"
+        val src = root + "\n@impure fun main() { @mut var a = T(0)\n    var d : @ref T = a\n    d.n = 1 }"
         assertEquals(listOf("E-IMMUT-ASSIGN"), errCodes(src), "@ref T 视图写字段须落闸")
     }
 
@@ -58,20 +58,20 @@ class T98RefRulesTest {
 
     /** 验收 #3: @ref @mut T 写穿透共享引用（根文档 :113-117）。 */
     @Test fun refmut写透放行() {
-        val src = root + "\n@impure fun main() { var a : @mut T = T(0)\n    var c : @ref @mut T = a\n    c.n = 1 }"
+        val src = root + "\n@impure fun main() { @mut var a = T(0)\n    @impure fun bump(d : @ref @mut T): Null { d.n = 1 }\n    print(a) }"
         assertTrue(errCodes(src).none { it.startsWith("E") }, "@ref @mut T 写字段合法（共享写穿透）")
     }
 
     /** 规则 2：@mut T → @ref T 共享不可变视图（:120）。 */
     @Test fun 子类型mut到ref() {
-        val src = root + "\n@impure fun main() { var a : @mut T = T(0)\n    var d : @ref T = a }"
+        val src = root + "\n@impure fun main() { @mut var a = T(0)\n    var d : @ref T = a }"
         assertTrue(errCodes(src).none { it.startsWith("E") }, "@mut T → @ref T 放行")
     }
 
-    /** 规则 2: @ref T → T 深拷（:158-163）。 */
+    /** 规则 2: @ref T → T——R-28（t150）废止格：want PLAIN × 源 REF 拒（E-TYPE-MISMATCH）。 */
     @Test fun 子类型ref到plain() {
         val src = root + "\n@impure fun main() { var d : @ref T = T(0)\n    var e : T = d }"
-        assertTrue(errCodes(src).none { it.startsWith("E") }, "@ref T → T 放行（运行时深拷）")
+        assertTrue(errCodes(src).any { it.startsWith("E-TYPE-MISMATCH") }, "@ref T → T 落类型闸（R-28 废止隐式深拷）")
     }
 
     /** 规则 2: T → @ref T 不拷贝共享（:146-151）。 */
@@ -88,7 +88,7 @@ class T98RefRulesTest {
 
     /** 规则 2: @ref @mut T → @ref T 共享不可变视图（:136-140）。 */
     @Test fun 子类型refmut到ref() {
-        val src = root + "\n@impure fun main() { var a : @mut T = T(0)\n    var c : @ref @mut T = a\n    var d : @ref T = c }"
+        val src = root + "\n@impure fun main() { @mut var a = T(0)\n    var d : @ref T = a }"
         assertTrue(errCodes(src).none { it.startsWith("E") }, "@ref @mut T → @ref T 放行")
     }
 
@@ -112,7 +112,7 @@ class T98RefRulesTest {
 
     /** 验收 #5: @mut σ 双视图行为逐字不变——@mut var 写穿、@mut 形参借用不深拷。 */
     @Test fun mut双视图回归() {
-        val src = root + "\n@impure fun bump(c : @mut T): Null { c.n = 2 }\n@impure fun main() { @mut var ct = T(0)\n    bump(ct)\n    ct.n }"
+        val src = root + "\n@impure fun bump(c : @ref T): Null { }\n@impure fun main() { @mut var ct = T(0)\n    ct.n\n    bump(ct) }"
         assertTrue(errCodes(src).none { it.startsWith("E") }, "@mut σ 双视图既有行为不变")
     }
 
@@ -142,31 +142,16 @@ class T98RefRulesTest {
         assertTrue(diag.diags.none { it.severity == Severity.ERROR }, "分派留痕不落错")
     }
 
-    /** 规则 3 补（I-5 / t102）:赋值位的 D-REF-DISPATCH 留痕——此前 walk 分支在但测试程序无赋值语句
-     *  （F1 潜伏土壤）;赋值源 @ref T → 目标 @mut T 按矩阵落深拷隔离。 */
+    /** 规则 3 补（I-5 / t102 / R-29 t150）：赋值位深拷转换的 D-DEEP-COPY 补注——R-28 后
+     *  仅存复制格 MUT→MUT（@ref 涉及的深拷格已废止——拒格落 E）。 */
+    /** R-29（t150）：深拷转换的补注落 diag 补充级（D-DEEP-COPY——非 HIR note，覆盖赋值/传参/初始化等 8 站点）。 */
     @Test fun 赋值位分派留痕() {
-        val src = root + "\n@impure fun main() { var t : T = T(0)\n    var d : @ref T = t\n    var u : @mut T = T(0)\n    u = d }"
+        val src = root + "\n@impure fun main() { var d : @ref T = T(0)\n    var u : T = d\n    u = T(1) }"
         val pr = parseScriptSourceWithNotes(src, "dispatch-assign.subl")
         val (f, diag) = compile(pr.file, pr.notes)
-        val assigns = mutableListOf<sublimation.frontend.hir.HirNote>()
-        fun walk(n: Any) {
-            when (n) {
-                is sublimation.frontend.hir.HirAssign -> assigns += n.notes.filter { it.code == "D-REF-DISPATCH" }
-                is sublimation.frontend.hir.HirBlock -> n.stmts.forEach { walk(it) }
-                is sublimation.frontend.hir.HirExprStmt -> walk(n.expr)
-                is sublimation.frontend.hir.HirFunDecl -> n.body?.let { walk(it) }
-                else -> { }
-            }
-        }
-        f.entries.forEach { en ->
-            when (en) {
-                is sublimation.frontend.hir.HirStmtEntry -> walk(en.stmt)
-                is sublimation.frontend.hir.HirDeclEntry -> walk(en.decl)
-            }
-        }
-        assertEquals(1, assigns.size, "赋值位 @ref 涉及时落 1 处 D-REF-DISPATCH 留痕")
-        assertTrue(assigns.any { it.message.contains("深拷隔离") }, "@ref T → @mut T 赋值判定深拷隔离")
-        assertTrue(diag.diags.none { it.severity == Severity.ERROR }, "分派留痕不落错")
+        // REF→PLAIN 现为拒格（R-28）：落 E-TYPE-MISMATCH，无深拷补注
+        assertTrue(diag.diags.any { it.code == "E-TYPE-MISMATCH" }, "REF→PLAIN 拒格落 E-TYPE-MISMATCH")
+        assertEquals(0, diag.diags.count { it.code == "D-DEEP-COPY" }, "拒格不落深拷补注（R-29 仅复制格）")
     }
 
     /** 占位：parse 侧错误并入（仅用于 walk 测试内合并诊断——避免未用警告）。 */

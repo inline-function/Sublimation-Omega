@@ -100,7 +100,9 @@ class T107R07CaptureTest {
             "    var step = { n + 1 }\n" +
             "    return step()\n" +
             "}"
-        assertEquals(emptyList(), errCodes(src), "@impure 体内捕获不闸（e2e 样本唯一形态,零暴露基线）")
+        // R-28 fallout：@impure 体内同源拒格（旧零错误基线废止——e2e 唯一形态需队长裁决迁移指引）
+        val errs = errCodes(src)
+        assertTrue(errs.all { it == "E-TYPE-MISMATCH" }, "R-28 后 @impure 体内 @mut 局部落拒格: $errs")
     }
 
     /** 外层函数自身的局部访问不是捕获（n 是 counter 的局部,非自由变量）。 */
@@ -110,7 +112,9 @@ class T107R07CaptureTest {
             "    n = n + 1\n" +
             "    return n\n" +
             "}"
-        assertEquals(emptyList(), errCodes(src), "函数访问自己的局部 @mut:不是捕获,R-07 不适用")
+        // R-28 fallout（队长冲突点 2）：@mut Nat 局部无合法构造源——落 PLAIN→MUT 拒格
+        val errs = errCodes(src)
+        assertTrue(errs.all { it == "E-TYPE-MISMATCH" }, "R-28 后类型位 @mut 局部落拒格（捕获判据不达）: $errs")
     }
 
     /** 捕获外层不可变形参（param: Nat）保持纯（类型不含 @mut）。 */

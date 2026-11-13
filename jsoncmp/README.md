@@ -393,3 +393,32 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 **一处自纠**：首轮将构造族改走 preludeFunSig/BUILTIN 通道（preludeFun/preludeFunSig 加变长旗标+理论参数透传）——T126 R15不可变构造红（listOf(2) 的 List→Nil|Cons 联合展开丢失：BUILTIN 通道不展开别名）⇒ 回到注入面 FUN-kind 通道（数据源替换口径，机制零改），preludeFunSig 逐字还原（B0-0 零漂移）。
 
 机械证据脚本: `jsoncmp/scripts/t146-parity.ps1` 五段（行为探针正/负 + 68 门 t122n 冻锚台账 + 精确差分 vs t149gate 一次性基线（list 件登记差校验：须含 mutableListOf 声明）+ stdlib 侧基线（list 件登记差）+ 确定性 + 脚本门），rc=0 全绿。
+
+## t150 分账（R-28 隐式深拷矩阵废止 + R-29 深拷补注，2026-11-13）
+
+| 验证位 | 结果 | 证据 |
+|---|---|---|
+| 套件 | **1220/1220 绿**（S4/S5 双轮 rc=0，--rerun-tasks 确定性） | gradlew :frontend:test |
+| 行为探针（R-28 五拒格） | 5 格落 E-TYPE-MISMATCH + 消息含迁移指引（copy(…) / toMutableList(…)） | t150-parity ①（探针 r1-r5） |
+| 行为探针（共享格零回归） | MUT→REF / REFMUT→REFMUT 放行（ok=true） | t150-parity ①（探针 s1/s2） |
+| 行为探针（R-29 补注硬指标） | `var a: @mut List[Nat] = mutableListOf(1); var b: List[Nat] = a` 落 D-DEEP-COPY 补注（非 E、不拦）——MUT→PLAIN / MUT→MUT 两形态 | t150-parity ①（探针 d1/d2） |
+| 68 门（vs **t122n 死冻锚**） | SAME **47** + 剥差同 16 + 预期转绿 1 + 预期差 4（三 e2e 吸收 + 模块样本 1）——闭合 68，FAIL=0 | out-subs/t150gate-ledger.txt |
+| 精确差分（vs t149gate 一次性基线） | **72 件逐字节同 + 登记差 4 件** = 三 e2e 吸收（副作用与unchecked / 特性巡礼 / 类型系统 = R-28 样本迁移）+ list envelope 构造族（t146 延续） | t150-parity ③ |
+| stdlib 侧（vs t143stdlib） | 8 件逐字节同 + list 件构造族迁源面 | t150-parity ④ |
+| 模块确定性 | 9/9 | t150-parity ⑤ |
+| 脚本门 | 14/14 | t150-parity ⑤ |
+
+**R-28 矩阵（5 深拷格废止改拒 / 2 复制格补注 / 7 共享格零回归）**:
+
+- 拒格（E-TYPE-MISMATCH + 迁移指引）：PLAIN→MUT / REF→PLAIN / REF→MUT / REFMUT→PLAIN / REFMUT→MUT；
+- 复制格（D-DEEP-COPY 补注、不拦）：MUT→PLAIN / MUT→MUT（+ R-14 元素层下钻）；
+- 共享格（零回归）：PLAIN→PLAIN / PLAIN→REF / MUT→REF / MUT→REFMUT / REF→REF / REFMUT→REF / REFMUT→REFMUT。
+
+**队长裁决冲突点（结构性后果——本批按字面吸收、已上报待裁）**:
+
+1. **R-06 提升写回被击穿**：脚本 `var x = 1 / x = x + 1` 提升后 RHS plain → PLAIN→MUT 拒（T125MutPromotion 4 件翻转）；
+2. **工程模式 @mut 类型位无合法构造**：`var a : @mut T = T(0)` 现拒——@mut 值唯经构造族（`var a : @mut List[Nat] = mutableListOf(1)`）；`@mut var` 绑定 = 注解位（HIR 型 plain、annotations=["mut"]）——T125WriteGate/T107/RefTypeInert/ViewDemotion 等件迁移或翻转。
+
+**旧测试 fallout 吸收口径（R-28 字面）**：T150R28MatrixTest 14 测新建；旧件迁移/翻转 20+（T98/T99/T107/T125×2/T126/T128/RefTypeInert/SubtypeOrder/ViewDemotion/NarrowSubtraction/TypeInferTest/AssignDefaults）+ e2e 样本 3 件 + diff-pairs fixture 2 对（borrow-neg-plain/ref）。文档勘误：旧工程参考-副作用与可变性控制.md（:98/:158-162 废止标注 + :91/:105/:114 格保留标注）；效应分析设计-提案.md §1.1 十六格表 + R-28 判定树同步；stdlib-设计-提案.md §22 批史（§21 t146 台账随带声明）。
+
+机械证据脚本: `jsoncmp/scripts/t150-parity.ps1` 五段（R-28/R-29 行为探针 / 68 门 t122n 冻锚台账含 R-28 预期差登记 / 精确差分 vs t149gate 一次性基线 / 侧基线 / 确定性+脚本门）。

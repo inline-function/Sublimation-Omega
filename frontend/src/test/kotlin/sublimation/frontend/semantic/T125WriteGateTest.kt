@@ -5,6 +5,7 @@ import sublimation.frontend.parser.parseSourceWithNotes
 import sublimation.frontend.semantic.compileWithRounds
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /** t125 S5a（OQ-3 对称修复）：名字位写闸补读**类型位** @mut。
@@ -21,9 +22,13 @@ class T125WriteGateTest {
 
     private fun errCodes(rs: RoundsReport): List<String> = rs.diag.diags.map { it.code }
 
+    /** R-28 fallout（队长冲突点 2 待裁）：工程模式 plain → @mut 形参不再隐式深拷放行——
+     *  写闸对称性以赋值位错（E-TYPE-MISMATCH）间接证实（旧 E-IMMUT-ASSIGN 已不落）。 */
     @Test fun 形参类型位mut可写() {
         val rs = rounds("@impure fun main(): Null { fun f(a: @mut Nat): Nat { a = a + 1; return a } print(f(1)) }")
-        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "类型位 @mut 形参可写——不再落 E-IMMUT-ASSIGN")
+        val codes = errCodes(rs).filter { it.startsWith("E-") }
+        assertTrue(codes.contains("E-TYPE-MISMATCH"), "R-28: plain 实参 → @mut 形参落 E-TYPE-MISMATCH（旧隐式深拷格废止）: $codes")
+        assertFalse(codes.contains("E-IMMUT-ASSIGN"), "写闸对称性：@mut 类型位写不再落 E-IMMUT-ASSIGN（旧错已消）")
     }
 
     @Test fun 普通形参写仍拒() {
@@ -31,15 +36,21 @@ class T125WriteGateTest {
         assertTrue(errCodes(rs).contains("E-IMMUT-ASSIGN"), "无 @mut 类型位的形参写仍落 E-IMMUT-ASSIGN")
     }
 
+    /** R-28 fallout：var x: @mut Nat 的类型位不可由 plain 字面构造——可写形态改 @mut var 绑定。 */
     @Test fun 局部变量类型位mut可写() {
-        val rs = rounds("@impure fun main(): Null { var x: @mut Nat = 1; x = x + 1; print(x) }")
-        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "var x: @mut T 类型位可写（既有形态回归保护）")
+        val rs = rounds("@impure fun main(): Null { @mut var x = 1; x = x + 1; print(x) }")
+        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "@mut var 绑定可写（R-28 后唯一合法可写局部形态）")
     }
 
+    /** R-28 fallout：工程模式 @mut Box 无合法构造（@mut 类型位初始化拒）——
+     *  写穿透语义改脚本模式借用形态（& 是脚本专属）。 */
     @Test fun refMut写穿透视图可写() {
         val rs = rounds("@mut struct Box(@mut n: Nat)\n" +
-            "@impure fun main(): Null { fun f(b: @ref @mut Box): Null { b.n = 3 } @mut var x: @mut Box = Box(0); f(x) }")
-        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "@ref @mut 写穿透视图的字段写放行")
+            "@impure fun main(): Null { fun f(b: @ref @mut Box): Null { b.n = 3 } @mut var x = Box(0); f(x) }")
+        // R-28：plain 源 → @ref @mut 形参落 E-TYPE-MISMATCH（旧深拷放行格废止）——
+        // 字段写闸 b.n = 3 不再落 E-IMMUT-ASSIGN（写穿透代码路径保持放行语义）
+        val codes = errCodes(rs).filter { it.startsWith("E-") }
+        assertEquals(listOf("E-TYPE-MISMATCH"), codes, "@ref @mut 写穿透：仅 R-28 拒格落点（写闸零 E-IMMUT-ASSIGN）")
     }
 
     @Test fun 只读引用写仍拒() {

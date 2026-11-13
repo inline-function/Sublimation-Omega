@@ -23,9 +23,9 @@ type Age = Nat
     o.n = 4
     print(view.n)                         // 4
 
-    @mut var p : Box = Box(5)
-    @ref var q : @mut Box = p             // @ref @mut ← @mut：别名共享
-    p.n = 6
-    print(q.n)                            // 6
+    var p : @mut List[Nat] = mutableListOf(5)
+    @ref var q : @mut List[Nat] = p      // @ref @mut ← MUT：别名共享（R-28：真 @mut 源唯构造族）
+    unchecked p.add(1)
+    print(q)                             // [5, 1]
     print("done")
 }

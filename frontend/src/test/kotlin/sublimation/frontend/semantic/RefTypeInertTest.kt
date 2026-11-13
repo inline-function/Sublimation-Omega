@@ -24,9 +24,10 @@ import kotlin.test.assertTrue
  */
 class RefTypeInertTest {
 
+    // R-28：@mut 类型位不可由 plain 构造——o 改 @mut var 绑定（view : @ref Box 共享格形态不变）
     private val src = """
         @mut struct Box(@mut n: Nat)
-        var o : @mut Box = Box(0)
+        @mut var o = Box(0)
         var view : @ref Box = o
     """.trimIndent()
 
@@ -61,13 +62,15 @@ class RefTypeInertTest {
      */
     @Test
     fun `t98_hir_2_refMut叠加形态`() {
+        // R-28 fallout（队长冲突点 2）：工程模式 @mut Box 无合法构造——@mut var 绑定得 plain Box，
+        //  var view : @ref @mut Box = o 落 PLAIN→REFMUT 拒格（旧深拷放行格废止）
         val (hir, bag) = script("""
             @mut struct Box(@mut n: Nat)
-            var o : @mut Box = Box(0)
+            @mut var o = Box(0)
             var view : @ref @mut Box = o
         """.trimIndent())
         val errors = bag.diags.filter { it.severity == Severity.ERROR }
-        assertTrue(errors.isEmpty(), "@mut Box → @ref @mut Box 共享放行：${errors.map { it.message }}")
+        assertTrue(errors.map { it.code } == listOf("E-TYPE-MISMATCH"), "@mut 类型位失效 → PLAIN→REFMUT 拒格（R-28）：${errors.map { it.message }}")
         val view = stmts(hir).filterIsInstance<HirVarStmt>().first { it.name == "view" }
         val outer = assertIs<HirRefType>(view.type)
         assertIs<HirMutType>(outer.inner)

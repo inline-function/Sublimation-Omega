@@ -183,7 +183,9 @@ class T128BorrowSemanticsTest {
 
     /** R-21.1 嵌套 @ref 折叠：@ref @ref Nat 形参 + &x ⇒ want 合成折叠为 @ref Nat。 */
     @Test fun R211嵌套ref折叠() {
-        val rs = sc("fun g(z : @ref @ref Nat) { print(z) }\n" +
+        // R-28：@ref 值不再隐式转 plain 形参（g 体内 print(z : Any) 拒格）——折叠形态改 @ref 透传
+        // R-28：@ref 值不再隐式转 plain（print : Any 形参拒格）——折叠断言改 @ref 透传链
+        val rs = sc("fun g(z : @ref @ref Nat) { h(z) }\nfun h(w : @ref Nat) { w }\n" +
             "@impure fun main(): Null {\n  var x : Nat = 3\n  g(&x)\n}\n")
         assertEquals(emptyList(), errs(rs), "折叠后类型核对通过")
         val note = borrowNote(rs)

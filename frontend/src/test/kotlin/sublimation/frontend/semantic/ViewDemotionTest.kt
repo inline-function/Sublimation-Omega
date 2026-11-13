@@ -40,12 +40,13 @@ class ViewDemotionTest {
      */
     @Test
     fun v1_mutArithmeticOk() {
+        // R-28：可写算术自更新经 @mut var 绑定（类型位 @mut 不可由 plain 初始化）
         val e = script("""
-            var x: @mut Nat = 1
+            @mut var x = 1
             x = x + 1
             x = x + 0
         """).second
-        assertTrue(errs(e).isEmpty(), "@mut Nat 上的算术（x = x + 1）须按 Nat 分类通过（t61 主修复）")
+        assertTrue(errs(e).isEmpty(), "@mut 绑定上的算术（x = x + 1）须按 Nat 分类通过（t61 主修复 + R-28 形态）")
     }
 
     /**
@@ -188,31 +189,33 @@ class ViewDemotionTest {
     fun d1_mutInitAndAssignStillOk() {
         val e = script("""
             @mut struct Box(@mut n: Nat)
-            var b: @mut Box = Box(1)
+            @mut var b = Box(1)
             b.n = 2
-            var x: @mut Nat = 1
+            @mut var x = 1
             x = 5
             x = x + 0
         """).second
-        assertTrue(errs(e).isEmpty(), "不回退：@mut 初始化与字段写/算术自更新须照常通过")
+        assertTrue(errs(e).isEmpty(), "不回退：@mut 初始化与字段写/算术自更新须照常通过（R-28 绑定形态）")
     }
 
     /**
-     * 不回退：plain 值经 @mut 形参借用（impureBump 语义）须照常通过。
+     * 不回退：@ref 只读形参的借用语义（R-28 后合法借用格）须照常通过——
+     * R-28 废止 plain → @mut 形参借用（队长冲突点 2 待裁，台账记录）。
      */
     @Test
     fun d2_plainArgToMutParamBorrowOk() {
         val e = script("""
             @mut struct Counter(@mut v: Nat)
-            @impure fun bump(c: @mut Counter): Null {
-                c.v = c.v + 1
+            @impure fun peek(c: @ref Counter): Nat {
+                var t : Nat = c.v
+                return t
             }
             @impure fun main() {
                 @mut var ct = Counter(0)
-                bump(ct)
+                unchecked peek(ct)
             }
         """).second
-        assertTrue(errs(e).isEmpty(), "不回退：plain 值经 @mut 形参借用（impureBump 语义）须照常通过")
+        assertTrue(errs(e).isEmpty(), "不回退：@ref 只读形参借用须照常通过（R-28 合法格）")
     }
 
 }

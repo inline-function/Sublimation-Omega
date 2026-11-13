@@ -330,3 +330,82 @@ builtinSig（TypeInfer:790）60+ 内建函数按域分类登记——**语言定
 - 任务书"stdlib 引用 1 处"实测零命中（台账修正登记）。
 
 **本批未越界声明**：不动语义/推导/闸/证明器（0 行行为逻辑改——纯字面改名）；工作树留未自提交。
+
+## 18 批史 t144（R-26.1 括号语义统一：[] 类型实参 + <> 命题参数，2026-11-13）
+
+**完成面**（调用位类型实参从 `<>` 迁 `[]`；`<>` 调用位划归命题参数通道，未通则精确 E 级）:
+
+1. **方括号通道**（Parser）：`parseBracketTypeArgList()` + parsePostfix LBRACKET 后缀分支（同 D-1 失败回滚口径）→ `InstExpr(bracket = true)`；语义层 B8 既有 explicitTps 类型域通路零改（`f[A](args)` / `f[A, B](args)` / `Channel[T](cap)` 绿）。
+2. **尖括号调用位精确报**（Elaborator B8 分型）：`bracket=false` 的调用位 InstExpr → **E-CALL-ANGLE**（消息三件：命题通道口径 + 方括号迁移指引 `callee[…]` + by 断言指引 `callee() by [命题]`），降级普通调用不复读类型实参（单点精确、不准静默）。
+3. **迁移**：e2e 4 位点（任务书登记）+ Kotlin 测试 4 件；**补登记嵌套角表漏项**——上下文弥散:37 `witness<tagged<7>>()`（正则不跨嵌套尖括号）——按口径落 E-CALL-ANGLE 预期转红（台账闭合）。
+4. **零改面**：声明位 `[T]`、类型位 `[Nat]`、命题面（preps/posts、`<p>` 命题括号、`p<v>` 谓词应用、`¬<p>`、by 断言、axiom/∴ 命题列表 `parseBracketList`）逐字零变。
+
+**验证（全套门）**: 套件 **1177/1177**（+11 T144BracketUnifyTest：方括号绿×3 / 负例精确拒×3（类型实参/构造位非命题/嵌套角表命题供给形态）/ 迁移样本绿×3 / 声明位类型位+命题面零回归×2）；t144-parity.ps1 五段 rc=0——精确差分 vs t143 冻结 **75 件逐字节同** + 唯一登记差（上下文弥散转红）；68 门 vs **t122n 死冻锚**：SAME 49 + 剥差同 16 + 转绿 1（t142）+ **预期转红 1** + 模块样本 1（闭合 68）；**4 处糖迁移样本维持 SAME——括号纯语法糖零 HIR 影响已证**；stdlib 侧 9 同；确定性 9/9；脚本门 14/14；行为探针（`[]` 双绿 / `<>` E-CALL-ANGLE 精确码+by 指引）。
+
+**诚实边界**:
+
+- **任务书"4 处"实测漏 1**：嵌套角表 `witness<tagged<7>>()`（上下文弥散：37）未被平正则命中——按 R-26.1 口径预期转红并台账登记（通知链：报告 + 台账）；
+- **调用侧命题供给未通**（V1 挂账——同 t142 Diffusion 推迟项一脉）：`witness<谓词>()` 形态须改写 `witness() by [命题]`（命题供给语义本体属手动证明件域，本批不落）；
+- 旧 Pascal 形无兼容期（R-26.1 纯迁移裁决同 t143 口径）；E-CALL-ANGLE 消息为中文指引（诊断族口径延续）。
+
+**本批未越界声明**：不动命题供给语义本体/证明器/axioms（B3）；零 HIR/JSON 形态改（产物零差的机器证）；工作树留未自提交。
+
+## 19 批史 t148（R-26.1 收口：调用位 <> 路由回既有命题参数供给通路，2026-11-13）
+
+**收口面**（t144 验收退件修——队长查 t122n 冻锚：`witness<tagged<7>>()` t122n 时已绿，callee theory 含 PropParam，调用位 <> 是命题供给正确形态；任务书"调用侧命题供给未通"为队长事实错误 F3，记队长账）:
+
+1. **路由收口**（Elaborator 调用位 B8 一处）：`bracket=false` 先查 `funDecls[nm]?.theory?.any { it is PropParam }`（t22 B6 同源判据）；有 ⇒ **t122n 既有通路供给**（按名解析 + explicitTps 类型域读取——与 bracket 通路同一）；无 ⇒ 保留 E-CALL-ANGLE。**[] 通路零改**（t144 已验收）；**样本零改**（witness<谓词>() 按 R-26 是正确形态）。
+2. **判别性**：复绿面 = theory 含 PropParam（`witness[@q]`）；保留拒面 = 纯类型参数（`id[T]`）、虚拟构造（Channel）、preps 契约形态（`witness<p>`——by 断言供给，t142 口径）——E-CALL-ANGLE 精确报泛化零风险。
+
+**验证**（全套门）: 套件 **1184/1184**（+7 T148PropSupplyRouteTest：复绿×3（骨架+样本本体+契约弥散链）/ 保留拒×2 / [] 零回归×2；T144 11 测试无过截全绿）；t148-parity.ps1 五段 rc=0——**上下文弥散复绿并逐字节回 t122n 锚**（SAME 50 含之；68 门闭合：SAME 50 + 剥差 16 + 转绿 1 + 模块 1）；精确差分 vs t144 冻结 75 件逐字节同 + 唯一登记差（上下文弥散复绿）；stdlib 侧 9 同；确定性 9/9；脚本门 14/14；行为探针（<> 供给绿 / 无命题参数红 / [] 绿）。
+
+**挂账**：声明侧 `[@q]`（命题参数在方括号）与 R-26 `<>` 口径相悖——队长裁属语义层裁决项（不代决），本件不碰声明侧（`fun witness[@q]<q>` 维持原样）。
+
+**本批未越界声明**：[] 通路不动（已验收）；样本零改；工作树留未自提交。
+
+## 20 批史 t149（R-26.2 注解纪律：未知注解/错位 E 级 + 合法位注册表，2026-11-13）
+
+**完成面**（旧状=未知注解静默忽略——值通道零校验）:
+
+1. **注册表落码**（Parser `AnnPositions`）：通道 × 合法位——FUN={impure,root,classic,async,mutable,mut,theorem,axiom}；STRUCT={mut,classic}；TRAIT={classic}；VAR={mut,ref}；PARAM={list}；FIELD={mut}；TYPE={mut,atomic,ref,impure}（与 parseType 既有纪律同源）。@ref var 位= t97 共享只读视图（类型系统/特性巡礼样本实证——初版表中漏列，parity 捕获后补正）。
+2. **两码**：E-UNKNOWN-ANN（无此注解+全表文案）/ E-ANN-POSITION（报该注解合法位）。parseType 未知类型注解与 @impure 非函数类型既有 E 升级挂同族码。
+3. **五通道收口**：顶层声明按种类 / 特质成员 / 语句（var/fun 分通道）/ var 表达式 / 形参（形参 vs 结构体字段分通道）+ 片段前置注解（防双报）。
+4. **承接不变**：@ref 形参名前既有 E 口径（t95）；`@x[…]` 策略语句与 `return @label` 零触及；@unchecked 是语句前缀关键字非注解。
+
+**验证（全套门）**: 负例先红（实现前 8 红——未知名静默/错位无报——不准放行纪律达成）；套件 **1197/1197**（+13 T149AnnotationDisciplineTest）；t149-parity.ps1 五段 rc=0——68 门 vs **t122n 死冻锚** 零波动（SAME 50+剥差 16+转绿 1+模块 1）；精确差分 vs t148gate **76 件逐字节同**（零产品差）；stdlib 9 同；确定性 9/9；脚本门 14/14；行为探针（未知 E-UNKNOWN-ANN / 错位 E-ANN-POSITION / 合法面绿）。
+
+**边界（挂账）**：未新增注解（范围外）；效应分析未触（t147 域）；声明侧 `[@q]` 属用户未裁 A/B 项——注册表 **零触及**（按令）；近名建议未落（任务标注"可选"——消息含全注册表文案已足够定位）。
+
+**本批未越界声明**：仅 Parser.kt 一件主码改 + 注册表；语义层/证明器/产物形态零改（零产品差机器证）；工作树留未自提交。
+
+## 21 批史 t146（R-26.5 / B2.1 构造函数正道：构造族落 stdlib 源 + 虚拟构造 retire，2026-11-13）
+
+**完成面**（旧状=虚拟 ctor 单参（first: T）签名——零参/多变参落 E-ARITY/缺实参）:
+
+1. **stdlib 源**：`fun mutableListOf[T](@list e : T) : @mut List[T]` + `fun listOf[T](@list e : T) : List[T]`——@list 变长形参（t48/ADR-32）吸收 0..n 实参；签名面（体随 R4 运行时桥——同 B2 扩展方法纪律）。
+2. **retire**：PreludeDecls 虚拟 ctor 表清空 + `RETIRED_CTOR_FUNS` 允许表（{mutableListOf, listOf}——B1/B2 同形第 4 件）；数据源经 stdlib 快照注入 `funDecls` 种子位 + `virtualFuns` 注入面（declareModuleCtorFun，同 declareModuleExt 纪律）——**解析通道逐字承接 t126 FUN-kind**（sigCheckedCall：@list 变长旗标 + 别名展开 + 理论参数解；preludeVirtualFun 懒登记 id 序零漂移）。
+3. **B0/B1/B2 纪律落实**：机制零改只换数据源（B0-0 数族 preludeFun/preludeFunSig 通道逐字不动——零漂移）；一处自纠（首轮 BUILTIN 通道改道致 R15 联合展开丢失⇒回注注入面）。
+
+**验证（全套门）**: 负例先红（实现前 6 红=虚拟 ctor 旧口径零参/多变参/混型 + 3 绿承接）；套件 **1206/1206**（+9 T146CtorFormTest）；t146-parity 五段 rc=0——68 门 vs **t122n 死冻锚** 零波动（SAME 50+剥差 16+转绿 1+模块 1）；精确差分 vs t149gate **75 件逐字节同 + 登记差 1 件 = stdlib list 件 envelope 构造族迁源面**（构造族 e2e 零引用⇒零差实证）；stdlib 侧 8 件同 + list 件登记差；确定性 9/9；脚本门 14/14；行为探针（构造面绿——0/1/3 实参 + @mut List[Nat] 视图落 HIR；混型落 E-TYPE-MISMATCH 元素类型精确报）。
+
+**边界（挂账）**：效应分析未触（t147 域）；命题通道零触及；后端运行时（R4 桥——构造族体）未落（签名面 V1，同 B2 扩展方法口径）；range/sum/summation B0-0 通道不动。R-27 口径（[] 理论参数槽=类型参数+命题参数；<> 实际命题槽）按队长令——本件无参数形式化书写。
+
+**本批越界清单**（inScope）：stdlib/collection/list/list.subl（源）+ PreludeDecls/SymbolTable/Semantic/Elaborator（注入面 retire）+ T146 测试件 + t146-parity 脚本 + README/提案（台账）。工作树留未自提交（t131mod 活目录残留已还原）。
+
+## 22 批史 t150（R-28 隐式深拷矩阵废止 + R-29 深拷补注，2026-11-13）
+
+**完成面**（旧状=16 格中 5 格隐式深拷放行：PLAIN→MUT / REF→PLAIN / REF→MUT / REFMUT→PLAIN / REFMUT→MUT）:
+
+1. **R-28 三态分派**：`TypeInfer.copyDispatch` 拒/复制/共享三态——5 深拷格废止改拒（落既有 E-TYPE-MISMATCH 码族 + 消息含迁移指引：`copy(…)` 取不可变副本 / `toMutableList(…)` 构造可变副本）；MUT→MUT 深拷维持；7 共享格（PLAIN→PLAIN / PLAIN→REF / MUT→REF / MUT→REFMUT / REF→REF / REFMUT→REF / REFMUT→REFMUT）零回归。
+2. **R-29 补注**：R-28 后仅存的深拷转换位（MUT→PLAIN / MUT→MUT + R-14 元素层）落 `D-DEEP-COPY` 补充级补注（非 E 级、不拦）——覆盖 8 站点（var 注解位 / 赋值位 / 默认值位 / call 实参位 / 造构实参位 / 结构体字段位 / return 位 / 函数体位）；硬指标 `var a: @mut T = …; var b: T = a` 实测落补注（t150parity 段① 探针 d1/d2）。
+3. **套件 fallout 吸收**：T150R28MatrixTest（14 测新建——5 拒格 + 消息指引 / 传参·赋值位 / 补注×4 / 共享格零回归×3 / 既有拒格零回归×2）；旧件形态迁移或期望翻转 20+（R-28 字面口径）——T99 十六格表 @mut 源改构造族 / T98 视图源形态迁移 / ViewDemotion d1/d2/v1 改 @mut var 绑定或 @ref 只读 / T125 三件翻转拒格 / T125MutPromotion 四件翻转（R-06 提升写回被击穿）/ T107 两件翻转（@mut 局部无合法构造}/T126 T3 翻转 / SubtypeOrder 正例迁移 / NarrowSub s4 改绑定 / TypeInferTest 改绑定 / RefTypeInert 两件迁移+翻转 / T128 R211 改 @ref 透传链 + borrow-neg fixture 双门迁移；e2e 样本 3 件（副作用与unchecked / 特性巡礼 / 类型系统）吸收为构造族合法形态。
+4. **验证（全套门）**：套件 **1220/1220** 绿（S4/S5 双轮确定性 rc=0）；t150-parity 五段 rc=0——68 门 vs **t122n**：SAME 47 + 剥差同 16 + 预期转绿 1 + 预期差 4（三 e2e 吸收 + 模块样本 1）；精确差分 vs **t149gate**：72 件逐字节同 + 登记差 4（同前）；stdlib 侧 vs t143stdlib 8 同 + list 件迁源面；模块双导出确定性 9/9 + 脚本门 14/14。差分台账：`jsoncmp/out-subs/t150gate-ledger.txt`。
+
+**队长裁决冲突点（结构性后果，本批按字面吸收、已上报待裁）**:
+
+- **冲突点 1（R-06 提升写回被击穿）**：脚本模式 `var x = 1 / x = x + 1` 提升后 x 视图 @mut Nat，RHS plain Nat → PLAIN→MUT 落 E-TYPE-MISMATCH（旧=造格深拷放行）——T125MutPromotion 4 件翻转。处置选项：(a) R-06 提升写回豁免（窄口子）/ (b) @mut var 注解位升级为 HIR @mut T 视图；若维持字面则旧测试 fallout 全量翻转期望（本批已按字面吸收）。
+- **冲突点 2（工程模式 @mut 类型位无合法构造）**：`var a : @mut T = T(0)` 现拒（@mut 值唯经 `mutableListOf`/List 族手写）；`@mut var` 绑定 = 注解位（HIR 型仍 plain T，annotations=["mut"]，JSON 无 mutable 键）——T125WriteGate/T107/RefTypeInert/ViewDemotion 等件迁移或翻转。队长硬指标 `var a: @mut T = …` 仅 `var a : @mut List[Nat] = mutableListOf(1)` 形态可走通（t150parity 段① 实测）。
+
+**边界（挂账）**：效应分析实现未触（t151 域）；CoW 与深拷运行时（R2 §三 接位）未落；R-06/R-28 冲突裁决待队长（本批按字面吸收 + 台账登记）。`t146 §21 台账`（本文件 §21）随 t150 提交一并带上——构造族迁源面（R-26.5）为 R-28 合法 @mut 源的唯一供给通道，两批衔接完整。
+
+**本批越界清单**（inScope）：TypeInfer.kt（copyDispatch 三态 + r28Report/deepCopyNote + 8 站点）+ T150R28MatrixTest 新建 + 旧测试件迁移/翻转（T98/T99/T107/T125×2/T126/T128/RefTypeInert/SubtypeOrder/ViewDemotion/NarrowSubtraction/TypeInfer/AssignDefaults）+ e2e 样本 3 件 + diff-pairs fixture 2 对 + 旧工程参考-副作用与可变性控制.md 勘误（:98/:158-162 R-28 废止标注 + :91/:105/:114 格保留标注）+ 效应分析设计-提案.md §1.1 十六格表 7 拒格 + 判定树同步 + jsoncmp/scripts/t150-parity.ps1 五段。

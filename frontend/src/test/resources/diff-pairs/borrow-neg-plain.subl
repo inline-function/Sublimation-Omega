@@ -1,8 +1,8 @@
 // t128（S6 / R-21）差分对拍：R-01 调用边界 want 合成——双形态
-// 对侧形态（无 &）：同格经 demoteView 造格放行（深拷）——红/绿对照即 R-01 双形态落点
+// 对侧形态（无 &）：R-28 后 plain → @mut 形参不再隐式深拷放行——改构造族可变源共享写透（红/绿对照即 R-01 双形态落点）
 @impure fun bump(xs : @mut List[Nat]) { xs.add(1) }
 @impure fun main(): Null {
-  var ys : List[Nat] = listOf(2)
+  var ys : @mut List[Nat] = mutableListOf(2)
   unchecked bump(ys)
   print(ys)
 }

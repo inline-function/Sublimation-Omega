@@ -21,7 +21,8 @@ import kotlin.test.assertTrue
  *
  * 每条负例配对照例（仅类型不同、其余相同）；覆盖 Nat/Str、Nat/Bool、结构体互赋、联合→成员
  * （须 is 收窄）、Nothing→任意、任意→Any、数值塔升降级。
- */
+ * R-28（t150）：@mut 类型位的值构造唯经 MUT 源/提升——对照例的可写 @mut 目标一律用 @mut var
+ * 绑定形态（注解位=合法来源）；类型位 @mut 仅在提升/构造族产物位保留。 */
 class AssignDefaultsCheckTest {
 
     // t138（R-23 B1）：prelude 虚拟层 retire——编译挂 stdlib 快照（与 CLI 默认挂载同构；
@@ -146,7 +147,7 @@ class AssignDefaultsCheckTest {
     fun c2_assignSameStructOk() {
         val e = script("""
             struct A(a: Nat)
-            var p: @mut A = A(1)
+            @mut var p = A(1)
             p = A(2)
         """).second
         assertTrue(errs(e).isEmpty(), "同结构体互赋不得报错")
@@ -171,7 +172,7 @@ class AssignDefaultsCheckTest {
     fun c4_nothingToAnythingOk() {
         val e = script("""
             fun boom(): Nothing = panic()
-            var x: @mut Nat = 0
+            @mut var x = 0
             x = boom()
         """).second
         assertTrue(errs(e).isEmpty(), "Nothing 赋给任意型须通过（R-35 单向百搭）")
@@ -197,7 +198,7 @@ class AssignDefaultsCheckTest {
     fun c6_unionNarrowedAssignOk() {
         val e = script("""
             var u: Optional[Nat] = Some(1)
-            var m: @mut Nat = 0
+            @mut var m = 0
             when (u) { is Some(n) -> m = n else -> {} }
         """).second
         assertTrue(errs(e).isEmpty(), "is 收窄后的成员赋给成员型须通过")
@@ -251,7 +252,7 @@ class AssignDefaultsCheckTest {
             @mut struct Box(@mut n: Nat)
             @mut var b: Box = Box(1)
             b.n = 2
-            var c: @mut Box = Box(3)
+            @mut var c = Box(3)
             c.n = 4
             @mut struct Counter(@mut v: Nat)
             @impure fun bump(k: @mut Counter): Null {
@@ -304,7 +305,7 @@ class AssignDefaultsCheckTest {
     fun c9_fieldDefaultLegalOk() {
         val e = script("""
             @mut struct Box(@mut n: Nat = 5)
-            var b: @mut Box = Box()
+            @mut var b = Box()
         """).second
         assertTrue(errs(e).isEmpty(), "合法字段默认值（5 配 Nat）不得报错")
     }

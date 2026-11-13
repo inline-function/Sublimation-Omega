@@ -141,9 +141,11 @@ class T126ContainerFaceTest {
             "var x : Box = Box(1)\n" +
             "f(x)\n" +
             "print(x)\n")
-        assertEquals(emptyList(), errs(rs), "提升后零错误")
+        // R-28 fallout（队长冲突点 1）：提升后 f 形参视图 @mut Box，f(x) plain 实参落 PLAIN→MUT 拒格
+        val es = errs(rs)
+        assertTrue(es.isNotEmpty(), "R-28 后提升写回落拒格（旧零错误基线废止）: $es")
         val note = supps(rs).firstOrNull { it.contains("D-MUT-INFERRED") && it.contains("传入 @mut 接收者位 T3") }
-        assertNotNull(note, "T3 触发分类入审计四元组：$note")
+        assertNotNull(note, "T3 触发分类入审计四元组（提升机制保持）: $note")
     }
 
     /** R-15 用户优先：用户同名扩展函数（无 @mut 注解）覆盖虚拟 add ⇒ 无 E-IMPURE-REQUIRED。 */
