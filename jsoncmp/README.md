@@ -448,3 +448,31 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 **套件吸收（局部构造族翻绿的测试面迁移）**: T126（R18红 / 种子第5类）+ T141（stdlibAdd纯域闸口径 / mutable纯域调用红）四处测试源改外域形参通道（红面延续）;新增 T151EffectOriginTest 7 测（判别性翻绿 ×3 + 负例面 ×3 + 两路放行零回归）。勘误源：参数位 injectTypeFacts（t65 事实注入）一次误删致 8 件回归（ProveFact/Narrow/T137/T131），修复后 S3 全绿。
 
 机械证据脚本: `jsoncmp/scripts/t151-parity.ps1` 五段（判别性/负例/零回归行为探针 / 68 门 t122n 冻锚台账（t151 波动 0 登记）/ 精确差分 vs t150gate 全同 / 侧基线 / 确定性+脚本门），rc=0 全绿。
+
+
+## t152 分账（诊断扩批一 / W 主战场 ×5「代码有很大风险，但依旧可以通过编译」，2026-11-13）
+
+| 验证位 | 结果 | 证据 |
+|---|---|---|
+| 套件 | **1241/1241 绿**（1227 t151 基线 + 新增 T152DiagBatchOneTest 14 测——套件只增不减，零旧测翻转） | gradlew :frontend:test |
+| 行为探针（五码七面绿） | W-REF-ESCAPE ×3（表达式体返回 / 块体 return / @mut 字段存入）;W-DEEP-COPY-LOOP（递归帧）;W-RESULT-IGNORED（纯函数结果丢弃）;W-REC-NON-TAIL（非尾递归）;W-BRANCH-UNREACHABLE（无 guard 前序包含分支）——全部编译过且落 W（负例先红：实现前五码实测零 W） | t152-parity ① |
+| 行为探针（保守豁免四面） | 非递归深拷免 / 块尾投影位（if 分支块值）免 / 块体纯函数免 / 带 guard 前序不含 + 尾递归免——噪声控制（误报零容忍） | t152-parity ① |
+| 68 门（vs **t122n 死冻锚**） | SAME **41** + 剥差同 11 + **W 批一增量 11 件（authorized 台账逐件登记）** + 预期差 4（t150/t146 延续）+ 转绿 1——老样本零结构性回归 | t152-parity ②（台账 out-subs/t152gate-ledger.txt） |
+| 精确差分（vs t151gate 冻结产物） | **61 件逐字节全同 + 15 件仅 W 增量**（滤五码后逐字同——**nid 位零漂移**：W 检查零分配 nid 纪律成立，见下） | t152-parity ③ |
+| stdlib 侧（vs t143stdlib） | 5 件同 + 3 件 W 增量（map/optional/set——滤后同）+ list 件构造族迁源面（t146 口径延续 + W 批一增量） | t152-parity ④ |
+| 模块确定性 | 9/9 | t152-parity ⑤ |
+| 脚本门 | 14/14 | t152-parity ⑤ |
+
+**实现口径（五新码——任务书定义、本批落地）**:
+
+- **W-REF-ESCAPE**（R-21 放行不封、风险告知）：@ref 视图流入 return 位（表达式体 + return 语句）与 @mut 字段存入位——类型结论取**节点物化字段**（`exprRefType`：**零分配 nid**——68 门逐字比对基线硬约束，与 t109 零分配位纪律同源；`etype` 的字面量 namedT 兜底会消费全局计数器、漂移后序节点 nid 位）。
+- **W-DEEP-COPY-LOOP**：语言无循环构造（AST/词法无 while/for）⇒ 递归帧 = 唯一迭代面;funDecl 处 AST 自调用 walk 收集 recCalls，体求值期置位 `TypeInfer.warnDeepCopyLoop`，deepCopyNote 补注位（R-29 深拷转换点）伴发 warn。
+- **W-RESULT-IGNORED**（V1 保守口径）：表达式体值函数（= …，结果即值——块体函数豁免，语句式用法）+ 无 @impure/@mut/@mutable/@theorem/@axiom 注解 + 形参全无 @ref/@mut/@atomic 通道（AST 静态判，零分配）+ 无 @list 变长位 + 未标注 Null 返回 + 非方法糖 / 内建 / 借用位 @mut 登记 / unchecked 包覆;**块尾投影位 exempt**（`blockTailStmt`：块末语句 = 值位投影（if/when 臂块值），结果并非丢弃——误报防护硬要求）。
+- **W-REC-NON-TAIL**：递归调用非尾位（停机闸已过为前提——失败件零该码）;尾位 = 块末语句 / return 值 / when 臂体 / if 两支尾 / 表达式体本身，其余一律非尾（AST 静态 walk，多轮回放去重兜底）。
+- **W-BRANCH-UNREACHABLE**：when 分支被**无 guard** 前序分支完全包含 ⇒ 永不匹配（死分支）：PatElse > PatBind("_") > 同名 PatCtor 且前序子模式全通配 > 同型 PatIs > 同元全通配 PatTuple（模式包含静态判）。
+
+**噪声权衡（批一 authorized 台账，逐件×码×处数）**: 68 门 + stdlib 侧共 **W-REC-NON-TAIL 114 处 / 19 件**（真阳性——stdlib map/filter/sort 等经典非尾递归栈深风险真实，纪律「不准静默放行」故登记接受）;W-RESULT-IGNORED / W-REF-ESCAPE / W-DEEP-COPY-LOOP / W-BRANCH-UNREACHABLE 在现有样本**零命中**（触发面仅存于判别性探针——保守豁免后存量样本零误报：初始口径的 W-RESULT-IGNORED 18 处实测全为块尾投影位假阳性，豁免后清零）。
+
+**套件吸收**: 新增 `T152DiagBatchOneTest` 14 测（五码判别面 + 保守豁免面 + t129 借用口径回归面）;零旧测翻转（t128/t129 既有 W-BORROW-REDUNDANT 样本保护——块体函数豁免覆盖既有形态）。
+
+机械证据脚本: `jsoncmp/scripts/t152-parity.ps1` 五段（行为探针 / 68 门 t122n 冻锚台账（W 批一 authorized 台账 11 件登记）/ 精确差分 vs t151gate（61 逐字同 + 15 仅 W 增量——nid 零漂移）/ stdlib 侧基线 / 确定性 9/9 + 脚本门）;配套比价器 `jsoncmp/scripts/t152-stripcmp.js`（wstrip / strippos / wstrippos / plain 四档，保序最弱归一化）;门编译脚本 `jsoncmp/scripts/t152-gate-run.js`。

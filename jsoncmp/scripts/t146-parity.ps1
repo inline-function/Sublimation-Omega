@@ -6,7 +6,9 @@
 #       ④ stdlib 侧基线（vs t143stdlib：全同）⑤ 确定性 9/9 + 脚本门 14/14。
 $ErrorActionPreference = "Continue"
 $root = Resolve-Path "$PSScriptRoot/../.."
-$java = "java -cp `"$($root)/frontend/build/install/frontend/lib/*`" sublimation.frontend.cli.MainKt"
+# java 绝对路径（PS 子进程 PATH 不继承 cmd 环境；t150 修）
+$javaExe = "F:\jdk-17.0.13.11-hotspot\bin\java.exe"
+$cp = "$($root)/frontend/build/install/frontend/lib/*"
 $probeDir = "$root/jsoncmp/out-subs"
 
 # ---- ① 行为探针（t146 构造函数正道：零/单/多变参 + 混型精确报 + Cons 自拼） ----
@@ -14,12 +16,11 @@ function Run-Probe([string]$tag, [string]$src) {
     $out = "$probeDir/t146-$tag.json"; $tmp = "$probeDir/t146-$tag.subl"
     Set-Content -Path $tmp -Value $src -Encoding UTF8
     Remove-Item $out -Force -ErrorAction SilentlyContinue
-    try { Invoke-Expression "$java compile `"$tmp`" -o `"$out`" 2>`$null | Out-Null" } catch { }
-    Start-Sleep -Seconds 2
+    try { Start-Process -FilePath $javaExe -ArgumentList @("-cp", $cp, "sublimation.frontend.cli.MainKt", "compile", $tmp, "-o", $out) -NoNewWindow -Wait | Out-Null } catch { }
     if (-not (Test-Path $out)) { return "MISSING" }
     return Get-Content $out -Raw
 }
-$goodTxt = Run-Probe "good" "fun main(): Null {`n    var a : @mut List[Nat] = mutableListOf()`n    var b : @mut List[Nat] = mutableListOf(1)`n    var c : @mut List[Nat] = mutableListOf(1, 2, 3)`n    var d : List[Nat] = listOf()`n    var e : List[Nat] = listOf(2)`n    var f : List[Nat] = Cons(4, Nil)`n    unchecked print(a); unchecked print(b); unchecked print(c)`n    unchecked print(d); unchecked print(e); unchecked print(f)`n}"
+$goodTxt = Run-Probe "good" "@impure fun main(): Null {`n    var a : @mut List[Nat] = mutableListOf()`n    var b : @mut List[Nat] = mutableListOf(1)`n    var c : @mut List[Nat] = mutableListOf(1, 2, 3)`n    var d : List[Nat] = listOf()`n    var e : List[Nat] = listOf(2)`n    var f : List[Nat] = Cons(4, Nil)`n    unchecked print(a); unchecked print(b); unchecked print(c)`n    unchecked print(d); unchecked print(e); unchecked print(f)`n}"
 if ($goodTxt -notmatch '"ok":\s*true') { Write-Output '[parity] FAIL: 构造面未绿（零/单/多变参+listOf+Cons 自拼）'; exit 1 }
 if ($goodTxt -notmatch 'HirMutType') { Write-Output '[parity] FAIL: @mut List[Nat] 视图未落 HIR'; exit 1 }
 Write-Output "[parity] OK: 构造面绿（mutableListOf 0/1/3 实参 + listOf 0/1 + Cons 自拼；@mut List[Nat] 视图落 HIR）"
@@ -52,7 +53,7 @@ foreach ($line in $manifest) {
     $dst = "$side/$base"
     $dir = Split-Path $dst -Parent
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Out-Null }
-    try { Invoke-Expression "$java compile `"$src`" -o `"$dst`" 2>`$null | Out-Null" } catch { }
+    try { Start-Process -FilePath $javaExe -ArgumentList @("-cp", $cp, "sublimation.frontend.cli.MainKt", "compile", $src, "-o", $dst) -NoNewWindow -Wait | Out-Null } catch { }
     $a = Get-Content "$root/jsoncmp/out/t122n/$base" -Raw -ErrorAction SilentlyContinue
     $b = if (Test-Path $dst) { Get-Content $dst -Raw } else { $null }
     if ($a -ceq $b) { $sameN++; $lines += "SAME`t$base（含上下文弥散复绿回锚——t146）" }
@@ -94,7 +95,7 @@ Write-Output "[parity] OK: 精确差分逐字节同 $sameD 件 + 登记差 $expe
 $mod = "$root/frontend/src/test/resources/e2e/examples/模块系统"
 $std = "$root/jsoncmp/out-subs/t146stdlib"
 Remove-Item $std -Recurse -Force -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Force -Path $std | Out-Null
-try { Invoke-Expression "$java compile `"$mod`" -o `"$std/examples__模块系统.json`" 2>`$null | Out-Null" } catch { }
+try { Start-Process -FilePath $javaExe -ArgumentList @("-cp", $cp, "sublimation.frontend.cli.MainKt", "compile", $mod, "-o", "$std/examples__模块系统.json") -NoNewWindow -Wait | Out-Null } catch { }
 $baseStd = "$root/jsoncmp/out-subs/t143stdlib"
 $sameS = 0; $diffS = @()
 foreach ($f in (Get-ChildItem $baseStd -Filter "*.json")) {
@@ -114,8 +115,8 @@ Write-Output "[parity] OK: stdlib 侧基线 $sameS 件同 + 登记差 1 件 = li
 $da = "$root/jsoncmp/out-subs/t146det-a"; $db = "$root/jsoncmp/out-subs/t146det-b"
 Remove-Item $da -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item $db -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $da | Out-Null; New-Item -ItemType Directory -Force -Path $db | Out-Null
-try { Invoke-Expression "$java compile `"$mod`" -o `"$da/examples__模块系统.json`" 2>`$null | Out-Null" } catch { }
-try { Invoke-Expression "$java compile `"$mod`" -o `"$db/examples__模块系统.json`" 2>`$null | Out-Null" } catch { }
+try { Start-Process -FilePath $javaExe -ArgumentList @("-cp", $cp, "sublimation.frontend.cli.MainKt", "compile", $mod, "-o", "$da/examples__模块系统.json") -NoNewWindow -Wait | Out-Null } catch { }
+try { Start-Process -FilePath $javaExe -ArgumentList @("-cp", $cp, "sublimation.frontend.cli.MainKt", "compile", $mod, "-o", "$db/examples__模块系统.json") -NoNewWindow -Wait | Out-Null } catch { }
 $ja = Get-ChildItem $da -Filter "*.json"
 $det = 0; $n = 0
 foreach ($f in $ja) { $n++; if ((Get-Content $f.FullName -Raw) -ceq (Get-Content "$db/$($f.Name)" -Raw)) { $det++ } }

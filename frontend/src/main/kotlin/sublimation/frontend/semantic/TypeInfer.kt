@@ -446,6 +446,10 @@ internal class TypeInfer(
     /** R-29（队长令 2026-11-13）：深拷转换点补注（D-DEEP-COPY，非 E 级、不拦）——覆盖赋值/传参/
      *  初始化等值通道；仅 R-28 后仅存复制格（MUT→PLAIN / MUT→MUT）+ 元素层深拷（R-14）同发；
      *  共享/平凡格零补注（同 reportMismatch 的合成/燃料容忍纪律）。 */
+    /** t152（W-DEEP-COPY-LOOP）：递归帧标记——由 Elaborator 在体含自调用的函数体求值前置位，
+     *  深拷转换点伴发风险告知（每层递归重复深拷的成本风险;V1 语言无循环构造，递归帧=唯一迭代面）。 */
+    var warnDeepCopyLoop: Boolean = false
+
     private fun deepCopyNote(got: HirType, want: HirType, pos: SourceRange, what: String) {
         val dec = copyDispatch(got, want)
         if (!dec.deep || dec.reject) return
@@ -454,6 +458,9 @@ internal class TypeInfer(
             "（元素层：" + dec.deepElements + " 位深拷——容器实参位随顶层下钻）" else ""
         diag.supplement("D-DEEP-COPY", pos, what + " 隐式深拷：" + render(got) + " → " + render(want) +
             "（深拷隔离——源端可写/目标无引用视图；实际深拷随后端运行时，R2 §三 / R-29）" + elem)
+        if (warnDeepCopyLoop)
+            diag.warn("W-DEEP-COPY-LOOP", pos, what + " 隐式深拷出现在递归帧内——每层递归重复深拷" +
+                "（成本随递归深度线性叠加）。出路：把深拷提到递归外只做一次，或改用 @ref 共享视图")
     }
 
     /** R-14：容器实参位——剥除外层视图层后，按**元数对齐**成对递归。

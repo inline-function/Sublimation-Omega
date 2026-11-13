@@ -1568,18 +1568,36 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             // t141（R-24）：闸帧纯度带接收者 @mut/@mutable 位（impureByDecl ⇒ self 访问免 E-MUT-CAPTURE 误伤）
             val gateFrame = gateFunEnter(d.name, d.annotations, params, preps, global, slotKey,
                 recvImpure = mutableLift || recvAst is sublimation.frontend.ast.MutType)   // t122：闸帧+闭包键
+            // t152（W-REC-NON-TAIL / W-DEEP-COPY-LOOP 共用）：体自调用静态收集（AST walk）——递归帧标记
+            // （深拷转换点伴发 W-DEEP-COPY-LOOP;V1 语言无循环构造，递归帧=唯一迭代面）+ 非尾位告知
+            val recCalls = mutableListOf<Pair<SourceRange, Boolean>>()
+            d.body?.let { recCallsOf(it, d.name, true, recCalls) }
+            infer.warnDeepCopyLoop = recCalls.isNotEmpty()
             enterEffectScope()   // t121：体效应累加（具名函数 purity 走注解/退化位，结论 A2 闭包消费）
-            val body = d.body?.let { b -> expectAt(retType) { expr(b) } }
+            val body = try { d.body?.let { b -> expectAt(retType) { expr(b) } } }
+                finally { infer.warnDeepCopyLoop = false }   // t152：递归帧标记复位
             val frame = funFrames.removeLast()
             gateFunExit(gateFrame, exitEffectScope())   // t122：体效应结论出栈即闭包种子（A2 消费位）
+            // t152（W-REC-NON-TAIL）：非尾位递归调用——停机闸已过（保证终止），栈深风险告知
+            recCalls.forEach { (cpos, isTail) ->
+                if (!isTail) diag.warn("W-REC-NON-TAIL", cpos,
+                    "递归调用不在尾位——每层递归占用一个栈帧（停机闸已过即保证终止，深递归仍有栈深风险）。" +
+                    "出路：改写为尾递归（累加器形参传中间结果），让栈帧可复用")
+            }
+            // t152（W-REF-ESCAPE 表达式体）：无 return 语句的表达式体函数——体值含 @ref 即 return 位直通
+            // （块体按 ReturnStmt 逐点落;此处仅表达式体补面）
+            if (body != null && d.body !is BlockExpr && exprRefType(body)?.let { infer.containsRef(it) } == true)
+                diag.warn("W-REF-ESCAPE", body.origin,
+                    "返回值持有 @ref 引用视图——引用直通调用方：调用方对返回值的写会穿透回被引用对象" +
+                    "（调用方快照预期被打破的风险）。出路：返回不可变副本（copy(…)），或显式文档化引用直通语义")
             // t115 求解收口（P-11 §3.3）；t117：返回位**每轮复解**——体类型/return 证据每轮重收，
             // 种子作下界单调并入（先轮的占位态近似解不会硬化为「声明返回」——假门根因：收敛轮 2 误报）
             val mRet = if (retMeta != null) {
                 // t118（R-02）：退化空位保 Any 落位——轮内体证据/复解一律跳过（Any 填充不冒充推导）
                 if (retMeta.degradedSlot) retMeta.resolved
                 else {
-                    if (body != null) { retMeta.lower.add(substMetas(etype(body)) to d.body.pos)
-                        retMeta.addEvidence(d.body.pos) }
+                    if (body != null) { retMeta.lower.add(substMetas(etype(body)) to d.body!!.pos)
+                        retMeta.addEvidence(d.body!!.pos) }
                     solveRetMeta(retMeta)
                 }
             } else retType
@@ -1732,6 +1750,153 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         else -> false                                         // R5 含糊拒（借用/元组/合成等=外域）
     }
 
+
+    /** t152（W-RESULT-IGNORED）：块尾语句豁免标记——块尾 ExprStmt 为值位投影（if/when 臂/块值），
+     *  结果不被丢弃（与 W-REC-NON-TAIL 尾位判定同源）。 */
+// ============================ t152（W 批一·诊断扩批：V1 全部静态可判） ============================
+
+    /** t152（W-RESULT-IGNORED）：块尾语句豁免标记——块尾 ExprStmt 为值位投影（if/when 臂 / 块值），
+     *  结果不被丢弃（与 W-REC-NON-TAIL 尾位判定同源）。 */
+    private var blockTailStmt: sublimation.frontend.ast.Stmt? = null
+
+    /** t152（W-REC-NON-TAIL / W-DEEP-COPY-LOOP 共用 AST 自调用收集）：体中所有 callee 名 == 函数名
+     *  的调用 + 尾位判定（自上而下传播：块末语句 / return 值 / when 各臂体 / if 两支尾 = 尾位;
+     *  表达式体本身 = 尾位;其余一律非尾）。局部 FunStmt 体属其自身递归域（递归进体但尾位=false）。 */
+    private fun recCallsOf(e: Expr, name: String, tail: Boolean, out: MutableList<Pair<SourceRange, Boolean>>) {
+        when (e) {
+            is CallExpr -> {
+                if ((e.callee as? NameRef)?.name == name) out.add(e.pos to tail)
+                recCallsOf(e.callee, name, false, out)
+                e.args.forEach { recCallsOf(it, name, false, out) }
+                e.namedArgs.values.forEach { recCallsOf(it, name, false, out) }
+            }
+            is BlockExpr -> e.stmts.forEachIndexed { i, st -> recCallsOfStmt(st, name, tail && i == e.stmts.lastIndex, out) }
+            is IfExpr -> {
+                recCallsOf(e.cond, name, false, out)
+                recCallsOf(e.thenBlock, name, tail, out)
+                e.elseBlock?.let { recCallsOf(it, name, tail, out) }
+            }
+            is WhenExpr -> {
+                e.subject?.let { recCallsOf(it, name, false, out) }
+                e.arms.forEach { a ->
+                    a.guard?.let { recCallsOf(it, name, false, out) }
+                    recCallsOf(a.body, name, tail, out)
+                }
+            }
+            is BinExpr -> { recCallsOf(e.left, name, false, out); recCallsOf(e.right, name, false, out) }
+            is UniExpr -> recCallsOf(e.operand, name, false, out)
+            is FieldExpr -> recCallsOf(e.target, name, false, out)
+            is BorrowExpr -> recCallsOf(e.operand, name, false, out)
+            is TupleExpr -> e.items.forEach { recCallsOf(it, name, false, out) }
+            is StructCtorExpr -> e.assigns.forEach { recCallsOf(it.second, name, false, out) }
+            is LambdaExpr -> recCallsOf(e.body, name, false, out)
+            is AnonFunExpr -> e.body?.let { recCallsOf(it, name, false, out) }
+            is TaskExpr -> recCallsOf(e.body, name, false, out)
+            is FlowExpr -> recCallsOf(e.body, name, false, out)
+            is InstExpr -> { recCallsOf(e.target, name, false, out); e.terms.forEach { recCallsOf(it, name, false, out) } }
+            is TypeTestExpr -> recCallsOf(e.target, name, false, out)
+            is FunRefExpr -> recCallsOf(e.target, name, false, out)
+            is IsPatExpr -> recCallsOf(e.target, name, false, out)
+            is ByExpr -> { recCallsOf(e.target, name, false, out); e.props.forEach { recCallsOf(it, name, false, out) } }
+            is VarExpr -> recCallsOf(e.value, name, false, out)
+            is SymbolCallExpr -> e.args.forEach { recCallsOf(it, name, false, out) }
+            else -> { }   // 字面量 / ParamRef / ReturnSym / 命题族（Quant/Error 等）不含调用位
+        }
+    }
+
+    private fun recCallsOfStmt(st: Stmt, name: String, tail: Boolean, out: MutableList<Pair<SourceRange, Boolean>>) {
+        when (st) {
+            is ExprStmt -> recCallsOf(st.expr, name, tail, out)
+            is ReturnStmt -> st.expr?.let { recCallsOf(it, name, tail, out) }
+            is VarStmt -> recCallsOf(st.value, name, false, out)
+            is AssignStmt -> { recCallsOf(st.target, name, false, out); recCallsOf(st.value, name, false, out) }
+            is UncheckedStmt -> recCallsOfStmt(st.inner, name, false, out)   // 单语句豁免上下文=非尾位
+            is FunStmt -> st.fn.body?.let { recCallsOf(it, name, false, out) }   // 局部函数体：尾位=false
+            else -> { }   // 命题域（axiom/by/when-prop/strategy 等）不列效应尾位
+        }
+    }
+
+    /** t152（W-RESULT-IGNORED V1 保守口径）：被调为**已知声明的纯自由函数**（无 @impure/@mut/@mutable/
+     *  @theorem/@axiom 注解、形参全无 @ref/@mut/@atomic 通道、返回类型标注非 Null、无 @list 变长位）且结果作
+     *  为语句被丢弃 ⇒ 疑似 bug 风险告知。方法糖 / 内建 / 借用位 @mut 登记 / unchecked 包覆均豁免（噪声控制）。 */
+    private fun resultIgnoredWarn(call: HirCall) {
+        val name = (call.callee as? HirNameRef)?.name ?: return
+        val d = symbols.lookupLocalFunDecl(name) ?: funDecls[name] ?: return
+        if ("impure" in d.annotations || "mut" in d.annotations || "mutable" in d.annotations ||
+            "theorem" in d.annotations || "axiom" in d.annotations) return
+        // V1 通道判据走 AST 静态形态（零分配 nid——68 门逐字比对基线纪律，t109 同源）
+        if (d.params.any { q -> q.type != null && astTypeHasView(q.type!!) }) return
+        if (d.params.any { q -> "list" in q.annotations }) return
+        if (d.receiver != null && astTypeHasView(d.receiver!!)) return
+        // V1 保守口径：仅**表达式体值函数**（= …，结果即值）——块体函数（含 print 等语句式用法）豁免（噪声控制）
+        if (d.body == null || d.body is BlockExpr) return
+        val rt = d.retType as? NamedType
+        if (rt != null && rt.name == "Null" && rt.args.isEmpty()) return
+        diag.warn("W-RESULT-IGNORED", call.origin,
+            "纯函数 " + ident(name) + " 的调用结果被丢弃——纯调用无副作用，结果不用即空操作（疑似 bug）。" +
+            "出路：使用结果（赋值 / 返回 / 入实参），或用 unchecked 包覆该语句显式声明丢弃意图")
+    }
+
+    /** t152（W-REF-ESCAPE）：表达式物化类型提取——零分配 nid（68 门逐字比对基线硬约束：etype 的字面量
+     *  兜底经 namedT 分配全局计数器，会漂移后序节点 nid 位;t109 定义的零分配位纪律同源）。
+     *  无物化类型节点（字面量族 / 块 / 半成品）返回 null——字面量族静态类型必不含 @ref。 */
+    private fun exprRefType(h: HirExpr): HirType? = when (h) {
+        is HirNameRef -> h.type
+        is HirBinExpr -> h.type
+        is HirUniExpr -> h.type
+        is HirBorrow -> h.type
+        is HirCall -> h.type
+        is HirField -> h.type
+        is HirFunRef -> h.type
+        is HirTask -> h.type
+        is HirFlow -> h.type
+        is HirInst -> h.type
+        is HirTuple -> h.type
+        is HirStructCtor -> h.type
+        is sublimation.frontend.hir.HirVarExpr -> h.type
+        is HirIf -> h.type
+        is sublimation.frontend.hir.HirWhen -> h.type
+        is HirLambda -> h.type
+        is sublimation.frontend.hir.HirAnonFun -> h.type
+        else -> null   // 字面量族 / 块 / 半成品：无物化类型，字面量族静态类型必不含 @ref
+    }
+
+    /** t152（W-RESULT-IGNORED）：AST 类型形参通道静态判（@ref/@mut/@atomic 视图层、函数类型、
+     *  容器实参位递归）——零分配，保守豁免策略。 */
+    private fun astTypeHasView(t: Type): Boolean = when (t) {
+        is sublimation.frontend.ast.RefType, is sublimation.frontend.ast.MutType,
+            is sublimation.frontend.ast.AtomicType -> true
+        is NamedType -> t.args.any { astTypeHasView(it) }
+        is sublimation.frontend.ast.TupleType -> t.items.any { astTypeHasView(it) }
+        is sublimation.frontend.ast.FunType -> true
+        is sublimation.frontend.ast.UnionType -> t.variants.any { astTypeHasView(it) }
+        is sublimation.frontend.ast.QualifiedType, is ErrorType -> false
+    }
+
+    /** t152（W-BRANCH-UNREACHABLE）：后序分支被任一**无 guard** 前序分支完全包含 ⇒ 永不匹配（死分支）。
+     *  包含判定（V1 静态可判集）：PatElse > PatBind("_") > 同名 PatCtor 且前序子模式全通配 > 同型 PatIs。 */
+    private fun patternContains(a: Pattern, b: Pattern): Boolean = when (a) {
+        is sublimation.frontend.ast.PatElse -> true
+        is PatBind -> a.name == "_"
+        is PatCtor -> b is PatCtor && a.name == b.name && a.args.all { it is PatBind || it is sublimation.frontend.ast.PatElse }
+        is PatIs -> b is PatIs &&
+            (a.type as? NamedType)?.name == (b.type as? NamedType)?.name &&
+            (a.type as? NamedType)?.args?.size == (b.type as? NamedType)?.args?.size
+        is PatTuple -> b is PatTuple && a.items.size == b.items.size && a.items.all { it is PatBind || it is sublimation.frontend.ast.PatElse }
+        else -> false
+    }
+
+    private fun unreachableArmWarn(e: WhenExpr) {
+        e.arms.indices.forEach { j ->
+            val aj = e.arms[j]
+            val shadowed = (0 until j).any { i ->
+                val ai = e.arms[i]
+                ai.guard == null && patternContains(ai.pattern, aj.pattern)
+            }
+            if (shadowed) diag.warn("W-BRANCH-UNREACHABLE", aj.pos,
+                "when 分支被前序分支完全包含——永不匹配（死分支）。出路：删除该分支，或调整分支顺序 / 收窄前序模式")
+        }
+    }
     // ============================ 语句 ============================
 
     private fun stmt(s: Stmt): sublimation.frontend.hir.HirStmt = when (s) {
@@ -1797,6 +1962,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             val target = expr(s.target)
             // t66：赋值右值的直接期望 = 目标类型（收窄触发条件③）
             val value = expectAt(etype(target)) { expr(s.value) }
+            // t152（W-REF-ESCAPE）：@ref 视图存入外域字段——属主对象逃逸作用域时引用随之逃逸（存放=共享直传）
+            if (s.target is FieldExpr && exprRefType(value)?.let { infer.containsRef(it) } == true)
+                diag.warn("W-REF-ESCAPE", s.pos,
+                    "@ref 引用视图存入字段——字段属主对象逃逸作用域时引用随之逃逸（快照预期被打破的风险）。" +
+                    "出路：存入不可变副本（copy(…)），或改用值语义字段")
             // t8 可写核定（旧 Frame.isMut 路径）：名字目标查 mut 标记；未定义名的 E-UNBOUND-NAME 已于 expr 解析路径落
             // t60-2：可写核定（t8 名字位 + t60 字段位）——字段写两闸：①可变性（字段须 @mut 且接收者可写）
             // t125（S5a / OQ-3 对称修复）：名字位写闸补读**类型位** @mut——与字段闸（:2897 两口径）
@@ -1875,8 +2045,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         is ExprStmt -> {
             val nid = freshNid()
             val value = expr(s.expr)
-            HirExprStmt(value, nid, s.pos, notesOf(s))
-        }
+            // t152（W-RESULT-IGNORED）：纯函数调用作为语句、结果丢弃——纯度已知，告知疑似 bug
+            if (uncheckedDepth == 0 && s !== blockTailStmt && value is HirCall && !value.methodSugar && value.nid !in mutMethodCalls)
+                resultIgnoredWarn(value)
+            HirExprStmt(value, nid, s.pos, notesOf(s))        }
         is BTSStmt -> {
             val nid = freshNid()
             val form = propNorm.prop(s.form)
@@ -2026,6 +2198,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             val frameRet = if (frame?.metaRet == true) null else frame?.retType
             val value = s.expr?.let { v -> expectAt(frameRet) { expr(v) } }
             infer.returnStmt(frameRet, value?.let { etype(it) }, frame != null, s.pos)
+            // t152（W-REF-ESCAPE）：@ref 视图流到 return 位——R-21 放行不封，风险告知
+            if (value != null && exprRefType(value)?.let { infer.containsRef(it) } == true)
+                diag.warn("W-REF-ESCAPE", s.pos,
+                    "return 值持有 @ref 引用视图——引用直通调用方：调用方对返回值的写会穿透回被引用对象" +
+                    "（调用方快照预期被打破的风险）。出路：返回不可变副本（copy(…)），或显式文档化引用直通语义")
             if (frame != null) frame.sawReturn = true
             // t117 块体 return 推导：返回位元变量（未决）收集 return 值下界 + 证据（R 轮内闭合）
             retMetaOfFrame(frame)?.let { m ->
@@ -2424,6 +2601,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 val reason = if (unionSeal != null && !unionAllNamed)
                     "联合含非具名成员，无法静态穷尽，请补 else" else null
                 infer.whenNonExhaustive(e.pos, hasElse, subjectSealed, covered, reason)
+                // t152（W-BRANCH-UNREACHABLE）：后序分支被前序（无 guard）分支完全包含 ⇒ 永不匹配（死分支）
+                unreachableArmWarn(e)
                 val armTypes = arms.map { etype(it.body) }
                 val joined = if (armTypes.isEmpty()) infer.namedT("Null") else armTypes.reduce { a, b -> infer.unify(a, b) ?: a }
                 val t = if (subjectSealed && (covered || hasElse)) joined
@@ -2447,7 +2626,12 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         // t65（ADR-42）：块级事实帧——块内 var/模式绑定的类型事实随块退出失效（生命周期=作用域）。
         return factFrame {
             symbols.frame(ScopeKind.BLOCK) {
-                val stmts = b.stmts.map { stmt(it) }
+                // t152（W-RESULT-IGNORED）：块尾语句=值位投影（if/when 臂/块值），结果不被丢弃——豁免标记
+                val stmts = b.stmts.mapIndexed { i, st ->
+                    val savedTail = blockTailStmt
+                    blockTailStmt = if (i == b.stmts.lastIndex) st else null
+                    try { stmt(st) } finally { blockTailStmt = savedTail }
+                }
                 // t142：块尾核对 by 断言——块帧事实（axiom/供给链注入）并入 allFacts 后再退栈
                 // （旧落点仅在函数体尾/文件尾，块内注入的参数化事实随块退丢失——上下文截断）
                 flushByAsserts()

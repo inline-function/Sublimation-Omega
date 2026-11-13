@@ -37,9 +37,11 @@ function Invoke-Run($r) {
   $cmdText  = 'java -cp "' + $CP + '" ' + $Main + ' compile "' + $srcPath + '" -o "' + $jsonPath + '" -v' + $flagText
   $oldEAP = $ErrorActionPreference
   $ErrorActionPreference = 'Continue'
-  $output   = & java -cp $CP $Main @argList 2>&1
+  $p = Start-Process -FilePath 'F:\jdk-17.0.13.11-hotspot\bin\java.exe' -ArgumentList (@('-cp', $CP, $Main) + $argList) -NoNewWindow -Wait -PassThru -RedirectStandardOutput "$logPath.out" -RedirectStandardError "$logPath.err"
+  $output = @(Get-Content "$logPath.out" -ErrorAction SilentlyContinue) + @(Get-Content "$logPath.err" -ErrorAction SilentlyContinue)
+  Remove-Item "$logPath.out", "$logPath.err" -Force -ErrorAction SilentlyContinue
   $ErrorActionPreference = $oldEAP
-  $code     = $LASTEXITCODE
+  $code     = if ($null -ne $p) { $p.ExitCode } else { $LASTEXITCODE }
   $lines = @("cmd: $cmdText", "exit: $code", '----- output -----') + $output
   Set-Content -Path $logPath -Value $lines -Encoding UTF8
   return @{ outName = $outName; code = $code; jsonPath = $jsonPath; logPath = $logPath }
