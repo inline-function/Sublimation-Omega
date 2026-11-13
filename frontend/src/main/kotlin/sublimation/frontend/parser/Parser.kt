@@ -94,8 +94,8 @@ class Parser(
         return ErrorStmt(msg, t.range())
     }
 
-    private fun errType(msg: String, t: Token): ErrorType {
-        diagError(msg, t)
+    private fun errType(msg: String, t: Token, code: String = "E-SYNTAX"): ErrorType {
+        diagError(msg, t, code)
         return ErrorType(msg, t.range())
     }
 
@@ -193,11 +193,13 @@ class Parser(
         Kind.FUN, Kind.TRAIT, Kind.STRUCT, Kind.ENUM, Kind.IMPL, Kind.TYPE, Kind.DEF -> DeclEntry(parseDecl())
         Kind.AT -> {
             val save = pos
-            val anns = parseAnnotations()
+            val dToks = ArrayList<Token>()
+            val anns = parseAnnotations(toksOut = dToks)
+            // t149（R-26.2）：声明位注解按种类校验（注解在前、fun/struct/trait 在后）。
             when (cur().kind) {
-                Kind.FUN -> DeclEntry(parseFun(anns))
-                Kind.STRUCT -> DeclEntry(parseStruct(anns))
-                Kind.TRAIT -> DeclEntry(parseTrait(anns))
+                Kind.FUN -> { checkAnnotations(anns, dToks, AnnPositions.FUN, "函数声明位"); DeclEntry(parseFun(anns)) }
+                Kind.STRUCT -> { checkAnnotations(anns, dToks, AnnPositions.STRUCT, "结构体声明位"); DeclEntry(parseStruct(anns)) }
+                Kind.TRAIT -> { checkAnnotations(anns, dToks, AnnPositions.TRAIT, "特质声明位"); DeclEntry(parseTrait(anns)) }
                 else -> if (scriptMode) { pos = save; StmtEntry(parseStmt()) } else noTopLevelEntry()
             }
         }
@@ -309,14 +311,69 @@ class Parser(
         return ErrorStmt(msg, t.range())
     }
 
-    private fun parseAnnotations(): List<String> {
+    private fun parseAnnotations(
+        allowed: Set<String> = emptySet<String>(),
+        kindLabel: String = "",
+        toksOut: MutableList<Token>? = null
+    ): List<String> {
         val out = ArrayList<String>()
         while (peek(Kind.AT)) {
+            val at = cur()
             pos++
             val n = expect(Kind.IDENT, "注解名")?.text ?: break
+            if (allowed.isNotEmpty()) checkAnn(n, at, allowed, kindLabel)
+            toksOut?.add(at)
             out += n
         }
         return out
+    }
+
+    /** t149（R-26.2）：注解合法位注册表 + 单注解校验——未知名 ⇒ E-UNKNOWN-ANN（无此注解）；
+     * 已知名但通道错 ⇒ E-ANN-POSITION（报该注解合法位）。值通道收口，类型位既有 parseType 纪律承接。 */
+    private fun checkAnn(name: String, at: Token, allowed: Set<String>, kindLabel: String) {
+        when {
+            name in allowed -> Unit
+            name !in AnnPositions.ALL -> diagError(
+                "无此注解 @$name（R-26.2 合法位注册表无此名；${AnnPositions.ALL_HINT})", at, "E-UNKNOWN-ANN")
+            else -> diagError(
+                "注解 @$name 不能写在$kindLabel（R-26.2 合法位：" + (AnnPositions.POS_HINT[name] ?: "") + "）",
+                at, "E-ANN-POSITION")
+        }
+    }
+
+    /** t149：两段式通道（注解在前、种类关键字在后）批量校验——逐注解落位。 */
+    private fun checkAnnotations(anns: List<String>, toks: List<Token>, allowed: Set<String>, kindLabel: String) {
+        for (i in anns.indices) checkAnn(anns[i], toks[i], allowed, kindLabel)
+    }
+
+    /** t149（R-26.2）：注解 × 合法位注册表。 */
+    private object AnnPositions {
+        val FUN = setOf("impure", "root", "classic", "async", "mutable", "mut", "theorem", "axiom")
+        val STRUCT = setOf("mut", "classic")
+        val TRAIT = setOf("classic")
+        val DECL: Set<String> = FUN + STRUCT + TRAIT
+        // @ref var：t97 共享只读视图（类型系统/特性巡礼样本形态）——var 位合法。
+        val VAR = setOf("mut", "ref")
+        val PARAM = setOf("list")
+        val FIELD = setOf("mut")
+        // 类型位（parseType 既有纪律承接——注册表同源口径）。
+        val TYPE = setOf("mut", "atomic", "ref", "impure")
+        val ALL: Set<String> = DECL + VAR + PARAM + FIELD + TYPE
+        const val ALL_HINT = "合法注解：@mut（类型/var/struct/字段位）@ref @atomic（类型位）" +
+            "@impure（函数级/函数类型位）@list（形参位）@mutable @root @classic @async @theorem @axiom（声明位）"
+        val POS_HINT = mapOf(
+            "impure" to "@impure 函数级（@impure fun …）或函数类型位（f: @impure (A) => Null）",
+            "mutable" to "@mutable 扩展函数级（@mutable fun T.m()）",
+            "mut" to "@mut 类型位（@mut T）/ var 位（@mut var）/ struct 声明位（@mut struct）/ 结构体字段位（@mut 字段）",
+            "ref" to "@ref 类型位（x: @ref T）",
+            "atomic" to "@atomic 类型位（x: @atomic T）",
+            "list" to "@list 形参位（末位变长：fun f(…, @list xs: T)）",
+            "root" to "@root 函数声明位",
+            "classic" to "@classic 声明位（fun/struct/trait）",
+            "async" to "@async 函数声明位",
+            "theorem" to "@theorem 函数声明位",
+            "axiom" to "@axiom 函数声明位"
+        )
     }
 
     /**
@@ -491,7 +548,7 @@ class Parser(
     }
 
     /** S-8【形参表】：注解 [解构] 名: 类型 [= 默认值]——默认值一律解析，合法性由语义层判（仅 struct 字段允许）。 */
-    private fun parseParams(): List<Param> {
+    private fun parseParams(isField: Boolean = false): List<Param> {
         next()   // (（分派保证）
         val out = ArrayList<Param>()
         if (!peek(Kind.RPAREN)) {
@@ -503,8 +560,14 @@ class Parser(
                     val at = cur()
                     val n = expect(Kind.IDENT, "注解名")?.text ?: break
                     // t95：@ref 是类型位注解（写 a: @ref T）——形参名前的注解位是值注解通道，混用落语法诊断
+                    // （t149：该 E 级错位口径承接不变——ref 不入注册表校验，防双报）。
                     if (n == "ref") diagError("@ref 是类型位注解：写在类型上（a: @ref T），不能放在形参名前（此处是值注解位）", at)
-                    else anns += n
+                    else {
+                        anns += n
+                        // t149（R-26.2）：形参位/结构体字段位注册表校验。
+                        checkAnn(n, at, if (isField) AnnPositions.FIELD else AnnPositions.PARAM,
+                            if (isField) "结构体字段位" else "形参位")
+                    }
                 }
                 val destruct = if (peek(Kind.LPAREN)) parseParamDestruct() else null
                 val nt = cur()
@@ -631,9 +694,9 @@ class Parser(
                 "impure" -> {
                     val ft = parseType()
                     if (ft is FunType) ft.copy(purity = "impure")
-                    else errType("@impure 类型注解只能修饰函数类型（写法：f: @impure (A) => Null）", t)
+                    else errType("@impure 类型注解只能修饰函数类型（写法：f: @impure (A) => Null）", t, "E-ANN-POSITION")
                 }
-                else -> errType("类型位注解只支持 @mut / @atomic / @impure / @ref", t)
+                else -> errType("无此注解 @$an（R-26.2 类型位支持 @mut / @atomic / @impure / @ref）", t, "E-UNKNOWN-ANN")
             }
         }
         val base: Type = when {
@@ -770,9 +833,10 @@ class Parser(
             skipSemis()
             if (peek(Kind.RBRACE)) break
             val before = pos
-            val ma = parseAnnotations()
+            val mToks = ArrayList<Token>()
+            val ma = parseAnnotations(toksOut = mToks)
             val m: Decl = when (cur().kind) {
-                Kind.FUN -> parseFun(ma)
+                Kind.FUN -> { checkAnnotations(ma, mToks, AnnPositions.FUN, "特质成员函数位"); parseFun(ma) }
                 // P-9/B.3（t40）：val 已废除——trait 不得携带状态，落 E-VAL-REMOVED + 指引，
                 // 并跳残段至下一成员边界（同 parseImpl 同步口径，避免重复诊断）
                 Kind.IDENT -> if (cur().text == "val") {
@@ -823,7 +887,7 @@ class Parser(
             skipBraced()
             return errDecl("struct 体是参数列表，请改写为 $name(字段: 类型 = 默认值)", lb)
         }
-        val fields = if (peek(Kind.LPAREN)) parseParams() else emptyList()
+        val fields = if (peek(Kind.LPAREN)) parseParams(isField = true) else emptyList()
         val props = if (peek(Kind.LT)) parseAngleList() else emptyList()
         return StructDecl(name, theory, fields, anns, props, nameTok.range())
     }
@@ -915,13 +979,16 @@ class Parser(
                 StrategyStmt(strategy, goal, t.range())
             } else {
                 val at = cur()
-                val anns = parseAnnotations()
+                val sToks = ArrayList<Token>()
+                val anns = parseAnnotations(toksOut = sToks)
                 // t129 件 2（I-6 收口）：局部 fun 注解透传——原 AT 位只放 var，@impure/@pure 局部 fun
                 //  被错拒（E-SYNTAX「期望 var 变量声明」）；现注解落 FunDecl.anns，语义层走既有注解位
                 //  （funDecl 纯度/闸帧）。bare 局部 fun 走 FUN 分派（无注解位，emptyList 等价）。
+                // t149（R-26.2）：语句位注解按 var/fun 通道校验（错位/未知名落 E-ANN-POSITION/E-UNKNOWN-ANN）。
                 when {
-                    peek(Kind.VAR) -> parseVar(anns)
+                    peek(Kind.VAR) -> { checkAnnotations(anns, sToks, AnnPositions.VAR, "var 语句位"); parseVar(anns) }
                     peek(Kind.FUN) -> {
+                        checkAnnotations(anns, sToks, AnnPositions.FUN, "局部函数声明位")
                         val fn = parseFun(anns)
                         if (fn is FunDecl) FunStmt(fn, fn.pos)
                         else ErrorStmt((fn as ErrorDecl).message, fn.pos)
@@ -1706,7 +1773,10 @@ class Parser(
             t.kind == Kind.VAR -> parseVarExpr(emptyList())
             t.kind == Kind.AT -> {
                 val at = cur()
-                val a = parseAnnotations()
+                val vToks = ArrayList<Token>()
+                val a = parseAnnotations(toksOut = vToks)
+                // t149（R-26.2）：var 表达式位注解校验（只有 @mut 合法）。
+                checkAnnotations(a, vToks, AnnPositions.VAR, "var 表达式位")
                 if (peek(Kind.VAR)) parseVarExpr(a) else errExpr("期望 var 变量声明", at)
             }
             t.kind == Kind.FUN -> parseAnonFunExpr()
@@ -2133,7 +2203,8 @@ class Parser(
     // ============ 片段入口（§2.1）——宿主契约：整段耗尽 + 无 ERROR 级诊断，否则抛 [ParseFailure] ============
 
     internal fun snippetDecl(): Decl {
-        val anns = if (peek(Kind.AT)) parseAnnotations() else emptyList()
+        val snToks = ArrayList<Token>()
+        val anns = if (peek(Kind.AT)) parseAnnotations(toksOut = snToks) else emptyList()
         val d = parseDecl()
         val merged: Decl = when {
             anns.isEmpty() -> d
@@ -2141,6 +2212,16 @@ class Parser(
             d is StructDecl -> d.copy(annotations = anns + d.annotations)
             d is TraitDecl -> d.copy(annotations = anns + d.annotations)
             else -> d
+        }
+        // t149（R-26.2）：片段前置注解按合并后声明种类校验（与 parseEntry 同表，防双报——此处唯一消费位）。
+        if (anns.isNotEmpty()) {
+            val (allowed, kindLabel) = when (merged) {
+                is FunDecl -> AnnPositions.FUN to "函数声明位"
+                is StructDecl -> AnnPositions.STRUCT to "结构体声明位"
+                is TraitDecl -> AnnPositions.TRAIT to "特质声明位"
+                else -> AnnPositions.DECL to "声明位"
+            }
+            checkAnnotations(anns, snToks, allowed, kindLabel)
         }
         strictFail()
         requireSnippetEof("声明")

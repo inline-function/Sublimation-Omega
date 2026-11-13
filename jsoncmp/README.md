@@ -326,3 +326,44 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 机械证据脚本: `jsoncmp/scripts/t148-parity.ps1` 五段（行为探针正/保留/[] / 68 门 t122n 冻锚台账含上下文弥散复绿回锚 / 精确差分 vs t144 冻结（75 同+登记差） / 侧基线 / 确定性 + 脚本门），rc=0 全绿。
 
 **队长令裁定挂账**：声明侧 `[@q]`（命题参数在方括号内）与 R-26 的 `<>` 口径相悖——队长裁为**语义层裁决项**（不代决），本件不碰声明侧（上下文弥散:24 `fun witness[@q]<q>` 维持原样复绿）。
+
+## t149 分账（R-26.2 注解纪律：未知注解 E-UNKNOWN-ANN + 错位 E-ANN-POSITION + 合法位注册表，2026-11-13）
+
+**变更画像**（旧状=未知注解静默忽略：值通道（声明/成员/语句/var/形参）注解收集后零校验；本件落注册表逐注解校验）:
+
+| 门 | 结果 | 证据 |
+|---|---|---|
+| 68 门（vs **t122n 死冻锚**） | **零波动**：SAME 50（含上下文弥散）+ 剥差同 16 + 预期转绿 1 + 模块样本 1（闭合 68）——注解纪律零产品差（样本/stdlib 全用合法位形态） | out-subs/t149gate-ledger.txt |
+| 精确差分（vs t148gate 一次性基线） | **76 件逐字节同**（e2e 全家 + 模块主件 + 子件） | t149-parity ③ |
+| 套件 | **1197/1197**（1184 + 13 T149：未知×4（声明/语句/形参/类型位） + 错位×4（impure var/list 声明/impure struct/impure 非函数类型） + 承接×2（@ref 形参既有口径/unchecked 语句前缀零回归） + 合法形态全绿 + @ref var 视图位零回归） | :frontend:test |
+| 负例先红 | 实现前 8 红（未知名静默放行/错位无报）+ 4 绿（既有承接）；实现后 13/13 绿 | T149 测试轮 |
+| stdlib 侧（vs t143stdlib） | 逐字节同 9 件 | t149-parity ④ |
+| 模块确定性 | 9/9 | t149-parity ⑤ |
+| 脚本门 | 14/14 | t149-parity ⑤ |
+
+**实现位点**（Parser.kt 一件，zero 新依赖）:
+
+1. **`AnnPositions` 注册表**（private object）：通道 × 合法位表——FUN={impure,root,classic,async,mutable,mut,theorem,axiom}；STRUCT={mut,classic}；TRAIT={classic}；VAR={mut,ref}（ref=t97 共享只读视图，样本实证）；PARAM={list}；FIELD={mut}；TYPE={mut,atomic,ref,impure}（parseType 既有纪律承接同源表）；ALL_OK hint + 每注解合法位文案（POS_HINT）。
+2. **`parseAnnotations(allowed, kindLabel, toksOut?)`** 升级：逐注解即时校验 + AT 位透传（两段式通道——注解在前、种类关键字在后的位点用 `checkAnnotations` 批量回补）。
+3. **五处通道收口**：parseEntry（fun/struct/trait 分种类校验）/ parseTrait 成员（特质成员函数位）/ parseStmt（var/fun 分通道）/ 初等式 var 表达式位 / parseParams（形参位 vs 结构体字段位分通道——`isField` 形参）+ snippetDecl 片段前置注解（合并后按种类校验，防双报）。
+4. **两码**：`E-UNKNOWN-ANN`（无此注解 @x + 全注册表文案）；`E-ANN-POSITION`（@x 不能写在〈通道〉+ 该注解合法位文案）。parseType 既有 errType 升级挂同族码（类型位未知→E-UNKNOWN-ANN；@impure 非函数类型→E-ANN-POSITION）。
+5. **承接不变**：@ref 形参名前既有 E-SYNTAX 口径逐字（t95；ref 不入注册表校验防双报）；策略语句 `@x[…]`（证明策略通道，非注解）与 `return @label`（标签）零触及；@unchecked 是语句前缀关键字（写 @unchecked 注解落既有「期望注解名」E 级）。
+
+**注册表表（文档面）**:
+
+| 注解 | 合法位 | 消费面 |
+|---|---|---|
+| @impure | 函数声明位（含局部 fun/特质成员）/ 函数类型位 | 纯度闸帧（Elaborator）|
+| @mutable | 扩展函数声明位（接收者存在） | @mut @ref 接收者纯糖（R-24 v2，t141）|
+| @root | 函数声明位 | 声明口径纯度内建表 |
+| @classic | 声明位（fun/struct/trait） | 经典逻辑挂载 |
+| @async | 函数声明位 | 异步标记 |
+| @theorem | 函数声明位 | 定理表（Collector）|
+| @axiom | 函数声明位 | 后件公理登记 |
+| @mut | 类型位 / var 位 / struct 声明位 / 结构体字段位 / 扩展函数+特质成员 | 可写性视图/容器可变/方法糖 |
+| @ref | 类型位 / var 位（共享只读视图，t97） | 可写性/拷贝规则 |
+| @atomic | 类型位 | 原子类型 |
+| @list | 形参位（末位变长） | 变长实参 codegen |
+| @unchecked | **非注解**——逃逸位是语句前缀 `unchecked <stmt>` | 逃逸闸 |
+
+机械证据脚本: `jsoncmp/scripts/t149-parity.ps1` 五段（行为探针正/负/合法面 + 68 门 t122n 冻锚台账 + 精确差分 vs t148gate 一次性基线 + 侧基线 + 确定性 + 脚本门），rc=0 全绿。
