@@ -1,0 +1,2 @@
+# stdlib.axioms 挂载约定（R-23）
+# 无依赖：命题项自由名走命题位静默模式（ADR-13 / NameResolver 既有口径），不挂他件。

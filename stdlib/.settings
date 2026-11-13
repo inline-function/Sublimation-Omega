@@ -8,3 +8,5 @@ mount collection/set
 mount collection/map
 mount collection/traits
 mount math
+# t156（B3）：axioms 公理库（基础公理 A1–A3 + L1–L4;归纳法按 t91 暂缓）
+mount axioms

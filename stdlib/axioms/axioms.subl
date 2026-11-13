@@ -1,0 +1,51 @@
+// stdlib.axioms —— 公理库（B3 / 标准库规划 §3 首批清单）。
+//
+// 定位：语言定义层的**规格面**（spec of record）——公理只登记不证明（R-AXIOM）。
+// 编译期擦除为 Null（无体签名 = 公理声明）;凡体可由内建快路径给的事实（如 Nat 非负，
+// t65 provenance=type 注入）与本库的公理做的是同一件事——公理库为规格，注入为实现，
+// 一致性（注入事实 ⊆ 公理可实例化）为后续件（规划 §6 Q2/路线②③）。
+//
+// 形态约束（诚实边界）:
+// - 类型判定位（∀n : Nat 的 n : Nat）按 ADR-13 §三 推迟——公理以**命题元变量** [n] 形态落，
+//   类型约束由调用位类型事实补（与 e2e core/logic 同一妥协）;
+// - 命题项自由名（length / Nil / Cons / append）走命题位静默模式（未知 schematic 变量），
+//   故本件**无依赖挂载**（公理不断言 stdlib 的符号解析，只断言其数学含义）;
+// - 归纳法依赖面（L5–L7 长度不变性族 / reverse 不动点 / E1–E3 外延性、排序正确性、
+//   induction 公理）按 t91 裁决 6 暂缓——归纳法落地后由「公理」降为「定理」。
+// - M1–M2 / S1–S2 / T1–T3 / G1 随核心库迁入扩容（规划路线⑤，本批不落）。
+
+// ---------- 数值（A1–A3）----------
+
+// A1：Nat 非负（用户点名的原型公理——规划 §1/§3.1）。
+@axiom
+fun `nat non-negative`[n]: Null <n >= 0>
+
+// A2：Nat 加法单调（无界加法不回绕）。
+@axiom
+fun `nat add monotone`[n, m]: Null <(n + m) >= n>
+
+// A3：Nat 减法非负充要（减法收窄的根据，ST-10.2）。
+@axiom
+fun `nat sub non-negative`[n, m]: Null <((n - m) >= 0) ↔ (n >= m)>
+
+// ---------- 链表（L1–L4：证明需归纳 ⇒ 公理）----------
+
+// L1：空表长度为零。
+@axiom
+fun `list length nil`: Null <length(Nil) = 0>
+
+// L2：Cons 长度递推（定义性，V1 无展开机制 ⇒ 公理）。
+@axiom
+fun `list length cons`[h, t]: Null <length(Cons(h, t)) = 1 + length(t)>
+
+// L3a：右单位元。
+@axiom
+fun `list append nil`[xs]: Null <append(xs, Nil) = xs>
+
+// L3b：结合律。
+@axiom
+fun `list append assoc`[xs, ys, zs]: Null <append(append(xs, ys), zs) = append(xs, append(ys, zs))>
+
+// L4：长度可加（实用度极高）。
+@axiom
+fun `list length append`[xs, ys]: Null <length(append(xs, ys)) = length(xs) + length(ys)>

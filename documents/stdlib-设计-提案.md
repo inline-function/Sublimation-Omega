@@ -409,3 +409,17 @@ builtinSig（TypeInfer:790）60+ 内建函数按域分类登记——**语言定
 **边界（挂账）**：效应分析实现未触（t151 域）；CoW 与深拷运行时（R2 §三 接位）未落；R-06/R-28 冲突裁决待队长（本批按字面吸收 + 台账登记）。`t146 §21 台账`（本文件 §21）随 t150 提交一并带上——构造族迁源面（R-26.5）为 R-28 合法 @mut 源的唯一供给通道，两批衔接完整。
 
 **本批越界清单**（inScope）：TypeInfer.kt（copyDispatch 三态 + r28Report/deepCopyNote + 8 站点）+ T150R28MatrixTest 新建 + 旧测试件迁移/翻转（T98/T99/T107/T125×2/T126/T128/RefTypeInert/SubtypeOrder/ViewDemotion/NarrowSubtraction/TypeInfer/AssignDefaults）+ e2e 样本 3 件 + diff-pairs fixture 2 对 + 旧工程参考-副作用与可变性控制.md 勘误（:98/:158-162 R-28 废止标注 + :91/:105/:114 格保留标注）+ 效应分析设计-提案.md §1.1 十六格表 7 拒格 + 判定树同步 + jsoncmp/scripts/t150-parity.ps1 五段。
+
+## 23 批史 t156（B3 axioms 公理库：A1–A3 + L1–L4，2026-11-14）
+
+**落地**（规划 §3 首批清单 · Q4 建议范围;归纳法按 t91 裁决 6 暂缓——不落 L5–L7 / E1–E3 / induction 面）:
+
+| 项 | 落位 | 内容 |
+|---|---|---|
+| 模块 | `stdlib/axioms/axioms.subl` + `stdlib/.settings` 增 `mount axioms` | 默认挂载并入编译根（R-23）;件无依赖挂载（命题项自由名走命题位静默模式——ADR-13 既有口径） |
+| 公理 | 同上 | **A1–A3 数值**（nat non-negative / nat add monotone / nat sub non-negative）+ **L1–L4 链表**（list length nil / cons + append 右单位元 / 结合律 / length 可加——L3 拆两条） = 8 条 @axiom 无体 fun |
+| 形态约束 | — | @axiom（AnnPositions FUN 级，R-26.2 注册表）+ 命题元变量 [n]（规划 §4 类型判定位延迟——ADR-13 §三）;反引号多词命名 → 裸名链零污染;@axiom 落 funs 表（非 theorems 分表——∴ 搜索面为 @theorem 通道，公理库为规格面） |
+
+- **纪律**：负例先红（T156 测套落盘先跑：门 2/3/4 三红——快照无 axioms 件）;零分配 nid（@axiom 无体声明——零新类型求值）;既有件逐字不动（B3 只加模块——vs t155gate 76 逐字同零增量、68 门分类零波动）;stdlib 9→10 闭合。
+- **t156 实测门**：套件 **1281/1281**（1276 + T156StdlibAxiomsTest 5 测：件并入零红 / 八条公理在位 / 限定引用调用绿 / 裸名链隔离 / 未引用零足迹）;T137/T131/T137B0 既有断言随件数更新（键集 +axioms、子件 8→9）;68 门 vs t122n 闭合（38/11/5/3/6/4/1 零波动）;vs t155gate 逐字同 76 + axioms 新增件 1;stdlib vs t143stdlib 10 闭合（4 同 + 3 纯W + 1 纯批二 + list 件登记差 + axioms 新增）;模块双导出确定性 10/10;脚本门 run-gate 过（五段机械证据见 `jsoncmp/scripts/t156-parity.ps1`）。
+- **诚实边界**：跨模块命题面（用户 posts 直接实例化 stdlib 公理）未通——@axiom 不入 theorems 分表，公理库现为**规格面**（spec of record）;一致性测试（t65 注入事实 ⊆ 公理可实例化，规划 §6 Q2/路线③）为后续件;M1–M2 / S1–S2 / T1–T3 / G1 随核心库迁入扩容（规划路线⑤）。

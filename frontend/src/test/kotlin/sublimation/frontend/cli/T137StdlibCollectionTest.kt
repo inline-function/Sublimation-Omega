@@ -57,7 +57,9 @@ class T137StdlibCollectionTest {
         val (su, _) = compileStdlibUnits(noStdlib = false, scriptMode = false, noDegrade = false, noLift = false)
         val by = su.associateBy { it.alias }
         // t140（B2.2）：加 traits 件（HKT 特质族——限定形态引用 traits.Functor 等）
-        assertEquals(setOf("list", "optional", "result", "set", "map", "traits", "math"), by.keys, "五件 + traits + math")
+        // t156（B3）：加 axioms 件（公理库 A1–A3 + L1–L4）
+        assertEquals(setOf("list", "optional", "result", "set", "map", "traits", "math", "axioms"),
+            by.keys, "五件 + traits + math + axioms")
         val opt = by["optional"]!!
         assertTrue("getOrElse" in opt.snapshot.funs && "isSome" in opt.snapshot.funs &&
             setOf("head", "firstOr", "get", "toResult").all { it in opt.snapshot.funs.keys },

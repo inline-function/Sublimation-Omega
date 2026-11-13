@@ -103,8 +103,10 @@ class T137StdlibB0Test {
         val (su, sd) = compileStdlibUnits(noStdlib = false, scriptMode = true, noDegrade = false, noLift = false)
         assertFalse(sd.hasError)
         val byAlias = su.associateBy { it.alias }
-        // B0-1 后 = 五件 + math（B0-0 阶段断言不可硬编小集——跟随实集）；t140（B2.2）加 traits 件
-        assertEquals(setOf("list", "optional", "result", "set", "map", "traits", "math"), byAlias.keys, "stdlib 件 = 五件 + traits + math")
+        // B0-1 后 = 五件 + math（B0-0 阶段断言不可硬编小集——跟随实集）；t140（B2.2）加 traits 件;
+        // t156（B3）：加 axioms 件（公理库）
+        assertEquals(setOf("list", "optional", "result", "set", "map", "traits", "math", "axioms"),
+            byAlias.keys, "stdlib 件 = 五件 + traits + math + axioms")
         // B0-1 后 list = 全家（B0-0 阶段断言不可硬编小集——retire 三项须在内）
         val listFuns = byAlias["list"]?.snapshot?.funs?.keys ?: emptySet()
         assertTrue(setOf("range", "sum").all { it in listFuns }, "list 件含 retire 的 range/sum")
