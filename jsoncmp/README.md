@@ -511,3 +511,32 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 **零分配 nid 验证**: ③ 段 58 件逐字节全同（HIR/产物全同）+ 10 件仅诊断条目差异（滤 12 码后逐字同——nid 位零漂移）;此前 net/regex 假阳性两轮收紧均未触及 HIR——nid 纪律全程成立。
 
 机械证据脚本: `jsoncmp/scripts/t153-parity.ps1` 五段;台账比价器 `jsoncmp/scripts/t153-gatecmp.js`（②③④ 段闭合分类 + 零未登记差 + 新码归因台账）;滤码器 `jsoncmp/scripts/t153-stripcmp.js`（w*/d*/b* 三族 12 码 + strippos，保序最弱归一化）;门编译脚本 `jsoncmp/scripts/t153-gate-run.js`（76 门 + stdlib）。产物：`out-subs/t153gate`（76）/ `t153stdlib`（9）/ `t153det-a·b`（摘要确定性）/ `t153gate-ledger.txt`（台账）/ `t153probe`（七码负例先红探针）/ t153-h1…d3n 探针（15 面）。
+
+
+---
+
+## t154 分账（诊断扩批三：D 级效应告示 D-EFFECT-LOCAL / D-EFFECT-ESCAPE——2026-11-14）
+
+**任务**：效应分析结论的 D 级告示（t151 origin 追踪已落地可依）。D-EFFECT-LOCAL（@mut 接收者写判定为局部来源 ⇒ 告示「写入局限本域、未逃逸」——纯函数局部修改的正面告示）;D-EFFECT-ESCAPE（变量写效应经借用/捕获/外域形参流出 ⇒ 告示「效应逃逸路径」，R-21 放行不封告示代替，与 W-REF-ESCAPE 互补：引用逃逸 vs 效应逃活）。**口径跟 t151 现行判定（形参一律外域保守地板、@ref 注解位不折入类型）——只告示不变判定**（mutMethodCalls 登记条件逐字同 t151：外域才入 @mut 方法闸——E-IMPURE-REQUIRED 零回归，e6 探针守)。纪律：负例先红（实现前二码实测零落）、零分配 nid（复用既有 receiverOriginIsLocal 判定 + 接收者形态分型，无新类型求值）、D 级一律 supplement 不拦。验收：套件 1262/1262 → **1269/1269**（+7 新测）+ 台账 + parity 五段 + 确定性 + 脚本门。
+
+| 证据面 | 结果 | 脚本 |
+|---|---|---|
+| 行为探针（二码四面绿） | 局部顶层 var xs = mutableListOf(1); xs.add(2)（判别性样本）/ 纯函数局部写（R-26.4 放行留痕，E-IMPURE-REQUIRED 零拦守）/ 字段随属主 R3 / 外域形参逃逸 / 祖先帧捕获逃逸——全部编译过且落新码 | t154-parity ① |
+| 行为探针（豁免面） | 纯方法（xs.map 无 @mut 写）零 D-EFFECT-*;局部/逃逸互斥（局部来源面绝不落逃逸告示）——误报零容忍 | t154-parity ① |
+| 68 门（vs **t122n 死冻锚**） | SAME **38** + 剥差同 11 + 纯 W 批一 5 + 纯批二 3 + 混合 6 + 预期差 4 + 转绿 1 = 68 闭合零未登记差——**批三新码全落既有 expOld 差异件内（副作用与unchecked / 特性巡礼 / 类型系统），分类口径零波动** | t154-parity ②（台账 out-subs/t154gate-ledger.txt） |
+| 精确差分（vs t153gate 冻结产物） | **65 件逐字节全同 + 3 件仅 14 码增量**（5 W + 7 H·D + 2 D-EFFECT）——HIR 全同（**nid 位零漂移**：零分配纪律成立——仅复用既有判定，无新类型求值） | t154-parity ③ |
+| stdlib 侧（vs t143stdlib） | 4 件同 + 3 件纯 W 批一 + 1 件纯批二 + list 件构造族迁源面登记差——**批三零命中** | t154-parity ④ |
+| 模块确定性 | 9/9 | t154-parity ⑤ |
+| 脚本门 | 14/14（run-gate **PASSED**——双编译逐字同 + 退出码 + 语义抽查） | t154-parity ⑤ |
+
+**实现口径（二新码——任务书定义、本批落地）**:
+
+- **D-EFFECT-LOCAL**：@mut/@mutable 方法调用（方法糖位 + 模块限定 ext 调用位——与 t151 mutMethodCalls 登记同源两位）的接收者经 [receiverOriginIsLocal] 判定为**局部来源**（字面量/构造点/同域声明/字段随属主 R3 一层;var 位复制格代入经 localOriginIds——R-28 矩阵：want 非 ref × 源 @mut 视图 = 深拷产生新对象）⇒ supplement 告示「写入局限本域、未逃逸：本调用对接收者的修改不流出函数（同域修改=纯判据的放行留痕）」。判据#define 逐字复用 t151——零分配 nid。
+- **D-EFFECT-ESCAPE**：同位接收者为**外域**（借入形参/祖先帧捕获/全局别名/含糊形态——R5 保守地板）⇒ supplement 告示「效应逃逸路径」，消息按接收者形态分型（外域形参（一律保守地板）/ 祖先帧捕获 / 内建别名 / 外域别名·含糊形态（保守地板）;字段随属主回溯一层）。R-21 放行不封告示代替;与 W-REF-ESCAPE 互补（引用逃逸 vs 效应逃逸）。
+- **只告示不变判定**：mutMethodCalls 登记条件逐字同 t151（外域才入 @mut 方法闸）——E-IMPURE-REQUIRED / E-MUT-CAPTURE / 纯度闸判定零改动（e6 探针「纯函数局部写」编译过 + 无 E-IMPURE-REQUIRED 机械守）。范围外（任务书）：R-06 提升写回修复（用户 pending）、精确逃逸分析（R-26.4 字面=保守地板——V1 字段写效应告示亦留后批）。
+
+**噪声台账（批三，逐件×码×处数）**: 68 门 + stdlib 共 **D-EFFECT-LOCAL 3 处 / 2 件**（特性巡礼×2、类型系统×1——局部可变累加真面）+ **D-EFFECT-ESCAPE 1 处 / 1 件**（副作用与unchecked×1——外域形参 unchecked 写真面）——**零噪声控制收紧需求**（批一二对照：批一 W-REC-NON-TAIL 114 处/批二 H-CONS-BUILD 13 处;批三 4 处为迄今最收敛）。
+
+**套件吸收**: 新增 `T154DiagBatchThreeTest` **7 测**（二码判别面 + 逃逸路径分型面 + 字段属主面 + 互斥面 + 纯方法豁免面）;零旧测翻转（1262 基线 + 7 = 1269/1269）。
+
+机械证据脚本: `jsoncmp/scripts/t154-parity.ps1` 五段;台账比价器 `jsoncmp/scripts/t154-gatecmp.js`（②③④ 段闭合分类 + 零未登记差 + 14 码归因台账）;门编译脚本 `jsoncmp/scripts/t154-gate-run.js`（76 门 + stdlib）。产物：`out-subs/t154gate`（76）/ `t154stdlib`（9）/ `t154det-a·b`/ `t154gate-ledger.txt`（台账）/ `t154probe`（e1-e6 六面负例先红探针 + mutdbg 基线件）。

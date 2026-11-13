@@ -1755,6 +1755,45 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         else -> false                                         // R5 含糊拒（借用/元组/合成等=外域）
     }
 
+    /** t154（D-EFFECT-LOCAL，supplement 族·效应告示批三）：@mut 方法调用的接收者经 t151 来源判定为局部
+     *  （构造点/字面量/同域声明/字段随属主;var 位复制格代入经 localOriginIds）⇒ 告示「写入局限本域、未逃逸」
+     *  ——纯函数局部修改的正面告示（同域修改=纯判据的放行留痕）。只告示不变判定;D 级一律不拦。 */
+    private fun effectLocalNote(pos: SourceRange, recv: HirExpr) {
+        val nm = (recv as? HirNameRef)?.name
+        diag.supplement("D-EFFECT-LOCAL", pos,
+            "@mut 接收者" + (if (nm != null) " " + ident(nm) else "") +
+                " 的写经来源判定为局部（构造点/复制格代入/@ref 注解位保守口径，R-26.4）——" +
+                "写入局限本域、未逃逸：本调用对接收者的修改不流出函数（同域修改=纯判据的放行留痕;" +
+                "D 级告示——不拦编译）")
+    }
+
+    /** t154（D-EFFECT-ESCAPE，supplement 族·效应告示批三）：@mut 方法调用的接收者为外域来源——写效应经
+     *  借用/捕获/外域形参/全局别名流出 ⇒ 告示「效应逃逸路径」（R-21 放行不封，告示代替;与 W-REF-ESCAPE
+     *  互补：一个引用逃逸，一个效应逃役）。口径跟 t151 现行判定（形参一律外域保守地板、@ref 注解位不折入
+     *  类型）——只告示不变判定。 */
+    private fun effectEscapeNote(pos: SourceRange, recv: HirExpr) {
+        diag.supplement("D-EFFECT-ESCAPE", pos,
+            "@mut 接收者的写效应经「" + receiverEscapePath(recv) + "」流出本函数——效应逃逸路径" +
+                "（R-21 放行不封，告示代替;与 W-REF-ESCAPE 互补：一个引用逃逸，一个效应逃逸;" +
+                "口径跟 t151 现行判定——告示不改判定）")
+    }
+
+    /** t154：外域接收者的逃逸路径分型（R5 保守地板口径——含糊形态亦归外域）。 */
+    private fun receiverEscapePath(recv: HirExpr): String = when (recv) {
+        is HirNameRef -> {
+            val kind = recv.symbol?.kind
+            when {
+                kind == SymbolKind.PARAM -> "外域形参（一律保守地板）"
+                kind == SymbolKind.BUILTIN -> "内建别名"
+                kind == SymbolKind.LOCAL && !symbols.bindingInCurrentFun(recv.name) -> "祖先帧捕获"
+                else -> "外域别名/含糊形态（保守地板）"
+            }
+        }
+        is HirField -> receiverEscapePath(recv.target)     // 字段随属主回溯一层
+        else -> "含糊形态（保守地板）"
+    }
+
+
 
     /** t152（W-RESULT-IGNORED）：块尾语句豁免标记——块尾 ExprStmt 为值位投影（if/when 臂/块值），
      *  结果不被丢弃（与 W-REC-NON-TAIL 尾位判定同源）。 */
@@ -3244,9 +3283,14 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         // t139（B2 ext 限定调位）：@mut 扩展的调用登记（纯度闸同方法糖口径）
         // t141（R-24 v2）：@mutable 同位登记（纯度闸口径同 @mut 方法糖——调用方纯域内拦 E-IMPURE-REQUIRED）
         // t151（R-26.4 / S2）：局部来源接收者（同域修改=纯）不入 @mut 方法闸——外域维持 E-IMPURE-REQUIRED
-        if (mf == null && mext != null && ("mut" in mext.decl.annotations || "mutable" in mext.decl.annotations)
-            && !receiverOriginIsLocal(args.first()))
-            mutMethodCalls.add(nid)
+        // t154（D-EFFECT-LOCAL / D-EFFECT-ESCAPE，supplement 族）：接收者来源判定的 D 级告示——
+        // 局部来源（构造点/复制格代入/@ref 注解位保守）⇒ D-EFFECT-LOCAL（写入局限本域、未逃逸）;
+        // 外域（借入形参/祖先帧捕获/全局别名/含糊）⇒ D-EFFECT-ESCAPE（效应逃逸路径——R-21 放行不封告示代替）。
+        // 只告示不变判定：mutMethodCalls 登记条件逐字同 t151（外域才入闸）。
+        if (mf == null && mext != null && ("mut" in mext.decl.annotations || "mutable" in mext.decl.annotations)) {
+            if (receiverOriginIsLocal(args.first())) effectLocalNote(e.pos, args.first())
+            else mutMethodCalls.add(nid).also { effectEscapeNote(e.pos, args.first()) }
+        }
         // t128（S6）：借用实参留痕 + 冗余登记（限定 ext 调用位；零借用免求值）
         val args2 = if (mf == null && mext != null && borrowedFlags.any { it }) {
             enterTypeParams(mext.decl.theory)
@@ -3346,9 +3390,11 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 //  判据不看实参视图（队长裁 V1 一刀：深拷实参照门，逃逸分析留后版）。
                 // t141（R-24 v2）：@mutable 同位登记（等价 @mut @ref 接收者形态——调用方纯域内拦）
                 // t151（R-26.4 / S2）：局部来源接收者（同域修改=纯）不入 @mut 方法闸——外域维持 E-IMPURE-REQUIRED
-                if (ext != null && ("mut" in ext.annotations || "mutable" in ext.annotations)
-                    && !receiverOriginIsLocal(args.first()))
-                    mutMethodCalls.add(nid)
+                // t154（D-EFFECT-LOCAL / D-EFFECT-ESCAPE，supplement 族）：来源判定 D 级告示（只告示不变判定）
+                if (ext != null && ("mut" in ext.annotations || "mutable" in ext.annotations)) {
+                    if (receiverOriginIsLocal(args.first())) effectLocalNote(e.pos, args.first())
+                    else mutMethodCalls.add(nid).also { effectEscapeNote(e.pos, args.first()) }
+                }
                 // t125（S5c / R-06 T3）：@mut 方法的接收者位——可提升名登记单调需求（提升通道复用 S5b：
                 //  形参/局部被传入 @mut 接收者位 ⇒ 提升为 @mut 视图，免深拷绕路）。
                 // t141（R-24 v2）：@mutable 同位触发（等价 @mut @ref 接收者——接收者位 @mut 视图需求同源）
