@@ -40,7 +40,11 @@ fun emptyList[T](): List[T] = Nil
 
 fun cons[T](x: T, xs: List[T]): List[T] = Cons(x, xs)
 
-fun listOf[T](@list items: T): List[T] = items
+// t146（R-26.5 / B2.1 构造函数正道）：构造族落 stdlib 源——@list 变长形参（t48/ADR-32）吸收
+// 0..n 实参；体随「运行时桥规格」（R4）后续件落（同 B2 扩展方法纪律——别写结构性体）。
+fun mutableListOf[T](@list e : T) : @mut List[T]
+
+fun listOf[T](@list e : T) : List[T]
 
 // 区间构造：range(1, 6) = [1, 2, 3, 4, 5]（右开区间；retire 替身 B0-0）。
 fun range(a: Nat, b: Nat): List[Nat] {

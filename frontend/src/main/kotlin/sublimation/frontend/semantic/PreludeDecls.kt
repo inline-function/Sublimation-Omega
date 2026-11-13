@@ -61,14 +61,23 @@ internal object PreludeDecls {
     /** t138（R-23 B1）：retire 别名替身名表（非限定类型面允许表）。 */
     val RETIRED_ALIASES: Set<String> = setOf("Optional", "List", "Result", "Set", "Map")
 
-    /** t126（S5c / R-15 容器面 · 队长裁 Alt A）：虚拟构造族——值实参解理论参数（既有 instCall 通道，
-     *  零新推导机制）：`mutableListOf(x)` → `@mut List[T]`（可变容器，元素类型由实参定）;
-     *  `listOf(x)` → `List[T]`（不可变同构）。零参 per-call ?T 形态登记后版（P-11 §5.1，R-20）。
-     *  用户同名声明优先（Collector 先摘虚拟条目再登记——P-7 口径）。 */
-    val FUNS: List<FunDecl> = listOf(
-        ctorFun("mutableListOf", mut = true),
-        ctorFun("listOf", mut = false),
-    )
+    /** t137（R-23）：retire 自由函数替身名表（非限定值/签名链允许表——preludeFun/preludeFunSig
+     *  BUILTIN 通道数据源）——B0-0 数族（range/sum/summation）。stdlib 件声明的其他自由函数
+     *  不入裸名链（R-22 限定唯一通道）。 */
+    val RETIRED_FUNS: Set<String> = setOf("range", "sum", "summation")
+
+    /** t146（R-26.5 / B2.1 构造函数正道）：构造族 retire 替身名表（mutableListOf/listOf）——
+     *  虚拟构造族数据源换挂载 stdlib 件快照（Elaborator init 注入 virtualFuns 层 + funDecls 种子位，
+     *  同 B2 扩展方法注入纪律；符号经 preludeVirtualFun 懒登记——id 序零漂移）。构造族解析保持
+     *  FUN-kind（sigCheckedCall 通道：@list 变长旗标 + 别名展开 + 理论参数解，逐字承接 t126 口径）。 */
+    val RETIRED_CTOR_FUNS: Set<String> = setOf("mutableListOf", "listOf")
+
+    /** t146（R-26.5 / B2.1 构造函数正道）：虚拟构造族 retire（mutableListOf/listOf）→ stdlib 源
+     *  （collection/list 件内 @list 变长形参声明——0..n 实参吸收，t48/ADR-32 已存机制）。
+     *  替身口径同 B0/B1/B2 数据源替换纪律：非限定链符号面（preludeFun）+ 签名面（preludeFunSig
+     *  ——数据源 = 挂载 stdlib 件快照）只吃 [RETIRED_FUNS] 允许表内的自由函数名；B0-0 数族
+     *  （range/sum/summation，t137）并入本表一统。用户同名声明优先（P-7）。 */
+    val FUNS: List<FunDecl> = listOf()
 
     /** t139（R-23 B2 / OQ-4 = b 签名面延续）：EXT_METHODS 虚拟表 retire——@mut 扩展方法 add 迁
      *  stdlib list 源声明（体**仍空**——体随「运行时桥规格」（R4）后续件落；R-15 兑现债登记，别写
@@ -81,15 +90,6 @@ internal object PreludeDecls {
      *  （stdlib 件内声明的其他 ext 保持方法糖/限定通道，不注入非限定直接调链——R-22 纪律）。 */
     val RETIRED_EXT_METHODS: Set<Pair<String, String>> = setOf("List" to "add")
 
-    private fun ctorFun(name: String, mut: Boolean): FunDecl {
-        val elem = NamedType("T", emptyList(), SYNTHETIC_POS)
-        val ret = NamedType("List", listOf(elem), SYNTHETIC_POS)
-        return FunDecl(name, if (mut) listOf("mut") else emptyList(),
-            listOf(TypeParam("T", null, 0, SYNTHETIC_POS)),
-            listOf(Param("first", elem, emptyList(), null, null, SYNTHETIC_POS)),
-            emptyList(), if (mut) MutType(ret, SYNTHETIC_POS) else ret, emptyList(),
-            null, emptyList(), SYNTHETIC_POS)
-    }
     private val structIndex = STRUCTS.associateBy { it.name }
     private val aliasIndex = ALIASES.associateBy { it.name }
 

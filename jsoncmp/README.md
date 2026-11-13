@@ -367,3 +367,29 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 | @unchecked | **非注解**——逃逸位是语句前缀 `unchecked <stmt>` | 逃逸闸 |
 
 机械证据脚本: `jsoncmp/scripts/t149-parity.ps1` 五段（行为探针正/负/合法面 + 68 门 t122n 冻锚台账 + 精确差分 vs t148gate 一次性基线 + 侧基线 + 确定性 + 脚本门），rc=0 全绿。
+
+## t146 分账（R-26.5 / B2.1 构造函数正道：mutableListOf/listOf 落 stdlib 源 + 虚拟构造 retire，2026-11-13）
+
+**变更画像**（旧状=虚拟 ctor（PreludeDecls 单参 first: T 签名）：零参/多变参形态落 E-ARITY/缺实参；构造族 e2e 零引用——产物零差预期）:
+
+| 门 | 结果 | 证据 |
+|---|---|---|
+| 68 门（vs **t122n 死冻锚**） | **零波动**：SAME 50 + 剥差同 16 + 预期转绿 1 + 模块样本 1（闭合 68）——构造族 e2e 零引用⇒零产品差实证 | out-subs/t146gate-ledger.txt |
+| 精确差分（vs t149gate 一次性基线） | **75 件逐字节同 + 登记差 1 件** = stdlib list 件 envelope（新增 mutableListOf 声明 + listOf 去体签名化；ok=true 不变）——案内预期迁源面 | t146-parity ③ |
+| 套件 | **1206/1206**（1197 + 9 T146：零/单/多变参 + 三形态 + 推导 + 混型精确报×2 + Cons 自拼 + 混用） | :frontend:test |
+| 负例先红 | 实现前 6 红（零参/多变参/listOf 三形态/混型×2/混用=虚拟 ctor 旧口径）+ 3 绿（单参/推导/Cons 承接）；实现后 9/9 绿 | T146 测试轮 |
+| stdlib 侧（vs t143stdlib） | 8 件逐字节同 + 登记差 1 件（list 件构造族迁源面） | t146-parity ④ |
+| 模块确定性 | 9/9 | t146-parity ⑤ |
+| 脚本门 | 14/14 | t146-parity ⑤ |
+
+**实现**（数据源替换纪律同 B0/B1/B2——机制零改，只换数据源）:
+
+1. **stdlib 源**（`stdlib/collection/list/list.subl`）：`fun mutableListOf[T](@list e : T) : @mut List[T]` + `fun listOf[T](@list e : T) : List[T]`——@list 变长形参（t48/ADR-32 已存机制：末位吸收 0..n 实参）；体随「运行时桥规格」（R4）后续件落（同 B2 扩展方法纪律——签名面，不写结构性体）。
+2. **retire**（PreludeDecls）：`FUNS` 虚拟 ctor 表清空（ctorFun 私有构造件删除）+ 新增 `RETIRED_CTOR_FUNS` 允许表 = {mutableListOf, listOf}（B1/B2 同形表：RETIRED_STRUCTS/ALIASES/EXT_METHODS 族第 4 件）。B0-0 数族表（RETIRED_FUNS=range/sum/summation）口径不动（t137）。
+3. **注入面**（构造族解析通道逐字承接 t126 FUN-kind——非 BUILTIN 通道）：Elaborator init — stdlib 快照经 RETIRED_CTOR_FUNS 过滤注入 `funDecls` 种子位 + SymbolTable `virtualFuns` 改注入面（`declareModuleCtorFun`——同 B2 `declareModuleExt` 纪律；preludeVirtualFun 懒登记 id 序零漂移）。⇒ 符号解析走 sigCheckedCall（@list 变长旗标 + 别名展开（List→Nil|Cons 联合）+ 理论参数解），T126 R15 两面（@mut 视图/联合展开）逐字保存。
+4. **调用面**：零参（空变长回退 synthetic，t48）/单参/多变参（元素逐一 unify，首解为准）皆绿；混型实参（mutableListOf(True, 1)）落 E-TYPE-MISMATCH（元素类型精确报，非元数错位）。
+5. **Cons 自拼合法**（R-26.3 不作诊断）：Cons(1, Nil) / 与构造族混用零回归。
+
+**一处自纠**：首轮将构造族改走 preludeFunSig/BUILTIN 通道（preludeFun/preludeFunSig 加变长旗标+理论参数透传）——T126 R15不可变构造红（listOf(2) 的 List→Nil|Cons 联合展开丢失：BUILTIN 通道不展开别名）⇒ 回到注入面 FUN-kind 通道（数据源替换口径，机制零改），preludeFunSig 逐字还原（B0-0 零漂移）。
+
+机械证据脚本: `jsoncmp/scripts/t146-parity.ps1` 五段（行为探针正/负 + 68 门 t122n 冻锚台账 + 精确差分 vs t149gate 一次性基线（list 件登记差校验：须含 mutableListOf 声明）+ stdlib 侧基线（list 件登记差）+ 确定性 + 脚本门），rc=0 全绿。

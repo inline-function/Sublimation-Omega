@@ -556,7 +556,9 @@ private class Elaborator(
         PreludeDecls.STRUCTS.forEach { structDecls[it.name] = it }
         PreludeDecls.ALIASES.forEach { aliasDecls[it.name] = it }
         // t126（S5c / R-15 容器面）：虚拟构造族声明索引预注入（用户同名 file 预扫描覆盖——P-7 口径）
-        PreludeDecls.FUNS.forEach { if (it.receiver == null) funDecls[it.name] = it }
+        // t146（R-26.5 / B2.1 构造函数正道）：数据源由 PreludeDecls 虚拟 ctor 换**挂载 stdlib 件快照**
+        // （virtualFuns 注入面 + 本声明索引种子位——符号/解析通道逐字承接 t126：FUN-kind →
+        // sigCheckedCall【@list 变长旗标 + 别名展开 + 理论参数解】，id 序零漂移）。
         // t134（S7 快照扩类型面 / R-23）：挂载模块类型面注入——结构体/别名入声明索引（P-7 用户覆盖：
         // file 预扫描重写覆盖；同 prelude 虚拟通道，查询链 用户 > 挂载子 > prelude），结构体构造器条目
         // 入 SymbolTable 的 moduleCtor 层（非限定构造经非限定名解析——R-23 非限定查询链）。
@@ -578,6 +580,15 @@ private class Elaborator(
                     if (k in PreludeDecls.RETIRED_ALIASES) {
                         aliasDecls[k] = v.decl
                         retiredAliasNames += k
+                    }
+                }
+                // t146（R-26.5 / B2.1）：retire 构造族替身注入（RETIRED_CTOR_FUNS 允许表过滤——
+                // virtualFuns 层 + 声明索引种子位：符号解析通道逐字承接 t126 FUN-kind，id 序零漂移;
+                // stdlib 件声明的其他自由函数不注入——R-22 限定唯一通道，同 B0-0 纪律）
+                snap.funs.forEach { (k, v) ->
+                    if (k in PreludeDecls.RETIRED_CTOR_FUNS) {
+                        funDecls[k] = v.decl
+                        symbols.declareModuleCtorFun(k, v.decl)
                     }
                 }
                 // t139（R-23 B2）：retire 扩展方法替身注入(RETIRED_EXT_METHODS 允许表过滤——

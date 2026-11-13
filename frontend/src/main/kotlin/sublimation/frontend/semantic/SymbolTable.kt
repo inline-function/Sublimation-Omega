@@ -465,13 +465,19 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
 
     /** t126（S5c / R-15 容器面）：虚拟自由构造族（mutableListOf/listOf）——符号**懒登记**（零命中零
      *  nextId 消费，68+14 样本 SAME 基线逐字保护）。用户同名 fun 优先（funs 表先查）。
-     *  声明索引在 Elaborator 侧预注入（funDecls 种子位），签名核对与理论参数推导走既有自由函数通道。 */
-    private val virtualFuns = PreludeDecls.FUNS.associateBy { it.name }
+     *  声明索引在 Elaborator 侧预注入（funDecls 种子位），签名核对与理论参数推导走既有自由函数通道。
+     *  t146（R-26.5 / B2.1 构造函数正道）：PreludeDecls 虚拟 ctor retire——本表改**注入面**
+     *  （替身源 = 挂载 stdlib 件经 RETIRED_CTOR_FUNS 允许表过滤的自由函数声明，Elaborator
+     *  init 注入——同 B2 扩展方法纪律；数据源替换，[preludeVirtualFun] 的懒登记与 id 序零改）。 */
+    private val virtualFuns = LinkedHashMap<String, FunDecl>()
+
+    /** t146（B2.1）：父域注入 retire 构造族替身（Elaborator init 期——先于 Collector 用户
+     *  声明；用户同名 file 预扫描覆盖，P-7）。仅 RETIRED_CTOR_FUNS 允许表内名可入。 */
+    fun declareModuleCtorFun(name: String, decl: FunDecl) { virtualFuns[name] = decl }
     private val virtualFunEntries = mutableMapOf<String, SymbolEntry>()
     fun preludeVirtualFun(name: String): SymbolEntry? {
-        if (name !in virtualFuns) return null
+        val d = virtualFuns[name] ?: return null
         return virtualFunEntries.getOrPut(name) {
-            val d = virtualFuns.getValue(name)
             SymbolEntry(nextId++, SymbolKind.FUN, name, d.pos, d.params.map { it.name },
                 d.params.any { it.destruct != null })
         }

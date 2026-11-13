@@ -135,7 +135,7 @@ internal fun compileWithRounds(
     // t137（R-23）：**retire 替身名表**——裸名（非限定）链只吃 retire 迁源的自由函数（B0-0:
     // range/sum/summation）。B0-1 collection 全家经**限定引用通道**（optional.getOrElse 形态）——
     // 不入裸名链：e2e 冻红样本的 getOrElse/add/put 未解析态保持不变（67/67 零差分保证）。
-    val retired = setOf("range", "sum", "summation")
+    val retired = PreludeDecls.RETIRED_FUNS   // B0-0 数族（t137 表）；B2.1 构造族经 virtualFuns 注入面，不经本通道
     symbols.declareModuleFunNames(mounted.values.filter { it.stdlib }.flatMap { it.funs.keys }.filter { it in retired })
     // R 轮循环
     var injected: Map<MetaSlotKey, MetaSolution> = emptyMap()
