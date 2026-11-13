@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 /**
  * t126（S5c / R-15 容器面 + R-17/R-18 纯度纪律）：
  *
- * - **R-15 容器面**：MutableListOf/ListOf 虚拟构造族（PreludeDecls 虚拟 FunDecl · 队长裁 Alt A：
+ * - **R-15 容器面**：mutableListOf/listOf 虚拟构造族（PreludeDecls 虚拟 FunDecl · 队长裁 Alt A：
  *   值实参解理论参数，零新推导机制）+ 虚拟 @mut 扩展方法 add（去糖模型 self = 接收者首参）;
  * - **R-17/R-18**：@mut 方法调用 ⇒ 调用方 @impure 或 unchecked（S-25）⇒ 否则 E-IMPURE-REQUIRED;
  *   方法体写接收者无罪（R-18.2）;判据不看实参视图（V1 一刀：深拷照门，逃逸分析留后版）;
@@ -60,9 +60,9 @@ class T126ContainerFaceTest {
         return out
     }
 
-    /** R-15：MutableListOf(x) → @mut List[T]（值实参解理论参数，既有 instCall 通道）。 */
+    /** R-15：mutableListOf(x) → @mut List[T]（值实参解理论参数，既有 instCall 通道）。 */
     @Test fun R15可变构造视图() {
-        val rs = sc("var xs = MutableListOf(1)\nprint(xs)\n")
+        val rs = sc("var xs = mutableListOf(1)\nprint(xs)\n")
         assertEquals(emptyList(), errs(rs), "脚本模式零错误")
         val v = varStmtOf(rs, "xs")
         assertNotNull(v)
@@ -73,9 +73,9 @@ class T126ContainerFaceTest {
         assertEquals("Nat", (inner.args.first() as? HirNamedType)?.name, "元素类型由实参解出")
     }
 
-    /** R-15：ListOf(x) → List[T]（不可变同构）。 */
+    /** R-15：listOf(x) → List[T]（不可变同构）。 */
     @Test fun R15不可变构造() {
-        val rs = sc("var ys = ListOf(2)\nprint(ys)\n")
+        val rs = sc("var ys = listOf(2)\nprint(ys)\n")
         assertEquals(emptyList(), errs(rs), "零错误")
         val v = varStmtOf(rs, "ys")
         assertNotNull(v)
@@ -87,27 +87,27 @@ class T126ContainerFaceTest {
 
     /** R-15：虚拟 @mut 扩展方法 add（方法糖改道 + 签名核对 + 脚本顶层隐式不纯免闸）。 */
     @Test fun R15mut方法脚本顶层免闸() {
-        val rs = sc("var xs : @mut List[Nat] = MutableListOf(1)\nxs.add(2)\nprint(xs)\n")
+        val rs = sc("var xs : @mut List[Nat] = mutableListOf(1)\nxs.add(2)\nprint(xs)\n")
         assertEquals(emptyList(), errs(rs), "脚本顶层调用 @mut 方法免闸（既有 D-SCRIPT-IMPLICIT-IMPURE 口径）")
     }
 
     /** R-18.3：纯函数（工程模式声明纯）调 @mut 方法 ⇒ E-IMPURE-REQUIRED（接收者闸红位）。 */
     @Test fun R18纯函数调mut方法红() {
         val rs = pc(
-            "fun f(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  xs.add(2)\n}\n" +
+            "fun f(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  xs.add(2)\n}\n" +
             "@impure fun main(): Null { f() }\n")
         assertTrue(errs(rs).contains("E-IMPURE-REQUIRED"), "纯函数调 @mut 方法落 E-IMPURE-REQUIRED")
     }
 
     /** R-18.3：调用方 @impure ⇒ 放行。 */
     @Test fun R18_impure调用方放行() {
-        val rs = pc("@impure fun main(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  xs.add(2)\n  print(xs)\n}\n")
+        val rs = pc("@impure fun main(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  xs.add(2)\n  print(xs)\n}\n")
         assertEquals(emptyList(), errs(rs), "@impure 调用方放行（无 E-IMPURE-REQUIRED）")
     }
 
     /** R-18.3 + S-25：unchecked 语句级前缀 ⇒ 单语句豁免（既有降闸帧通道，零新语法）。 */
     @Test fun R18unchecked前缀豁免() {
-        val rs = pc("fun f(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked xs.add(2)\n}\n" +
+        val rs = pc("fun f(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked xs.add(2)\n}\n" +
             "@impure fun main(): Null { f() }\n")
         assertEquals(emptyList(), errs(rs), "unchecked 包覆 ⇒ E-IMPURE-REQUIRED 免")
     }
@@ -125,7 +125,7 @@ class T126ContainerFaceTest {
     /** t122 闭包种子第 5 类「引用可变调用」——纯函数体内 @mut 方法调用 ⇒ D-PURITY-INFERRED。 */
     @Test fun 种子第5类引用可变调用() {
         val rs = pc(
-            "fun f(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked xs.add(2)\n}\n" +
+            "fun f(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked xs.add(2)\n}\n" +
             "@impure fun main(): Null { f() }\n")
         assertEquals(emptyList(), errs(rs))
         val seed = supps(rs).firstOrNull { it.contains("D-PURITY-INFERRED") && it.contains("引用可变调用") }

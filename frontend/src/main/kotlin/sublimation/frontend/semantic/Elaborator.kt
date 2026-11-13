@@ -2226,8 +2226,35 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             val nid = freshNid()
             val target = expr(e.target)
             val props = e.props.map { propNorm.prop(it) }
-            // t30：props 待核断言——延迟到包围语句/函数体检查完（名字绑定与事实注入就绪）后核对
-            if (e.props.isNotEmpty()) pendingByAsserts += props to e.pos
+            // t142（手动证明供给链）：目标为带上文角组（preps 契约位）的调用时，by 证据逐条供给契约位——
+            // 每条 preps 须有单条证据证出（复用 prover.proves 判据，零改证明器主机制）；缺位 ⇒ E-CANNOT-PROVE
+            // 精确报契约位（不放宽为通过）；供给成功的证据条注入 Γ（既有事实槽 injectFact——下文弥散
+            // Diffusion（V1 推迟项）不动的 by 通道手动形态）。无契约目标（callee 无 preps / 非调用）零变
+            val calleeName = (target as? HirCall)?.let { callCalleeName(it.callee) }
+            val calleeDecl = calleeName?.let { symbols.lookupLocalFunDecl(it) ?: funDecls[it] }
+            val preps = calleeDecl?.preps?.map { propNorm.prop(it, calleeDecl.params) } ?: emptyList()
+            var contractFailed = false
+            if (calleeName != null && preps.isNotEmpty() && props.isNotEmpty()) {
+                val base = allFacts()
+                val supplied = mutableSetOf<HirProp>()
+                var failed = false
+                for (q in preps) {
+                    val ev = props.firstOrNull { prover.proves(base + it, q) != null }
+                    if (ev == null) {
+                        failed = true
+                        diag.error("E-CANNOT-PROVE", e.pos,
+                            "by 证据不足以证明函数 " + ident(calleeName) + " 契约的上文要求 " + prover.render(q) +
+                            "。by 断言的每条证据须逐条供给上文角组的全部命题；当前证据：" +
+                            props.joinToString("；") { prover.render(it) } + "；Γ 已知事实：" +
+                            base.joinToString("；") { prover.render(it) })
+                    } else supplied.add(ev)
+                }
+                if (failed) contractFailed = true   // 契约失败：byAsserts 免叠报（契约错精确单一）
+                else props.filter { it in supplied }.forEach { injectFact(it) }   // 供给入当前块帧（块内后续可用）
+            }
+            // t30：props 待核断言——延迟到包围语句/函数体检查完（名字绑定与事实注入就绪）后核对；
+            // t142：契约失败位只报契约错（精确）；成功位队列保留（供给条已入 Γ，块尾 reflexive 复核）
+            if (e.props.isNotEmpty() && !contractFailed) pendingByAsserts += props to e.pos
             HirByExpr(target, props, prover.snapshot(allFacts()), null, null, nid, e.pos, notesOf(e))
         }
         is VarExpr -> {
@@ -2351,6 +2378,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         return factFrame {
             symbols.frame(ScopeKind.BLOCK) {
                 val stmts = b.stmts.map { stmt(it) }
+                // t142：块尾核对 by 断言——块帧事实（axiom/供给链注入）并入 allFacts 后再退栈
+                // （旧落点仅在函数体尾/文件尾，块内注入的参数化事实随块退丢失——上下文截断）
+                flushByAsserts()
                 HirBlock(stmts, nid, b.pos, notesOf(b))
             }
         }

@@ -86,9 +86,9 @@ class T128BorrowSemanticsTest {
     }
 
     private val sharedSrc = "@impure fun bump(xs : @mut List[Nat]) { xs.add(1) }\n" +
-        "@impure fun main(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked bump(&xs)\n}\n"
+        "@impure fun main(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked bump(&xs)\n}\n"
     private val deepSrc = "@impure fun bump(xs : @mut List[Nat]) { xs.add(1) }\n" +
-        "@impure fun main(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked bump(xs)\n}\n"
+        "@impure fun main(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked bump(xs)\n}\n"
 
     /** R-01 矩阵共享格（:113）：@mut 实参 × want 合成 @ref @mut ⇒ 类型通过 + D-REF-DISPATCH 留共享。 */
     @Test fun R01共享格类型通过() {
@@ -112,7 +112,7 @@ class T128BorrowSemanticsTest {
     /** 矩阵拒绝格 1（T → @ref @mut T）：不可变实参借入 @mut 形参 ⇒ E-TYPE-MISMATCH（负例先红）。 */
     @Test fun 矩阵拒绝格1不可变实参() {
         val rs = sc("@impure fun bump(xs : @mut List[Nat]) { xs.add(1) }\n" +
-            "@impure fun main(): Null {\n  var ys : List[Nat] = ListOf(2)\n  unchecked bump(&ys)\n}\n")
+            "@impure fun main(): Null {\n  var ys : List[Nat] = listOf(2)\n  unchecked bump(&ys)\n}\n")
         assertTrue(errs(rs).any { it == "E-TYPE-MISMATCH" }, "拒绝格 1 须红：${errs(rs)}")
     }
 
@@ -126,7 +126,7 @@ class T128BorrowSemanticsTest {
     /** 方法糖实参位借用：xs.add(&one) 走扩展签名 want 合成（receiver 位不借——R-03 解析通道）。 */
     @Test fun 方法糖实参位借用() {
         val rs = sc("var one : Nat = 1\n" +
-            "@impure fun main(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked xs.add(&one)\n}\n")
+            "@impure fun main(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked xs.add(&one)\n}\n")
         assertEquals(emptyList(), errs(rs), "方法糖借用零错误")
         val note = borrowNote(rs)
         assertNotNull(note, "方法糖实参位留痕：$note")
@@ -153,7 +153,7 @@ class T128BorrowSemanticsTest {
     /** R-04.3 非冗余口径：@mut 实参借入只读形参（无 & 深拷 vs 有 & 共享——分派有差）⇒ 零 warn。 */
     @Test fun WBORROW非冗余可变实参只读形参() {
         val rs = sc("fun len(xs) { print(xs) }\n" +
-            "var xs : @mut List[Nat] = MutableListOf(1)\nunchecked len(&xs)\nprint(xs)\n")
+            "var xs : @mut List[Nat] = mutableListOf(1)\nunchecked len(&xs)\nprint(xs)\n")
         assertEquals(emptyList(), errs(rs))
         assertEquals(emptyList(), warns(rs), "深拷→共享有语义差，warn 免")
         assertNotNull(borrowNote(rs), "借用仍留痕（共享分派）")
@@ -162,7 +162,7 @@ class T128BorrowSemanticsTest {
     /** R-04.3 陈旧口径：形参经 T3 提升为 @mut 后借用转为有效 ⇒ 提升轮免 warn（不翻案）。 */
     @Test fun 提升轮形参翻mut免陈旧warn() {
         val rs = sc("fun bump(xs) { unchecked xs.add(1) }\n" +
-            "var xs : @mut List[Nat] = MutableListOf(1)\nunchecked bump(&xs)\nprint(xs)\n")
+            "var xs : @mut List[Nat] = mutableListOf(1)\nunchecked bump(&xs)\nprint(xs)\n")
         assertEquals(emptyList(), errs(rs), "提升链零错误")
         assertEquals(emptyList(), warns(rs), "形参翻 @mut 后借用有效，无冗余 warn")
         assertTrue(supps(rs).any { it.contains("D-MUT-INFERRED") && it.contains("T3") },
@@ -172,7 +172,7 @@ class T128BorrowSemanticsTest {
     /** §1.3 形参视图回写载体：省略型形参经提升闭合后 HirParam.type 载 @mut 衣（零新字段）。 */
     @Test fun 形参视图回写载体() {
         val rs = sc("fun bump(xs) { unchecked xs.add(1) }\n" +
-            "var xs : @mut List[Nat] = MutableListOf(1)\nunchecked bump(&xs)\nprint(xs)\n")
+            "var xs : @mut List[Nat] = mutableListOf(1)\nunchecked bump(&xs)\nprint(xs)\n")
         val ps = funParams(rs, "bump")
         assertNotNull(ps)
         assertEquals(1, ps!!.size)
@@ -207,7 +207,7 @@ class T128BorrowSemanticsTest {
     /** 后段契约：借用链不绕过纯度门——callee @mut 方法（种子第 5 类）⇒ 传播闭包使调用方推导 impure。 */
     @Test fun 借用不绕过纯度门() {
         val rs = sc("fun g(xs : @mut List[Nat]) { xs.add(1) }\n" +
-            "@pure fun f(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  g(&xs)\n}\n" +
+            "@pure fun f(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  g(&xs)\n}\n" +
             "@impure fun main(): Null { print(1) }\n")
         assertTrue(supps(rs).any { it.contains("D-PURITY-INFERRED") && it.contains("引用可变调用") },
             "种子第 5 类经借用实参照燃：${supps(rs)}")

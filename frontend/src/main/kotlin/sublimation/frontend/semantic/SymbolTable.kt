@@ -463,7 +463,7 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
     fun declareModuleAliasNames(names: Collection<String>) { moduleAliasNames += names }
     fun preludeFun(name: String): SymbolEntry? = if (name in moduleFunNames) builtinEntry(name) else null
 
-    /** t126（S5c / R-15 容器面）：虚拟自由构造族（MutableListOf/ListOf）——符号**懒登记**（零命中零
+    /** t126（S5c / R-15 容器面）：虚拟自由构造族（mutableListOf/listOf）——符号**懒登记**（零命中零
      *  nextId 消费，68+14 样本 SAME 基线逐字保护）。用户同名 fun 优先（funs 表先查）。
      *  声明索引在 Elaborator 侧预注入（funDecls 种子位），签名核对与理论参数推导走既有自由函数通道。 */
     private val virtualFuns = PreludeDecls.FUNS.associateBy { it.name }

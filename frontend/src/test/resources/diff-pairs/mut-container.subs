@@ -1,6 +1,6 @@
 // t126 S5c 差分对拍：R-15 容器面（双门同源——@mut 方法注解 + 接收者闸 + 去糖签名）
 @impure fun main(): Null {
-  var xs : @mut List[Nat] = MutableListOf(1)
+  var xs : @mut List[Nat] = mutableListOf(1)
   unchecked xs.add(2)
   print(xs)
 }

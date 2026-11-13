@@ -2,7 +2,7 @@
 // 拒绝格 1（T → @ref @mut T）：不可变实参借入 @mut 形参 ⇒ E-TYPE-MISMATCH
 @impure fun bump(xs : @mut List[Nat]) { xs.add(1) }
 @impure fun main(): Null {
-  var ys : List[Nat] = ListOf(2)
+  var ys : List[Nat] = listOf(2)
   unchecked bump(&ys)
   print(ys)
 }

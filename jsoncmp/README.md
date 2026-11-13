@@ -221,3 +221,54 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 - **@mut 函数级语义零变**（R-24 v2 纪律）: 纯度旗语义保持（purity=pure——T141 门 6 机器证）; @impure 注解/退化函数口径零变。
 
 机械证据脚本: `jsoncmp/scripts/t141-parity.ps1` 五段（stdlib 形态核对 / 68 门 t122n 冻锚台账 / 精确差分 vs t140 冻结 / 侧基线 / 确定性 + 脚本门），rc=0 全绿。
+
+## t142 分账（手动证明 by 证据链：契约位供给通道，2026-11-13）
+
+**变更画像**（窄差分：唯一 e2e 产品差 = 手动证明样本冻红转绿；零新增件；stdlib/模块样本零触及）:
+
+| 门 | 结果 | 证据 |
+|---|---|---|
+| 精确差分（vs t141 冻结产物 `out-subs/t141gate`） | **66 e2e 件逐字节同** + 仅 **手动证明转绿差**（ok false→true；Δ+58；by 诊断消失；模块样本主件+8 子件逐字节同） | t142-parity ③ |
+| 68 门（vs **t122n 死冻锚**） | SAME **51→50**（手动证明从冻红集合除名 → 预期转绿=1）+ 剥差同 16 + 结构差 1（模块样本，t141 口径延续） | out-subs/t142gate-ledger.txt |
+| 套件 | **1166/1166**（1158 + 8 T142ManualProofTest；存量零改） | :frontend:test |
+| stdlib 侧（vs t141stdlib） | 逐字节同 9 件（by 通道不触 stdlib） | t142-parity ④ |
+| 模块确定性 | 9/9 | t142-parity ⑤ |
+| 脚本门 | 14/14 | t142-parity ⑤ |
+
+**实现位点**（Elaborator.kt，两处；证明器零改）:
+
+1. `ByExpr` 分支（手动证明供给链）：目标为**带上文角组（preps 契约位）的调用**时，by 证据逐条供给——每条 preps 须有单条证据经既有 `prover.proves` 判据证出；缺位 ⇒ **E-CANNOT-PROVE 精确报契约位**（不放宽为通过，负例 `by [q]` / 多位只供其一均红）；供给成功的证据条经既有 `injectFact` 注入当前块帧 Γ（下文弥散 Diffusion——ProofChecker 头注 V1 推迟项——不动的 by 通道手动形态）；
+2. `block()` 块尾补 `flushByAsserts()` 落点：by 断言延迟核对原仅在函数体尾/文件尾，块内注入的事实（axiom/供给链）随块帧退栈丢失（上下文截断）——块尾核对使 byAsserts 的 Γ 完整（旧文件级/函数级行为对无 by 块文件零影响）。
+
+**台账登记（新面/预期差/边界）**:
+
+- **契约映射**：callee 解析复用调用点既有位（`lookupLocalFunDecl/funDecls` 同帧链口径）；preps 规范化复用声明位 `propNorm.prop(it, d.params)`；**零新增遍历、零改证明器主机制**（proves/render/快照复用）；
+- **判据双轨保留**：契约案例（callee 有 preps）→ 契约位判据（失败位精确单一报——byAsserts 免叠报；成功位队列保留，供给条已入 Γ 由块尾复核 reflexive）；无契约目标（无 preps / 非调用 / 内建）→ byAsserts 旧口径（近证据从 Γ 核对）逐字零变；
+- **负例先红**：`by [q]`（证据不足）/ `<p, r>` 只供其一 ⇒ E-CANNOT-PROVE；`go() by [q]`（无契约 Γ 无证）⇒ E-CANNOT-PROVE（旧口径）；
+- **冻红集合变化**：手动证明样本自冻红集合除名（转绿登记：SAME 51→50 + 预期转绿 1 + 剥差同 16 + 模块样本 1 = 68 计数闭合）；
+- **挂账**：调用点 preps 义务仍 V1 仅声明位登记（`consumeP()` 无 by 不拦——t9 既有口径）；下文弥散 Diffusion 依旧 V1 推迟（本批 by 通道为手动供给形态，非自动弥散）。
+
+机械证据脚本: `jsoncmp/scripts/t142-parity.ps1` 五段（供给链落位正/负/旧口径 / 68 门 t122n 冻锚台账含转绿登记 / 精确差分 vs t141 冻结 / 侧基线 / 确定性 + 脚本门），rc=0 全绿。
+
+## t143 分账（R-25 虚拟构造小写化 mutableListOf/listOf，2026-11-13）
+
+**变更画像**（纯命名件：51 处改名 / 17 件；语义零变——值参形态 R-20 Alt A 不变；**e2e 导出 68 门零引用该构造族 ⇒ 零产品差**）:
+
+| 门 | 结果 | 证据 |
+|---|---|---|
+| 精确差分（vs t142 冻结产物 `out-subs/t142gate`） | **76 件逐字节同**（68 门全家 + 模块主件+8 子件——纯命名件零产品差；诊断消息不含构造名 ⇒ 无消息差） | t143-parity ③ |
+| 68 门（vs **t122n 死冻锚**） | **零波动**：SAME 50 + 剥差同 16 + 预期转绿 1（t142 手动证明除名口径延续）+ 模块样本 1（t141 口径） | out-subs/t143gate-ledger.txt |
+| 套件 | **1166/1166**（改名 51 处后存量零 failures——语义零变的机器证） | :frontend:test |
+| stdlib 侧（vs t142stdlib） | 逐字节同 9 件 | t143-parity ④ |
+| 模块确定性 | 9/9 | t143-parity ⑤ |
+| 脚本门 | 14/14 | t143-parity ⑤ |
+
+**改名面（实测扫描为准）**:
+
+- **主码 2 件 / 6 处**: PreludeDecls.kt（ctorFun 定义 2 + 头注注释 2 + R-20 注释行）、SymbolTable.kt:466 注释（2 处旧名引用）；
+- **Kotlin 测试 10 件 / 45 处**（任务书估 32 处，实测 45 处——命名面含文档注释: T126ContainerFaceTest 11 / T128BorrowSemanticsTest 8 / T141MutableSugarTest 5 / T118RoundsTest 4 / T139StdlibExtTest 3 / T129NidGuardTest 3 / T129UncheckedBlockTest 2 / T129LocalFunAnnotationsTest 2 / T129BorrowArgFilterTest 1 / T125 系列经 diff-pairs 件间接）；
+- **diff-pairs 6 件 / 6 处**: borrow-neg-plain（.subl/.subs）、borrow-shared（.subl/.subs）、mut-container（.subl/.subs）；
+- **stdlib 实测 0 处**（任务书登记"1 处"未复现——全 stdlib 树 grep 零命中；任务前面测或指 PreludeDecls 旁注，本批按实测零改 stdlib 体）；
+- **archive/ documents/ 历史件不改**（日志/计划属历史记录，t143 范围=活码面）。
+
+机械证据脚本: `jsoncmp/scripts/t143-parity.ps1` 五段（落位核对+双探针（mutableListOf/listOf 绿地）/ 68 门 t122n 冻锚零波动台账 / 精确差分 vs t142 冻结全同 / 侧基线 / 确定性 + 脚本门），rc=0 全绿。

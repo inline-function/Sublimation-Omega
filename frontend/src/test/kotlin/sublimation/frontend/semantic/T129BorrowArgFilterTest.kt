@@ -51,7 +51,7 @@ class T129BorrowArgFilterTest {
     /** 免 warn 位 1：方法糖理论参数位（xs.add(&one) 的 v: a）——warn 免，留痕照常。 */
     @Test fun 方法糖理论参数位warn免() {
         val rs = sc("var one : Nat = 1\n" +
-            "@impure fun main(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked xs.add(&one)\n}\n")
+            "@impure fun main(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked xs.add(&one)\n}\n")
         assertEquals(emptyList(), warns(rs), "理论参数形参位（a 未代入核对）零 warn")
         assertNotNull(borrowNote(rs), "借用留痕照落（分派结论仍可编码消费）")
     }

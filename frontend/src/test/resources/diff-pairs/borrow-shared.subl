@@ -2,7 +2,7 @@
 // 对侧形态（无 &）：got=@mut × want=@mut ⇒ 矩阵深拷格（:104，R-01 双形态对照）
 @impure fun bump(xs : @mut List[Nat]) { xs.add(1) }
 @impure fun main(): Null {
-  var xs : @mut List[Nat] = MutableListOf(1)
+  var xs : @mut List[Nat] = mutableListOf(1)
   unchecked bump(xs)
   unchecked xs.add(2)
   print(xs)

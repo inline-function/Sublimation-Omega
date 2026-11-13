@@ -56,7 +56,7 @@ class T139StdlibExtTest {
      *  retire 前（D-METHOD-SUGAR 无 D-MODULE-REF——模块面命中会落模块符号 id 而漂移）。 */
     @Test fun 方法糖解析源零差分() {
         val o = scriptStd(
-            "@impure fun m(): Null {\n    var xs : @mut List[Nat] = MutableListOf(1)\n    unchecked xs.add(2)\n    print(xs)\n}")
+            "@impure fun m(): Null {\n    var xs : @mut List[Nat] = mutableListOf(1)\n    unchecked xs.add(2)\n    print(xs)\n}")
         assertEquals(emptyList<String>(), errs(o), "方法糖 add 解析绿: " + errs(o))
         val addCall = Regex("\"name\":\\s*\"add\"[^}]*\"symbol\"").findAll(o.json).count()
         assertTrue(addCall > 0, "HIR add 调用位落符号引用")
@@ -78,7 +78,7 @@ class T139StdlibExtTest {
             "fun dbl(n: Nat): Nat = n * 2\nfun m(): Nat {\n    var xs : List[Nat] = Cons(1, Nil)\n    unchecked return math.map(xs, dbl)\n}")
         assertTrue(errs(o).any { it == "E-UNBOUND-NAME" }, "math 无 map 扩展：限定调位缺件先红")
         val bare = scriptStd(
-            "fun m(): Nat {\n    var xs : @mut List[Nat] = MutableListOf(1)\n    unchecked return add(xs, 9)\n}")
+            "fun m(): Nat {\n    var xs : @mut List[Nat] = mutableListOf(1)\n    unchecked return add(xs, 9)\n}")
         assertTrue(errs(bare).any { it == "E-UNBOUND-NAME" }, "裸名直接调 add 不解析（R-22：方法糖/限定唯一通道）")
         val ns = compileFrontendImpl(
             "fun m(): Nat { var xs : Nat = 1; unchecked return list.add(xs, 9) }", "t139ns.subl",
@@ -96,7 +96,7 @@ class T139StdlibExtTest {
 
     /** 门 7：编译确定性——含 add 调用面同源双导出字节同（数据源替换 id 分配稳定）。 */
     @Test fun 编译确定性() {
-        val src = "@impure fun m(): Null {\n    var xs : @mut List[Nat] = MutableListOf(1)\n    unchecked xs.add(2)\n    print(xs)\n}"
+        val src = "@impure fun m(): Null {\n    var xs : @mut List[Nat] = mutableListOf(1)\n    unchecked xs.add(2)\n    print(xs)\n}"
         val o1 = scriptStd(src)
         val o2 = scriptStd(src)
         assertEquals(o1.json, o2.json, "双导出字节同（注入层 builtins id 序稳定）")

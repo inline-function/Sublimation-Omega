@@ -66,9 +66,9 @@ class T129LocalFunAnnotationsTest {
     /** 语义位同判：@pure 局部 fun 的 @mut 体调用按既有 R-16 A2 口径（与顶层同判，不另设判据）。 */
     @Test fun pure局部fun与顶层同判() {
         val local = sc("@impure fun main(): Null {\n  @pure fun bad(xs : @mut List[Nat]) { xs.add(1) }\n" +
-            "  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked bad(xs)\n}\n")
+            "  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked bad(xs)\n}\n")
         val top = sc("@pure fun bad(xs : @mut List[Nat]) { xs.add(1) }\n" +
-            "@impure fun main(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked bad(xs)\n}\n")
+            "@impure fun main(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked bad(xs)\n}\n")
         assertEquals(errs(top), errs(local), "局部 @pure fun 判据同顶层（R-16 A2 推导口径一致）")
         assertEquals(emptyList(), errs(local), "两形态皆按既有口径零错误")
     }

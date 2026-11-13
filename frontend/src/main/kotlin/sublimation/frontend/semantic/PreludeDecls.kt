@@ -62,12 +62,12 @@ internal object PreludeDecls {
     val RETIRED_ALIASES: Set<String> = setOf("Optional", "List", "Result", "Set", "Map")
 
     /** t126（S5c / R-15 容器面 · 队长裁 Alt A）：虚拟构造族——值实参解理论参数（既有 instCall 通道，
-     *  零新推导机制）：`MutableListOf(x)` → `@mut List[T]`（可变容器，元素类型由实参定）;
-     *  `ListOf(x)` → `List[T]`（不可变同构）。零参 per-call ?T 形态登记后版（P-11 §5.1，R-20）。
+     *  零新推导机制）：`mutableListOf(x)` → `@mut List[T]`（可变容器，元素类型由实参定）;
+     *  `listOf(x)` → `List[T]`（不可变同构）。零参 per-call ?T 形态登记后版（P-11 §5.1，R-20）。
      *  用户同名声明优先（Collector 先摘虚拟条目再登记——P-7 口径）。 */
     val FUNS: List<FunDecl> = listOf(
-        ctorFun("MutableListOf", mut = true),
-        ctorFun("ListOf", mut = false),
+        ctorFun("mutableListOf", mut = true),
+        ctorFun("listOf", mut = false),
     )
 
     /** t139（R-23 B2 / OQ-4 = b 签名面延续）：EXT_METHODS 虚拟表 retire——@mut 扩展方法 add 迁

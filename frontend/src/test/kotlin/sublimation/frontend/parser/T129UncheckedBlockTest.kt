@@ -19,7 +19,7 @@ class T129UncheckedBlockTest {
 
     /** 负例：unchecked 块形态 ⇒ E-SYNTAX 精确拒绝 + 单语句语法提示（负例先红）。 */
     @Test fun unchecked块形态精确拒绝() {
-        val src = "@impure fun main(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked { xs.add(1) }\n}\n"
+        val src = "@impure fun main(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked { xs.add(1) }\n}\n"
         val pr = script(src)
         assertTrue(pr.diag.any { it.severity == Severity.ERROR && it.code == "E-SYNTAX" },
             "unchecked 块形态须落 E-SYNTAX：${pr.diag.map { it.code + it.message }}")
@@ -31,7 +31,7 @@ class T129UncheckedBlockTest {
 
     /** 正例：unchecked 单语句面逐字不变（免回归本形态）。 */
     @Test fun unchecked单语句面不变() {
-        val src = "@impure fun main(): Null {\n  var xs : @mut List[Nat] = MutableListOf(1)\n  unchecked xs.add(1)\n}\n"
+        val src = "@impure fun main(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked xs.add(1)\n}\n"
         assertEquals(emptyList(), parseErrors(src), "单语句面零解析错误")
         // AST 形态断言：UncheckedStmt 套单条 ExprStmt（非 Block）
         val st = script(src).file.entries

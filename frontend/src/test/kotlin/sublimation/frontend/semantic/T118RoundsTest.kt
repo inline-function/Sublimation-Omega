@@ -210,12 +210,12 @@ class T118RoundsTest {
         assertFalse(box.fields.first().inferred, "默认填充不是推导（inferred=false）")
     }
 
-    /** 容器默认（§3.6 ListOf/MutableListOf 行）边界登记：当前语言无容器字面量/ListOf 预声明
+    /** 容器默认（§3.6 listOf/mutableListOf 行）边界登记：当前语言无容器字面量/listOf 预声明
      *  （容器经 Nil/Cons 结构构造子位组装——其形参/字段空位走通用元变量机制）——本件不引入
      *  新预声明（P-11 待裁 V2）；已验证零nid直通门与 SAME 门不受影响。 */
     @Test
     fun 容器默认行为边界登记() {
-        // 结构构造子组装的链表：空位经 ctor 实参证据推导（非 ListOf 预声明通道）
+        // 结构构造子组装的链表：空位经 ctor 实参证据推导（非 listOf 预声明通道）
         val rep = scriptRounds("struct Cons(head, tail)\nvar xs = Cons(0, Cons(1, Cons(2, Cons(3, 0))))")
         val cons = structDecl(rep, "Cons")
         // head 由 ctor 实参下界推导（脚本模式）；构造子位证据源序落表

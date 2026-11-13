@@ -23,14 +23,14 @@ class T129NidGuardTest {
     /** N1 + N3 内联语料（零借用 → 借用 → 局部注解 → unchecked → 泛型 → 联合别名逐热点面）。 */
     @Test fun N1唯一_内联语料() {
         val corpus = listOf(
-            "var xs : @mut List[Nat] = MutableListOf(1)\nunchecked xs.add(1)\nprint(xs)",
+            "var xs : @mut List[Nat] = mutableListOf(1)\nunchecked xs.add(1)\nprint(xs)",
             "@impure fun bump(xs : @mut List[Nat]) { xs.add(1) }\n" +
-                "@impure fun main(): Null { var xs : @mut List[Nat] = MutableListOf(1); unchecked bump(&xs) }",
+                "@impure fun main(): Null { var xs : @mut List[Nat] = mutableListOf(1); unchecked bump(&xs) }",
             "@impure fun main(): Null { @impure fun g(): Null { print(1) }; g() }",
             "@impure fun main(): Null { unchecked print(1); var v : Nat = 2; print(v) }",
             "fun g[T](x : T) { print(x) }\nvar v : Nat = 3\ng(v)\nprint(v)",
             "fun bump(xs) { print(xs) }\nvar ys : List[Nat] = Nil\nbump(ys)\nprint(ys)",
-            "fun len(xs) { print(xs) }\nvar xs : @mut List[Nat] = MutableListOf(1)\nunchecked len(&xs)\nprint(xs)",
+            "fun len(xs) { print(xs) }\nvar xs : @mut List[Nat] = mutableListOf(1)\nunchecked len(&xs)\nprint(xs)",
         )
         corpus.forEachIndexed { i, src ->
             val (json1, rs1) = compile(src)

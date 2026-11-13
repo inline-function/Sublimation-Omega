@@ -97,7 +97,7 @@ class T141MutableSugarTest {
     /** @mutable 本地扩展在纯函数体调用 ⇒ 纯度闸拦（按引用改调用方状态；双闸码任一即红）。 */
     @Test fun mutable纯域调用红() {
         val o = scriptStd("@mutable fun List[a].addx[a](e: a): List[a]\n" +
-            "fun f(): Null { var xs : @mut List[Nat] = MutableListOf(1); xs.addx(2); print(xs) }\n" +
+            "fun f(): Null { var xs : @mut List[Nat] = mutableListOf(1); xs.addx(2); print(xs) }\n" +
             "@impure fun main(): Null { f() }")
         assertTrue(errs(o).any { it == "E-IMPURE-CALL" || it == "E-IMPURE-REQUIRED" },
             "纯域调用 @mutable 扩展须红（⇒ impure 闸口径）: " + errs(o))
@@ -106,10 +106,10 @@ class T141MutableSugarTest {
     /** @impure 调用方 + unchecked 两路放行绿（三路口径同纯度闸）。 */
     @Test fun mutable调用放行两路绿() {
         val impure = scriptStd("@mutable fun List[a].addx[a](e: a): List[a]\n" +
-            "@impure fun go(): Null { var xs : @mut List[Nat] = MutableListOf(1); xs.addx(2); print(xs) }")
+            "@impure fun go(): Null { var xs : @mut List[Nat] = mutableListOf(1); xs.addx(2); print(xs) }")
         assertEquals(emptyList<String>(), errs(impure), "@impure 调用方放行绿: " + errs(impure))
         val un = scriptStd("@mutable fun List[a].addx[a](e: a): List[a]\n" +
-            "fun go(): Null { var xs : @mut List[Nat] = MutableListOf(1); unchecked xs.addx(2); unchecked print(xs) }")
+            "fun go(): Null { var xs : @mut List[Nat] = mutableListOf(1); unchecked xs.addx(2); unchecked print(xs) }")
         assertEquals(emptyList<String>(), errs(un), "unchecked 单语句豁免绿: " + errs(un))
     }
 
@@ -190,11 +190,11 @@ class T141MutableSugarTest {
 
     /** stdlib add 纯域调用走 @mut 方法糖闸（E-IMPURE-REQUIRED——R-24 v2 调用方口径同 @mut 形态）。 */
     @Test fun stdlibAdd纯域闸口径() {
-        val o = scriptStd("fun f(): Null { var xs : @mut List[Nat] = MutableListOf(1); xs.add(2); print(xs) }\n" +
+        val o = scriptStd("fun f(): Null { var xs : @mut List[Nat] = mutableListOf(1); xs.add(2); print(xs) }\n" +
             "@impure fun main(): Null { f() }")
         assertTrue(errs(o).any { it == "E-IMPURE-REQUIRED" },
             "stdlib add 纯域调用走 @mut 方法糖闸（E-IMPURE-REQUIRED）: " + errs(o))
-        val ok = scriptStd("@impure fun m(): Null { var xs : @mut List[Nat] = MutableListOf(1); xs.add(2); print(xs) }")
+        val ok = scriptStd("@impure fun m(): Null { var xs : @mut List[Nat] = mutableListOf(1); xs.add(2); print(xs) }")
         assertEquals(emptyList<String>(), errs(ok), "@impure 调用方放行（stdlib add 等价口径）: " + errs(ok))
     }
 

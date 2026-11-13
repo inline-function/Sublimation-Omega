@@ -2,7 +2,7 @@
 // 借用形态（&）：got=@mut × want 合成 @ref @mut ⇒ 矩阵共享格（:113）
 @impure fun bump(xs : @mut List[Nat]) { xs.add(1) }
 @impure fun main(): Null {
-  var xs : @mut List[Nat] = MutableListOf(1)
+  var xs : @mut List[Nat] = mutableListOf(1)
   unchecked bump(&xs)
   unchecked xs.add(2)
   print(xs)
