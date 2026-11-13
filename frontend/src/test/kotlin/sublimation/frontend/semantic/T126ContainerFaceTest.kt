@@ -91,12 +91,14 @@ class T126ContainerFaceTest {
         assertEquals(emptyList(), errs(rs), "脚本顶层调用 @mut 方法免闸（既有 D-SCRIPT-IMPLICIT-IMPURE 口径）")
     }
 
-    /** R-18.3：纯函数（工程模式声明纯）调 @mut 方法 ⇒ E-IMPURE-REQUIRED（接收者闸红位）。 */
+    /** R-18.3：纯函数（工程模式声明纯）调 @mut 方法 ⇒ E-IMPURE-REQUIRED（接收者闸红位）。
+     *  t151（R-26.4）：局部构造族接收者翻绿（同域修改=纯）——红面改形参通道（保守地板 R5：callee
+     *  无法证明调用方不 `&` 借用 ⇒ 形参一律按外域，不登记局部来源）。 */
     @Test fun R18纯函数调mut方法红() {
         val rs = pc(
-            "fun f(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  xs.add(2)\n}\n" +
-            "@impure fun main(): Null { f() }\n")
-        assertTrue(errs(rs).contains("E-IMPURE-REQUIRED"), "纯函数调 @mut 方法落 E-IMPURE-REQUIRED")
+            "fun f(ys : @mut List[Nat]): Null {\n  ys.add(2)\n}\n" +
+            "@impure fun main(): Null { var v : @mut List[Nat] = mutableListOf(1); f(v); print(1) }\n")
+        assertTrue(errs(rs).contains("E-IMPURE-REQUIRED"), "纯函数调 @mut 方法落 E-IMPURE-REQUIRED（形参通道=外域）: " + errs(rs))
     }
 
     /** R-18.3：调用方 @impure ⇒ 放行。 */
@@ -122,15 +124,17 @@ class T126ContainerFaceTest {
         assertTrue(errs(rs).none { it == "E-IMPURE-REQUIRED" }, "方法体写接收者不落 E-IMPURE-REQUIRED")
     }
 
-    /** t122 闭包种子第 5 类「引用可变调用」——纯函数体内 @mut 方法调用 ⇒ D-PURITY-INFERRED。 */
+    /** t122 闭包种子第 5 类「引用可变调用」——纯函数体内 @mut 方法调用 ⇒ D-PURITY-INFERRED。
+     *  t151（R-26.4）：局部接收者免种子（同域修改=纯）——种子红面改形参通道（R5 保守地板）。 */
     @Test fun 种子第5类引用可变调用() {
         val rs = pc(
-            "fun f(): Null {\n  var xs : @mut List[Nat] = mutableListOf(1)\n  unchecked xs.add(2)\n}\n" +
-            "@impure fun main(): Null { f() }\n")
+            "fun f(ys : @mut List[Nat]): Null {\n  unchecked ys.add(2)\n}\n" +
+            "@impure fun main(): Null { var v : @mut List[Nat] = mutableListOf(1); f(v) }\n")
         assertEquals(emptyList(), errs(rs))
         val seed = supps(rs).firstOrNull { it.contains("D-PURITY-INFERRED") && it.contains("引用可变调用") }
         assertNotNull(seed, "种子源=引用可变调用（R-17/R-18）：$seed")
     }
+
 
     /** R-06 T3：脚本模式形参被传入 @mut 接收者位 ⇒ 提升通道（D-MUT-INFERRED 触发分类 T3）。 */
     @Test fun T3形参加入mut接收者位() {

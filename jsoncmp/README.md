@@ -422,3 +422,29 @@ A2 收口后 SAME 基线为 `out/t122n/`；t123 落地**未动该基线**（工�
 **旧测试 fallout 吸收口径（R-28 字面）**：T150R28MatrixTest 14 测新建；旧件迁移/翻转 20+（T98/T99/T107/T125×2/T126/T128/RefTypeInert/SubtypeOrder/ViewDemotion/NarrowSubtraction/TypeInferTest/AssignDefaults）+ e2e 样本 3 件 + diff-pairs fixture 2 对（borrow-neg-plain/ref）。文档勘误：旧工程参考-副作用与可变性控制.md（:98/:158-162 废止标注 + :91/:105/:114 格保留标注）；效应分析设计-提案.md §1.1 十六格表 + R-28 判定树同步；stdlib-设计-提案.md §22 批史（§21 t146 台账随带声明）。
 
 机械证据脚本: `jsoncmp/scripts/t150-parity.ps1` 五段（R-28/R-29 行为探针 / 68 门 t122n 冻锚台账含 R-28 预期差登记 / 精确差分 vs t149gate 一次性基线 / 侧基线 / 确定性+脚本门）。
+
+## t151 分账（R-26.4 同域修改=纯：E-IMPURE-REQUIRED 判据收窄，效应分析实现 S1+S2，2026-11-13）
+
+| 验证位 | 结果 | 证据 |
+|---|---|---|
+| 套件 | **1227/1227 绿**（S3 rc=0：1220 t150 基线 + 新增 T151EffectOriginTest 7 测） | gradlew :frontend:test |
+| 行为探针（判别性翻绿三面） | 局部构造族接收者 / 复制格代入（R-28 MUT→MUT）/ @ref 注解位复制格——纯函数体内 @mut 方法调用 ok=true、零 E-IMPURE-REQUIRED（t141 现状误拦面消除） | t151-parity ①（探针 p1-p3） |
+| 行为探针（负例三面红） | 借入形参通道（含 @mut want 值参——R5 保守地板）落 E-IMPURE-REQUIRED;祖先帧捕获落 E-MUT-CAPTURE/E-IMPURE-REQUIRED;REFMUT 类型位接收位按 R-28 拒格 | t151-parity ①（探针 n1-n3） |
+| 行为探针（两路放行零回归） | @impure 调用方 / unchecked 单语句豁免 ok=true | t151-parity ①（探针 w1/w2） |
+| 68 门（vs **t122n 死冻锚**） | SAME **47** + 剥差同 16 + 预期转绿 1 + 预期差 4（t150 口径逐条延续）——**t151 波动 0**（样本中零纯域局部接收者 @mut 方法调用），闭合 68，FAIL=0 | out-subs/t151gate-ledger.txt |
+| 精确差分（vs t150gate 一次性基线） | **76 件逐字节全同**——判据收窄为闸**行为面**（E-IMPURE-REQUIRED/D-PURITY-INFERRED 种子注册位过滤），产物面零差（OQ-10 报告态先行的实测确认） | t151-parity ③ |
+| stdlib 侧（vs t143stdlib） | 8 件逐字节同 + list 件构造族迁源面（t146 口径延续） | t151-parity ④ |
+| 模块确定性 | 9/9 | t151-parity ⑤ |
+| 脚本门 | 14/14 | t151-parity ⑤ |
+
+**实现口径（提案 §2/§3 落地，偏差逐条登记于提案 §10 落地批史）**:
+
+- 局部来源登记面（Elaborator `localOriginIds`）：var 声明位（复制格代入 want 非 ref × 源 @mut 视图 = R-28 深拷新对象;其余按初值来源：构造点/调用产品/字面量/同域名一层回溯 R3）+ 解构分量同初值来源;帧序比较 `SymbolTable.bindingInCurrentFun`（innermost FUNCTION/SCRIPT_TOP 及其内部块帧 = 局部;祖先帧/全局 = 外域，OQ-1 零 schema 载体）;
+- 闸判据收窄：mutMethodCalls 注册位 ×2（方法糖注解位 + 限定 ext 调位）加 `!receiverOriginIsLocal(args.first())` 过滤——局部接收者免注册 ⇒ 种子（D-PURITY-INFERRED 引用可变调用）与 E-IMPURE-REQUIRED 双收窄，**闸消费面零改**（单一 set，无第二集合）;
+- **裁决偏差 1（提案 §2.6 值形参=局部 → 实现按 R5 收紧为形参一律外域）**：@mut 形参通道可经 `&` 借用实参翻为借入通道（R2;t128 样本「借用不绕过纯度门」口径延续——callee 无法证明调用方不借用 ⇒ 含糊一律拒）。代价：值参形态接收者仍保守误拦（精确逃逸分析 = 范围外，提案 §6 S5 后版）;判别性样本（局部构造族 var）不受影响;
+- **裁决偏差 2（@ref 注解位不折入类型）**：`@ref var w : @mut T = ys` 的 HIR 型仍 @mut T ⇒ 该形态是 MUT→MUT 复制格（R-28）⇒ 局部翻绿——别名传播（R3）只经**类型位** @ref（REFMUT 通道）发生，REFMUT 接收位调 add 按 R-28 拒格;
+- E-MUT-CAPTURE 互补不去重（提案 §3.3）：捕获场景经 E-MUT-CAPTURE + 闭包 impure 传播使 chainImpure ⇒ E-IMPURE-REQUIRED 自动免（既有行为）。
+
+**套件吸收（局部构造族翻绿的测试面迁移）**: T126（R18红 / 种子第5类）+ T141（stdlibAdd纯域闸口径 / mutable纯域调用红）四处测试源改外域形参通道（红面延续）;新增 T151EffectOriginTest 7 测（判别性翻绿 ×3 + 负例面 ×3 + 两路放行零回归）。勘误源：参数位 injectTypeFacts（t65 事实注入）一次误删致 8 件回归（ProveFact/Narrow/T137/T131），修复后 S3 全绿。
+
+机械证据脚本: `jsoncmp/scripts/t151-parity.ps1` 五段（判别性/负例/零回归行为探针 / 68 门 t122n 冻锚台账（t151 波动 0 登记）/ 精确差分 vs t150gate 全同 / 侧基线 / 确定性+脚本门），rc=0 全绿。

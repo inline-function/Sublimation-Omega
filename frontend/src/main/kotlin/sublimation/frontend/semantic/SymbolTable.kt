@@ -338,6 +338,18 @@ private fun SourceRange.posStr() = start.line.toString() + ":" + start.col
         else "外层"
 
     /** 名字是否为 @mut 绑定（旧 Frame.isMut：帧链内→外）。 */
+    /** t151（R-26.4 / S1 帧序比较）：名绑定是否在**当前函数帧**（innermost FUNCTION/SCRIPT_TOP 及其内部块帧）
+     *  内——接收者声明帧 vs 访问帧的比较口径（OQ-1 零 schema 载体）。祖先帧（闭包捕获=外域，R4）与全局层返回
+     *  false;帧链空（全局兜底帧）按最内 BLOCK 扫描。 */
+    fun bindingInCurrentFun(name: String): Boolean {
+        for (i in frames.size - 1 downTo 0) {
+            val f = frames[i]
+            if (f.bindings[name] != null) return true
+            if (f.kind == ScopeKind.FUNCTION || f.kind == ScopeKind.SCRIPT_TOP) return false
+        }
+        return false
+    }
+
     fun isMut(name: String): Boolean {
         for (i in frames.indices.reversed()) {
             frames[i].bindings[name]?.let { return it.mutable }

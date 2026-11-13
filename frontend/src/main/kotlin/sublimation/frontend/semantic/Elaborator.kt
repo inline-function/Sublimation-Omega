@@ -646,6 +646,13 @@ private class Elaborator(
      *  阶段 2 消费）。非产物通道（零 JSON 漂移）：@mut 注解结论只在闸/闭包相位用，HirCall 本身
      *  不携带注解字段（calleeImpure 位留给被调纯度口径）。 */
     private val mutMethodCalls = mutableSetOf<Int>()
+    /** t151（R-26.4 / S1+S2）：局部来源声明表（SymbolEntry.id 集）——接收者来源为**局部声明域**的
+     *  var/形参登记位（同域修改=纯的判据原料）。登记面：复制格代入（R-28 矩阵 want 非 ref × 源 @mut
+     *  = 深拷产生新对象）、构造点/函数调用产品、本函数内字面量、同域别名（一层回溯，R3）。不登记面
+     *  （外域=拦面）：**形参一律不登记**（R5 保守地板——@mut 形参通道可经 `&` 借用实参翻为借入通道，
+     *  callee 无法证明调用方不借用）、祖先帧捕获（帧序比较 false）、全局别名、含糊形态（R5）。 */
+    private val localOriginIds = mutableSetOf<Int>()
+
 
     /** t128（S6 / R-04.3）：借用冗余 warn 登记表（本轮调用点收集，runPurityGate 终轮发——
      *  终轮回放口径见 [borrowArgNotes]：提升轮形参翻 @mut 后借用转为有效，免 warn）。 */
@@ -1681,6 +1688,50 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
 
     private fun isTypeParam(name: String): Boolean = typeParams.any { name in it }
 
+    /** t151（R-26.4 / S1）：类型树持 @mut 视图（MUT/REFMUT 任一）——与 [TypeInfer.containsRef] 同构的
+     *  深拷格触发判据（R-28 矩阵 want 非 ref × 源 @mut = 复制格代入）。 */
+    private fun mutViewOf(t: HirType): Boolean = when (t) {
+        is HirMutType -> true
+        is sublimation.frontend.hir.HirRefType -> mutViewOf(t.inner)
+        is HirNamedType -> t.args.any { mutViewOf(it) }
+        is sublimation.frontend.hir.HirQualifiedType -> t.args.any { mutViewOf(it) }
+        is sublimation.frontend.hir.HirTupleType -> t.items.any { mutViewOf(it) }
+        is sublimation.frontend.hir.HirUnionType -> t.variants.any { mutViewOf(it) }
+        else -> false
+    }
+
+    /** t151（R-26.4 / S1）：初值/实参表达式的**来源**——本函数内字面量、构造点/函数调用产品（本帧创建）、
+     *  同域名（一层回溯，R3）⇒ 局部;借用/元组/联合/when/合成等含糊形态一律非局部（R5 保守地板）。 */
+    private fun localOriginOf(e: HirExpr): Boolean = when (e) {
+        is HirIntLit, is HirFloatLit, is HirStrLit -> true     // 本函数内字面量（提案 §2.1）
+        is HirCall -> true                                     // 构造点/函数调用产品（本帧创建）
+        is HirNameRef -> {
+            val id = e.symbol?.id ?: return false
+            localOriginIds.contains(id) && symbols.bindingInCurrentFun(e.name)
+        }
+        is HirField -> localOriginOf(e.target)                 // R3：字段随属主（一层回溯）
+        else -> false                                         // R5 含糊拒
+    }
+
+    /** t151（R-26.4 / S1）：var 声明位的局部来源判据——复制格代入（R-28 矩阵：want 非 ref × 源 @mut 视图
+     *  = 深拷产生新对象）⇒ 局部;其余按初值来源（§2.1 构造点/字面量/同域别名;含糊非局部，R5）。 */
+    private fun originIsLocalVar(varT: HirType, initT: HirType, init: HirExpr): Boolean =
+        (!infer.containsRef(varT) && mutViewOf(initT)) || localOriginOf(init)
+
+
+    /** t151（R-26.4 / S2）：@mut 方法调用**接收者**的来源判定——局部声明域（同域修改=纯 ⇒ E-IMPURE-REQUIRED
+     *  判据收窄放行）vs 外域（借入形参/祖先帧捕获/全局别名/含糊 ⇒ 维持拦截）。帧序比较（OQ-1）+ 别名一层（OQ-4）。 */
+    private fun receiverOriginIsLocal(recv: HirExpr): Boolean = when (recv) {
+        is HirIntLit, is HirFloatLit, is HirStrLit -> true     // 字面量接收者（本帧）
+        is HirCall -> true                                     // 调用产品接收者（本帧创建，OQ-9 快照同口径）
+        is HirNameRef -> {
+            val id = recv.symbol?.id ?: return false
+            localOriginIds.contains(id) && symbols.bindingInCurrentFun(recv.name)
+        }
+        is HirField -> receiverOriginIsLocal(recv.target)     // R3：接收者字段随属主（一层回溯）
+        else -> false                                         // R5 含糊拒（借用/元组/合成等=外域）
+    }
+
     // ============================ 语句 ============================
 
     private fun stmt(s: Stmt): sublimation.frontend.hir.HirStmt = when (s) {
@@ -1701,7 +1752,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     val pEvi = if (scriptMode) mutPromoted[mutKey(s.pos, n)] else null
                     val pT = if (pEvi != null) promotedView(partT, s.pos) else partT
                     if (pEvi != null) mutNote(n, pT, s.pos, "局部二次赋值 T1", pEvi)
-                    declareLocal(n, SymbolKind.LOCAL, s.pos, pT, scriptPromotable = scriptMode)
+                    // t151（S1）：解构分量同初值来源（一层回溯;含糊不登记=外域，R5）
+                    val partSym = declareLocal(n, SymbolKind.LOCAL, s.pos, pT, scriptPromotable = scriptMode)
+                    if (partSym != null && localOriginOf(value)) localOriginIds.add(partSym.id)
+
                     injectTypeFacts(n, pT, s.pos)   // t65
                 }
                 HirVarStmt(s.name, null, s.annotations, initT, value, s.destruct, false, nid, s.pos, notesOf(s))
@@ -1728,6 +1782,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     "mut" in s.annotations || declared is sublimation.frontend.hir.HirMutType || mutEvi != null,
                     what = "不可重定义", scriptPromotable = scriptMode)
                 injectTypeFacts(s.name, varT, s.pos)   // t65
+                // t151（R-26.4 / S1）：局部来源登记——复制格代入（want 非 ref × 源 @mut=R-28 深拷产生新对象）⇒ 局部;
+                //  其余按初值来源（构造点/字面量/同名域别名一层回溯;含糊不登记=外域，R5）
+                if (originIsLocalVar(varT, initT, value)) symbol?.let { localOriginIds.add(it.id) }
+
                 // t98（规则 3 拷贝分派留痕）：仅 @ref 涉及时落 D-REF-DISPATCH（@mut 侧维持既有产物）
                 val dn = if (declared?.let { infer.containsRef(it) } == true || infer.containsRef(initT))
                     listOf(refDispatchNote(s.pos, initT, varT, s.name)) else emptyList()
@@ -2178,8 +2236,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 // B9（ADR-22）:形参类型取期望位（两遍定型第二遍）;无期望落 synthetic 承接
                 val paramTypes = names.mapIndexed { i, n -> given?.getOrNull(i) ?: infer.syntheticT("lambda参数" + n) }
                 val params = names.mapIndexed { i, n ->
-                    val symbol = symbols.declareLocal(SymbolKind.PARAM, n, e.pos, paramTypes[i]).ref()
-                    HirParam(n, paramTypes[i], symbol, emptyList(), null, null, freshNid(), e.pos, emptyList())
+                    val pt = paramTypes[i]
+                    val symbol = symbols.declareLocal(SymbolKind.PARAM, n, e.pos, pt).ref()
+                    HirParam(n, pt, symbol, emptyList(), null, null, freshNid(), e.pos, emptyList())
                 }
                 funFrames.addLast(FunFrame(null))   // lambda 内 return 放行（返回类型反推未启用）
                 val gateFrame = gateClosureEnter(GateFrameKind.LAMBDA, params)   // t122：闸帧（体效应/捕获共用）
@@ -2818,7 +2877,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         }
         // t139（B2 ext 限定调位）：@mut 扩展的调用登记（纯度闸同方法糖口径）
         // t141（R-24 v2）：@mutable 同位登记（纯度闸口径同 @mut 方法糖——调用方纯域内拦 E-IMPURE-REQUIRED）
-        if (mf == null && mext != null && ("mut" in mext.decl.annotations || "mutable" in mext.decl.annotations)) mutMethodCalls.add(nid)
+        // t151（R-26.4 / S2）：局部来源接收者（同域修改=纯）不入 @mut 方法闸——外域维持 E-IMPURE-REQUIRED
+        if (mf == null && mext != null && ("mut" in mext.decl.annotations || "mutable" in mext.decl.annotations)
+            && !receiverOriginIsLocal(args.first()))
+            mutMethodCalls.add(nid)
         // t128（S6）：借用实参留痕 + 冗余登记（限定 ext 调用位；零借用免求值）
         val args2 = if (mf == null && mext != null && borrowedFlags.any { it }) {
             enterTypeParams(mext.decl.theory)
@@ -2917,7 +2979,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 // t126（S5c / R-17/R-18.3）：@mut 标方法（注解位）调用登记——纯度闸（E-IMPURE-REQUIRED）
                 //  判据不看实参视图（队长裁 V1 一刀：深拷实参照门，逃逸分析留后版）。
                 // t141（R-24 v2）：@mutable 同位登记（等价 @mut @ref 接收者形态——调用方纯域内拦）
-                if (ext != null && ("mut" in ext.annotations || "mutable" in ext.annotations)) mutMethodCalls.add(nid)
+                // t151（R-26.4 / S2）：局部来源接收者（同域修改=纯）不入 @mut 方法闸——外域维持 E-IMPURE-REQUIRED
+                if (ext != null && ("mut" in ext.annotations || "mutable" in ext.annotations)
+                    && !receiverOriginIsLocal(args.first()))
+                    mutMethodCalls.add(nid)
                 // t125（S5c / R-06 T3）：@mut 方法的接收者位——可提升名登记单调需求（提升通道复用 S5b：
                 //  形参/局部被传入 @mut 接收者位 ⇒ 提升为 @mut 视图，免深拷绕路）。
                 // t141（R-24 v2）：@mutable 同位触发（等价 @mut @ref 接收者——接收者位 @mut 视图需求同源）
@@ -5092,7 +5157,10 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         val symbol = declareLocal(p.name, kind, p.pos,
             if (isVararg) infer.namedT("List", listOf(t2)) else t2,
             scriptPromotable = scriptMode && kind != SymbolKind.FIELD)
+        // t151 保守地板修订（R5）：形参位**不登记**——@mut 形参通道可经 `&` 借用实参翻为借入通道（R2;
+        //  callee 无法证明调用方不借用 ⇒ 含糊一律外域=维持拦截）。局部来源仅覆盖本帧 var 声明位。
         if (kind != SymbolKind.FIELD) injectTypeFacts(p.name, t2, p.pos)   // t65（字段声明位无事实帧——跳过）
+        //  callee 无法证明调用方不借用 ⇒ 含糊一律外域=维持拦截）。局部来源仅覆盖本帧 var 声明位。
         // t45（ADR-30 R-22）：默认值求值环境=声明处——前序形参/字段（+ self，由 funDecl 先行登记）可见；
         // 引用**后序**名落 E-DEFAULT-ORDER，且跳过本处 elaborate（不再重复报 E-UNBOUND-NAME）
         val default = p.default?.let { def ->

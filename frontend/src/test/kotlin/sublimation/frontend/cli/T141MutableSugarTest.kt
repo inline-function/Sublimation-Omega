@@ -94,14 +94,16 @@ class T141MutableSugarTest {
 
     // -------------------- 门 2：⇒ impure（纯度闸拦截口径） --------------------
 
-    /** @mutable 本地扩展在纯函数体调用 ⇒ 纯度闸拦（按引用改调用方状态；双闸码任一即红）。 */
+    /** @mutable 本地扩展在纯函数体调用 ⇒ 纯度闸拦（按引用改调用方状态）。
+     *  t151（R-26.4）：局部构造族接收者翻绿（同域修改=纯）——红面改形参通道（R5 保守地板）。 */
     @Test fun mutable纯域调用红() {
         val o = scriptStd("@mutable fun List[a].addx[a](e: a): List[a]\n" +
-            "fun f(): Null { var xs : @mut List[Nat] = mutableListOf(1); xs.addx(2); print(xs) }\n" +
-            "@impure fun main(): Null { f() }")
+            "fun f(ys : @mut List[Nat]): Null { ys.addx(2); print(ys) }\n" +
+            "@impure fun main(): Null { var v : @mut List[Nat] = mutableListOf(1); f(v) }")
         assertTrue(errs(o).any { it == "E-IMPURE-CALL" || it == "E-IMPURE-REQUIRED" },
             "纯域调用 @mutable 扩展须红（⇒ impure 闸口径）: " + errs(o))
     }
+
 
     /** @impure 调用方 + unchecked 两路放行绿（三路口径同纯度闸）。 */
     @Test fun mutable调用放行两路绿() {
@@ -187,11 +189,11 @@ class T141MutableSugarTest {
         assertEquals(true, d.body == null, "体仍空（OQ-4 b 签名面延续 / R-15 债不变）")
         assertEquals(0, PreludeDecls.EXT_METHODS.size, "EXT_METHODS 虚拟表 retire（空表不变）")
     }
-
-    /** stdlib add 纯域调用走 @mut 方法糖闸（E-IMPURE-REQUIRED——R-24 v2 调用方口径同 @mut 形态）。 */
+    /** stdlib add 纯域调用走 @mut 方法糖闸（E-IMPURE-REQUIRED——R-24 v2 调用方口径同 @mut 形态）。
+     *  t151（R-26.4）：局部构造族接收者翻绿——红面改形参通道（R5 保守地板）。 */
     @Test fun stdlibAdd纯域闸口径() {
-        val o = scriptStd("fun f(): Null { var xs : @mut List[Nat] = mutableListOf(1); xs.add(2); print(xs) }\n" +
-            "@impure fun main(): Null { f() }")
+        val o = scriptStd("fun f(ys : @mut List[Nat]): Null { ys.add(2); print(ys) }\n" +
+            "@impure fun main(): Null { var v : @mut List[Nat] = mutableListOf(1); f(v) }")
         assertTrue(errs(o).any { it == "E-IMPURE-REQUIRED" },
             "stdlib add 纯域调用走 @mut 方法糖闸（E-IMPURE-REQUIRED）: " + errs(o))
         val ok = scriptStd("@impure fun m(): Null { var xs : @mut List[Nat] = mutableListOf(1); xs.add(2); print(xs) }")
