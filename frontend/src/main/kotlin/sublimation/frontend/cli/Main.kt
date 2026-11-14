@@ -87,17 +87,15 @@ fun runCli(args: Array<String>, out: PrintStream = System.out, err: PrintStream 
             if (bag.hasError) { err.println("[错误] 语法分析未通过"); 1 } else 0
         }
         "check" -> {
-            val (su, sd) = compileStdlibUnits(opts.noStdlib, scriptMode, opts.noDegrade, opts.noLift)
-            val r = compileFrontendImpl(source, unitPath, scriptMode, opts.noDegrade, opts.noLift,
-                su.associate { it.alias to it.snapshot }, sd)
+            // t165（P-L1）：复用公共挂载入口通道——CLI 不再自行装配 stdlib（通道单一，无复刻漂移）
+            val r = compileFrontendWithStdlib(source, unitPath, scriptMode, opts.noDegrade, opts.noLift, opts.noStdlib)
             report(r.diag, source, opts.verbose, out)
             if (r.diag.hasError) { err.println("[错误] 前端检查未通过"); 1 }
             else { out.println("[完成] 前端检查通过"); 0 }
         }
         "compile" -> {
-            val (su, sd) = compileStdlibUnits(opts.noStdlib, scriptMode, opts.noDegrade, opts.noLift)
-            val r = compileFrontendImpl(source, unitPath, scriptMode, opts.noDegrade, opts.noLift,
-                su.associate { it.alias to it.snapshot }, sd)
+            // t165（P-L1）：复用公共挂载入口通道——同 check（产物逐字节同 T165 门 6 守卫）
+            val r = compileFrontendWithStdlib(source, unitPath, scriptMode, opts.noDegrade, opts.noLift, opts.noStdlib)
             val target = File(opts.output ?: srcFile.path + ".hir.json")
             target.writeText(r.json, Charsets.UTF_8)
             report(r.diag, source, opts.verbose, out)
