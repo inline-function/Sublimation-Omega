@@ -1643,7 +1643,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             val hirAnns = if (mutableLift) d.annotations.filter { it != "mutable" } else d.annotations
             HirFunDecl(
                 d.name, symbol, hirAnns, theory, params, preps, mRet, posts, constraints,
-                purity, async, body, nid, d.pos, notesOf(d), recvT,
+                purity, async, body, nid, d.pos, notesOf(d) + (if (d.body != null) deepCopyNotes(d.body!!.pos) else emptyList()), recvT,
                 inferred = retInferred, evidence = retEvidence,
             )
             }
@@ -2177,7 +2177,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 // t98（规则 3 拷贝分派留痕）：仅 @ref 涉及时落 D-REF-DISPATCH（@mut 侧维持既有产物）
                 val dn = if (declared?.let { infer.containsRef(it) } == true || infer.containsRef(initT))
                     listOf(refDispatchNote(s.pos, initT, varT, s.name)) else emptyList()
-                HirVarStmt(s.name, symbol, s.annotations, varT, value, null, false, nid, s.pos, notesOf(s) + dn)
+                val dcN = deepCopyNotes(s.pos)
+                HirVarStmt(s.name, symbol, s.annotations, varT, value, null, dcN.isNotEmpty(), nid, s.pos, notesOf(s) + dn + dcN)
             }
         }
         is AssignStmt -> {
@@ -2237,7 +2238,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             // t98（规则 3）：赋值位同口径留痕（仅 @ref 涉及时）
             val an = if (infer.containsRef(targetT) || infer.containsRef(valueT))
                 listOf(refDispatchNote(s.pos, valueT, targetT, "赋值")) else emptyList()
-            sublimation.frontend.hir.HirAssign(target, value, mutable, nid, s.pos, notesOf(s) + an)
+            sublimation.frontend.hir.HirAssign(target, value, mutable, nid, s.pos, notesOf(s) + an + deepCopyNotes(s.pos))
         }
         is AxiomStmt -> {
             val nid = freshNid()
@@ -2431,7 +2432,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             retMetaOfFrame(frame)?.let { m ->
                 if (value != null) { m.lower.add(substMetas(etype(value)) to s.pos); m.addEvidence(s.pos) }
             }
-            HirReturn(value, s.label, nid, s.pos, notesOf(s))
+            HirReturn(value, s.label, nid, s.pos, notesOf(s) + deepCopyNotes(s.pos))
         }
         is ErrorStmt -> sublimation.frontend.hir.HirErrorStmt(s.message, freshNid(), s.pos, notesOf(s))
     }
@@ -2693,7 +2694,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 infer.structCtor(e.struct, fields, defaults, e.assigns.map { it.first }, assignTypes, e.pos)
             }
             else infer.syntheticT("构造" + e.struct)
-            HirStructCtor(e.struct, assigns, symbol, t, nid, e.pos, notesOf(e))
+            HirStructCtor(e.struct, assigns, symbol, t, nid, e.pos, notesOf(e) + deepCopyNotes(e.pos))
         }
         is ByExpr -> {
             val nid = freshNid()
@@ -2740,7 +2741,8 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 "mut" in e.annotations || declared is sublimation.frontend.hir.HirMutType)
             injectTypeFacts(e.name, declared ?: finalT, e.pos)   // t65
             gateRecordVarBound(symbol)   // t122：R-07 绑定集词法序累计
-            HirVarExpr(e.name, symbol, e.annotations, declared ?: finalT, value, null, false, nid, e.pos, notesOf(e))
+            val dcV = deepCopyNotes(e.pos)
+            HirVarExpr(e.name, symbol, e.annotations, declared ?: finalT, value, null, dcV.isNotEmpty(), nid, e.pos, notesOf(e) + dcV)
         }
         is AnonFunExpr -> {
             enterTypeParams(e.theory)
@@ -2775,7 +2777,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 )
                 sublimation.frontend.hir.HirAnonFun(
                     e.name, theory, params, preps, retType, posts, body, t, purity,
-                    nid, e.pos, notesOf(e),
+                    nid, e.pos, notesOf(e) + (if (e.body != null) deepCopyNotes(e.body!!.pos) else emptyList()),
                 )
             }
             exitTypeParams()
@@ -3363,7 +3365,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             // （快照 funPurity——t141 真化面的模块态延续;扩展函数限定形态同通道）
             calleeImpure = mf?.let { it.decl.annotations.contains("impure") || mod.funPurity[it.decl.name] == true }
                 ?: mext?.let { it.decl.annotations.contains("impure") || mod.funPurity[it.decl.name] == true } ?: false,
-            nid = nid, origin = e.pos, notes = notesOf(e, listOf(moduleRefNote(e.pos))),
+            nid = nid, origin = e.pos, notes = notesOf(e, listOf(moduleRefNote(e.pos))) + deepCopyNotes(e.pos),
         )
         onCall(node, mf?.decl?.name ?: mext?.decl?.name)   // 订阅（停机判定读本地声明表——跨模块递归分析 V1 不通，提案 §9 限制面）
         return node
@@ -3535,7 +3537,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     callee = callee, args = args2, symbol = calleeSymbol, type = t, dictionary = null,
                     slot = null, dictArgs = emptyList(), methodSugar = true, awaitPoint = false,
                     calleeImpure = false, nid = nid, origin = e.pos,
-                    notes = notesOf(e, if (sugarHit?.moduleFace == true) listOf(note, moduleRefNote(e.pos)) else listOf(note)),
+                    notes = notesOf(e, if (sugarHit?.moduleFace == true) listOf(note, moduleRefNote(e.pos)) else listOf(note)) + deepCopyNotes(e.pos),
                 )
                 onCall(node, c.name)   // t97+t94+t122 订阅（事件化；接收者入首实参位）
                 return node
@@ -3694,7 +3696,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                                     callee = extCallee,
                                     args = args2, symbol = extSymbol, type = tExt, dictionary = null,
                                     slot = null, dictArgs = emptyList(), methodSugar = false, awaitPoint = false,
-                                    calleeImpure = false, nid = nid, origin = e.pos, notes = notes,
+                                    calleeImpure = false, nid = nid, origin = e.pos, notes = notes + deepCopyNotes(e.pos),
                                 )
                                 onCall(node, plan.second)   // t97+t94+t122 订阅（事件化）
                                 return node
@@ -3768,7 +3770,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 val node = HirCall(
                     callee = callee, args = args3, symbol = symbol, type = t, dictionary = null,
                     slot = null, dictArgs = emptyList(), methodSugar = false, awaitPoint = false,
-                    calleeImpure = false, nid = nid, origin = e.pos, notes = notes,
+                    calleeImpure = false, nid = nid, origin = e.pos, notes = notes + deepCopyNotes(e.pos),
                 )
                 onCall(node, callCalleeName(callee))   // t97+t94+t122 订阅（事件化）
                 return node
@@ -4071,6 +4073,16 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                     "（前端类型层判定，实际深拷随后端运行时，R2 §三）"),
             pos, infer.render(got), infer.render(want))
     }
+
+    /** t160（R4-A0 / R4 提案 §2.2）：D-DEEP-COPY 指令 notes 化——把 TypeInfer 登记的深拷指令
+     *  （诊断 message 同源单 wording）按站点 pos drain 后挂值通道节点 notes。
+     *  v3 加性：仅深拷站点挂（默认态零产）;drain 精确 SourceRange 相等防跨站误取。 */
+    private fun deepCopyNotes(pos: SourceRange): List<sublimation.frontend.hir.HirNote> =
+        infer.drainDeepCopyInstrs(pos).map { instr ->
+            sublimation.frontend.hir.HirNote(
+                sublimation.frontend.hir.HirNoteKind.SUPPLEMENT, "D-DEEP-COPY",
+                instr.message, instr.pos, instr.from, instr.to, instr.deepElements)
+        }
 
     /**
      * t128（S6 / R-01 调用边界）：借用实参收尾——
@@ -5766,7 +5778,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         // t115/t117：载体回填（t108 槽位）——证据源序去重落表（种子证据 + 本轮收据合并）；
         // 默认填充零证据零标记（零发射）
         // t118（R-02）：退化空位零发射（inferred=false——Any 填充不冒充有证据的解）
-        return HirParam(p.name, t2, symbol, p.annotations, default, p.destruct, nid, p.pos, emptyList(),
+        return HirParam(p.name, t2, symbol, p.annotations, default, p.destruct, nid, p.pos, deepCopyNotes(p.pos),
             inferred = meta != null && meta.hasEvidence() && !meta.degradedSlot,
             evidence = if (meta != null && meta.hasEvidence() && !meta.degradedSlot) meta.evidenceList()
                 else emptyList())

@@ -87,7 +87,7 @@ HIR JSON 产品正式作为**前后端契约**冻结：
 
 """
 { "kind": "desugar"|"hint"|"supplement", "code": "<码>", "message": "<文>", "pos": "<l:c-l:c>",
-  "from": "<原形标签>", "to": "<目标形态标签>" }
+  "from": "<原形标签>", "to": "<目标形态标签>", "deepElements": <数> }
 """
 
 - `desugar`：脱糖通道留痕——`from/to` 记录原形/目标形态标签，`code` 沿用脱糖规则编号
@@ -96,6 +96,12 @@ HIR JSON 产品正式作为**前后端契约**冻结：
   见 `documents/HIR-JSON诊断段契约.md` 三条纪律）。
 - notes 随节点落盘（非阻断诊断另有顶层 diagnostics 段——两处留痕分家：节点内=结构留痕，
   顶层=编译结论文本）。
+- t160（R4-A0，加性扩展）：`D-DEEP-COPY` 深拷指令 notes 化——隐式深拷站点（变量初始化/赋值/
+  实参/默认值/构造字段/return/函数体等值通道位）在**值通道节点**上挂 `kind=supplement`、
+  `code="D-DEEP-COPY"` 的 note，`from/to` 为源/目标类型串，`deepElements` 为元素层深拷计数槽
+  （**默认态零产**：仅 >0 发射——零元素层深拷时字段缺席，既有产物逐字零差）。
+- 同站点 `HirVarStmt.deepCopy` 布尔真化（既有字段语义兑现——ADR-1 §3.3 #13）;诊断 D-DEEP-COPY
+  照发（告知面不变），notes 为其结构化镜像（message/pos 同源单 wording）。
 
 ## 5. diagnostics 段（四级别形态，冻结）
 
@@ -169,3 +175,5 @@ HIR JSON 产品正式作为**前后端契约**冻结：
 - 版本史与动机：ADR-1 §3.7（v1 设计）、ADR-9（发射器实现）、ADR-24（v2）、ADR-35（v3
   class→trait）;诊断段实测基线：`documents/HIR-JSON诊断段契约.md`。
 - 冻结批次：t158（2026-11-14，schema v3 冻结声明——契约文档 + 版本守门 + 消费方指南）。
+- 加性扩展示例（v3 内演进）：t160（2026-11-14，R4-A0）——notes `deepElements` 可选槽
+  （默认态零产）+ `D-DEEP-COPY` note 种类与 `deepCopy` 布尔真化;口径见 §4。

@@ -683,6 +683,7 @@ private fun JsonWriter.note(n: HirNote) = obj {
     field("pos") { range(n.pos) }
     fieldStrNullable("from", n.from)
     fieldStrNullable("to", n.to)
+    if (n.deepElements > 0) fieldNum("deepElements", n.deepElements)   // t160（R4-A0）：默认态零发射
 }
 
 /** envelope 诊断条目（四族小写，D-10；nid 反引节点身份，D-9）。 */

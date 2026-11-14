@@ -450,14 +450,31 @@ internal class TypeInfer(
      *  深拷转换点伴发风险告知（每层递归重复深拷的成本风险;V1 语言无循环构造，递归帧=唯一迭代面）。 */
     var warnDeepCopyLoop: Boolean = false
 
+    /** t160（R4-A0）：D-DEEP-COPY 深拷指令登记——诊断（告知面）的结构化镜像，供 Elaborator
+     *  按站点 pos drain 后挂值通道节点 notes（v3 加性通道;默认态零产）。 */
+    data class DeepCopyInstr(
+        val message: String, val pos: SourceRange, val from: String, val to: String, val deepElements: Int,
+    )
+    private val deepCopyInstrs: MutableList<DeepCopyInstr> = mutableListOf()
+
+    /** t160（R4-A0）：消费方 drain——Elaborator 按站点 pos 取回本站点的深拷指令（防跨站误取：精确 SourceRange 相等）。 */
+    fun drainDeepCopyInstrs(pos: SourceRange): List<DeepCopyInstr> {
+        if (deepCopyInstrs.isEmpty()) return emptyList()
+        val out = deepCopyInstrs.filter { it.pos == pos }
+        deepCopyInstrs.removeAll(out)
+        return out
+    }
+
     private fun deepCopyNote(got: HirType, want: HirType, pos: SourceRange, what: String) {
         val dec = copyDispatch(got, want)
         if (!dec.deep || dec.reject) return
         if (fuelExhaustedNow() || containsSynthetic(got) || containsSynthetic(want)) return
         val elem = if (dec.deepElements > 0)
             "（元素层：" + dec.deepElements + " 位深拷——容器实参位随顶层下钻）" else ""
-        diag.supplement("D-DEEP-COPY", pos, what + " 隐式深拷：" + render(got) + " → " + render(want) +
-            "（深拷隔离——源端可写/目标无引用视图；实际深拷随后端运行时，R2 §三 / R-29）" + elem)
+        val msg = what + " 隐式深拷：" + render(got) + " → " + render(want) +
+            "（深拷隔离——源端可写/目标无引用视图；实际深拷随后端运行时，R2 §三 / R-29）" + elem
+        diag.supplement("D-DEEP-COPY", pos, msg)
+        deepCopyInstrs.add(DeepCopyInstr(msg, pos, render(got), render(want), dec.deepElements))   // t160（R4-A0）
         if (warnDeepCopyLoop)
             diag.warn("W-DEEP-COPY-LOOP", pos, what + " 隐式深拷出现在递归帧内——每层递归重复深拷" +
                 "（成本随递归深度线性叠加）。出路：把深拷提到递归外只做一次，或改用 @ref 共享视图")

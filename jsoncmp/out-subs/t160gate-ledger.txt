@@ -1,0 +1,11 @@
+﻿[2] 68门 vs t122n: SAME=38 剥差同=11 纯W批一=5 纯批二=3 混合=6 预期差=4 转绿=1 总=68
+[2] 预期差件（authorized）: examples__副作用与unchecked.subl.json, examples__模块系统__主.subl.json, examples__特性巡礼.subl.json, examples__类型系统.subl.json
+[3] vs t157gate: 逐字同=74 authorized深拷notes件=3（notes +15，deepCopy 真化 7 位）零未登记差——R4-A0 加性通道（envelope/diagnostics 零触）
+[3]   examples__副作用与unchecked.subl.json（notes +5，deepCopy 真化 1 位）
+[3]   examples__特性巡礼.subl.json（notes +6，deepCopy 真化 4 位）
+[3]   examples__类型系统.subl.json（notes +4，deepCopy 真化 2 位）
+[4] stdlib vs t143stdlib: 逐字同=4 纯W批一=3 纯批二=1 混合=0 list件登记差=1 axioms新增件=1 总=10（口径延续 t157）
+[4b] vs t157stdlib: 十件逐字同（R4-A0 默认态零产——stdlib 零深拷站点）
+[ledger] R4-A0 D-DEEP-COPY notes 化: 3 件 / +15 notes / 7 位 deepCopy 真化；其余 74 件 + stdlib 10 件逐字同（默认态零产）
+T160GATECMP DONE
+

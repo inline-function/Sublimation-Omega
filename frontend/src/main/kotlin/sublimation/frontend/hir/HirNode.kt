@@ -17,6 +17,9 @@ data class HirNote(
     val pos: SourceRange,
     val from: String? = null,
     val to: String? = null,
+    /** t160（R4-A0）：元素层深拷计数槽——D-DEEP-COPY 指令 note 携带的结构化预算提示
+     *  （R-14 容器实参位下钻计数;默认 0 零发射，v3 加性纪律）。 */
+    val deepElements: Int = 0,
 )
 
 /** 留痕种类：脱糖通道 + 旧体系非阻断两族（D-10 四族口径）。 */
