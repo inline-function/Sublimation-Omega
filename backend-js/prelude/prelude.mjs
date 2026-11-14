@@ -28,6 +28,51 @@ function ctorStr(v) {
 
 export const toStr = render;
 
+// ---------- V2：深拷引擎（R4 §2.3） ----------
+// DFS 对象图遍历 + visited 表：同一次拷贝内已访问节点复用同一副本——保共享、保环。
+// 标量/字符串/函数=透传（不可变对象零成本;函数值透传=e2e lambda 样本 golden 实证）。
+// R-14 元素层计数仅编译期成本提示——运行时一律全图递归（不做部分拷）。
+// R-29 口径：deepCopyCount 只作审计观测，不参与正确性路径。
+export let deepCopyCount = 0;
+const DEEP_MAX = 4096;   // DFS 栈深上限（成本面与 W-DEEP-COPY-LOOP 同源;部分/惰性拷为 V3 CoW 域）
+export function deepcopy(v, seen, depth) {
+  if (seen === undefined) { seen = new Map(); deepCopyCount += 1; }
+  if (depth === undefined) depth = 0;
+  if (v === null || v === undefined) return v;
+  const tv = typeof v;
+  if (tv === 'function') return v;
+  if (tv !== 'object') return v;
+  if (depth > DEEP_MAX) {
+    throw new Error('$S.deepcopy: 深度超上限(' + DEEP_MAX + ')——深图/循环数据需 V3 CoW 处置');
+  }
+  const hit = seen.get(v);
+  if (hit !== undefined) return hit;
+  if (Array.isArray(v)) {
+    const c = [];
+    seen.set(v, c);
+    for (const x of v) c.push(deepcopy(x, seen, depth + 1));
+    const proto = Object.getPrototypeOf(v);
+    if (proto && proto !== Array.prototype) Object.setPrototypeOf(c, proto);  // 保 MList 等子类形态
+    return c;
+  }
+  if (v instanceof Map) {
+    const c = new Map();
+    seen.set(v, c);
+    for (const e of v) c.set(deepcopy(e[0], seen, depth + 1), deepcopy(e[1], seen, depth + 1));
+    return c;
+  }
+  if (v instanceof Set) {
+    const c = new Set();
+    seen.set(v, c);
+    for (const x of v) c.add(deepcopy(x, seen, depth + 1));
+    return c;
+  }
+  const c = {};
+  seen.set(v, c);
+  for (const k in v) c[k] = deepcopy(v[k], seen, depth + 1);
+  return c;
+}
+
 export function concat(a, b) { return String(a) + String(b); }
 
 export function length(s) { return [...String(s)].length; }
@@ -111,7 +156,17 @@ export function Nil() { return []; }
 export function Cons(h, t) { return [h, ...t]; }
 export function emptyList() { return []; }
 export function listOf(...items) { return [...items]; }
-export function mutableListOf(...items) { return [...items]; }
+
+// Mutable 容器：Array 值模型子类（OQ-9）。`.n` = 当前持有值（末元素）——
+// golden 派生语义（e2e 特性巡礼 深拷站点注释实证：a=mutableListOf(0)，b 深拷后 a.n 仍 0）。
+export class MList extends Array {
+  get n() { return this.length === 0 ? undefined : this[this.length - 1]; }
+}
+export function mutableListOf(...items) {
+  const ml = new MList();
+  for (const x of items) ml.push(x);
+  return ml;
+}
 export function add(xs, v) { xs.push(v); return null; }
 
 // ---------- 通用构造 / 分派工具 ----------
@@ -226,6 +281,8 @@ export const P = {
   listOf: listOf,
   mutableListOf: mutableListOf,
   add: add,
+  deepcopy: deepcopy,
+  MList: MList,
   typeIs: typeIs,
   isCtor: isCtor,
   asyncStub: asyncStub,
@@ -257,3 +314,6 @@ export const P = {
   rand: rand,
   sublEval: sublEval,
 };
+
+
+Object.defineProperty(P, 'deepCopyCount', { get: function () { return deepCopyCount; } });

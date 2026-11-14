@@ -73,8 +73,13 @@ export function compileUnit(envelope) {
     top: new Set(),       // 顶层声明名（fun/struct/alias）
     warnings: [],
     errors: [],
-    whenCounter: 0
+    whenCounter: 0,
+    slotById: new Map(),      // symbol.id → 槽位信息（可变/引用/标量）——闭包捕获快照判据
+    slotByName: new Map(),    // 名 → 槽位信息（symbol 缺失回落）
+    renames: [],              // 闭包快照重命名帧（栈，内层优先）
+    snapCounter: 0
   };
+  collectSlots(hir, ctx);
   for (const e of hir.entries) {
     if (e.kind === 'HirStructDecl') {
       ctx.structs.set(e.name, e.fields || []);
@@ -148,7 +153,11 @@ function emitFun(d, ctx, top) {
   // 扩展方法：receiver 首参 self（方法糖 D-METHOD-SUGAR 调用方= 首参传）
   const hasReceiver = !!(d.receiver);
   const params = (hasReceiver ? [{ name: 'self', default: null }] : []).concat(d.params || []).map(function (p) {
-    if (p.default) return p.name + ' = ' + emitExpr(p.default, ctx);
+    // 站点 3 默认值：拷指令后入槽
+    if (p.default) {
+      const dv = emitExpr(p.default, ctx);
+      return p.name + ' = ' + (hasDeepCopyNote(p) ? deepWrap(dv) : dv);
+    }
     return p.name;
   }).join(', ');
   const head = (top ? 'export function ' : 'function ') + safeName(d.name) + '(' + params + ') ';
@@ -158,10 +167,14 @@ function emitFun(d, ctx, top) {
     const bt = blockTail(body.stmts);
     const lines = [];
     for (const s of bt.stmts) { const ls = emitStmt(s, ctx); for (const l of ls) lines.push(l); }
-    if (bt.tail !== null) lines.push('  return ' + emitExpr(bt.tail, ctx) + ';');
+    if (bt.tail !== null) {
+      // 站点 7 返回值/函数表达式体：拷指令后返
+      const tv = emitExpr(bt.tail, ctx);
+      lines.push('  return ' + (hasDeepCopyNote(bt.tail, { skipArgNotes: true }) ? deepWrap(tv) : tv) + ';');
+    }
     return head + '{\n' + lines.join('\n') + '\n}';
   }
-  return head + '{\n  return ' + emitExpr(body, ctx) + ';\n}';
+  return head + '{\n  return ' + (hasDeepCopyNote(body, { skipArgNotes: true }) ? deepWrap(emitExpr(body, ctx)) : emitExpr(body, ctx)) + ';\n}';
 }
 
 function emitStruct(d, ctx) {
@@ -236,20 +249,112 @@ function safeName(n) {
   return '$_' + [...n].map(function (c) { return '$' + c.charCodeAt(0).toString(16); }).join('') + '$';
 }
 
+// ---------- V2 深拷（R4 §2.3 八站点发射 + 闭包快照 §2.4） ----------
+const SCALAR_TYPE_NAMES = ['Nat', 'Int', 'Rat', 'Real', 'Str', 'Bool', 'Null', 'Nothing'];
+// D-DEEP-COPY 补注（R4-A0 结构化）或 var 位 deepCopy 布尔——单源信任
+function hasDeepCopyNote(n, opts) {
+  if (!n || typeof n !== 'object') return false;
+  if (n.deepCopy === true) return true;
+  const ns = n.notes;
+  if (!ns) return false;
+  const skipArg = opts && opts.skipArgNotes;
+  for (let i = 0; i < ns.length; i++) {
+    if (ns[i].code !== 'D-DEEP-COPY') continue;
+    if (skipArg && /实参\s*\d+/.test(ns[i].message || '')) continue;
+    return true;
+  }
+  return false;
+}
+function hasMethodSugar(n) {
+  const ns = n && n.notes;
+  if (!ns) return false;
+  for (let i = 0; i < ns.length; i++) if (ns[i].code === 'D-METHOD-SUGAR') return true;
+  return false;
+}
+// call 实参位拷指令：message 内"实参 N"（ receiver 首参含在 N 内）
+function deepArgIndexes(n) {
+  const out = new Set();
+  const ns = n.notes;
+  if (!ns) return out;
+  for (let i = 0; i < ns.length; i++) {
+    const nt = ns[i];
+    if (nt.code !== 'D-DEEP-COPY') continue;
+    const m = /实参\s*(\d+)/.exec(nt.message || '');
+    if (m) out.add(parseInt(m[1], 10) - 1);
+  }
+  return out;
+}
+function stripViews(t) {
+  let cur = t;
+  while (cur && (cur.kind === 'HirMutType' || cur.kind === 'HirRefType')) cur = cur.inner;
+  return cur;
+}
+function isScalarType(t) {
+  const n = stripViews(t);
+  if (!n) return true;
+  if (n.kind !== 'HirNamedType') return false;
+  return SCALAR_TYPE_NAMES.indexOf(n.name) >= 0;
+}
+function slotInfoOf(annotations, type) {
+  const ann = annotations || [];
+  const ty = type || null;
+  return {
+    mut: ann.indexOf('mut') >= 0 || (ty !== null && ty.kind === 'HirMutType'),
+    ref: ann.indexOf('ref') >= 0 || (ty !== null && ty.kind === 'HirRefType'),
+    scalar: isScalarType(ty)
+  };
+}
+function collectSlots(n, ctx) {
+  if (Array.isArray(n)) { for (const x of n) collectSlots(x, ctx); return; }
+  if (!n || typeof n !== 'object') return;
+  if (n.kind === 'HirVarStmt' && n.name) {
+    const info = slotInfoOf(n.annotations, n.type);
+    ctx.slotByName.set(n.name, info);
+    if (n.symbol && n.symbol.id !== undefined && n.symbol.id !== null) ctx.slotById.set(String(n.symbol.id), info);
+  }
+  if (n.kind === 'HirParam' && n.name) {
+    const info = slotInfoOf(n.annotations, n.type);
+    ctx.slotByName.set(n.name, info);
+    if (n.symbol && n.symbol.id !== undefined && n.symbol.id !== null) ctx.slotById.set(String(n.symbol.id), info);
+  }
+  for (const k in n) if (k !== 'notes') collectSlots(n[k], ctx);
+}
+// 判据 A：节点带拷指令;判据 B:@mut 槽位 ← 值迁移（NameRef/Field/Borrow——非自造值）
+function isValueTransfer(v) {
+  if (!v) return false;
+  return v.kind === 'HirNameRef' || v.kind === 'HirField' || v.kind === 'HirBorrow';
+}
+function deepWrap(code) { return '$S.deepcopy(' + code + ')'; }
+function refViewVar(s) {
+  const ann = s.annotations || [];
+  return ann.indexOf('ref') >= 0 || (s.type && s.type.kind === 'HirRefType');
+}
+function mutVar(s) {
+  const ann = s.annotations || [];
+  return ann.indexOf('mut') >= 0 || (s.type && s.type.kind === 'HirMutType');
+}
+
 // ---------- 语句发射 ----------
 
 function emitStmt(s, ctx) {
   switch (s.kind) {
     case 'HirVarStmt': {
-      const value = s.value ? emitExpr(s.value, ctx) : 'null';
+      // 站点 1 var 初始化：指令拷（deepCopy 位/note）+ @mut 槽位值迁移拷；@ref 视图=零操作同指
+      let value = s.value ? emitExpr(s.value, ctx) : 'null';
+      if (!refViewVar(s) && (hasDeepCopyNote(s, { skipArgNotes: true }) || (mutVar(s) && isValueTransfer(s.value)))) {
+        value = deepWrap(value);
+      }
       if (s.destruct) {
         return ['let [' + s.destruct.map(function (n) { return n || '_'; }).join(', ') + '] = ' + value + ';'];
       }
       return ['let ' + safeName(s.name) + ' = ' + value + ';'];
     }
     case 'HirAssign': {
+      // 站点 2 赋值：右值拷指令后写槽
       const target = emitTarget(s.target, ctx);
-      return [target + ' = ' + emitExpr(s.value, ctx) + ';'];
+      let rhs = emitExpr(s.value, ctx);
+      if (hasDeepCopyNote(s, { skipArgNotes: true }) || s.deepCopy === true) rhs = deepWrap(rhs);
+      return [target + ' = ' + rhs + ';'];
     }
     case 'HirExprStmt': {
       const e = s.expr;
@@ -262,8 +367,13 @@ function emitStmt(s, ctx) {
       if (e.kind === 'HirWhen') return emitWhenStmt(e, ctx);
       return [emitExpr(e, ctx) + ';'];
     }
-    case 'HirReturn':
-      return (s.expr || s.value) ? ['return ' + emitExpr(s.expr || s.value, ctx) + ';'] : ['return;'];
+    case 'HirReturn': {
+      // 站点 7 return 值：拷指令后返
+      if (!(s.expr || s.value)) return ['return;'];
+      let rv = emitExpr(s.expr || s.value, ctx);
+      if (hasDeepCopyNote(s, { skipArgNotes: true })) rv = deepWrap(rv);
+      return ['return ' + rv + ';'];
+    }
     case 'HirBlock': {
       const ls = [];
       for (const st of s.stmts || []) { const l2 = emitStmt(st, ctx); for (const x of l2) ls.push(x); }
@@ -327,7 +437,10 @@ function emitExpr(n, ctx) {
       const bt = blockTail(n.stmts);
       const ls = [];
       for (const st of bt.stmts) { const l2 = emitStmt(st, ctx); for (const x of l2) ls.push(x); }
-      if (bt.tail !== null) ls.push('  return ' + emitExpr(bt.tail, ctx) + ';');
+      if (bt.tail !== null) {
+        const tv = emitExpr(bt.tail, ctx);
+        ls.push('  return ' + (hasDeepCopyNote(bt.tail, { skipArgNotes: true }) ? deepWrap(tv) : tv) + ';');
+      }
       return '(function () {' + nl() + ls.join(nl()) + nl() + '})()';
     }
     case 'HirIf': {
@@ -378,7 +491,14 @@ function emitName(n, ctx) {
     ctx.warnings.push('unresolved:' + n.name + '@' + (n.pos || '?'));
     return '$S.dynamicStub(' + JSON.stringify(n.name) + ')';
   }
-  if (k === 'param' || k === 'local') return safeName(n.name);
+  if (k === 'param' || k === 'local') {
+    // V2 闭包快照：捕获快照帧内层优先（内层 lambda 形参帧先查）
+    for (let i = ctx.renames.length - 1; i >= 0; i--) {
+      const frame = ctx.renames[i];
+      if (frame.has(n.name)) return frame.get(n.name);
+    }
+    return safeName(n.name);
+  }
   if (k === 'builtin') {
     if (n.name === 'True') return 'true';
     if (n.name === 'False') return 'false';
@@ -416,7 +536,7 @@ function emitCall(n, ctx) {
   }
   if (callee.kind === 'HirNameRef' && callee.symbol && callee.symbol.kind === 'builtin') {
     const nm = callee.name;
-    const a = (n.args || []).map(function (x) { return emitExpr(x, ctx); });
+    const a = callArgs(n, ctx);
     if (nm === 'in') return '$S.in_(' + a.join(', ') + ')';
     return '$S.' + nm + '(' + a.join(', ') + ')';
   }
@@ -427,8 +547,21 @@ function emitCall(n, ctx) {
     return '$S.dynamicStub(' + JSON.stringify('module:' + (callee.target && callee.target.name) + '.' + callee.name) + '(' + ra.length + ' args))';
   }
   const f = emitExpr(callee, ctx);
-  const args = (n.args || []).map(function (x) { return emitExpr(x, ctx); });
+  const args = callArgs(n, ctx);
   return f + '(' + args.join(', ') + ')';
+}
+
+// 站点 4 call 实参：caller 侧拷后入帧（callee 无感）——"实参 N"拷指令;
+// 方法糖（D-METHOD-SUGAR）receiver 首参=同一对象写口，透传不拷（别名共享/就地写可见性，
+// e2e 特性巡礼与类型系统 golden 实证）
+function callArgs(n, ctx) {
+  const deepIdx = deepArgIndexes(n);
+  const sugared = hasMethodSugar(n);
+  return (n.args || []).map(function (x, i) {
+    const code = emitExpr(x, ctx);
+    if (deepIdx.has(i) && !(sugared && i === 0)) return deepWrap(code);
+    return code;
+  });
 }
 
 function emitStructCtor(n, ctx) {
@@ -438,7 +571,8 @@ function emitStructCtor(n, ctx) {
     const assigns = n.assigns || [];
     const values = fields.map(function (f) {
       const a = assigns.filter(function (x) { return x.field === f.name; })[0];
-      if (a) return emitExpr(a.value, ctx);
+      // 站点 5 构造子/struct 字段：拷指令后装字段
+      if (a) return hasDeepCopyNote(a) ? deepWrap(emitExpr(a.value, ctx)) : emitExpr(a.value, ctx);
       const dflt = ctx.defaults.get(name + '.' + f.name);
       return dflt ? emitExpr(dflt, ctx) : 'null';
     });
@@ -450,17 +584,61 @@ function emitStructCtor(n, ctx) {
 }
 
 function emitLambda(n, ctx) {
-  const params = (n.params || []).map(function (p) {
-    if (p.default) return p.name + ' = ' + emitExpr(p.default, ctx);
+  // 站点 8 闭包捕获：创建时对可变复合值深拷快照（R4 §2.4;e2e 特性巡礼 golden 实证
+  // ——snapshot() 持创建时值）。标量槽=直播（JS 词法域重绑定可见;e2e lambda 样本实证）;
+  // @ref 捕获=共享透传（§2.3 同源）。纯编译期槽位信息（无前端 @mut 衣依赖）。
+  const ownParams = new Set((n.params || []).map(function (p) { return p.name; }));
+  const seen = new Set();
+  const snaps = [];
+  walkRefs(n.body, function (ref) {
+    const nm = ref.name;
+    if (ownParams.has(nm) || seen.has(nm)) return;
+    const sym = ref.symbol;
+    if (!sym || (sym.kind !== 'local' && sym.kind !== 'param')) return;
+    seen.add(nm);
+    const info = (sym.id !== undefined && sym.id !== null) ? ctx.slotById.get(String(sym.id)) : null;
+    const slot = info || ctx.slotByName.get(nm);
+    if (slot && slot.mut && !slot.ref && !slot.scalar) snaps.push(nm);
+  });
+  const defaults = (n.params || []).map(function (p) {
+    if (p.default) {
+      const dv = emitExpr(p.default, ctx);
+      return p.name + ' = ' + (hasDeepCopyNote(p) ? deepWrap(dv) : dv);
+    }
     return p.name;
   }).join(', ');
   const body = n.body;
+  let inner;
+  if (snaps.length === 0) {
+    if (body.kind === 'HirBlock') {
+      const ls = [];
+      for (const st of body.stmts || []) { const l2 = emitStmt(st, ctx); for (const x of l2) ls.push(x); }
+      inner = '{\n' + ls.join('\n') + '\n}';
+    } else inner = emitExpr(body, ctx);
+    return '((' + defaults + ') => ' + inner + ')';
+  }
+  ctx.snapCounter += 1;
+  const snapVar = '__snap' + ctx.snapCounter;
+  const frame = new Map();
+  for (const nm of snaps) frame.set(nm, snapVar + '.' + safeField(nm));
+  ctx.renames.push(frame);
   if (body.kind === 'HirBlock') {
     const ls = [];
     for (const st of body.stmts || []) { const l2 = emitStmt(st, ctx); for (const x of l2) ls.push(x); }
-    return '((' + params + ') => {\n' + ls.join('\n') + '\n})';
-  }
-  return '((' + params + ') => ' + emitExpr(body, ctx) + ')';
+    inner = '{\n' + ls.join('\n') + '\n}';
+  } else inner = emitExpr(body, ctx);
+  ctx.renames.pop();
+  const envObj = '{' + snaps.map(function (nm) {
+    return safeField(nm) + ': ' + deepWrap(safeName(nm));
+  }).join(', ') + '}';
+  return '((' + snapVar + ') => ((' + defaults + ') => ' + inner + '))(' + envObj + ')';
+}
+
+function walkRefs(n, f) {
+  if (Array.isArray(n)) { for (const x of n) walkRefs(x, f); return; }
+  if (!n || typeof n !== 'object') return;
+  if (n.kind === 'HirNameRef') f(n);
+  for (const k in n) if (k !== 'notes') walkRefs(n[k], f);
 }
 
 // ---------- when/模式发射 ----------

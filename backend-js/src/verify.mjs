@@ -40,6 +40,7 @@ function extractGolden(srcText) {
     if (l.match(/预期输出（每行一个）[：:]/) || l.match(/预期 stdout（compile \+ node，逐行）[：:]/) || l.match(/预期输出（逐行）[：:]/)) { idx = i; break; }
   }
   if (idx < 0) return inlineGolden(lines);
+  // header 形：显式逐行预期=完整 golden（声明位=执行位的作者承诺）
   const head = headerItems(lines[idx]);
   // 续行注释（同行 ' / ' 亦入），直到非注释行
   let items = head;
@@ -50,7 +51,7 @@ function extractGolden(srcText) {
     if (!extra.length) break;
     items = items.concat(extra);
   }
-  return items;
+  return { items: items.map(function (s) { return { v: s, line: null }; }), commentBased: true };
 }
 function headerItems(l) {
   const m = l.match(/预期[^：:]*[：:]\s*(.*)$/);
@@ -60,16 +61,33 @@ function headerItems(l) {
   if (items.length && items[0].indexOf('//') === 0) return [];
   return items;
 }
+// V2:值样判据——行尾注释剥离（…）后若为值样（数/布/列表渲染/ctor 形/无空白分号 CJK 单 token）
+// 取为 golden;非值样注释（说明文字）与无注释 print 行回落到字符串字面量值（print("done") 之属）。
 function inlineGolden(lines) {
   const out = [];
-  for (const l of lines) {
+  let commentBased = false;
+  for (let li = 0; li < lines.length; li++) {
+    const l = lines[li];
     if (l.indexOf('print(') < 0) continue;
     const index = l.lastIndexOf('//');
-    if (index < 0) continue;
+    if (index < 0) { pushLiteralGolden(out, l, li); continue; }
     const value = l.slice(index + 2).trim().replace(/（[^（）]*）$/, '').replace(/\s*\/$/, '');
-    if (value.length) out.push(value);
+    if (value.length && isValueLike(value)) { out.push({ v: value, line: li + 1 }); commentBased = true; }
+    else pushLiteralGolden(out, l, li);
   }
-  return out.length ? out : null;
+  return out.length ? { items: out, commentBased: commentBased } : null;
+}
+function isValueLike(v) {
+  if (/^-?\d+(\.\d+)?$/.test(v)) return true;
+  if (v === 'true' || v === 'false') return true;
+  if (/^\[.*\]$/.test(v) && v.indexOf('（') < 0) return true;
+  if (/^[A-Za-z_$][A-Za-z0-9_$]*\(/.test(v) && v.indexOf('（') < 0) return true;
+  return !/[\s；:：]/.test(v) && !/[一-龥]/.test(v);
+}
+function pushLiteralGolden(out, l, li) {
+  // 行回落：仅 print("字面量") 取值——非字面（print(expr)）不可静态知，跳过
+  const m = /print\s*\(\s*"((?:[^"\\]|\\.)*)"\s*\)/.exec(l);
+  if (m) out.push({ v: m[1], line: li + 1, fallback: true });
 }
 function unusedExtractAnchor(lines) {
   for (const l of lines) {
@@ -100,7 +118,7 @@ for (const f of samples) {
   const prod = productsDir + '/' + f + '.json';
   if (!existsSync(prod)) { ledger.push([f, 'SKIP', '无编译产物']); continue; }
   const srcText = readFileSync(samplesDir + '/' + f, 'utf8');
-  const golden = extractGolden(srcText);
+  const goldenRaw = extractGolden(srcText);
   let g;
   try { g = gate(JSON.parse(readFileSync(prod, 'utf8'))); }
   catch (e) { ledger.push([f, 'SKIP', '产物 JSON 解析失败']); continue; }
@@ -114,15 +132,51 @@ for (const f of samples) {
   writeFileSync(snapDir + '/' + r.name + '.stdout', stdout, 'utf8');
   const rc = run.status;
   const lane = laneOf(f);
-  if (!golden) { ledger.push([f, 'NO-GOLDEN', lane + ' 无预期注释']); continue; }
-  const exp = golden;
+  // 纯字面回落=作者未写预期注释 → NO-GOLDEN（不误判为 FAIL）
+  if (!goldenRaw || (!goldenRaw.commentBased && goldenRaw.items.every(function (it) { return it.fallback; }))) {
+    ledger.push([f, 'NO-GOLDEN', lane + ' 无预期注释（仅字面回落）']);
+    continue;
+  }
+  const golden = goldenRaw.items;
+  const exp = golden.map(function (it) { return it.v; });
   const act = stdout.split('\n').filter(function (s) { return s.length; });
-  let hit = exp.length === act.length && exp.every(function (v, i) { return v === act[i]; });
+  // 多体样本：print 分布于多个函数声明体——声明位序≠执行位序，按多重集对拍（单体保序）
+  const multiBody = isMultiBody(JSON.parse(readFileSync(prod, 'utf8')).hir, golden);
+  let hit;
+  if (multiBody) {
+    const sortJoin = function (a) { return a.slice().sort().join('\u0001'); };
+    hit = sortJoin(exp) === sortJoin(act);
+  } else {
+    hit = exp.length === act.length && exp.every(function (x, i) { return x === act[i]; });
+  }
   if (hit && rc === 0) ledger.push([f, 'PASS', lane]);
   else if (lane !== 'V1') ledger.push([f, 'FAIL(范围外:' + lane + ')', 'rc=' + rc + ' 差异: ' + diffBrief(exp, act)]);
   else ledger.push([f, 'FAIL', 'rc=' + rc + ' 差异: ' + diffBrief(exp, act)]);
 }
 
+// golden 各值由 HIR print 调用位归属到声明的函数——跨多个声明体=多体样本
+function isMultiBody(hir, golden) {
+  const ownerOf = {};   // print 调用首行 → 声明名
+  let any = false;
+  hir.entries.forEach(function (e) {
+    if (e.kind !== 'HirFunDecl') return;
+    const nm = e.name || '?';
+    walkCallPrint(e.body, function (pos) {
+      const m = /^(\d+):/.exec(pos || '');
+      if (m) { ownerOf[parseInt(m[1], 10)] = nm; any = true; }
+    });
+  });
+  if (!any) return false;
+  const owners = new Set();
+  golden.forEach(function (it) { if (ownerOf[it.line]) owners.add(ownerOf[it.line]); });
+  return owners.size > 1;
+}
+function walkCallPrint(n, f) {
+  if (Array.isArray(n)) { for (const x of n) walkCallPrint(x, f); return; }
+  if (!n || typeof n !== 'object') return;
+  if (n.kind === 'HirCall' && n.callee && n.callee.kind === 'HirNameRef' && n.callee.name === 'print') f(n.pos);
+  for (const k in n) if (k !== 'notes') walkCallPrint(n[k], f);
+}
 function diffBrief(exp, act) {
   const n = Math.min(exp.length, act.length);
   for (let i = 0; i < n; i++) if (exp[i] !== act[i]) return '#' + (i + 1) + ' 期「' + exp[i] + '」得「' + act[i] + '」';
