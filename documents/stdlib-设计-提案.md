@@ -423,3 +423,35 @@ builtinSig（TypeInfer:790）60+ 内建函数按域分类登记——**语言定
 - **纪律**：负例先红（T156 测套落盘先跑：门 2/3/4 三红——快照无 axioms 件）;零分配 nid（@axiom 无体声明——零新类型求值）;既有件逐字不动（B3 只加模块——vs t155gate 76 逐字同零增量、68 门分类零波动）;stdlib 9→10 闭合。
 - **t156 实测门**：套件 **1281/1281**（1276 + T156StdlibAxiomsTest 5 测：件并入零红 / 八条公理在位 / 限定引用调用绿 / 裸名链隔离 / 未引用零足迹）;T137/T131/T137B0 既有断言随件数更新（键集 +axioms、子件 8→9）;68 门 vs t122n 闭合（38/11/5/3/6/4/1 零波动）;vs t155gate 逐字同 76 + axioms 新增件 1;stdlib vs t143stdlib 10 闭合（4 同 + 3 纯W + 1 纯批二 + list 件登记差 + axioms 新增）;模块双导出确定性 10/10;脚本门 run-gate 过（五段机械证据见 `jsoncmp/scripts/t156-parity.ps1`）。
 - **诚实边界**：跨模块命题面（用户 posts 直接实例化 stdlib 公理）未通——@axiom 不入 theorems 分表，公理库现为**规格面**（spec of record）;一致性测试（t65 注入事实 ⊆ 公理可实例化，规划 §6 Q2/路线③）为后续件;M1–M2 / S1–S2 / T1–T3 / G1 随核心库迁入扩容（规划路线⑤）。
+
+## 24 批史 t157（B3 后续件：跨模块命题实例化收口 + 注入一致性 + M/S/T/G 扩容，2026-11-14）
+
+**1. 跨模块命题实例化面（R-27 模块态）**——摸现状定位根因后收口：
+
+- **缺口（负例先红，CLI 探针实测）**：挂载模块 callee 的紧贴角表两路皆红——`mod.gid[Nat](x)` 的类型
+  实参按**值域**读（`E-UNBOUND-NAME: Nat` 双错）;`mod.witness<p>()` 落 `E-CALL-ANGLE` 兜底「callee」。
+  根因：Elaborator InstExpr callee 分支只查本模块 `funDecls` 判定 PropParam/角表角色，挂载快照 funs 面未接入。
+- **收口**:callee target 为限定链时经 `moduleChainResolve` 消解 + 快照被调声明（`ModuleSnapshot.funs[name].decl`——
+  t134 既有 AST 承载面）:`[]` 恒为类型实参通道（按类型域读，`moduleQualifiedCall` 携带 `explicitTps` 经
+  `sigCheckedCall` 同本地方案）;`<>` 须被调含 PropParam 理论参数（R-26.1/t148 同口径，本模块与快照两处查）,
+  否则 E-CALL-ANGLE 精确落位（hint 指回限定链末段函数名）;中段未命中单错落位（免双错同源）。
+- **既有边界（登记未强造）**:数值公理形（本库 `[n]` 元变量 + posts）不经调用注入——R-26.1 既有口径（t148 收口）;
+  跨文件定理空间搜索按 ADR-13 §三 V1 推迟（归归纳法面 t91 一并暂缓）。用户实例化以 `axiom` 语句 / `by` 断言就地写。
+
+**2. 注入一致性测试（防静默漂移）**——`T157AxiomsConsistencyTest`（cli 测套 4 门）:
+
+- 以 stdlib 编译产物的 HirFunDecl posts **JSON 区段**为基线，逐 16 条断言命题形关键片段（head/谓词名/构造子/
+  字面量/量词符）——改任一公理的命题即触红（drift 门:公理集增删与片段两重断言）;
+- **注入≡规格**:用户 post `<n >= 0>` 走类型注入（D-NAT-PROP，provenance=type）绿，与 A1 公理声明同形
+  断言（快路径与规格分家但口径对应——零 nid、零新通道，不为注入加公理依赖）。
+
+**3. M/S/T/G 扩容（先评估后定 Scope）**——先行 CLI 探测四族命题形（函数应用/构造子应用 `Some(v)`/真值字面量
+  `True`/字符串字面量 `""`/区间项 `lo..hi` 与 `∈`）**全部可写**，零强造语法：M1–M2（map 查找-插入/异键不扰）、
+S1–S2（set 插入自含/异元不扰）、T1–T3（文本长度可加/结合律/空串单位元）、G1（区间成员等价，闭区间口语——
+半开/闭合最终语义随 P-11 区间定案校准）。axioms 件 8→16 条。归纳法族（L5–L7/E1–E3/induction）仍按 t91 暂缓。
+
+- **t157 实测门**:套件 **1289/1289**（1281 + 一致性 4 + 角表通道 4;T156 门 2 随库更新 8→16 命名断言）;
+  68 门 vs t122n 闭合零波动（38/11/5/3/6/4/1）;vs t156gate **76 逐字同 + axioms 件 8→16 authorized 零未登记差**;
+  stdlib 10 闭合（vs t143stdlib）+ ④b vs t156stdlib 九件逐字同 + axioms 8→16;模块双导出确定性 10/10;
+  脚本门 run-gate 过;parity 五段全绿（`jsoncmp/scripts/t157-parity.ps1`）。
+- 文档分账：标准库规划 §3.2–3.5 对账标注（M/S/T/G 已落）。

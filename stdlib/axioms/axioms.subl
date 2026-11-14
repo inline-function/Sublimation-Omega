@@ -12,7 +12,15 @@
 //   故本件**无依赖挂载**（公理不断言 stdlib 的符号解析，只断言其数学含义）;
 // - 归纳法依赖面（L5–L7 长度不变性族 / reverse 不动点 / E1–E3 外延性、排序正确性、
 //   induction 公理）按 t91 裁决 6 暂缓——归纳法落地后由「公理」降为「定理」。
-// - M1–M2 / S1–S2 / T1–T3 / G1 随核心库迁入扩容（规划路线⑤，本批不落）。
+// - t157（B3 后续件）：M/S/T/G 四族八条评估后**可落**（现行命题形全通——函数应用/
+//   构造子应用/真值与字符串字面量/区间项 ∈/lo..hi），已落下方四族;归纳法面仍暂缓。
+// - 跨模块命题实例化通道（t157 收口 + 既有边界登记）:
+//   · 限定 callee 角表（mod.f[Nat](x) 类型实参 / mod.f<p>() 命题供给，被调含 PropParam
+//     理论参数时）**已通**（t157 Elaborator 收口——修前两路皆红：[] 按值域读双错、<> 兜底）;
+//   · 数值公理形（本库 [n] 元变量 + posts）不经调用注入（R-26.1/t148 既有口径）——
+//     posts 的跨件检查仅声明侧（快照无命题面），用户实例化以 axiom 语句 / by 断言就地写。
+//   · 注入一致性（t157 落 T157AxiomsConsistencyTest：axioms 修改即报差，防静默漂移）——
+//     类型注入（D-NAT-PROP 的 n >= 0）与 A1 声明同一断言：快路径与规格分家但口径对应。
 
 // ---------- 数值（A1–A3）----------
 
@@ -49,3 +57,38 @@ fun `list append assoc`[xs, ys, zs]: Null <append(append(xs, ys), zs) = append(x
 // L4：长度可加（实用度极高）。
 @axiom
 fun `list length append`[xs, ys]: Null <length(append(xs, ys)) = length(xs) + length(ys)>
+
+
+// ---------- t157（B3 后续件·M/S/T/G 扩容）：四族八条 ----------
+// 评估结论（先行探测后落，零强造）：四族命题形在现行语言形态下**全部可写**——
+// 函数应用（get/put/insert/contains/concat）、构造子应用（Some(v)）、真值字面量 True、
+// 字符串字面量 ""、区间项 lo..hi 与 ∈ 原子经命题位静默模式解析（NameResolver 既有口径）。
+// M 族（Map 查找-插入律 / 异键不扰）——自由名接 stdlib map 件函数面（put/get）。
+@axiom
+fun `map get put`[m, k, v]: Null <get(put(m, k, v), k) = Some(v)>
+
+@axiom
+fun `map put other key`[m, k1, k2, v]: Null <(k1 != k2) → (get(put(m, k1, v), k2) = get(m, k2))>
+
+// S 族（Set 插入自含 / 异元不扰）——自由名接 stdlib set 件函数面（insert/contains）。
+@axiom
+fun `set insert contains`[s, x]: Null <contains(insert(s, x), x) = True>
+
+@axiom
+fun `set insert other`[s, x, y]: Null <(x != y) → (contains(insert(s, x), y) = contains(s, y))>
+
+// T 族（文本长度可加 / 结合律 / 空串单位元）——concat/length 自由名（stdlib 件未含文本操作，
+// 按规划 §3.3 以规格先行落，函数面随核心库迁入）。
+@axiom
+fun `text length concat`[a, b]: Null <length(concat(a, b)) = length(a) + length(b)>
+
+@axiom
+fun `text concat assoc`[a, b, c]: Null <concat(concat(a, b), c) = concat(a, concat(b, c))>
+
+@axiom
+fun `text concat empty`[a]: Null <concat(a, "") = a>
+
+// G 族（区间成员等价）——∈ 原子 + 区间项（lo..hi）与 e2e logic/inequality 同口径。
+// V1 取闭区间口语（lo <= x ∧ x <= hi）;半开/闭合最终语义随 P-11 区间定案校准（规划 §3.5 注）。
+@axiom
+fun `range membership`[x, lo, hi]: Null <(x ∈ (lo..hi)) ↔ ((lo <= x) ∧ (x <= hi))>

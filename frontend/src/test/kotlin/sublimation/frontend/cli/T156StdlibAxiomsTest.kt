@@ -35,18 +35,24 @@ class T156StdlibAxiomsTest {
         assertFalse(sd.hasError, "stdlib 全件（含 axioms）零红: " + sd.diags.map { it.code + it.message }.joinToString(";"))
     }
 
-    /** 门 2：七条首批公理在位（A1–A3 + L1–L4，反引号命名——裸名链零污染）。 */
+    /** 门 2：十六条公理在位（首批 A1–A3 + L1–L4 八条 + t157 扩容 M/S/T/G 八条）。
+     *  t157 扩容八条随库更新并入本门（同 t140 件数更新先例）。 */
     @Test fun 首批公理条目在位() {
         val (su, _) = compileStdlibUnits(noStdlib = false, scriptMode = false, noDegrade = false, noLift = false)
         val by = su.associateBy { it.alias }
         assertEquals(true, "axioms" in by.keys, "axioms 件在默认挂载表")
         val ax = by["axioms"]!!.snapshot.funs.keys
         // A1–A3（数值三条）+ L1/L2/L3a/L3b/L4（链表五条——L3 结合律拆右单位元 + 结合律两条）
-        assertEquals(8, ax.size, "首批公理恰八条: $ax")
+        // t157（B3 后续件）：M1–M2/S1–S2/T1–T3/G1 八条扩容并入——十六为现态
+        // （同 t140 件数更新先例：既有断言随库扩容更新，不掩裂）
+        assertEquals(16, ax.size, "公理恰十六条（首批八 + 扩容八）: $ax")
         assertTrue(setOf("nat non-negative", "nat add monotone", "nat sub non-negative").all { it in ax } &&
             setOf("list length nil", "list length cons", "list append nil",
                 "list append assoc", "list length append").all { it in ax },
             "A1–A3 + L1–L4 命名在位: $ax")
+        assertTrue(setOf("map get put", "map put other key", "set insert contains", "set insert other",
+            "text length concat", "text concat assoc", "text concat empty", "range membership").all { it in ax },
+            "t157 扩容 M1–M2/S1–S2/T1–T3/G1 命名在位: $ax")
     }
 
     /** 门 3：限定引用调用绿（公理函数可作普通函数调用——编译期擦除为 Null）。 */

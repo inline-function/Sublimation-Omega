@@ -3292,6 +3292,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         e: CallExpr, c: FieldExpr, qref: NameRef, mod: ModuleSnapshot,
         /** t155（三段调用链）：中段模块段 AST 清单（外→内序）——HIR 限定链逐段构造取位。 */
         segments: List<FieldExpr> = emptyList(),
+        /** t157（B3 后续件·跨模块 callee 角表）：限定 callee 的紧贴角表实参（[] 类型实参 / <>
+         * 命题供给——按类型域读，经 sigCheckedCall 同本地方案;默认空=普通限定调逐字不变）。 */
+        explicitTps: List<HirType> = emptyList(),
     ): HirCall {
         val nid = freshNid()
         gateBatchOpen()   // t122 实参批次（调用位归并回放序；onCall 内 gateBatchCloseWithCall 配对收尾）
@@ -3309,7 +3312,7 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             head?.let { mod.lookupExt(it, c.name) }
         } else null
         val t: sublimation.frontend.hir.HirType = if (mf != null)
-            sigCheckedCall(mf.decl, mf.decl.name, argTypes, e.pos, emptyList(), borrowedFlags)
+            sigCheckedCall(mf.decl, mf.decl.name, argTypes, e.pos, explicitTps, borrowedFlags)
         else if (mext != null)
             extCallType(mext.decl, argTypes, e.pos, borrowedFlags)
         else if (mod.structs[c.name] != null) {
@@ -3562,18 +3565,44 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                         val nm = (c.target as? NameRef)?.name
                         val hasPropTheory = nm != null &&
                             funDecls[nm]?.theory?.any { it is sublimation.frontend.ast.PropParam } == true
-                        if (c.bracket || hasPropTheory) {
+                        // t157（B3 后续件·跨模块 callee 角表通道收口）：限定 callee（mod.f[…]()/mod.f<p>() 形）
+                        // ——模块段链消解（c.target 的 target 段）+ 挂载快照被调声明。修前限定 callee 的角表
+                        // 两路皆不通：[] 的类型实参按值域读落 E-UNBOUND-NAME 双错、<> 落 E-CALL-ANGLE 兜底
+                        // 「callee」——根因是被调声明只查本模块 funDecls。现按 R-26.1 同口径：[] 恒为类型
+                        // 实参通道;<> 须被调（本模块 funDecls 或快照声明）含 PropParam 理论参数，否则
+                        // E-CALL-ANGLE 精确落位（hint 指回限定链末段函数名）。中段未命中同限定调位落位
+                        // 报错（免双错同源）;本地同名值遮蔽模块别名时不走限定通道（消歧序 1 同口径）。
+                        val qfe = c.target as? FieldExpr
+                        val qhit = qfe?.let { moduleChainResolve(it.target) }
+                        val qHitMod = qhit?.first
+                        val qDecl = qHitMod?.mod?.let { m -> qfe!!.name.let { n -> m.lookupFun(n)?.decl } }
+                        val hasPropTheoryMod = qDecl?.theory?.any { it is sublimation.frontend.ast.PropParam } == true
+                        val qShadowed = qHitMod != null && symbols.lookupValue(qHitMod.root.name) != null
+                        if (c.bracket || hasPropTheory || (hasPropTheoryMod && !qShadowed)) {
                             if (nm != null && symbols.lookupValue(nm) != null) {
                                 symbol = resolver.resolveValue(nm, c.target.pos)
                                 callee = HirNameRef(nm, symbol, null, freshNid(), c.target.pos, notesOf(c.target))
                                 explicitTps = c.terms.map { termType(it) }
+                            } else if (qHitMod != null && !qShadowed) {
+                                // t157：限定 callee 命中——走限定调用通道携带显式角表（快照声明核对;
+                                // 快照无该名时由 moduleQualifiedCall 落原有 E-UNBOUND-NAME，不静默）
+                                return moduleQualifiedCall(
+                                    e, qfe!!, qHitMod.root, qHitMod.mod, qHitMod.segments, c.terms.map { termType(it) })
+                            } else if (qfe != null && qhit?.second != null) {
+                                val qmiss = qhit.second!!
+                                diag.error("E-UNBOUND-NAME", qmiss.missed.pos,
+                                    "模块 " + qmiss.modPath + " 无子模块 " + ident(qmiss.missed.name) +
+                                        "（限定链中段未命中挂载子模块——子目录须经其 .settings 挂载;" +
+                                        modulePathStr(qmiss.root.name, listOf(qmiss.missed), qfe.name) +
+                                        " 的中段解不出）")
+                                return moduleDeadCall(e, qfe, qmiss.root)
                             } else {
                                 callee = expr(e.callee)
                                 symbol = (callee as? HirInst)?.let { it.target as? HirNameRef }?.symbol
                                 explicitTps = emptyList()
                             }
                         } else {
-                            val hint = nm ?: "callee"
+                            val hint = nm ?: qfe?.name ?: "callee"
                             diag.error("E-CALL-ANGLE", e.pos,
                                 "调用位尖括号 `<…>` 是命题参数通道（R-26.1）：类型实参请迁移到方括号 " + ident(hint) +
                                 "[…]；命题供给请改用 by 断言（" + ident(hint) + "() by [命题]）")
