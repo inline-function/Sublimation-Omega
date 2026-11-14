@@ -136,7 +136,10 @@ class T126ContainerFaceTest {
     }
 
 
-    /** R-06 T3：脚本模式形参被传入 @mut 接收者位 ⇒ 提升通道（D-MUT-INFERRED 触发分类 T3）。 */
+    /** R-06 T3：脚本模式形参被传入 @mut 接收者位 ⇒ 提升通道（D-MUT-INFERRED 触发分类 T3）。
+     *  R-31（t163）：T3 提升翻回绿——@mut 接收者位提升落声明位通道（符号 mutable，类型 plain）：
+     *  接收者类型 plain Box 与方法头匹配（@mut 为方法注解位——走纯度闸面），f(x) plain→plain 零拒格
+     *  （旧 t150 视图合成通道下 f(x) 落 PLAIN→MUT 拒格的翻转吸收作废）。 */
     @Test fun T3形参加入mut接收者位() {
         val rs = sc(
             "@mut struct Box(@mut n: Nat)\n" +
@@ -145,9 +148,9 @@ class T126ContainerFaceTest {
             "var x : Box = Box(1)\n" +
             "f(x)\n" +
             "print(x)\n")
-        // R-28 fallout（队长冲突点 1）：提升后 f 形参视图 @mut Box，f(x) plain 实参落 PLAIN→MUT 拒格
+        // R-31：提升链零错误（接收者位类型匹配 + 属主写通道）
         val es = errs(rs)
-        assertTrue(es.isNotEmpty(), "R-28 后提升写回落拒格（旧零错误基线废止）: $es")
+        assertEquals(emptyList(), es, "R-31: T3 提升绿态恢复（声明位通道零拒格）: $es")
         val note = supps(rs).firstOrNull { it.contains("D-MUT-INFERRED") && it.contains("传入 @mut 接收者位 T3") }
         assertNotNull(note, "T3 触发分类入审计四元组（提升机制保持）: $note")
     }

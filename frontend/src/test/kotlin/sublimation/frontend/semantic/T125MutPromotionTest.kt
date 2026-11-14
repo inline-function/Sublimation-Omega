@@ -16,12 +16,16 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * t125 S5b（R-06 脚本模式 @mut 自动提升）。
+ * t125 S5b（R-06 脚本模式 @mut 自动提升）—— **R-31（t163）重裁**：提升改走**声明位通道**。
  *
- * - **T1 局部二次赋值** / **T2 形参被赋值** ⇒ 单调提升（SymbolEntry.mutable + 视图 @mut）;
- * - 机制：赋值位登记需求（scriptPromotable 候选过滤——字段 C-5/循环变量/lambda 形参不提升）
- *   ⇒ 驱动器**单轮预应用重跑**（mut-promoted 轮：声明先于赋值、单调 ⇒ 一轮收敛，轮次确定性）;
- * - D-MUT-INFERRED 审计四元组（名 + 提升视图 + 触发分类 + 证据清单）;
+ * - **T1 局部二次赋值** / **T2 形参被赋值** ⇒ 单调提升——提升产出=**声明位槽位可变标记**
+ *   （SymbolEntry.mutable，同 @mut var 记账），**类型保持 plain T**（不再合成 @mut 视图类型;
+ *   t150 翻转的视图合成通道作废，本件 4 测翻回绿态）;
+ * - 语义后果：提升槽位的写回=**属主写**（写闸走符号 mutable 位），不进 R-28 copyDispatch 矩阵
+ *   （矩阵只管值位/子类型转换的跨变量伪造——矩阵拒格零回归见 T125WriteGate/T150）;
+ * - 机制保持：赋值位登记需求（scriptPromotable 候选过滤）⇒ 驱动器**单轮预应用重跑**
+ *   （mut-promoted 轮：声明先于赋值、单调 ⇒ 一轮收敛，轮次确定性）;
+ * - D-MUT-INFERRED 审计四元组（名 + 提升视图 @mut + 触发分类 + 证据清单）——@mut 视图仅入审计渲染;
  * - 工程模式零通道（声明制——E-IMMUT-ASSIGN 逐字不变，t8/t98 冻结测保护）;
  * - C-5：字段层不提升（写位仍落 E-IMMUT-ASSIGN）。
  */
@@ -51,19 +55,19 @@ class T125MutPromotionTest {
     private fun varStmtOf(hir: HirFile, name: String): HirVarStmt? =
         hir.entries.mapNotNull { (it as? HirStmtEntry)?.stmt as? HirVarStmt }.firstOrNull { it.name == name }
 
-    /** R-28 击穿 R-06 提升写回（队长冲突点 1，待裁）：提升后 x 视图 @mut Nat，
-     *  RHS plain Nat → PLAIN→MUT 拒格——提升机制结构证据保留，写回落点翻转。 */
+    /** R-31（t163）：T1 提升翻回绿——声明位通道（符号 mutable，类型 plain）⇒ 写回=属主写，
+     *  不进 R-28 矩阵（PLAIN→MUT 拒格不再适用于提升槽位的属主写）。 */
     @Test fun T1局部二次赋值提升() {
         val rs = scriptRounds("var x = 1\nx = x + 1\nprint(x)\n")
         val es = errCodes(rs).filter { it.startsWith("E-") }
-        assertEquals(listOf("E-TYPE-MISMATCH"), es, "R-28: 提升后写回 PLAIN→MUT 拒格（旧隐式深拷废止）")
+        assertEquals(emptyList(), es, "R-31: 提升槽位写回=属主写，零 E-TYPE-MISMATCH（矩阵拒格零回归见 T125WriteGate）")
         assertTrue(rs.mutPromoted, "mut-promoted 重跑发生（R-06 提升机制本身保持）")
         val v = varStmtOf(rs.hir, "x")
         assertNotNull(v)
-        assertTrue(v.type is HirMutType, "var 视图提升为 @mut Nat")
-        val inner = (v.type as HirMutType).inner as? sublimation.frontend.hir.HirNamedType
-        assertNotNull(inner)
-        assertEquals("Nat", inner.name, "视图内层为 Nat（R-06 提升视图 @mut Nat）")
+        // R-31：类型保持 plain（声明位可变标记入 SymbolEntry——写回成立仅可由符号 mutable 解释）
+        val nt = v.type as? sublimation.frontend.hir.HirNamedType
+        assertNotNull(nt, "提升槽位类型保持 plain（R-31 声明位通道——不再合成 @mut 视图）")
+        assertEquals("Nat", nt.name, "var 推导类型为 Nat（视图 @mut 仅入 D-MUT-INFERRED 审计渲染）")
     }
 
     @Test fun D_MUT_INFERRED四元组落袋() {
@@ -77,15 +81,18 @@ class T125MutPromotionTest {
         assertTrue(msg.contains("use:"), "四元组④证据尝试清单")
     }
 
-    /** R-28 fallout（队长冲突点 1）：提升后形参视图 @mut Nat，body 写回 + 调用位 plain 实参双双落拒格。 */
+    /** R-31（t163）：T2 形参提升翻回绿——形参槽位走声明位通道（符号 mutable，类型 plain）：
+     *  body 写回=属主写（零 E-TYPE-MISMATCH），调用位 plain 实参按 plain 形参传递。
+     *  R-06 原话「提升出的 @mut 即形参推导类型」与声明位通道口径相反——如实记录冲突，
+     *  R-31 裁决下 T2 形参类型保持 plain（未硬并，@mut 视图仅入审计渲染）。 */
     @Test fun T2形参被赋值提升() {
         val rs = scriptRounds("fun f(a) {\n  a = a + 1\n  return a\n}\nprint(f(1))\n")
         val es = errCodes(rs).filter { it.startsWith("E-") }
-        assertTrue(es.isNotEmpty() && es.all { it == "E-TYPE-MISMATCH" }, "R-28: 提升形参写回 + plain 实参落 E-TYPE-MISMATCH（旧深拷废止）: $es")
+        assertEquals(emptyList(), es, "R-31: 提升形参写回=属主写 + plain 实参按 plain 形参传递（零拒格）: $es")
         val f = rs.hir.entries.mapNotNull { (it as? sublimation.frontend.hir.HirDeclEntry)?.decl as? sublimation.frontend.hir.HirFunDecl }.first { it.name == "f" }
-        val pt = f.params.first().type
-        assertTrue(pt is HirMutType, "形参视图提升 @mut（R-06：提升出的 @mut 即形参推导类型）")
-        // 名称引用结论侧亦同步（调用位按 R-01 表深拷核）
+        val nt = f.params.first().type as? sublimation.frontend.hir.HirNamedType
+        assertNotNull(nt, "形参类型保持 plain（R-31 声明位通道）")
+        assertEquals("Nat", nt.name, "形参推导类型 plain Nat（可变标记入 SymbolEntry）")
     }
 
     @Test fun 工程模式零通道声明制() {
@@ -118,15 +125,17 @@ class T125MutPromotionTest {
         val src = pairDir.resolve("mut-promote.subs").readText()
         val rs = parseScriptSourceWithNotes(src, "mut-promote.subs").let { compileWithRounds(it.file, it.notes, scriptMode = true) }
         val rp = parseSourceWithNotes(pairDir.resolve("mut-promote.subl").readText(), "mut-promote.subl").let { compileWithRounds(it.file, it.notes, scriptMode = false) }
-        // R-28 fallout（队长冲突点 1）：脚本提升后写回落拒格（旧零错误基线废止）
-        assertTrue(errCodes(rs).filter { it.startsWith("E-") }.isNotEmpty(), "脚本侧 R-28 拒格落点（提升写回 PLAIN→MUT）")
+        // R-31（t163）：脚本提升翻绿——声明位通道（符号 mutable，类型 plain），写回/调用零拒格
+        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "脚本侧提升绿态（属主写零 E）")
         assertTrue(errCodes(rp).contains("E-IMMUT-ASSIGN"), "工程侧同源拒绝位（声明制）：未标 @mut 的形参/局部写落 E-IMMUT-ASSIGN")
         assertTrue(rs.mutPromoted, "脚本侧 mut-promoted 重跑")
         assertFalse(rp.mutPromoted, "工程侧零提升通道")
-        // 形参提升视图（推导位 vs 工程拒绝位的分型证据）
+        // 声明位通道分型证据：脚本侧形参类型 plain（可变标记入符号）
         val pf = rs.hir.entries.mapNotNull { (it as? HirDeclEntry)?.decl as? sublimation.frontend.hir.HirFunDecl }.firstOrNull { it.name == "bump" }
         assertNotNull(pf)
-        assertTrue(pf.params.first().type is HirMutType, "脚本侧形参 a 提升视图 @mut Nat")
+        val pnt = pf.params.first().type as? sublimation.frontend.hir.HirNamedType
+        assertNotNull(pnt, "脚本侧形参 a 类型 plain（R-31 声明位通道）")
+        assertEquals("Nat", pnt.name)
     }
 
     @Test fun 差分对拍标注等价_视图同() {
@@ -135,12 +144,16 @@ class T125MutPromotionTest {
             .let { compileWithRounds(it.file, it.notes, scriptMode = true) }
         val rp = parseSourceWithNotes(pairDir.resolve("mut-promote-eq.subl").readText(), "mut-promote-eq.subl")
             .let { compileWithRounds(it.file, it.notes, scriptMode = false) }
-        // R-28 fallout：subs 侧提升写回落拒格（冲突点 1）;subl 工程标注位（@mut Nat 形参）无 plain 调用源亦拒
-        assertTrue(errCodes(rs).filter { it.startsWith("E-") }.isNotEmpty(), "subs 侧 R-28 拒格落点")
-        assertTrue(errCodes(rp).filter { it.startsWith("E-") }.isNotEmpty(), "subl 侧 R-28 拒格落点")
+        // R-31（t163）：等价口径改**行为等价**（可写槽位）——subs 推导位（声明位标记，类型 plain）
+        //  与 subl 标注位（@mut Nat 类型视图）同为可写形参;subl 侧 plain 实参→@mut 形参仍落
+        //  R-28 拒格（矩阵零回归），subs 侧 plain→plain 零拒格（提升绿态恢复）
+        assertEquals(emptyList(), errCodes(rs).filter { it.startsWith("E-") }, "subs 侧提升绿态（R-31）")
+        assertTrue(errCodes(rp).contains("E-TYPE-MISMATCH"), "subl 侧矩阵拒格零回归（plain 实参 → @mut 形参）")
         val fs = rs.hir.entries.mapNotNull { (it as? HirDeclEntry)?.decl as? sublimation.frontend.hir.HirFunDecl }.first()
         val fp = rp.hir.entries.mapNotNull { (it as? HirDeclEntry)?.decl as? sublimation.frontend.hir.HirFunDecl }.first()
-        assertEquals(inferRender(fp.params.first().type!!), inferRender(fs.params.first().type!!),
-            "形参视图同：脚本推导位与工程标注位结构等价（@mut Nat）")
+        assertEquals("Nat", (fs.params.first().type as sublimation.frontend.hir.HirNamedType).name,
+            "subs 形参 plain Nat（声明位标记）")
+        assertEquals("@mutNat", inferRender(fp.params.first().type!!),
+            "subl 标注位 @mut Nat（两侧行为等价：同为可写形参槽位;inferRender 去空格口径）")
     }
 }

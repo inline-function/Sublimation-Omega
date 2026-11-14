@@ -2137,23 +2137,27 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
                 s.destruct.forEachIndexed { i, n ->
                     val partT = partTypes.getOrElse(i) { infer.syntheticT("分量" + n) }
                     // t125（S5b）：解构分量按名提升（分量同属 T1 局部族;键=声明位+分量名，不与变量名撞键）
+                    // R-31（t163）：提升落声明位——类型 plain，符号 mutable（属主写不进 R-28 矩阵）
                     val pEvi = if (scriptMode) mutPromoted[mutKey(s.pos, n)] else null
-                    val pT = if (pEvi != null) promotedView(partT, s.pos) else partT
-                    if (pEvi != null) mutNote(n, pT, s.pos, "局部二次赋值 T1", pEvi)
+                    if (pEvi != null) mutNote(n, promotedView(partT, s.pos), s.pos, "局部二次赋值 T1", pEvi)
                     // t151（S1）：解构分量同初值来源（一层回溯;含糊不登记=外域，R5）
-                    val partSym = declareLocal(n, SymbolKind.LOCAL, s.pos, pT, scriptPromotable = scriptMode)
+                    val partSym = declareLocal(n, SymbolKind.LOCAL, s.pos, partT, mutable = pEvi != null,
+                        scriptPromotable = scriptMode)
                     if (partSym != null && localOriginOf(value)) localOriginIds.add(partSym.id)
 
-                    injectTypeFacts(n, pT, s.pos)   // t65
+                    injectTypeFacts(n, partT, s.pos)   // t65
                 }
                 HirVarStmt(s.name, null, s.annotations, initT, value, s.destruct, false, nid, s.pos, notesOf(s))
             } else {
                 val finalT = infer.checkScope(s.pos) { infer.varAnnotated(s.name, declared, initT, s.pos) }
                 // t125（S5b / R-06）：脚本模式可变性提升**预应用**——上一轮登记的需求在此落位（声明先于赋值，
                 // 词法序天然;单调：已 @mut 穿过不重包——混标单向蕴含）。工程模式零此通道（声明制）。
+                // R-31（t163）：提升产出=声明位槽位可变标记（SymbolEntry.mutable，同 @mut var 记账），
+                // 类型保持 plain T——不再合成 @mut 视图（写回=属主写，不进 R-28 copyDispatch 矩阵;
+                // 矩阵只管值位/子类型转换的跨变量伪造）。旧视图合成通道作废（t150 翻转吸收）。
                 val mutEvi = if (scriptMode) mutPromoted[mutKey(s.pos, s.name)] else null
-                val varT = if (mutEvi != null) promotedView(declared ?: finalT, s.pos) else (declared ?: finalT)
-                if (mutEvi != null) mutNote(s.name, varT, s.pos, "局部二次赋值 T1", mutEvi)
+                val varT = declared ?: finalT
+                if (mutEvi != null) mutNote(s.name, promotedView(varT, s.pos), s.pos, "局部二次赋值 T1", mutEvi)
                 // 可写来源：语句注解 @mut 或类型位 @mut T（旧 Frame.isMut 两个口径）或提升预应用
                 // t39：脚本模式顶层 var 与顶层自由变量/函数同域唯一（E-DUP-DECL）；块内重名走遮蔽（H-SHADOW）
                 // t39：脚本模式顶层 var 与顶层自由变量/函数同域唯一（E-DUP-DECL）；块内重名走遮蔽（H-SHADOW）
@@ -3085,8 +3089,9 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
             if (m != null && m.resolved != null && m.hasEvidence()) m.resolved!! else infer.namedT("Any")
         }
         else type(ErrorType("形参类型标注省略", q.pos))
-        val evi = if (scriptMode) mutPromoted[mutKey(q.pos, q.name)] else null
-        return if (evi != null) promotedView(base, q.pos) else base
+        // R-31（t163）：提升槽位类型保持 plain，调用侧签名亦 plain——实参按 plain 传递（无 PLAIN→MUT
+        // 值位转换需求）;@mut 视图仅入 D-MUT-INFERRED 审计四元组渲染。
+        return base
     }
     private fun retSigType(d: FunDecl): HirType? {
         if (d.retType != null) return type(d.retType)
@@ -5742,18 +5747,23 @@ is ErrorDecl -> sublimation.frontend.hir.HirErrorDecl(d.message, freshNid(), d.p
         }
         // t125（S5b / R-06）：形参可变性提升**预应用**（T2 形参被赋值 ⇒ @mut——R-06 原话「提升出的 @mut
         //  即形参推导类型」：视图入签名 ⇒ 调用按 R-01 表深拷核）。C-5：字段（FIELD）不提升。
+        // R-31（t163）：提升产出=声明位槽位可变标记（SymbolEntry.mutable），类型保持 plain T——不再合成
+        // @mut 视图。T2 冲突如实记录：R-06 原话「提升出的 @mut 即形参推导类型」与声明位通道口径相反，
+        // 未硬并（T2 形参类型保持 plain，@mut 视图仅入审计渲染）。
         val mutEvi = if (scriptMode && kind != SymbolKind.FIELD) mutPromoted[mutKey(p.pos, p.name)] else null
-        val t2 = if (mutEvi != null) promotedView(t, p.pos) else t
+        val t2 = t
         // t126（S5c）：触发分类按需求账渲染（T2 形参被赋值 / T3 传入 @mut 接收者位）
         if (mutEvi != null) {
             val trigger = mutPromotedTriggers[mutKey(p.pos, p.name)] ?: "形参被赋值 T2"
-            mutNote(p.name, t2, p.pos, trigger, mutEvi)
+            mutNote(p.name, promotedView(t, p.pos), p.pos, trigger, mutEvi)
         }
         // t48（ADR-32 R-30）：@list 变长形参——HirParam 保留**元素类型** + 注解旗标（D-9），
         // 体位符号按 List[元素] 登记（序列值）；调用位按元素类型核对剩余实参。
         val isVararg = "list" in p.annotations
         val symbol = declareLocal(p.name, kind, p.pos,
             if (isVararg) infer.namedT("List", listOf(t2)) else t2,
+            // R-31（t163）：提升形参的属主写闸走符号 mutable 位（类型 plain 不带可写视图）
+            mutable = mutEvi != null,
             scriptPromotable = scriptMode && kind != SymbolKind.FIELD)
         // t151 保守地板修订（R5）：形参位**不登记**——@mut 形参通道可经 `&` 借用实参翻为借入通道（R2;
         //  callee 无法证明调用方不借用 ⇒ 含糊一律外域=维持拦截）。局部来源仅覆盖本帧 var 声明位。
